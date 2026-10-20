@@ -15,7 +15,7 @@
 | [T07](../../docs/lody4dot-development.md#t07实现自包含构建与云环境接入) | 自包含包与云接入 | T03、T04、T05、T06 | done | [分发与云配置](../../docs/lody4dot-validation.md)：22文件移位安装通过；草稿保存已确认，用户随后确认已发布；实际加载未验 |
 | [T08](../../docs/lody4dot-development.md#t08完成无账户集成与分发回归) | 无账户集成验证 | T07 | done | [无账户验收](../../docs/lody4dot-validation.md)：45项条目测试加8项原仓库测试通过，移位CLI安装及inspect通过 |
 | [T09](../../docs/lody4dot-development.md#t09完成干净云任务加载安装和真实发现) | 真实云端加载、安装、发现 | T08；宿主、身份、网络、工作区 | blocked | [外部条件](../../docs/lody4dot-validation.md)：当前实例已收到token，真实登录/工作区查询通过；选定个人工作区目录被Loro Streams域名CONNECT403阻断，待新增规则生效 |
-| [T10](../../docs/lody4dot-development.md#t10验证-agent-任务能力与受控执行闭环) | agent 场景与真实任务 | T09；测试目标、执行凭证 | blocked | 依赖T09；实际工作区、测试目标/Role和底层Agent凭证未验证；离线agent演练单列，不替代闭环 |
+| [T10](../../docs/lody4dot-development.md#t10验证-agent-任务能力与受控执行闭环) | agent 场景与真实任务 | T09；测试目标、执行凭证 | blocked | [运行前提补充](../../docs/lody4dot-runtime-findings.md)：个人目标已选；builtin运行时与host全工作区副作用已核实，独立ACP初始化RPC1001，未创建会话 |
 | [T11](../../docs/lody4dot-development.md#t11补齐高级能力的场景与平台边界) | 高级场景与支持矩阵 | T10 | blocked | 高级参考与命令导航已覆盖；真实高级场景依赖T10及隔离目标 |
 | [T12](../../docs/lody4dot-development.md#t12交付复现与支持范围确认) | 复现与交付 | T10、T11 | blocked | 离线实现已审查；T09–T11的真实验收未完成，不标整体交付完成 |
 
@@ -38,3 +38,9 @@
 2026-10-20，用户再次发布后，同一任务观测 spec_revision/observed_spec_revision=4，四域名已生效，进程token present。auth login和verify-only均退出0，真实工作区查询ok且count=2。用户已明确选择个人workspace用于本机临时目录小任务，不再次询问。
 
 目录查询发现新的、可复现的阻断：api/control-b/control-c/presence.streams-api-x.loro.dev 均 CONNECT403；机器及Role列表原始exit1，不当成空列表。网络规则按源码分片模式补充 *.streams-api-x.loro.dev；保留已有规则与变量。doctor 0.1.1可用 --workspace 保留账户已认证/目录失败的分项证据。后续先复验目录，再做观察与任务；没有启动daemon或创建真实会话。
+
+## Loro 规则发布后的继续验证
+
+用户已确认发布，正式配置中可读 *.streams-api-x.loro.dev（无新草稿），但当前运行实例仍为 revision4、仅四域名，实际 CONNECT403；完成独立准备后复查仍未变化。没有重复保存配置或重新登录。
+
+[运行前提补充](../../docs/lody4dot-runtime-findings.md) 记录了适配器版本、managed0.160.1的受管入口、无模型初始化失败与官方状态目录边界，以及原生host会覆盖API-key可见的全部工作区。没有越过用户的个人工作区范围启动host。临时项目及验收断言已备妥，实际目录、观察和任务闭环仍待条件满足。

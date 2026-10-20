@@ -112,6 +112,23 @@
       ],
       "network_rule": "*.streams-api-x.loro.dev",
       "note": "规则只涵盖当前服务返回的分片后缀；并未验证放行后的真实目录、观察或任务成功。"
+    },
+    {
+      "id": "codex-runtime-and-host-scope",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "0.107.2",
+      "scope": "resolveBuiltinACPProcessLaunch、mergeACPProcessEnv、ManagedAgentRuntimeManager、LodyFleet.startWorkspaceSubscription/applyRemoteWorkspaceList、prepareCodexHomeEnv；builtin managed版本及host全工作区订阅边界",
+      "verification": "static_source_verified",
+      "note": "adapter --version实测1.12.0；managed0.160.1仅HEAD200与源码hash/size核实，未下载执行；不据此宣称模型任务可用。"
+    },
+    {
+      "id": "codex-sqlite-config",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core/config.schema.json#L8058",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "Codex0.163.0，另核实0.160.1相同配置字段",
+      "scope": "sqlite_home/CODEX_SQLITE_HOME与强制配置边界；独立SQLite目录不能代替日志/rollout可写性或真实ACP初始化",
+      "verification": "official_source_verified"
     }
   ],
   "known_differences": [

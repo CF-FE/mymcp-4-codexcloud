@@ -23,6 +23,16 @@ Lody 内置 MCP 的资源发现、会话、operation、调度和角色工具需�
 
 模型/模式/权限和扩展能力来自目标运行时协商。支持一个 ACP 或 Lody 扩展不表示支持其余扩展；刷新能力也须满足实际机器与进程约束。Lody 账户 token 不等于 Provider 的模型凭证。
 
+## 内置 Codex 与 host 范围
+
+`0.107.2` 自带 `dist/codex-acp.js`（适配器 `1.12.0`），builtin Codex 默认解析 managed `0.160.1`；系统 PATH 里存在另一个 Codex 不表示它会被采用。内置 launch 先解析 `runtimeOverrides.codexPath` 或 managed runtime，再设置 `CODEX_PATH`，后者覆盖 Agent config 的同名 env。当前公开 create/update CLI 没有对应 runtimeOverrides 或 custom command 参数，不猜字段、不改底层 store。
+
+直接启动 bundled adapter 时，`CODEX_PATH` 是该入口明确要求的参数；这种单独预检与 builtin 默认运行链路分别记录。ACP `initialize` 不发送模型任务，但可能启动原生 app-server 并尝试写运行状态；`session/new` 会建立 thread 并查询模型，不能作为零持久化探测。
+
+API-key 路径的 `LodyFleet` 为账户返回的全部工作区建立 runtime 并登记本机/默认配置；任务的 `--workspace` 或 `LODY_WORKSPACE_ID` 不过滤 host 的工作区订阅。用户限定单个工作区时，先核实凭证或宿主是否有受支持的范围限制，不因任务目标已指定就假称 host 只影响该工作区。
+
+不使用 `LODY_E2E` 或标题辅助进程作为认证隔离技巧；对应分支可能创建工作目录 `.codex` 并复制默认认证。受控任务使用明确标题，并保持已有认证边界。
+
 ## 证据和状态
 
 | 观察 | 可以报告 | 不能单独报告 |
