@@ -40,16 +40,29 @@ JSONL 的 sequence 只排序当前观察进程，不能用它保证跨进程恢�
 ## 会话维护与取消
 
 - `list` 先明确工作区、活跃/已归档筛选；查询结果不自动代表全部历史。
-- `rename` 修改标题；用环境 session 选择器时采用命令支持的显式标题参数，避免位置参数歧义。
-- `archive` 与 `restore` 可逆整理会话；`restore` 只针对已归档会话。
+- `rename` 修改标题；显式传入 session、workspace 与 `--title`，避免环境 session 选择器和位置参数歧义。保存原标题，需要往返验证时先检查目标空闲。
+- `archive` 在 `0.107.2` 会递归归档以 `parentSessionId ?? openedBySessionId` 关联的后代，包括已经归档的后代；不能只核对根会话。先用 `session list --all --workspace WORKSPACE_ID --json` 取得包含已归档项的完整元数据，核对关联图和授权范围；该版本省略 `--limit` 返回全部同步条目，`--opened-by` 不能替代 parent 关系检查。
+- `restore` 要求根会话已归档，只恢复根及直接 `parentSessionId` 子项，不承诺恢复归档时的所有递归或 openedBy 后代，也可能使原先已归档的直接子项变为未归档。先保存各受影响会话的原状态，不能把归档与恢复当作完整回滚。
+- 执行端观察到归档后会释放 runtime、终端、预览及 ACP 等资源，并可能清理关联的活动子会话、安排关联 worktree 的 GC；归档前也须评估磁盘清理影响。恢复元数据不代表恢复同一进程或还原已发生的 worktree 清理；源码还保留终止失败的处理，不能从归档成功推导所有进程已停止。维护命令没有取消命令的 `--turn-id` 条件；有活动回合、排队输入或不明关联时先核实，不为测试归档用户已有任务。
 - `delete` 永久删除已归档会话，并会排队进行机器侧资源清理；不能把它当普通归档或诊断动作。
-- `cancel` 针对当前任务明确允许取消的运行回合；活动回合存在时，按目标机器走本机或远端取消路径。没有活动回合或指定 turn 已不匹配时可返回 `alreadyStopped`，不能据此声称本次取消了该回合。仍须核验持久化状态，不要在用户已有任务中试验取消。
+- `cancel` 针对当前任务明确允许取消的运行回合；先用本次请求的 userTurnId 匹配 observe 中的 running 回合，再将对应的 **assistantTurnId** 传给 `--turn-id`。按目标机器走本机或远端路径。控制端重新同步时没有活动回合或指定 turn 不匹配，可返回 `alreadyStopped`；派发后的陈旧请求也可能被执行端忽略却返回 `success:true`。ACK 不证明取消，仍须核对同一 user/assistant 回合的 persisted/synced/canceled 终态。Operation inbox 的暂停还可能影响同一执行的后继回合，不能把 `--turn-id` 当成适用于所有协作流程的原子隔离保证。不要在用户已有任务中试验取消。
 - `recover-inbox` 用于检查被阻塞的本地执行；恢复前必须确认所有旧资源（包括未记录的进程）已释放，才可按准确 workspace、machine 和 execution ID 使用恢复参数。不得自动加 `--confirm-resources-released` 来掩盖不明状态。
+
+```bash
+lody session cancel SESSION_ID --workspace WORKSPACE_ID --turn-id ASSISTANT_TURN_ID --json
+lody session rename SESSION_ID --workspace WORKSPACE_ID --title "New title" --json
+lody session archive SESSION_ID --workspace WORKSPACE_ID --json
+lody session restore SESSION_ID --workspace WORKSPACE_ID --json
+```
+
+这些示例只展示准确参数，不替代目标与影响范围授权。超时先只读核对实际状态，不直接重发维护操作。无后代的自有验收会话可用于最小往返：先核对空闲、队列为空及最新回合标识，再逐步验证标题、isArchived 和最终历史；有后代时必须逐项评估原状态与恢复范围。
 
 ## 最小闭环与失败处理
 
 先读目标与成功条件，发现并选择资源，核对执行端进程及 Agent 凭证后创建一次任务，再观察、读取历史并检查产物，最后报告结果。控制端未运行 daemon 不能独自否定远端派发；未登录、权限拒绝、目标机器不可达或底层 Agent 启动失败时保留确切失败类别，不换用未经授权身份或扩权。若发起请求已超时，工作仍可能在目标会话继续，先核验再决定后续动作。
 
-本次已验证无控制端 host/daemon 的公开 CLI 向已有远端 Codex 配置创建任务并继续一个只读验证回合：两个回合均完成，observe 为 persisted/synced，Agent 二次读回的产物字节、JSON和随机 challenge 哈希经控制端校验匹配。公开 history 只有可见文本，不含底层工具执行日志；产物证据来自 Agent 回传，不声称控制端直接读取远端文件系统。没有测试运行中取消，也不推导其他配置和平台均已通过。
+已验证无控制端 host/daemon 的公开 CLI 向已有远端 Codex 配置创建任务并继续一个只读验证回合：两个回合均完成，observe 为 persisted/synced，Agent 二次读回的产物字节、JSON和随机 challenge 哈希经控制端校验匹配。另一次自有运行回合按 assistantTurnId 取消后，同一回合持久化为 canceled，活动列表为空。公开 history 只有可见文本，不含底层工具执行日志；产物证据来自 Agent 回传，不声称控制端直接读取远端文件系统，也不据回合取消证明工具进程即时终止。不推导其他配置、协作场景和平台均已通过。
+
+在同一自有验收会话确认无后代、空闲且队列为0后，还完成了改名往返及归档/恢复：原标题与未归档状态还原，两个响应的 child IDs 均为空，6条可见历史和 latestTurn 保持一致，最终为 persisted/synced、无活动回合。该结果只覆盖无后代的元数据往返，未实测级联范围或进程恢复。
 
 来源：[CLI：Session 命令](https://lody.ai/zh/docs/cli/)、[Agent 对话控制](https://lody.ai/zh/docs/session-orchestration/)、[Agent 角色](https://lody.ai/zh/docs/agent-roles/)、[0.107.2 发布源码](https://registry.npmjs.org/lody/-/lody-0.107.2.tgz)。官网的运行进程概括与该版本按目标分支的差异见 [来源记录](sources.json)。

@@ -1,6 +1,6 @@
 # lody4dot 支持与验证矩阵
 
-核实日期：2026-10-20。基线为 `lody@0.107.2`、`lody4dot 0.1.3`，实际控制端为当前 Linux Codex 云环境。本文覆盖全部 **20 个公开命令根、70 条公开命令路径**；逐条参数与帮助哈希见[命令索引](../skill/lody4dot/references/command-index.json)和[帮助快照](../skill/lody4dot/references/help-snapshot.json)。
+核实日期：2026-10-21。CLI基线为 `lody@0.107.2`，当前源码/分发为 `lody4dot 0.1.4`，已发布云环境仍为0.1.3；实际控制端为当前 Linux Codex 云环境。本文覆盖全部 **20 个公开命令根、70 条公开命令路径**；逐条参数与帮助哈希见[命令索引](../skill/lody4dot/references/command-index.json)和[帮助快照](../skill/lody4dot/references/help-snapshot.json)。
 
 所有路径的帮助已核实，不代表所有业务功能已经运行。下表的“通过”只覆盖列出的操作、目标及结果；“未运行”与“明确失败”分别记录。空目录查询通过，只证明该查询范围内当前没有条目。任务状态仍以[任务队列](../.codex/agent-state/todo.md)为准，已有实测细节见[验证记录](lody4dot-validation.md)及[运行前提](lody4dot-runtime-findings.md)。
 
@@ -24,7 +24,7 @@
 | [`project`](../skill/lody4dot/references/discovery.md) | 已核实 4 条路径 | 指定工作区的完整项目目录查询通过，`kind=local` 为 1 项 | 没有读取或修改该既有项目文件，未测试 `add/delete`、本机 daemon 项目列表或 Git worktree。远端受控任务未附加既有项目 |
 | [`review`](../skill/lody4dot/references/delivery.md) | 已核实 2 条路径 | **渲染明确失败**：原生命令退出 1，未生成 HTML；匹配 Viewer 的发布资源当前不可取得 | 不能把帮助可读或其他 Viewer 的 SRI 通过当成渲染成功；匹配资源与恢复条件见下节 |
 | [`schedule`](../skill/lody4dot/references/automation.md) | 已核实 9 条路径 | `list` 退出 0；从 `offset=0, limit=100` 查询得到 `schedules=[]`、`matched=0`，没有后续 offset | 只验证目录读取；未创建、编辑、暂停、恢复、立即运行或删除调度，未验证触发、时区、补跑及执行结果。此命令的日志和分页规则见下节 |
-| [`session`](../skill/lody4dot/references/sessions.md) | 已核实 14 条路径 | 真实列表、历史和观察通过；已有远端 Codex 配置的 `create` 与只读 `chat` 两个回合均 completed，Agent 二次回传的产物字节及随机 challenge 经控制端校验匹配。另一个受控回合实际 running 后，以精确 assistantTurnId 取消成功，同一回合持久化为 `persisted/synced/canceled`，无活动回合 | 仅覆盖该配置和受控任务；文件证据来自 Agent 回传，公开 history 不含底层工具日志；回合取消不证明工具进程即时终止。恢复、归档、改名、删除及其他 Agent/平台未测；本机 Codex ACP 初始化另有明确只读失败 |
+| [`session`](../skill/lody4dot/references/sessions.md) | 已核实 14 条路径 | 列表、历史及观察通过；已有远端Codex的create/chat两个回合completed，Agent回传产物经控制端校验；另一个running回合按assistantTurnId取消后persisted/synced/canceled。自有无后代会话的改名往返、归档/恢复通过，原标题及未归档状态还原，6条可见历史和latestTurn不变、队列及活动列表为空 | 仅覆盖该配置和受控任务；产物来自Agent回传，公开history无底层工具日志。回合取消及元数据恢复不证明工具进程终止/恢复；陈旧取消ACK可能成功，归档/恢复范围不对称。级联、删除、其他Agent/平台未测；本机Codex ACP仍有明确只读失败 |
 | [`start`](../skill/lody4dot/references/setup-cloud.md) | 已核实 1 条路径 | 未启动本机 host | 源码确认 API-key host 会登记全部可见工作区，不能将业务 `--workspace` 当成 host 范围限制；本机 Agent 执行和进程恢复未验收，不为远端派发自动启动 host |
 | [`sync`](../skill/lody4dot/references/delivery.md) | 已核实 1 条路径 | 独立 `lody sync` 命令未运行 | 目录及会话操作中的同步已有真实结果，但不能替代本命令的完整工作区缓存同步验收；同步也不等于 Git 推送、模型执行或产物完成 |
 | [`workspace`](../skill/lody4dot/references/discovery.md) | 已核实 2 条路径 | 真实账户查询退出 0，返回 2 个可访问工作区；后续只使用用户选定的个人工作区 | 未创建、变更或扩大工作区权限；账户列表成功与机器目录、长连接、任务执行分别核验 |
@@ -48,6 +48,8 @@ Operation 的空结果只针对当前控制端的私密本机 store 与本任务
 ## 云接入与执行位置
 
 正式配置复核已无草稿，仓库来源为公开提交 `a2e6796`，新版 `start_skill` 与保存的云启动说明逐字匹配。完整云安装脚本的 56 项测试、同锁安装复用和离线 inspect 已通过。这些是当前实例与正式配置的证据，不证明独立新云任务自动加载，也不证明原生 Codex 插件已注册。
+
+0.1.4仅更新会话知识与证据，56项回归、自包含包、包内同锁安装及inspect通过；CLI和依赖锁未变。没有以此改写已发布环境来源或创建云草稿，独立新任务的0.1.3接入验收仍按其正式版本记录。
 
 当前可用路径是 Codex 云端作为控制端，复用已有授权、在线的远端 Agent。当前云机的 managed Codex `0.160.1` bundled ACP 初始化返回 RPC1001；独立 SQLite 目录后仍有只读错误，官方代码还要求读写 Codex home 下的 `installation_id`。该本机失败不否定已通过的远端任务路径，也不泛化其他平台。
 

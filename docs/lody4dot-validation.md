@@ -174,11 +174,23 @@ Review做了无账户真实渲染尝试：依据原生review prompt编写覆盖a
 
 只发送一次`session chat --json`，提示约束为一个45秒的前台等待命令，不创建文件、访问网络或凭证、变更配置、启动后台工作或重试。保存返回的userTurnId后，observe实际显示persisted/synced/running，唯一active turn的userTurnId匹配本次请求，并取得其assistantTurnId。随后以`session cancel SESSION_ID --workspace WORKSPACE_ID --turn-id ASSISTANT_TURN_ID --json`精确取消；该参数使用assistantTurnId，不是chat返回的userTurnId。
 
-chat、运行中观察、cancel及取消后观察的原始退出码均为0。取消响应ok=true、response.success=true，没有alreadyStopped=true；最终observe的userTurnId及assistantTurnId均与本次选择完全匹配，source=persisted、freshness=synced、latestTurn.state=canceled、state=idle、activeTurns为空。取消边界经独立只读复核；若取消时目标已结束或变为其他回合，CLI的精确turn检查会返回alreadyStopped，不能算本次取消成功。本轮实际没有遇到该分支。
+chat、运行中观察、cancel及取消后观察的原始退出码均为0。取消响应ok=true、response.success=true，没有alreadyStopped=true；最终observe的userTurnId及assistantTurnId均与本次选择完全匹配，source=persisted、freshness=synced、latestTurn.state=canceled、state=idle、activeTurns为空。控制端重新同步时若发现目标不再匹配，可返回alreadyStopped，不能算本次取消成功。后续源码复核补充：派发后的陈旧请求也可能被执行端忽略却返回success:true，Operation inbox暂停还可能影响同一执行的后继回合；精确turn参数不是所有协作流程的原子隔离保证。本轮成功依据对应回合的持久化终态，而非只看ACK。
 
 这些证据仅证明该配置的Lody运行回合被精确取消并持久化。公开history不包含工具日志，没有据此证明等待命令已启动、远端进程收到何种系统信号或被即时终止。未测试超时恢复、其他配置/平台、长期worker或独立新云任务加载。自有私密认证state已删除，全局token绑定保留；未启动控制端host/daemon、修改远端配置或重新保存云环境草稿。原0.1.3发布物保持不变，本轮仅补充验收记录。
 
 本轮仓库结构、空白及56项回归检查通过；4份改动文档的本地链接检查通过，差异未包含本轮真实资源标识或凭证。
+
+## 会话维护往返与知识修正
+
+2026-10-21，继续用户授权范围，在本任务自建验收会话补测rename、archive与restore。新0700私密state真实登录后，先以`session list --all --json`同步完整元数据，不加limit；核对完整标题与既有ID唯一匹配，并按parentSessionId和openedBySessionId检查没有关联后代。show/observe确认未归档、idle、persisted/synced、队列0、activeTurns为空、最新回合仍为此前canceled；公开history --all实际返回6条可见记录。
+
+使用显式session/workspace/--title完成一次临时改名和还原标题，各阶段重新读取show/observe核对标题、空闲状态及最新回合。再次确认无后代后归档，响应archivedChildSessionIds=[]，后续同步读取isArchived=true；再确认目标及关联范围后恢复，响应restoredChildSessionIds=[]，后续isArchived=false。所有原生命令退出0。最终原标题、未归档状态、空队列及空活动列表还原，persisted/synced；latestTurn的标识、状态及字段与基线一致，6条公开transcript条目的规范化JSON摘要前后匹配。该比较只涉及本次可见历史，不推导底层日志或所有生命周期数据均未更新。
+
+独立源码复核发现原知识中“archive/restore可逆整理”的概括不完整：collectSessionArchiveTargets按parentSessionId ?? openedBySessionId递归，readSessionOperationTargets的restore仅根与直接parent子项，不能保证完整回滚；执行端releaseArchivedSessionRuntime释放终端、预览、ACP和会话运行状态，并安排关联worktree GC。终止失败仍可能保留进程，restore不承诺恢复同一进程或还原已发生的磁盘清理。没有为验证级联而创建或操作其他会话，未测试进程恢复或worktree清理，本次会话未附加repo。已将准确边界、取消的assistantTurnId用法及陈旧ACK竞态同步到技能、命令索引和来源记录，版本升为0.1.4。
+
+本轮56项回归、结构及构建检查通过；新包22个内容文件加receipt共23文件，直接从包执行安装器reused=true及inspect均通过，固定CLI仍为0.107.2，锁摘要未变。`dist/lody4dot-0.1.4.zip`为74,514字节，ZIP与receipt逐文件哈希和完整性检查通过；ZIP SHA-256为`3d4e41b7f37272a05e604e6aac4826f9fa47eb3dfe0eaf44f7be44c7c19bc54d`，receipt为`c51eb2bd810a75152b1556a79ae9203f4af86da09f45c53417dde81c5ee291fc`。产物保留在忽略目录，旧0.1.3包不覆盖。
+
+自有认证state已删除，保留全局变量绑定；没有新模型回合、永久删除、向其他会话发起维护命令、新增远端配置或启动控制端daemon。没有据此断言执行端后台GC或所有其他磁盘状态均无变化。已发布环境仍以0.1.3源码为准，未新建云草稿，不能把0.1.4源码与包完成当作云环境已升级。T09独立新云任务回执和T12整体交付仍blocked；Review匹配上游资源、本机ACP只读限制及其他未运行项不改为通过。
 
 ## 复现命令
 

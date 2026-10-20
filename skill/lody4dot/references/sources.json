@@ -146,7 +146,16 @@
       "version_scope": "0.107.2",
       "scope": "withWorkspaceManager、ensureTargetMachineOnline及create/chat/cancel本机与远端路由；无host时独立workspace client，远端machine RPC，本机目标ensureLocalRuntimeAvailable，cancel可alreadyStopped",
       "verification": "static_source_and_sanitized_remote_acceptance",
-      "note": "公开CLI无控制端host/daemon派发已有远端Codex配置；create/chat两个回合completed，Agent二次回传的文件字节、JSON及随机challenge哈希经控制端校验匹配。history不含底层工具日志，不称控制端直接远程FS读取；未测cancel、其他配置或平台；refresh-capabilities仍限本机。"
+      "note": "公开CLI无控制端host/daemon派发已有远端Codex配置；create/chat两个回合completed，Agent二次回传的文件字节、JSON及随机challenge哈希经控制端校验匹配。另一次自有running回合按assistantTurnId取消后，同一user/assistant回合persisted/synced/canceled、无活动回合。history不含底层工具日志，不称控制端直接远程FS读取或工具进程终止；未泛化其他配置或平台；refresh-capabilities仍限本机。"
+    },
+    {
+      "id": "session-maintenance-scope-and-cancel-races",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz",
+      "retrieved_at": "2026-10-21",
+      "version_scope": "0.107.2",
+      "scope": "collectSessionArchiveTargets/readSessionOperationTargets、runSessionOperationWithSyncedMetadata、handleSessionArchived/releaseArchivedSessionRuntime、cancelSessionTurn及执行端cancelSession；归档递归范围、恢复直接子项、资源释放/worktree GC与陈旧取消ACK",
+      "verification": "static_source_and_sanitized_maintenance_acceptance",
+      "note": "archive按parentSessionId ?? openedBySessionId递归；restore仅根和直接parent子项，不能当对称回滚。自有无后代会话的改名往返/归档/恢复已实测，原标题和未归档状态恢复，6条可见历史和latestTurn不变、无activeTurns/队列。未测级联或进程恢复。执行端归档释放可能遇到终止失败；控制端按assistantTurnId预检取消，执行端陈旧请求可success:true但被忽略；Operation inbox暂停可影响同一执行的后继，必须核对持久化目标终态。"
     }
   ],
   "known_differences": [

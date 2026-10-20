@@ -1172,7 +1172,7 @@
         "json"
       ],
       "pagination": "not_applicable",
-      "success_evidence": "后续查询确认对应会话的请求变更；delete针对已归档会话且可能排队清理机器资源。",
+      "success_evidence": "事先以完整元数据核对parentSessionId ?? openedBySessionId递归后代及授权；随后确认根和实际受影响后代的isArchived与响应child IDs。归档可释放运行资源，不能仅看列表隐藏或假定restore完整回滚。",
       "sources": [
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
@@ -1195,7 +1195,7 @@
         "json"
       ],
       "pagination": "not_applicable",
-      "success_evidence": "保存准确session/turn标识，并以持久化结果和目标产物核对完成、失败或取消；超时不重复创建。",
+      "success_evidence": "用本次userTurnId匹配running回合，将assistantTurnId传给--turn-id，再核对同一user/assistant回合persisted/synced/canceled及活动列表；success ACK或alreadyStopped均不证明本次取消成功。",
       "sources": [
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
@@ -1203,7 +1203,7 @@
       ],
       "verification": "documented",
       "help_sha256": "40a9c1264c21b2f672f72ae17e37336d27c0ea4029ee72cf75dc8c9d10f58fde",
-      "runtime_note": "有活动回合时按目标机器选择本机或远端取消路径，远端不要求控制端host/daemon；无活动回合或指定turn不匹配时可alreadyStopped，不代表本次取消成功。远端cancel源码已核实，未实测。"
+      "runtime_note": "远端不要求控制端host/daemon；控制端同步后无活动或turn不匹配时可alreadyStopped，执行端陈旧请求也可忽略并ACK success；Operation inbox暂停还可能影响同一执行的后继。已在自有普通会话实测同一回合canceled，不泛化协作流程或工具进程终止。"
     },
     {
       "command": "session chat",
@@ -1385,7 +1385,7 @@
         "json"
       ],
       "pagination": "not_applicable",
-      "success_evidence": "后续查询确认对应会话的请求变更；delete针对已归档会话且可能排队清理机器资源。",
+      "success_evidence": "使用显式session/workspace/--title，后续同步查询确认对应标题；往返测试保存并还原标题，再核对最新回合和可见历史。",
       "sources": [
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
@@ -1408,7 +1408,7 @@
         "json"
       ],
       "pagination": "not_applicable",
-      "success_evidence": "后续查询确认对应会话的请求变更；delete针对已归档会话且可能排队清理机器资源。",
+      "success_evidence": "先确认根已归档及全部直接parentSessionId子项的授权/原状态；后续同步查询核对根和实际受影响子项isArchived=false与响应child IDs。该范围不对称于archive，不证明递归后代或原进程恢复。",
       "sources": [
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
