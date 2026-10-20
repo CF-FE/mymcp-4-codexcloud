@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "lifecycle_scripts": "disabled",
+  "reviewed_install_script_packages": [],
+  "native_modules": [
+    "better-sqlite3",
+    "@lydell/node-pty",
+    "@napi-rs/keyring",
+    "loro-crdt",
+    "@loro-dev/roost-node"
+  ]
+}

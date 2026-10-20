@@ -16,11 +16,11 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 ## 当前状态
 
-已导入 [Gitee MCP 网关](mcp/gitee/README.md)：保留原源码、部署文档、验收资料和历史交付包，并记录来源与文件校验清单。文件导入与静态检查已验证；原服务的依赖安装、OAuth/Gitee 连接和实际运行尚未验证。当前没有独立的 skill 或 plugin 条目。
+已导入 [Gitee MCP 网关](mcp/gitee/README.md)：保留原源码、部署文档、验收资料和历史交付包，并记录来源与文件校验清单。文件导入与静态检查已验证；原服务的依赖安装、OAuth/Gitee 连接和实际运行尚未验证。另有 [lody4dot 技能](skill/lody4dot/SKILL.md) 和 [分发工具](plugin/lody4dot/README.md)。
 
 仓库结构检查无需安装第三方依赖，也没有公共服务需要启动。运行单个 MCP 时需按其 README 准备依赖和配置。后续导入按照 [导入步骤](docs/architecture.md#导入已有插件) 迁移，并在此补充条目入口。
 
-规划中的插件：[lody4dot 产品方案](docs/lody4dot-plan.md)、[详细开发方案](docs/lody4dot-development.md) 和 [任务队列](.codex/agent-state/todo.md)，帮助 agent 使用 Lody，并支持 Codex 云端安装。目前仅完成方案，尚未实现或安装。
+lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安装、只读诊断、显式认证和自包含打包。在当前 Linux 云机已验证 CLI 安装、同锁复用和移位分发；真实账户、宿主新任务加载与任务闭环仍待外部条件。见 [产品方案](docs/lody4dot-plan.md)、[开发契约](docs/lody4dot-development.md)、[验证记录](docs/lody4dot-validation.md) 和 [任务队列](.codex/agent-state/todo.md)。
 
 ## 开发与验证
 

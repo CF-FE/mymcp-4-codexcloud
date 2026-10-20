@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "lody_version": "0.107.2",
+  "captured_at": "2026-10-20",
+  "verification_note": "documented表示资料和帮助可追溯，help_executed只表示帮助命令成功；均不表示已安装发布、登录、连接或真实业务功能通过。发行是否安全支持仍由运行时依赖检查与发布验收决定。",
+  "sources": [
+    {
+      "id": "cli",
+      "url": "https://lody.ai/zh/docs/cli/",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "官网当前文档；与0.107.2帮助交叉核对",
+      "scope": "公开命令、参数查询、登录、daemon、资源分页、Role提议与Session行为",
+      "verification": "retrieved"
+    },
+    {
+      "id": "quickstart",
+      "url": "https://lody.ai/zh/docs/quickstart/",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "官网当前文档；与0.107.2帮助交叉核对",
+      "scope": "包名、Node要求、服务器启动、Agent配置与本地目录",
+      "verification": "retrieved"
+    },
+    {
+      "id": "roles",
+      "url": "https://lody.ai/zh/docs/agent-roles/",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "官网当前文档；与0.107.2帮助交叉核对",
+      "scope": "Role绑定、共享、不可用原因、确认卡片和创建时冻结",
+      "verification": "retrieved"
+    },
+    {
+      "id": "orchestration",
+      "url": "https://lody.ai/zh/docs/session-orchestration/",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "官网当前文档；与0.107.2帮助交叉核对",
+      "scope": "内置MCP对话协调、作用范围与超时结果",
+      "verification": "retrieved"
+    },
+    {
+      "id": "runtimes",
+      "url": "https://lody.ai/zh/docs/cli-runtimes/",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "官网当前文档；与0.107.2帮助交叉核对",
+      "scope": "运行时安装、凭证和自定义ACP启动语义",
+      "verification": "retrieved"
+    },
+    {
+      "id": "capabilities",
+      "url": "https://lody.ai/zh/docs/acp-feature-support/",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "官网当前文档；与0.107.2帮助交叉核对",
+      "scope": "版本化能力协商和provider差异",
+      "verification": "retrieved"
+    },
+    {
+      "id": "schedules",
+      "url": "https://lody.ai/zh/docs/scheduled-tasks/",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "官网当前文档；与0.107.2帮助交叉核对",
+      "scope": "机器时区、执行归属、错过运行与提议确认",
+      "verification": "retrieved"
+    },
+    {
+      "id": "review",
+      "url": "https://lody.ai/zh/docs/lody-review/",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "官网当前文档；与0.107.2帮助交叉核对",
+      "scope": "本地评审格式与渲染、无桌面输出",
+      "verification": "retrieved"
+    },
+    {
+      "id": "npm-metadata",
+      "url": "https://registry.npmjs.org/lody/0.107.2",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "0.107.2",
+      "scope": "包名、Node engines、版本与发布完整性元数据",
+      "verification": "retrieved"
+    },
+    {
+      "id": "npm-package",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "0.107.2",
+      "scope": "已校验发布物README与静态公开入口；没有据此证明真实账户或任务可用",
+      "verification": "registry_integrity_verified"
+    },
+    {
+      "id": "public-help",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "0.107.2",
+      "scope": "70个公开命令路径的--help实际exit0；20个一级入口，排除内部入口",
+      "verification": "help_executed",
+      "resource": "help-snapshot.json",
+      "sha256": "e3ee1b9668b26cf2e3a0ea8647b9841dc250099b6542fe41903721814eaefd85",
+      "command_count": 70,
+      "root_count": 20
+    }
+  ],
+  "known_differences": [
+    {
+      "command": "session create",
+      "topic": "--env",
+      "website": "官网CLI页曾说明per-session env保存；实际0.107.2帮助标为deprecated",
+      "resolution": "不推荐per-session --env；按当前帮助改在Agent config配置。"
+    }
+  ]
+}

@@ -1,0 +1,582 @@
+{
+  "schema_version": 1,
+  "lody_version": "0.107.2",
+  "captured_at": "2026-10-20",
+  "roots": [
+    "agent-config",
+    "agent-role",
+    "app",
+    "daemon",
+    "export",
+    "feedback",
+    "github",
+    "login",
+    "logout",
+    "machine",
+    "mcp",
+    "migrate",
+    "operation",
+    "project",
+    "review",
+    "schedule",
+    "session",
+    "start",
+    "sync",
+    "workspace"
+  ],
+  "commands": [
+    {
+      "command": "agent-config",
+      "help": "Usage: lody agent-config [options] [command]\n\nManage agent configs\n\nOptions:\n  -h, --help                                 display help for command\n\nCommands:\n  list [options]                             List readable agent_config resources\n  get [options] <id>                         Read one agent_config by stable id\n  show [options] [idOrName]                  Show an agent config; environment values are hidden by default\n  refresh-capabilities [options] [idOrName]  Refresh ACP capabilities for an agent config on the current machine\n  create [options]                           Create a new agent config\n  update [options] [idOrName]                Update an existing agent config\n  delete [options] [idOrName]                Delete an agent config\n  help [command]                             display help for command\n",
+      "sha256": "95dfbc81076ae5639081c4f6fe2a16b3362bf185574572a1d0241f22266177df",
+      "children": [
+        "list",
+        "get",
+        "show",
+        "refresh-capabilities",
+        "create",
+        "update",
+        "delete"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "agent-config create",
+      "help": "Usage: lody agent-config create [options]\n\nCreate a new agent config\n\nOptions:\n  --agent-type <type>               Agent type identifier\n  --workspace <selector>            Target workspace id, slug, or name\n  --machine <idOrName>              Machine id or name; defaults to the current\n                                    machine\n  --name <name>                     Agent config name\n  --description <text>              Agent config description\n  --env <keyValue>                  Environment variable in KEY=VALUE form;\n                                    repeatable (default: [])\n  --env-file <path>                 Read environment variables from a file\n  --prompt <text>                   Default prompt prefix\n  --prompt-file <path|->            Read default prompt prefix from file or\n                                    stdin\n  --title-config-option <keyValue>  Title generation config option in KEY=VALUE\n                                    form; repeatable (default: [])\n  --json                            Print JSON output\n  --debug                           Enable debug output\n  -h, --help                        display help for command\n",
+      "sha256": "67d9774c7280cfd406f8332dc8829168de0465055bc2e277592b90fd386d98c3",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "agent-config delete",
+      "help": "Usage: lody agent-config delete [options] [idOrName]\n\nDelete an agent config\n\nArguments:\n  idOrName                Agent config id or name; falls back to\n                          LODY_AGENT_CONFIG_ID\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --json                  Print JSON output\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "9b11689a5b4419f05f46d00fa7e12b740391cd676db93ab92f07b915d2481634",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "agent-config get",
+      "help": "Usage: lody agent-config get [options] <id>\n\nRead one agent_config by stable id\n\nOptions:\n  --workspace <selector>  Workspace id, slug or name\n  --json                  Print JSON\n  --offline               Read cached catalogs; authorization still requires\n                          connectivity\n  -h, --help              display help for command\n",
+      "sha256": "22420942d942f70393c550eda0fc2c9f2cc65a1cd21e71feaba92f0a84729008",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "agent-config list",
+      "help": "Usage: lody agent-config list [options]\n\nList readable agent_config resources\n\nOptions:\n  --workspace <selector>  Workspace id, slug or name\n  --offline               Read cached catalogs; authorization still requires\n                          connectivity\n  --json                  Print JSON\n  --debug                 Enable debug output\n  --query <text>          Filter by id, name, description or project path\n  --limit <count>         Page size (1-100, default 20)\n  --cursor <cursor>       Continue the previous page with the same filters\n  --all-pages             Read every page\n  --machine <selector>    Machine id or name\n  -h, --help              display help for command\n",
+      "sha256": "a567997f82efb14df019b122fbba052ecd564ae6c76f640fa9ce842814f4a2d0",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "agent-config refresh-capabilities",
+      "help": "Usage: lody agent-config refresh-capabilities [options] [idOrName]\n\nRefresh ACP capabilities for an agent config on the current machine\n\nArguments:\n  idOrName                Agent config id or name; falls back to\n                          LODY_AGENT_CONFIG_ID\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --machine <idOrName>    Machine id or name; defaults to the current machine\n  --json                  Print JSON output\n  --jsonl                 Print JSON Lines output\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "90b545d64199460e061925e10883fcfa94bfea58103534443293578e2a713288",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "agent-config show",
+      "help": "Usage: lody agent-config show [options] [idOrName]\n\nShow an agent config; environment values are hidden by default\n\nArguments:\n  idOrName                Agent config id or name; falls back to\n                          LODY_AGENT_CONFIG_ID\n\nOptions:\n  --show-secrets          Include raw environment values in output; may expose\n                          credentials\n  --workspace <selector>  Target workspace id, slug, or name\n  --json                  Print JSON output\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "9b1b0ae2fd87353d29e03cb423629daf48cdd998f928fd4fcc4996c97800623e",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "agent-config update",
+      "help": "Usage: lody agent-config update [options] [idOrName]\n\nUpdate an existing agent config\n\nArguments:\n  idOrName                          Agent config id or name; falls back to\n                                    LODY_AGENT_CONFIG_ID\n\nOptions:\n  --workspace <selector>            Target workspace id, slug, or name\n  --name <name>                     Updated agent config name\n  --description <text>              Updated agent config description; pass\n                                    empty to clear\n  --env <keyValue>                  Environment variable in KEY=VALUE form;\n                                    repeatable (default: [])\n  --env-file <path>                 Read environment variables from a file\n  --unset-env <key>                 Remove an environment variable; repeatable\n                                    (default: [])\n  --prompt <text>                   Updated default prompt prefix; pass empty\n                                    to clear\n  --prompt-file <path|->            Read default prompt prefix from file or\n                                    stdin\n  --title-config-option <keyValue>  Title generation config option in KEY=VALUE\n                                    form; repeatable (default: [])\n  --clear-title-generation          Remove title generation settings\n  --json                            Print JSON output\n  --debug                           Enable debug output\n  -h, --help                        display help for command\n",
+      "sha256": "3a536b7b0613bdd190463cfbaa23854fa4d07dab7f35b091f1ea9b8e2996a690",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "agent-role",
+      "help": "Usage: lody agent-role [options] [command]\n\nInspect Agent Roles and propose creations or updates\n\nOptions:\n  -h, --help                  display help for command\n\nCommands:\n  list [options]              List readable agent_role resources\n  get [options] <id>          Read one agent_role by stable id\n  create [options]            Propose an Agent Role create; save the review\n                              card in Lody to apply it\n  update [options] <role-id>  Propose an Agent Role update; save the review\n                              card in Lody to apply it\n  help [command]              display help for command\n",
+      "sha256": "8ecf602d77708406e4bc25c0b5ff17a2fea080c3650ebf9c078a27ea4c418d78",
+      "children": [
+        "list",
+        "get",
+        "create",
+        "update"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "agent-role create",
+      "help": "Usage: lody agent-role create [options]\n\nPropose an Agent Role create; save the review card in Lody to apply it\n\nOptions:\n  --file <path>               JSON: name, description, promptPrefix, machineId,\n                              agentConfigId\n  --name <name>               Role name\n  --description <text>        Role description; empty string clears it\n  --prompt-prefix <text>      Role instructions; empty string clears them\n  --session <id>              Conversation for the proposal (defaults to\n                              LODY_SESSION_ID)\n  -w, --workspace <selector>  Workspace id or slug\n  --request-id <id>           Reuse this id when retrying\n  --json                      Output JSON\n  --debug                     Debug logging\n  --machine-id <id>           Machine hosting the Agent config\n  --agent-config-id <id>      Agent config to bind\n  -h, --help                  display help for command\n",
+      "sha256": "4870e45e9b7f185415982e0c28beb5e0381c298b22146cf602f53289056250d4",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "agent-role get",
+      "help": "Usage: lody agent-role get [options] <id>\n\nRead one agent_role by stable id\n\nOptions:\n  --workspace <selector>  Workspace id, slug or name\n  --json                  Print JSON\n  --offline               Read cached catalogs; authorization still requires\n                          connectivity\n  -h, --help              display help for command\n",
+      "sha256": "278a641a470a0dd47d93c03a1218223867bf8d91f96189c79d735c8ef81fa017",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "agent-role list",
+      "help": "Usage: lody agent-role list [options]\n\nList readable agent_role resources\n\nOptions:\n  --workspace <selector>  Workspace id, slug or name\n  --offline               Read cached catalogs; authorization still requires\n                          connectivity\n  --json                  Print JSON\n  --debug                 Enable debug output\n  --query <text>          Filter by id, name, description or project path\n  --limit <count>         Page size (1-100, default 20)\n  --cursor <cursor>       Continue the previous page with the same filters\n  --all-pages             Read every page\n  --machine <selector>    Machine id or name\n  -h, --help              display help for command\n",
+      "sha256": "829b703a5e4ff95fdcf41a8b0b1cd555b37287a5d14830aaca16a67004a61649",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "agent-role update",
+      "help": "Usage: lody agent-role update [options] <role-id>\n\nPropose an Agent Role update; save the review card in Lody to apply it\n\nOptions:\n  --file <path>               JSON patch: name, description, promptPrefix;\n                              empty strings clear optional fields\n  --name <name>               Role name\n  --description <text>        Role description; empty string clears it\n  --prompt-prefix <text>      Role instructions; empty string clears them\n  --session <id>              Conversation for the proposal (defaults to\n                              LODY_SESSION_ID)\n  -w, --workspace <selector>  Workspace id or slug\n  --request-id <id>           Reuse this id when retrying\n  --json                      Output JSON\n  --debug                     Debug logging\n  -h, --help                  display help for command\n",
+      "sha256": "88fccabb7fe1eada81bc0cc80e6a678ee7088ee688c69198d06a1b29a2598018",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "app",
+      "help": "Usage: lody app [options] [command] [path]\n\nOpen the Lody desktop app on a new chat with a local directory selected\n(registers it if needed)\n\nArguments:\n  path                    Local project directory to select (default: \".\")\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --json                  Print JSON output\n  -d, --debug             Enable debug output\n  -h, --help              display help for command\n\nCommands:\n  reset-cache [options]   Clear the desktop app's local cache on its next\n                          launch (use when its window is frozen)\n",
+      "sha256": "6780e008fc0532e42958673031759e02435eeb565f89a6040fb0ef28f888f64e",
+      "children": [
+        "reset-cache"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "app reset-cache",
+      "help": "Usage: lody app reset-cache [options]\n\nClear the desktop app's local cache on its next launch (use when its window is\nfrozen)\n\nOptions:\n  --hard       Erase all local data and sign out instead of only the\n               recoverable cache\n  --cancel     Disarm a reset that has not been applied yet\n  --json       Print JSON output\n  -d, --debug  Enable debug output\n  -h, --help   display help for command\n",
+      "sha256": "d36ae77c75b8a70060c51d310fade076d0d5869effd874612037e14d66fe690b",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "daemon",
+      "help": "Usage: lody daemon [options] [command]\n\nRun lody as a background daemon service\n\nOptions:\n  -h, --help       display help for command\n\nCommands:\n  start [options]  Start lody daemon in the background\n  stop             Stop the running lody daemon\n  status           Show daemon status\n  logs [options]   Show daemon logs\n  restart          Restart the lody daemon (stop if running, then start)\n  help [command]   display help for command\n",
+      "sha256": "9eca77e3002016f9c42d4296f9291607705305aa7f019ab05664096f8aa4564e",
+      "children": [
+        "start",
+        "stop",
+        "status",
+        "logs",
+        "restart"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "daemon logs",
+      "help": "Usage: lody daemon logs [options]\n\nShow daemon logs\n\nOptions:\n  -n, --lines <count>  number of lines to show (default: \"50\")\n  -h, --help           display help for command\n",
+      "sha256": "e6df6cc31be0f4aa5c53d77e8a633a76d142e134aa626dd86aa808155fe2741e",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "daemon restart",
+      "help": "Usage: lody daemon restart [options]\n\nRestart the lody daemon (stop if running, then start)\n\nOptions:\n  -h, --help  display help for command\n",
+      "sha256": "028dfd7550d87e32ff390e4762eaa005e0fd905669da31d0d96de6f7ab98441c",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "daemon start",
+      "help": "Usage: lody daemon start [options]\n\nStart lody daemon in the background\n\nOptions:\n  --auth <credential>    Connect with a CLI API key or machine connection token\n  --machine-name <name>  Machine name to register (defaults to hostname)\n  --skip-auth-check      Skip the backend connectivity and sign-in check before\n                         entering daemon mode\n  -h, --help             display help for command\n",
+      "sha256": "e7afb2ca676d1b976a526758a84d184515b0294f93ea7af74b1c3411eff47008",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "daemon status",
+      "help": "Usage: lody daemon status [options]\n\nShow daemon status\n\nOptions:\n  -h, --help  display help for command\n",
+      "sha256": "91bb457b978b8d1eebfc44a4b451af718e1469113c972d811a714f534f6d097e",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "daemon stop",
+      "help": "Usage: lody daemon stop [options]\n\nStop the running lody daemon\n\nOptions:\n  -h, --help  display help for command\n",
+      "sha256": "627f9eb907e5df2b4279f80ef36662d5bd917305957d4cfb85e0784d2c831460",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "export",
+      "help": "Usage: lody export [options] [outputDir]\n\nExport user-facing workspace session data\n\nArguments:\n  outputDir               Output directory for export files\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --all-workspace         Export all accessible workspaces\n  --no-images             Skip downloading image binaries\n  --offline               Read the local cache without syncing first\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "5ca1ec802169d50748e8a904d0f41ec2f1004f039d3071c98d370a86c1c826d6",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "feedback",
+      "help": "Usage: lody feedback [options] [feedback...]\n\nSend product feedback with account identity and basic CLI/OS information\n\nArguments:\n  feedback    Suggestion or problem report; options precede text; use -- before\n              text beginning with -; omit sensitive data\n\nOptions:\n  --stdin     Read feedback from stdin instead of command arguments\n  --json      Print JSON output\n  --debug     Enable debug output\n  -h, --help  display help for command\n",
+      "sha256": "ee2999492b2c7647137c955692b8fc5114f41b486c035d2f09fa5235ce86fe47",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "github",
+      "help": "Usage: lody github [options] [command]\n\nManage GitHub repositories linked to a workspace\n\nOptions:\n  -h, --help      display help for command\n\nCommands:\n  list [options]  List GitHub repositories linked to a workspace\n  help [command]  display help for command\n",
+      "sha256": "94478942c5b28aa54e03cc7d72074e38ee4dcddf44e6a12c417582bb029754f2",
+      "children": [
+        "list"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "github list",
+      "help": "Usage: lody github list [options]\n\nList GitHub repositories linked to a workspace\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --json                  Print JSON output\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "138b46e5eb012ed8939ff291e184355e7707be690ef77156e047ab0b333eae93",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "login",
+      "help": "Usage: lody login [options]\n\nLogin to Lody using device authorization flow or an API key\n\nOptions:\n  -d, --debug            enable debug output\n  --machine-name <name>  Machine name to register (defaults to hostname)\n  --auth <credential>    Log in with a CLI API key or machine connection token\n  -h, --help             display help for command\n",
+      "sha256": "05853b8dbad1a9606a9ce4010c46c0e0e4237abb7c56860617dc890381b39c12",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "logout",
+      "help": "Usage: lody logout [options]\n\nLogout from Lody and clear saved authentication\n\nOptions:\n  -d, --debug  enable debug output\n  -h, --help   display help for command\n",
+      "sha256": "9c5f7425f388ea44721ab4111591d9aa636b6d9ee8879b287c2009fb689ea9bc",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "machine",
+      "help": "Usage: lody machine [options] [command]\n\nInspect registered machines\n\nOptions:\n  -h, --help      display help for command\n\nCommands:\n  list [options]  List machines in a workspace\n  help [command]  display help for command\n",
+      "sha256": "38043c7cf24b3509cf7ce114cf949aa7660b0fff0b43434856994ea06c7ce8a7",
+      "children": [
+        "list"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "machine list",
+      "help": "Usage: lody machine list [options]\n\nList machines in a workspace\n\nOptions:\n  --query <text>              Filter by id, name, description or project path\n  --limit <count>             Page size (1-100, default 20)\n  --cursor <cursor>           Continue the previous page with the same filters\n  --all-pages                 Read every page\n  --workspace <selector>      Target workspace id, slug, or name\n  --online-only               Only include machines with a recent heartbeat\n  --online-status <state>     online, offline or unknown\n  --json                      Print JSON output\n  --include-acp-capabilities  Include acpCapabilities in JSON output\n  --include-agents            Include agent config summaries per machine\n  --debug                     Enable debug output\n  -h, --help                  display help for command\n",
+      "sha256": "93b676780aa602e0fd54067f837e5fec42d9c131f65e98bf144b86d1e2b39a86",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "mcp",
+      "help": "Usage: lody mcp [options] [command]\n\nManage workspace MCP servers\n\nOptions:\n  -h, --help                 display help for command\n\nCommands:\n  list [options]             List readable mcp resources\n  add [options] <name>       Add a workspace MCP server\n  set [options] <server>     Update a workspace MCP server\n  remove [options] <server>  Remove a workspace MCP server\n  help [command]             display help for command\n",
+      "sha256": "6d1039168fa98c66d6b3ebc8db2e9b998973ea4299d5311847d727125aa415a5",
+      "children": [
+        "list",
+        "add",
+        "set",
+        "remove"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "mcp add",
+      "help": "Usage: lody mcp add [options] <name>\n\nAdd a workspace MCP server\n\nArguments:\n  name                         Unique server name\n\nOptions:\n  --workspace <selector>       Target workspace id, slug, or name\n  --json                       Print JSON output\n  --debug                      Enable debug output\n  --offline                    Use the local catalog cache without refreshing\n                               it first\n  --command <command>          stdio executable\n  --arg <arg>                  stdio argument (repeatable)\n  --env <NAME=value>           stdio environment value (repeatable)\n  --env-passthrough <NAME>     Pass a variable from the target daemon\n                               environment (repeatable)\n  --url <url>                  Streamable HTTP endpoint\n  --bearer-token <token>       HTTP bearer token; supports ${VAR}\n  --header <Name:value>        HTTP request header (repeatable)\n  --description <description>  Server description\n  --default                    Select this server by default for new sessions\n  --no-default                 Do not select this server by default for new\n                               sessions\n  -h, --help                   display help for command\n",
+      "sha256": "3734016efe010ee8d6eaede49af6d46c958c711350a8acc4035027f17166cafd",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "mcp list",
+      "help": "Usage: lody mcp list [options]\n\nList readable mcp resources\n\nOptions:\n  --workspace <selector>  Workspace id, slug or name\n  --offline               Read cached catalogs; authorization still requires\n                          connectivity\n  --json                  Print JSON\n  --debug                 Enable debug output\n  --query <text>          Filter by id, name, description or project path\n  --limit <count>         Page size (1-100, default 20)\n  --cursor <cursor>       Continue the previous page with the same filters\n  --all-pages             Read every page\n  -h, --help              display help for command\n",
+      "sha256": "7c7e7b2c161bba31a67c0235902c8b0258199003809e3fc91b0bbf2769f9d911",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "mcp remove",
+      "help": "Usage: lody mcp remove [options] <server>\n\nRemove a workspace MCP server\n\nArguments:\n  server                  Server id or name\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --json                  Print JSON output\n  --debug                 Enable debug output\n  --offline               Use the local catalog cache without refreshing it\n                          first\n  -h, --help              display help for command\n",
+      "sha256": "d74d6334406a05189adaae931c852e19987f302a27b3f6c571abbe00558190c4",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "mcp set",
+      "help": "Usage: lody mcp set [options] <server>\n\nUpdate a workspace MCP server\n\nArguments:\n  server                       Server id or name\n\nOptions:\n  --workspace <selector>       Target workspace id, slug, or name\n  --json                       Print JSON output\n  --debug                      Enable debug output\n  --offline                    Use the local catalog cache without refreshing\n                               it first\n  --command <command>          stdio executable\n  --arg <arg>                  stdio argument (repeatable)\n  --env <NAME=value>           stdio environment value (repeatable)\n  --env-passthrough <NAME>     Pass a variable from the target daemon\n                               environment (repeatable)\n  --url <url>                  Streamable HTTP endpoint\n  --bearer-token <token>       HTTP bearer token; supports ${VAR}\n  --header <Name:value>        HTTP request header (repeatable)\n  --name <name>                New unique server name\n  --description <description>  Server description\n  --default                    Select this server by default for new sessions\n  --no-default                 Do not select this server by default for new\n                               sessions\n  -h, --help                   display help for command\n",
+      "sha256": "e983c8310610b0927236107eeed937027786237c0e2cc2f35f2e33a4d804780c",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "migrate",
+      "help": "Usage: lody migrate [options]\n\nImport a frozen OSS snapshot into an existing cloud workspace\n\nOptions:\n  --from-oss              Migrate local OSS records\n  --source <directory>    OSS data root (defaults to ~/.lody-oss)\n  --workspace <selector>  Explicit existing workspace id, slug or name\n  --yes                   Confirm upload without a prompt (requires\n                          --workspace)\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "5763ee291f3eea17d68e8f37f07093c4114441206197f2a0ed9a8156287239c5",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "operation",
+      "help": "Usage: lody operation [options] [command]\n\nInspect Operations on this machine\n\nOptions:\n  -h, --help      display help for command\n\nCommands:\n  list [options]  List Operations owned by a requester Session and the\n                  authenticated user\n  help [command]  display help for command\n",
+      "sha256": "a2435460ef948f224c80b91e7fa54adb19cbfe99df2edae90c32ba133d628324",
+      "children": [
+        "list"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "operation list",
+      "help": "Usage: lody operation list [options]\n\nList Operations owned by a requester Session and the authenticated user\n\nOptions:\n  --workspace <selector>  Workspace id, slug or name\n  --session <id>          Requester session id (defaults to LODY_SESSION_ID)\n  --state <state>         active or finished\n  --limit <count>         Page size (1-100, default 20)\n  --cursor <cursor>       Next page cursor\n  --json                  Print JSON\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "2deccc8e54e7d7c3a7f19bc971d1f2adb65c0eeda560462b8d1d968b48c8befd",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "project",
+      "help": "Usage: lody project [options] [command]\n\nManage local projects\n\nOptions:\n  -h, --help            display help for command\n\nCommands:\n  add [options] [path]  Add a local project directory\n  delete [options]      Delete local projects\n  list [options]        List local projects\n  help [command]        display help for command\n",
+      "sha256": "d8a28964d04b13a835395cd8e33ca27dd5bcab8f2d728a06499c8443676c8439",
+      "children": [
+        "add",
+        "delete",
+        "list"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "project add",
+      "help": "Usage: lody project add [options] [path]\n\nAdd a local project directory\n\nArguments:\n  path                    Local project directory path (default: \".\")\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --all-workspaces        Apply to all active workspaces\n  --json                  Output machine-readable JSON\n  -d, --debug             enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "5d23baec71a4217cb8fa57f484fa29dc2fe6b4191c1a684c622dfd32e57c287d",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "project delete",
+      "help": "Usage: lody project delete [options]\n\nDelete local projects\n\nOptions:\n  --json       Output machine-readable JSON\n  -d, --debug  enable debug output\n  -h, --help   display help for command\n",
+      "sha256": "a50ce67df6846ef58055de3e50554b966bcf4ff6d553f1fe72b7378fe8bc8d87",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "project list",
+      "help": "Usage: lody project list [options]\n\nList local projects\n\nOptions:\n  --query <text>          Filter by id, name, description or project path\n  --limit <count>         Page size (1-100, default 20)\n  --cursor <cursor>       Continue the previous page with the same filters\n  --all-pages             Read every page\n  --workspace <selector>  Remote workspace id, slug, or name\n  --machine <selector>    Remote machine id or name\n  --kind <kind>           Workspace catalog: local or github\n  --catalog               List the current workspace project catalog across\n                          machines\n  --json                  Output machine-readable JSON\n  -d, --debug             enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "1684858639f430ba9ddbbdf864c8a989435665f7573b18fe36306c2acf3f1325",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "review",
+      "help": "Usage: lody review [options] [command] [file]\n\nRender a .review.md into a self-contained HTML review and open it\n\nArguments:\n  file                   Path to a .review.md (or .review.json[.gz]) file to\n                         render\n\nOptions:\n  -r, --repo <repo>      Git repository directory (default:\n                         \"/workspace/mymcp-4-codexcloud\")\n  -o, --output <output>  Output HTML path (defaults to a file in the system\n                         temp dir)\n  --no-open              Do not open the generated HTML in a browser\n  -h, --help             display help for command\n\nCommands:\n  prompt                 Print the Code Review prompt that teaches an agent to\n                         write a .review.md\n",
+      "sha256": "cc8ed9d73d522db3b1f086488666d47cbf067ba9e177427ebad904edede78c1d",
+      "children": [
+        "prompt"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "review prompt",
+      "help": "Usage: lody review prompt [options]\n\nPrint the Code Review prompt that teaches an agent to write a .review.md\n\nOptions:\n  -h, --help  display help for command\n",
+      "sha256": "430cdbcd4ead43a40648b50a75807cfb4f4b856c2fdec4bc844fa62bf4b51af2",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "schedule",
+      "help": "Usage: lody schedule [options] [command]\n\nManage scheduled tasks. The target machine daemon owns execution.\n\nOptions:\n  -h, --help                      display help for command\n\nCommands:\n  list [options]\n  show [options] <schedule-id>\n  create [options]\n  edit [options] <schedule-id>\n  pause [options] <schedule-id>\n  resume [options] <schedule-id>\n  run [options] <schedule-id>\n  delete [options] <schedule-id>\n  help [command]                  display help for command\n",
+      "sha256": "dfd0ce7b33a7a68f4feefc73375ab600443bda9f1dd51128c27f3f069a6cf2fe",
+      "children": [
+        "list",
+        "show",
+        "create",
+        "edit",
+        "pause",
+        "resume",
+        "run",
+        "delete"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "schedule create",
+      "help": "Usage: lody schedule create [options]\n\nOptions:\n  -w, --workspace <workspace>  Workspace id or slug\n  --json                       Output JSON\n  --debug                      Debug logging\n  --file <path>                JSON draft: title, prompt, machineId, trigger,\n                               agent, project and policies\n  --request-id <id>            Stable idempotency key; reuse on retry\n  -h, --help                   display help for command\n",
+      "sha256": "3c9fbe76c819fbdd18b612b1e08eb43eff632e328f094e610e540ccf7bb5eef2",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "schedule delete",
+      "help": "Usage: lody schedule delete [options] <schedule-id>\n\nOptions:\n  -w, --workspace <workspace>  Workspace id or slug\n  --json                       Output JSON\n  --debug                      Debug logging\n  -h, --help                   display help for command\n",
+      "sha256": "fe6956a639825145287850792c0f185902d1cd1748ce6fe2dabd6e72814010ff",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "schedule edit",
+      "help": "Usage: lody schedule edit [options] <schedule-id>\n\nOptions:\n  -w, --workspace <workspace>  Workspace id or slug\n  --json                       Output JSON\n  --debug                      Debug logging\n  --file <path>                JSON draft: title, prompt, machineId, trigger,\n                               agent, project and policies\n  --request-id <id>            Stable idempotency key; reuse on retry\n  -h, --help                   display help for command\n",
+      "sha256": "86081088dbf67e3fba8a32dd102362431b79546032b03e9656067f784f217196",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "schedule list",
+      "help": "Usage: lody schedule list [options]\n\nOptions:\n  -w, --workspace <workspace>  Workspace id or slug\n  --json                       Output JSON\n  --debug                      Debug logging\n  --query <text>               Filter schedule titles\n  --limit <count>              Maximum results (1–100) (default: \"30\")\n  --offset <count>             Result offset (default: \"0\")\n  -h, --help                   display help for command\n",
+      "sha256": "1413aba5264f8ca53b327ad98e27134dfed8a9db2acaef7da987cb91d78a7616",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "schedule pause",
+      "help": "Usage: lody schedule pause [options] <schedule-id>\n\nOptions:\n  -w, --workspace <workspace>  Workspace id or slug\n  --json                       Output JSON\n  --debug                      Debug logging\n  --request-id <id>            Stable idempotency key; reuse on retry\n  -h, --help                   display help for command\n",
+      "sha256": "095f4fa6d15bd1f0fa98af791e866c1fede34bb957a864f2ff2ef731700340bf",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "schedule resume",
+      "help": "Usage: lody schedule resume [options] <schedule-id>\n\nOptions:\n  -w, --workspace <workspace>  Workspace id or slug\n  --json                       Output JSON\n  --debug                      Debug logging\n  --request-id <id>            Stable idempotency key; reuse on retry\n  -h, --help                   display help for command\n",
+      "sha256": "72c67bd1341997cf89ecd75cb9c6540a53c08fbde60fd6a62fea792c4fef91b3",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "schedule run",
+      "help": "Usage: lody schedule run [options] <schedule-id>\n\nOptions:\n  -w, --workspace <workspace>  Workspace id or slug\n  --json                       Output JSON\n  --debug                      Debug logging\n  --request-id <id>            Stable idempotency key; reuse on retry\n  -h, --help                   display help for command\n",
+      "sha256": "6993aa7e56ebbf40188efbf2e8825f6af1805d4729d28ab62c73e155700b4acd",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "schedule show",
+      "help": "Usage: lody schedule show [options] <schedule-id>\n\nOptions:\n  -w, --workspace <workspace>  Workspace id or slug\n  --json                       Output JSON\n  --debug                      Debug logging\n  -h, --help                   display help for command\n",
+      "sha256": "dac80468300322fd3dddc7340e25ffb7caebc80c3462a14878176567e319a656",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session",
+      "help": "Usage: lody session [options] [command]\n\nManage sessions without the web UI\n\nOptions:\n  -h, --help                            display help for command\n\nCommands:\n  create [options] [prompt]             Create a new session\n  chat [options] [sessionId] [prompt]   Send a new user prompt to an existing\n                                        session\n  cancel [options] [sessionId]          Cancel the current running turn for a\n                                        session\n  list [options]                        List sessions in a workspace\n  history [options] [sessionId]         Read visible session transcript history\n  observe [options] [sessionId]         Observe persisted Session state without\n                                        executing or marking messages read\n                                        (Cloud CLI)\n  show [options] [sessionId]            Show session metadata\n  status [options] [sessionId]          Show current session status\n  rename [options] [sessionId] [title]  Rename a session\n  archive [options] [sessionId]         Archive a session\n  restore [options] [sessionId]         Restore an archived session\n  recover-inbox [options] <sessionId>   Inspect a blocked local execution;\n                                        recover only after all its resources\n                                        are released\n  delete [options] [sessionId]          Permanently delete an archived session\n  help [command]                        display help for command\n",
+      "sha256": "7b1260fbbafc31a36ba6b47f4254c87d2584db725157c30d0879e47bf3631d5e",
+      "children": [
+        "create",
+        "chat",
+        "cancel",
+        "list",
+        "history",
+        "observe",
+        "show",
+        "status",
+        "rename",
+        "archive",
+        "restore",
+        "recover-inbox",
+        "delete"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "session archive",
+      "help": "Usage: lody session archive [options] [sessionId]\n\nArchive a session\n\nArguments:\n  sessionId               Session ID; falls back to LODY_SESSION_ID\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --json                  Print JSON output\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "19a5082e53c18f6a4493554f3d0737c97433229c8917d27ce87e353284cc03a3",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session cancel",
+      "help": "Usage: lody session cancel [options] [sessionId]\n\nCancel the current running turn for a session\n\nArguments:\n  sessionId               Session ID; falls back to LODY_SESSION_ID\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --turn-id <turnId>      Cancel only when this exact assistant turn is active\n  --json                  Print JSON output\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "40a9c1264c21b2f672f72ae17e37336d27c0ea4029ee72cf75dc8c9d10f58fde",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session chat",
+      "help": "Usage: lody session chat [options] [sessionId] [prompt]\n\nSend a new user prompt to an existing session\n\nArguments:\n  sessionId                   Session ID; falls back to LODY_SESSION_ID\n  prompt                      Prompt text\n\nOptions:\n  --workspace <selector>      Target workspace id, slug, or name\n  --mode <modeId>             ACP mode override\n  --model <modelId>           ACP model override\n  --config-option <keyValue>  ACP config option override in key=value form;\n                              repeatable (default: [])\n  --attach <path>             Attach a file from this machine; repeatable\n                              (default: [])\n  --prompt <text>             Prompt text\n  --prompt-file <path>        Read prompt text from file, or - for stdin\n  --json                      Print JSON output\n  --jsonl                     Print JSON Lines output\n  --wait                      Wait for the assistant turn to complete before\n                              exiting\n  --timeout <seconds>         Wait timeout in seconds for --wait\n  --debug                     Enable debug output\n  -h, --help                  display help for command\n",
+      "sha256": "b874bc9964671425b27fb2bee1ffd4aad505b2b6b2e4edef7665624763fd07a5",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session create",
+      "help": "Usage: lody session create [options] [prompt]\n\nCreate a new session\n\nArguments:\n  prompt                           Prompt text\n\nOptions:\n  --workspace <selector>           Target workspace id, slug, or name\n  --machine <idOrName>             Target machine id or name\n  --agent <idOrName>               Agent config id or name\n  --agent-config <idOrName>        Agent config id or name\n  --agent-role <idOrName>          Agent Role id or name; the Role overrides\n                                   --machine, --agent(-config), --mode, --model\n                                   and --config-option\n  --parent <sessionId>             Parent session whose work context should be\n                                   reused\n  --use-current-session-as-parent  Use LODY_SESSION_ID as the parent session\n  --title <title>                  Fixed session title (default: generated from\n                                   the prompt)\n  --repo <owner/repo>              GitHub repository to attach\n  --local-project <id|name|path>   Local project id, name, or root path\n  --worktree                       Create an isolated git worktree for\n                                   --local-project\n  --branch <name>                  Git branch to use for GitHub repos or local\n                                   git projects\n  --mode <modeId>                  ACP mode override\n  --model <modelId>                ACP model override\n  --config-option <keyValue>       ACP config option override in key=value\n                                   form; repeatable (default: [])\n  --env <keyValue>                 Deprecated per-session env override;\n                                   configure env on the agent config instead\n                                   (default: [])\n  --attach <path>                  Attach a file from this machine; repeatable\n                                   (default: [])\n  --prompt <text>                  Prompt text\n  --prompt-file <path>             Read prompt text from file, or - for stdin\n  --json                           Print JSON output\n  --jsonl                          Print JSON Lines output\n  --wait                           Wait for the assistant turn to complete\n                                   before exiting\n  --timeout <seconds>              Wait timeout in seconds for --wait\n  --history-backend <kind>         History backend for this session (default:\n                                   loro)\n  --debug                          Enable debug output\n  -h, --help                       display help for command\n",
+      "sha256": "b1ebe8ef9f63aacce8b3838ba8f24056b3eee5c997df68c93ab106351eaabf16",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session delete",
+      "help": "Usage: lody session delete [options] [sessionId]\n\nPermanently delete an archived session\n\nArguments:\n  sessionId               Session ID; falls back to LODY_SESSION_ID\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --json                  Print JSON output\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "1b0cb517470aaa901cd9b56803abc3dc4ebbbcc82dfbb63b45ae792c5ff49b99",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session history",
+      "help": "Usage: lody session history [options] [sessionId]\n\nRead visible session transcript history\n\nArguments:\n  sessionId               Session ID; falls back to LODY_SESSION_ID\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --limit <count>         Maximum number of transcript turns to print (default:\n                          50)\n  --all                   Include all transcript turns\n  --reverse               Print newest transcript turns first\n  --offline               Read the local cache without syncing first\n  --json                  Print JSON output\n  --jsonl                 Print JSON Lines output\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "fbc9d97c0a9e28d368f13a16e3d5a10fc8d89fbc019ebd3fccc7721fb8e49d97",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session list",
+      "help": "Usage: lody session list [options]\n\nList sessions in a workspace\n\nOptions:\n  --workspace <selector>   Target workspace id, slug, or name\n  --archived               Only include archived sessions\n  --all                    Include active and archived sessions\n  --opened-by <sessionId>  Only include sessions opened by this session id\n  --opened-by-current      Only include sessions opened by LODY_SESSION_ID\n  --query <text>           Filter session titles or ids\n  --machine-id <id>        Filter by machine id\n  --agent-config-id <id>   Filter by Agent configuration id\n  --agent-role-id <id>     Filter by Agent Role creation provenance\n  --limit <count>          Maximum number of sessions to print\n  --offline                Read the local cache without syncing first\n  --json                   Print JSON output\n  --debug                  Enable debug output\n  -h, --help               display help for command\n",
+      "sha256": "2c52eb872a0111e78e1e6c9866e38c65c794635be01fdf093268d3c8eafc3479",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session observe",
+      "help": "Usage: lody session observe [options] [sessionId]\n\nObserve persisted Session state without executing or marking messages read\n(Cloud CLI)\n\nArguments:\n  sessionId               Session ID; falls back to LODY_SESSION_ID outside\n                          --all\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --all                   Observe the selected Workspace catalog and active\n                          Sessions\n  --follow                Keep observing subsequent turns; requires --jsonl\n  --json                  Print the current snapshot as JSON\n  --jsonl                 Print versioned JSON Lines events\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "6b97a701b145dde646b12c624ed32172bf816dd9c0d31f9eef72ca2a589f1b80",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session recover-inbox",
+      "help": "Usage: lody session recover-inbox [options] <sessionId>\n\nInspect a blocked local execution; recover only after all its resources are\nreleased\n\nArguments:\n  sessionId                     Blocked Session ID\n\nOptions:\n  --machine <machineId>         Local machine ID owning the SQLite store\n  --workspace <workspaceId>     Exact workspace ID\n  --execution <executionId>     Exact blocked execution ID to recover\n  --confirm-resources-released  Attest that ALL old resources, including\n                                unrecorded processes, are released\n  -h, --help                    display help for command\n",
+      "sha256": "4f1ab4d8492ae455e44b165a20d0f9ae8185ccc3db081be227634275d23683de",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session rename",
+      "help": "Usage: lody session rename [options] [sessionId] [title]\n\nRename a session\n\nArguments:\n  sessionId               Session ID; falls back to LODY_SESSION_ID\n  title                   New session title\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --title <title>         New session title\n  --json                  Print JSON output\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "25ba57c3484b34db15f5a12f6631c8c75aaaee8511be2bc93205bd38064b3d6f",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session restore",
+      "help": "Usage: lody session restore [options] [sessionId]\n\nRestore an archived session\n\nArguments:\n  sessionId               Session ID; falls back to LODY_SESSION_ID\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --json                  Print JSON output\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "b306806037a5cf0d2c820e928066f92f2b2d5b73460840adf3b997742fa7dba9",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session show",
+      "help": "Usage: lody session show [options] [sessionId]\n\nShow session metadata\n\nArguments:\n  sessionId               Session ID; falls back to LODY_SESSION_ID\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --offline               Read the local cache without syncing first\n  --json                  Print JSON output\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "6b30d216affadd2f5eafa9a5acf37078a5cfec4714fa8bd93d43b1aa0fd208bf",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "session status",
+      "help": "Usage: lody session status [options] [sessionId]\n\nShow current session status\n\nArguments:\n  sessionId               Session ID; falls back to LODY_SESSION_ID\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --offline               Read the local cache without syncing first\n  --json                  Print JSON output\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "8110a64bbe8d1a4481ef91d82c155575e9512c94d2edfe85b5b940fcb07529cd",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "start",
+      "help": "Usage: lody start [options]\n\nStart agent service in native mode\n\nOptions:\n  --machine-name <name>   Machine name to register (defaults to hostname)\n  --cli-types <types...>  Specify CLI types to register: `kimi`, `grok`,\n                          `claude`, or `codex`\n  --debug                 enable debug output\n  --heartbeat-log         output current timestamp every 5 seconds\n  --auth <credential>     Connect with a CLI API key or machine connection\n                          token\n  -h, --help              display help for command\n",
+      "sha256": "3010d6dc8ca2d6507fd58b29451afbd262e12fba3e376f5dbcf8e1eee1728d27",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "sync",
+      "help": "Usage: lody sync [options]\n\nSync workspace Loro data to the local cache\n\nOptions:\n  --workspace <selector>  Target workspace id, slug, or name\n  --all-workspace         Sync all accessible workspaces\n  --concurrency <count>   Maximum number of documents to sync concurrently\n                          (default: 4)\n  --json                  Print final JSON summary\n  --jsonl                 Print JSON Lines progress events and final summary\n  --debug                 Enable debug output\n  -h, --help              display help for command\n",
+      "sha256": "e3e1996c841e72c853481aebd2dd4a56c463a6e60c31d2f3c11d89d32f36d344",
+      "children": [],
+      "exit_code": 0
+    },
+    {
+      "command": "workspace",
+      "help": "Usage: lody workspace [options] [command]\n\nManage workspaces\n\nOptions:\n  -h, --help      display help for command\n\nCommands:\n  list [options]  List accessible workspaces\n  help [command]  display help for command\n",
+      "sha256": "434ae04811b9cbc292c21cbfbdd5559b89f10ad17c309366fd8054246cd49df8",
+      "children": [
+        "list"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "workspace list",
+      "help": "Usage: lody workspace list [options]\n\nList accessible workspaces\n\nOptions:\n  --json      Print JSON output\n  --debug     Enable debug output\n  -h, --help  display help for command\n",
+      "sha256": "8f035998fb9a5e52b3971007858bf938bbcb4b67ebabb2ee0175698e5bcfc14b",
+      "children": [],
+      "exit_code": 0
+    }
+  ]
+}

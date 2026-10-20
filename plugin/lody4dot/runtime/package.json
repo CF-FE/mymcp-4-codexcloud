@@ -1,0 +1,13 @@
+{
+  "name": "lody4dot-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "lody": "0.107.2"
+  },
+  "overrides": {
+    "lody": {
+      "tinypool": "2.1.2"
+    }
+  }
+}
