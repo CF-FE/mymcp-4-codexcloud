@@ -20,6 +20,8 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 仓库结构检查无需安装第三方依赖，也没有公共服务需要启动。运行单个 MCP 时需按其 README 准备依赖和配置。后续导入按照 [导入步骤](docs/architecture.md#导入已有插件) 迁移，并在此补充条目入口。
 
+规划中的插件：[lody4dot 方案](docs/lody4dot-plan.md)，帮助 agent 使用 Lody，并支持 Codex 云端安装。目前仅完成方案，尚未实现或安装。
+
 ## 开发与验证
 
 1. 先阅读目标目录的 README，新增 `mcp/<id>/`、`skill/<id>/` 或 `plugin/<id>/`。
