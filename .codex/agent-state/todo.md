@@ -14,12 +14,12 @@
 | [T06](../../docs/lody4dot-development.md#t06实现显式认证适配) | 显式认证适配 | T05 | done | [诊断与认证验证](../../docs/lody4dot-validation.md)：显式模式、私密state、假凭证不回显通过；真实login/verify-only已通过，不误报机器注册 |
 | [T07](../../docs/lody4dot-development.md#t07实现自包含构建与云环境接入) | 自包含包与云接入 | T03、T04、T05、T06 | done | [分发与云配置](../../docs/lody4dot-validation.md)：22文件移位安装通过；草稿保存已确认，用户随后确认已发布；实际加载未验 |
 | [T08](../../docs/lody4dot-development.md#t08完成无账户集成与分发回归) | 无账户集成验证 | T07 | done | [无账户验收](../../docs/lody4dot-validation.md)：48项条目测试加8项原仓库测试通过，移位CLI安装及inspect通过 |
-| [T09](../../docs/lody4dot-development.md#t09完成干净云任务加载安装和真实发现) | 真实云端加载、安装、发现 | T08；宿主、身份、网络、工作区 | blocked | [真实目录](../../docs/lody4dot-validation.md)：revision5分片规则已生效，真实授权、完整目录、metadata及定点persisted观察通过；仍缺新云任务加载回执及跨任务私密状态边界验证 |
+| [T09](../../docs/lody4dot-development.md#t09完成干净云任务加载安装和真实发现) | 真实云端加载、安装、发现 | T08；宿主、身份、网络、工作区 | blocked | [发布后复验](../../docs/lody4dot-validation.md)：0.1.3正式源码/启动说明一致，无草稿；新私密state先未认证再真实授权，完整目录及persisted观察通过；仍缺[独立新云任务回执](../../docs/lody4dot-fresh-task-acceptance.md)，原生注册不是该路线必选项 |
 | [T10](../../docs/lody4dot-development.md#t10验证-agent-任务能力与受控执行闭环) | agent 场景与真实任务 | T09已验证的发现；测试目标、执行凭证 | done | [远端验收](../../docs/lody4dot-validation.md)：用户授权已有Agent；无控制端host的既有远端Codex create/chat两个回合completed，persisted/synced；Agent二次读回字节及challenge由控制端校验匹配，不冒称直接FS读取 |
-| [T11](../../docs/lody4dot-development.md#t11补齐高级能力的场景与平台边界) | 高级场景与支持矩阵 | T10 | in_progress | 高级参考与70路径导航已覆盖；取消、Role/MCP/调度等仍逐项保留未实测，不从本次Codex成功扩展推论 |
-| [T12](../../docs/lody4dot-development.md#t12交付复现与支持范围确认) | 复现与交付 | T10、T11 | blocked | 远端基本闭环通过；T09新云任务加载与T11高级场景未完成，不标整体交付完成 |
+| [T11](../../docs/lody4dot-development.md#t11补齐高级能力的场景与平台边界) | 高级场景与支持矩阵 | T10 | done | [支持矩阵](../../docs/lody4dot-support-matrix.md)覆盖20根/70路径，列明高级只读实测、Review上游artifact失败、条件支持及未运行项；完成的是支持边界与场景覆盖，不冒称全部高级业务已运行 |
+| [T12](../../docs/lody4dot-development.md#t12交付复现与支持范围确认) | 复现与交付 | T10、T11 | blocked | 分发、远端基本闭环和支持边界已复核；仍缺T09独立新云任务加载回执，不标整体交付完成 |
 
-当前首项：T09的新云任务加载回执及状态边界，T11高级场景可独立推进。已有token和分片网络无需重配；T10已通过指定已有远端Codex的基本任务闭环。本机只读限制不再是远端派发的阻塞；不启动覆盖全部工作区的host，不把当前对话演练冒充新云任务自动加载。个人workspace选择保留。
+当前首项：T09独立新云任务的读取与组件状态回执；当前工具不能代建该任务，按[验收流程](../../docs/lody4dot-fresh-task-acceptance.md)补齐后继续T12。已有token、网络、0.1.3正式源码和启动说明无需重配或重复发布；T10远端闭环与T11支持矩阵已完成。本机只读限制不阻塞远端派发；不启动覆盖全部工作区的host，不把当前对话演练冒充新云任务自动加载。个人workspace选择保留。
 
 后续状态为 `in_progress / blocked / done`。blocked 需注明具体前提及仍可推进的独立项；done 必须链接实际结果与未运行项。任务完成不等于整体发布完成，能力缺口不得被结构检查或 fixture 通过掩盖。
 
@@ -62,3 +62,13 @@
 没有新增机器、Agent配置、项目或Role，没有启动控制端host或影响其他工作区。已有用户会话未被操作；仅保留本次新建验收会话和临时产物。取消、其他Agent/平台、长期worker和高级操作仍未实测。T10的远端结果独立成立，T09新云任务加载仍须另验。
 
 0.1.3的56项回归、结构检查、自包含构建和ZIP完整性通过，已生成不含身份的验收产物包；本轮私密认证state已清理。更正后的start_skill草稿已确认saved/requires_publish=true，仅供后续任务复用，未重配网络或变量；当前验收不再等待环境发布。原生插件注册、新云任务读取回执和高级场景仍分别留在T09/T11。
+
+## 0.1.3正式发布后的复验
+
+正式配置无draft，仓库ref=a2e6796，start_skill与checkout逐字一致；现有token和网络均ready/enforced，无需再次发布相同配置。cloud-install退出0，56项测试、同锁复用和inspect通过。新0700 state在登录前verify-only预期authentication失败，显式login后真实control/完整机器目录通过；只读重查自有验收会话为persisted/synced/completed，无activeTurns。认证state已清理，没有创建新模型任务或改远端资源。
+
+高级只读MCP/Role/GitHub/Schedule查询通过，当前结果均为空；Operation只代表新controller本机store及自有requester，不能当全局空操作。Review真实渲染退出1/noHTML，已定位固定Viewer0.107.2官方artifact缺失；其他版本虽SRI通过但模板hash不匹配，未使用或放宽校验。具体条件与证据见支持矩阵和验证记录。
+
+当前宿主工具没有新建/附着独立云任务的入口；子agent或同实例发布不冒充新任务加载。最小外部回执流程已写[新任务验收](../../docs/lody4dot-fresh-task-acceptance.md)。没有重存已发布配置或要求用户重新添加token；本轮只更新仓库中的验收文档。
+
+T11按开发契约完成支持范围和场景覆盖：20根/70路径数量、来源、实测和条件边界已逐项核对，独立复核通过。Review保留明确上游阻塞，取消等未运行项不改成通过。整体交付仍由T12受T09新任务实证约束。

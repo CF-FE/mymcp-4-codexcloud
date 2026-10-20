@@ -33,9 +33,11 @@ dist/lody4dot/
 - CLI 依赖与稳定入口在 `/workspace/.tools/lody4dot/`，位于 checkout 外；不与登录态混合。
 - 安装器只准备 CLI，不自动登录、注册机器或启动 daemon；doctor 默认只读。
 - installer 使用自有 marker、版本目录、验证后原子切换的 `current` 指向和稳定 `bin/lody`；失败保留旧指向。安装目录内部受控链接与分发包的包外链接是不同边界。
-- 认证仅使用 `LODY_CLI_TOKEN`，显式调用已核实的登录入口；本次任务进程尚未观察到此变量。
+- 认证仅使用 `LODY_CLI_TOKEN`，显式调用已核实的登录入口。T01初期未观察到变量；后续已安全注入且真实授权通过，当前证据见[验证记录](lody4dot-validation.md)，不沿用早期缺失结论。
 - 查询/观察和 create/chat/cancel 的运行进程前提分开，内置 MCP 需要实际注入的上下文。
 - 默认状态和缓存目录需在允许写入的位置；不改变继承的代理和 CA，不禁用验证。
+
+0.1.3的正式发布源码和启动说明已核实；新任务加载仍按[独立任务验收](lody4dot-fresh-task-acceptance.md)取得实际回执。发布确认不能替代该回执，也不要求为此再次发布相同配置。
 
 ## 来源
 

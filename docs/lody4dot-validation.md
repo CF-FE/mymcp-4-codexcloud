@@ -152,6 +152,22 @@ doctor 0.1.1 增加显式 `--workspace` 目录探测，执行原生 machine list
 
 已清理本轮0700私密认证state，保留全局token绑定；本次新建远端会话和验收临时文件保留用于追溯，未操作用户既有会话或项目。修正后的完整云启动说明已由后端确认status=saved、requires_publish=true；只更新start_skill，网络、凭证及安装脚本均未重配。该草稿供后续云任务复用，仍需环境设置中的发布；当前远端验收结果不依赖再次发布。
 
+## 0.1.3 发布后的复验与高级能力边界
+
+用户确认环境发布后，正式配置已无草稿，仓库ref为`a2e67962cba7cfdcb2e4c01fcec5a9bc644d0248`；start_skill与该checkout的启动说明逐字相同，SHA-256为`bb1e9001744505d3c250097e9eb42f6df5c0a831f67dd90e20935c6e52ba5811`。现有网络enforced、LODY_CLI_TOKEN ready/present，无待注入变量；网络spec_revision/observed_spec_revision仍均为5，不能由该编号未变推断源码或启动说明发布失败。没有重存配置、添加变量或再次制造待发布草稿。
+
+完整cloud-install退出0：56项测试、同锁安装复用与inspect通过，CLI仍为0.107.2。前轮私密运行记录已不在当前/tmp；本轮另建0700 state，登录前verify-only退出4、类别authentication，随后显式login退出0并真实认证。control+完整机器目录退出0、machine_count=2。通过精确标题重新发现本次自有验收会话，发布后只读observe退出0、persisted/synced、latestTurn.completed、activeTurns为空。没有新建模型任务、操作用户既有会话或启动控制端daemon；本轮state已清理。
+
+进一步真实只读查询均原始退出0：MCP和Role完整目录为0项、hasMore=false；GitHub已链接仓库为0项；Operation查询仅针对当前新私密本机store和自有requester，0项、hasMore=false，不能据此推断远端机器没有Operation。Schedule list使用offset=0、limit=100，返回`schedules=[]、matched=0`，未创建、暂停或运行调度。
+
+Schedule stdout同样含两条精确Streams消息，但其JSON没有workspaceId。本次按请求中的确切工作区核对两种消息，要求唯一完整JSON及准确schema后读取，未将通用目录解析失败当空列表，也未放宽doctor账户/机器解析器。非空列表须依据nextOffset续页，不套用目录的cursor或all-pages。
+
+Review做了无账户真实渲染尝试：依据原生review prompt编写覆盖a2e6796及其parent间15个变更文件的报告，使用--no-open，子进程移除LODY_CLI_TOKEN。报告/Git阶段无diagnostics，但Viewer下载失败，原始退出1，未生成HTML。CLI要求`lody-code-review-viewer@0.107.2`及SHA-256 `d1ba5702aa0bd441b40492bd916d6412f8b970e92683f7073878a36efbdb0649`；官方registry版本端点和jsDelivr文件均404。官方latest 0.81.1的包SRI通过，但模板哈希不匹配，未用于渲染，未改期望哈希或关闭TLS。
+
+这是上游匹配产物缺失，不能通过重复发布环境或只增加fallback域名修复。只能等待官方匹配文件，或由公开LODY_REVIEW_VIEWER指定与CLI固定哈希完全相同的文件后重试；不使用其他模板冒称成功。报告和脱敏摘要留在忽略的cache；临时state已清理。全部高级能力与条件见[支持矩阵](lody4dot-support-matrix.md)。
+
+当前工具无法创建/附着独立云任务，因此发布确认和本次当前实例复验仍不等同新任务自动接入。剩余外部步骤见[新任务验收](lody4dot-fresh-task-acceptance.md)；既定路线是start_skill云接入，原生插件注册单独保留未验，不作为该路线的额外必选门槛。
+
 ## 复现命令
 
 在仓库根目录运行：

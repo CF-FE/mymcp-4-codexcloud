@@ -22,6 +22,8 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安装、只读诊断、显式认证和自包含打包。当前 Linux 云机已验证安装、真实授权和完整目录；通过已有远端 Codex Agent 完成了创建、执行、继续验证和持久化观察，并校验 Agent 二次读回的产物字节。控制端无需本机 daemon，56 项回归测试通过。宿主新任务加载仍需回执；本机 Codex 执行的只读状态限制单独保留。见 [产品方案](docs/lody4dot-plan.md)、[开发契约](docs/lody4dot-development.md)、[验证记录](docs/lody4dot-validation.md) 和 [任务队列](.codex/agent-state/todo.md)。
 
+0.1.3的正式环境配置与源码、启动说明已核实；具体实测、条件支持和未运行项见[支持矩阵](docs/lody4dot-support-matrix.md)。Review目前受上游匹配Viewer缺失限制；[新云任务接入验收](docs/lody4dot-fresh-task-acceptance.md)仍需独立任务回执，不重复发布相同配置。
+
 ## 开发与验证
 
 1. 先阅读目标目录的 README，新增 `mcp/<id>/`、`skill/<id>/` 或 `plugin/<id>/`。
