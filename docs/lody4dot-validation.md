@@ -58,7 +58,7 @@ python3 plugin/lody4dot/scripts/install.py --prefix /workspace/.tools/lody4dot -
 
 10 项构建 fixture 验证移位资源与精确哈希、必需 common、缺资源、包外引用、敏感/额外文件、符号链接、未知输出保护及切换失败恢复。独立代码审查发现的 common 必需依赖漏检已修复，并增加回归测试。
 
-标准命令现递归覆盖 45 项 lody4dot 测试及 8 项原仓库测试，共 **53 项通过**；结构检查为 `mcp=1 skill=1 plugin=1`。独立 worker 检查不计入这 53 项。
+0.1.1 阶段的标准命令覆盖 45 项 lody4dot 测试及 8 项原仓库测试，共 **53 项通过**；结构检查为 `mcp=1 skill=1 plugin=1`。独立 worker 检查不计入这 53 项。本次 0.1.2 的新增验证见下文。
 
 完整执行 `.codex/cloud-install.sh` 退出 0，实际完成这些测试、同锁安装复用和离线 inspect，未做认证或启动服务。
 
@@ -114,9 +114,27 @@ doctor 0.1.1 增加显式 `--workspace` 目录探测，执行原生 machine list
 
 本次测试身份只写到新建的0700私密临时目录，credentials.json实测0600；保存新网络草稿前已删除整个自有测试state，保留全局安全注入的变量绑定。没有把身份放入依赖或分发物，也没有证明平台可私密跨任务恢复身份。
 
-目录、观察和受控任务需待该服务规则生效后继续。新增规则不是重复添加原来的 token 或四个域名；T09 保留未完成，用户已选工作区无需重新询问。
+当时目录、观察和受控任务需待该服务规则生效后继续。新增规则不是重复添加原来的 token 或四个域名；用户已选工作区无需重新询问。以下记录本次规则生效后的结果。
 
 后续继续验证的发布传播、Codex 运行时与 host 范围见 [运行前提补充](lody4dot-runtime-findings.md)。该次独立准备没有真实模型任务结果。
+
+## 分片规则生效与真实目录（0.1.2）
+
+同一运行实例的 spec_revision/observed_spec_revision 更新为 **5**，observations_current=true，已包含 `*.streams-api-x.loro.dev`。正式配置无新草稿或待注入变量；现有全局 token 已可用。api/control-b/presence 的无凭证 HTTPS 请求不再遭 CONNECT 拒绝，curl 均退出 0，根路径 404。
+
+新建 `0700` 私密任务状态后，真实登录和工作区查询再次通过。选定个人工作区的原生 machine list 全页查询退出 0、2 台机器、hasMore=false；agent-role list 确实为空，agent-config list 为 2 项，工作区目录中 `kind=local` 的项目为 1 项。没有把解析失败或无权限当作空目录。
+
+原生 0.107.2 的目录 JSON 前后夹有同工作区的 `Remote Streams transport attached/detached` 日志。已定位发布源码中的两条精确消息及 compact JSON 输出位置；仅兼容唯一完整 JSON 及这两种同工作区消息，保留字段和分页校验。未知日志、跨工作区消息、多 JSON 和截断响应继续失败；stderr 仅提示忽略条数。没有采用任意截取最后一行或忽略全部非 JSON 的处理。独立差异审查通过。
+
+修复后的真实 `doctor --profile control --connect --workspace ... --json` 退出 0：account authenticated、workspace_count=2、workspace_catalog pass、machine_count=2、all_pages=true、has_more=false；local_runtime 和 task_execution 仍为 not_run。21 项诊断测试及全部 **56 项**仓库测试通过。
+
+真实 `session list --limit 5 --json` 退出 0，返回 1 个未归档会话；这是有界查询，不代表全量历史。`session observe --all --json` 退出 0，返回 2 个 synced/source=metadata 快照。另一个 agent 按 cloud-start → SKILL → discovery/sessions/compatibility 及准确帮助独立完成只读场景：完整机器目录 2 台 online、Role 确实为空；定点观察已有会话退出 0、ok=true、freshness=synced、source=persisted，存在 latestTurn。仅记录字段及状态，没有输出业务文本或标识，没有向已有会话发消息或取消任务。
+
+这证明当前技能导航和真实发现/观察可用；all 的 metadata 不能冒充 persisted，已有会话的 persisted 读取也不能证明本次创建、模型执行或产物成功。agent 被提供了入口，不能证明新云任务自动加载。本机 daemon status 退出 1 且明确未运行；未启动 host 或建立测试会话。
+
+当前剩余验收是新云任务的技能读取回执、私密状态跨任务边界，以及真实受控执行。已按官方大小/哈希下载并运行 managed Codex 0.160.1 的版本检查，但 bundled ACP 初始化仍失败；具体结果与 host 作用于全部可见工作区的限制见 [运行前提](lody4dot-runtime-findings.md)。不再要求重新配置 token 或重复发布已生效的分片规则。
+
+完整 `.codex/cloud-install.sh` 退出 0，56 项测试、同锁复用安装和离线 inspect 通过；脚本不登录或启动服务。0.1.2 自包含产物构建通过，直接从产物运行真实 control+完整目录检查也退出 0。`dist/lody4dot-0.1.2.zip` 共 23 文件、69,005 字节，解压完整性通过；SHA-256 为 `bf8d2d1fe0b27486d0789939aad494b8051f1614523d4ecda0e7358857934626`，receipt SHA-256 为 `e61149fc1653782fcff61d2cd6a1943bccb26f1a092eb285931070c20f03a95e`。产物保留在忽略目录，不提交为源码。结束后已删除本轮自有私密认证 state；全局安全注入变量保留，没有新建环境草稿或把登录态放入快照。
 
 ## 复现命令
 

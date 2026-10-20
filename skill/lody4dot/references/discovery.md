@@ -21,6 +21,12 @@ lody mcp list --workspace WORKSPACE_ID --json
 
 支持 `--json` 的查询优先读取结构化结果；保留 stderr 的错误类别，不能把空 stdout 当空目录。各目录的机器、项目等专属数组别名不是新的独立查询。对于 `operation` 等目录不要假定它们也支持 `--all-pages`，查具体帮助。
 
+## 0.107.2 的目录 JSON 兼容
+
+部分目录命令虽退出 0，仍会在完整 JSON 前后向 stdout 输出 `[WORKSPACE_ID] Remote Streams transport attached/detached`。这是已核实的版本行为；会话命令另有 stderr 路由，不能假定所有命令相同。
+
+自带 doctor 已做窄兼容：先严格解析整个 JSON，必要时只接受一个完整单行 JSON 及同一 workspace ID 的上述两种精确消息；字段及分页完成条件继续验证。其他日志、多个 JSON、跨工作区前缀、截断响应都应报错。不要任意取最后一行或把解析失败当空目录；不回显原始日志中的身份或凭证。
+
 ## 本机目录与工作区目录
 
 不带工作区/catalog 选项的 `project list` 保留本机 daemon 项目列表行为。需要从未运行本机 daemon 的客户端查看工作区项目时，使用明确的工作区目录路径。工作区目录可包含已授权机器的本地项目和已启用 GitHub 仓库；`--machine` 限制为该机器本地项目。

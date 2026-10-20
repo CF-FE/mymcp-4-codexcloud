@@ -40,6 +40,8 @@ python3 plugin/lody4dot/scripts/doctor.py --profile control --connect --workspac
 
 当前部署还会返回 Loro Streams 网关与分片后缀 `streams-api-x.loro.dev`。实测 `api`、`control-b`、`control-c`、`presence` 子域在只放行四个 Lody 域时被 CONNECT 403 拦截。源码的控制/数据/写入/presence 分片会使用同一后缀；云网络需包含 `*.streams-api-x.loro.dev`，不以只读账户查询成功替代该链路验证。该后缀属于本次实际返回值，部署变化时应重新核实。
 
+`0.107.2` 的部分目录命令会在 JSON 前后输出同工作区的 `Remote Streams transport attached/detached` 诊断行。工具仅识别这两种精确消息及唯一完整 JSON，仍拒绝未知输出、混合工作区和多个 JSON；安全提示写 stderr，不回显日志或身份。账户与完整目录在本次云机已实测通过。
+
 状态通过 Lody 支持的 `LODY_DATA_DIR` 分离；身份不进入插件包和共享环境快照。不修改 `HOME` 或 `CODEX_HOME` 绕过受保护的宿主配置。云端启动说明应显式读取技能入口并运行 doctor；保存说明后仍需要新任务提供实际加载回执。
 
 ## 自包含插件包
@@ -76,3 +78,5 @@ python3 scripts/check_repository.py
 ```
 
 离线测试验证工具行为和分发边界，不能代替真实账户、长连接、宿主加载或任务产物验收。完整命令资料的帮助证据也不等于全部业务功能已经实测。当前实现进度和真实验证缺口统一记录在仓库的 `.codex/agent-state/todo.md`。
+
+`0.1.2` 修复了原生 Streams 诊断日志导致目录 JSON 误报的问题。当前云机的安装、真实授权、完整目录和已有会话的持久化观察已通过；本机 Codex ACP 初始化仍遇到只读状态写入错误，未通过真实任务验收。host 还会登记凭证可见的全部工作区，不能把任务的 workspace 参数当成 host 范围限制；详见技能的兼容性参考。

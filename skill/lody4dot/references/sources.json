@@ -111,7 +111,7 @@
         "presence.streams-api-x.loro.dev"
       ],
       "network_rule": "*.streams-api-x.loro.dev",
-      "note": "规则只涵盖当前服务返回的分片后缀；并未验证放行后的真实目录、观察或任务成功。"
+      "note": "先前精确hostname探测确认CONNECT403；本次分片规则生效后真实完整机器目录与会话元数据观察通过，未验证任务执行。后缀仅涵盖当前服务返回路由。"
     },
     {
       "id": "codex-runtime-and-host-scope",
@@ -119,8 +119,8 @@
       "retrieved_at": "2026-10-20",
       "version_scope": "0.107.2",
       "scope": "resolveBuiltinACPProcessLaunch、mergeACPProcessEnv、ManagedAgentRuntimeManager、LodyFleet.startWorkspaceSubscription/applyRemoteWorkspaceList、prepareCodexHomeEnv；builtin managed版本及host全工作区订阅边界",
-      "verification": "static_source_verified",
-      "note": "adapter --version实测1.12.0；managed0.160.1仅HEAD200与源码hash/size核实，未下载执行；不据此宣称模型任务可用。"
+      "verification": "static_source_and_sanitized_runtime_diagnostic",
+      "note": "adapter --version实测1.12.0；managed0.160.1官方artifact大小/hash匹配，安全解包后--version通过；bundled ACP initialize仍RPC1001，单独SQLite目录重试仍read-only；没有会话/模型/host或官方安装完成标记。"
     },
     {
       "id": "codex-sqlite-config",
@@ -129,6 +129,15 @@
       "version_scope": "Codex0.163.0，另核实0.160.1相同配置字段",
       "scope": "sqlite_home/CODEX_SQLITE_HOME与强制配置边界；独立SQLite目录不能代替日志/rollout可写性或真实ACP初始化",
       "verification": "official_source_verified"
+    },
+    {
+      "id": "codex-installation-id-write",
+      "url": "https://github.com/openai/codex/blob/rust-v0.160.1/codex-rs/core/src/installation_id.rs#L17",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "Codex0.160.1",
+      "scope": "app-server初始化在SQLite后无条件resolve_installation_id；以read/write/create打开CODEX_HOME/installation_id，独立sqlite_home/log_dir/cwd不能改变该路径",
+      "verification": "official_source_and_readonly_filesystem_metadata",
+      "note": "本次托管home所在文件系统只读且installation_id不存在；未读取ID值或认证。不能据此泛化其他平台均不可执行。"
     }
   ],
   "known_differences": [
@@ -143,6 +152,12 @@
       "topic": "机器身份与注册",
       "website": "官网将登录与机器注册连写；0.107.2 的不同授权路径有差异",
       "resolution": "API-key路径只validateToken、获取稳定本机ID并saveAuthInfo；远端机器注册/在线另验，配对和设备授权仍有各自连接副作用。"
+    },
+    {
+      "command": "machine list / agent-config list / agent-role list / project list",
+      "topic": "stdout诊断与JSON",
+      "website": "原生JSON用于结构化结果，但0.107.2部分目录命令未将Streams attach/detach日志路由至stderr",
+      "resolution": "源码Lody.attachStreamsTransport/detachStreamsTransport的同workspace精确日志可夹在compact JSON前后；插件仅接受唯一完整JSON及这两种精确诊断，其他输出继续失败。session命令另有routeLoggerToStderr。"
     }
   ]
 }

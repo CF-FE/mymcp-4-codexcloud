@@ -92,6 +92,54 @@ class DiagnosticTests(unittest.TestCase):
                 self.assertEqual(caught.exception.code, 4)
                 self.assertEqual(caught.exception.category, "invalid_response")
 
+    def test_native_json_accepts_only_known_stream_diagnostics_around_one_record(self):
+        payload = {"ok": True, "workspaceId": "workspace-1", "items": [
+            {"id": "machine-1", "name": "test machine"}], "machines": [
+            {"id": "machine-1", "name": "test machine"}], "hasMore": False}
+        record = json.dumps(payload, separators=(",", ":"))
+        attached = "[workspace-1] Remote Streams transport attached"
+        detached = "[workspace-1] Remote Streams transport detached"
+        for stdout in (f"{attached}\n{record}\n{detached}\n",
+                       f"{record}\n{attached}\n{detached}\n",
+                       f"{attached}\n{detached}\n{record}\n"):
+            with self.subTest(stdout=stdout), \
+                 patch.object(common, "run_native", return_value=(0, stdout, "")), \
+                 redirect_stderr(io.StringIO()) as errors:
+                self.assertEqual(common.verify_catalog(Path("/cli"), Path("/state"), "workspace-1", 2), 1)
+                self.assertNotIn("workspace-1", errors.getvalue())
+                self.assertNotIn("test machine", errors.getvalue())
+
+    def test_native_json_rejects_unknown_or_mismatched_diagnostics_and_multiple_records(self):
+        payload = {"workspaceId": "workspace-1", "items": [], "hasMore": False}
+        record = json.dumps(payload, separators=(",", ":"))
+        attached = "[workspace-1] Remote Streams transport attached"
+        invalid = (
+            f"unknown log fixture-secret\n{record}\n",
+            f"[different-workspace] Remote Streams transport attached\n{record}\n",
+            f"{attached}\n{record}\n{record}\n",
+            f"{attached}\n{record}\n[]\n",
+            f"{attached}\n{{\"workspaceId\":\"workspace-1\",\"items\":[]\n",
+            f"{attached}\n{json.dumps({'items': [], 'hasMore': False})}\n",
+            f"{attached}\n{json.dumps({'workspaceId': '', 'items': [], 'hasMore': False})}\n",
+            f" {attached}\n{record}\n",
+            f"\x1e{record}\x1e",
+            f"\x1e\n{record}\n",
+        )
+        for stdout in invalid:
+            with self.subTest(stdout=stdout), patch.object(common, "run_native", return_value=(0, stdout, "")), \
+                 redirect_stderr(io.StringIO()) as errors:
+                with self.assertRaises(common.ToolError) as caught:
+                    common.verify_catalog(Path("/cli"), Path("/state"), "workspace-1", 2)
+                self.assertEqual(caught.exception.category, "invalid_response")
+                self.assertNotIn("fixture-secret", str(caught.exception) + errors.getvalue())
+
+    def test_account_query_uses_the_same_strict_native_json_boundary(self):
+        payload = {"ok": True, "workspaceId": "workspace-1", "workspaces": [
+            {"id": "workspace-1", "name": "test workspace"}]}
+        stdout = "[workspace-1] Remote Streams transport attached\n" + json.dumps(payload) + "\n"
+        with patch.object(common, "run_native", return_value=(0, stdout, "")), redirect_stderr(io.StringIO()):
+            self.assertEqual(common.verify_account(Path("/cli"), Path("/state"), 2), 1)
+
     def test_catalog_failure_retains_authenticated_account_without_passing_control(self):
         for profile in ("control", "inspect"):
             with self.subTest(profile=profile), \

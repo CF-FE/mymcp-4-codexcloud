@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 import signal
 import subprocess
+import sys
 import tempfile
 
 SCHEMA_VERSION = 1
@@ -138,13 +139,45 @@ def native_failure(code, stdout, stderr):
     return ToolError(4, category, "Lody command failed; native output was withheld to protect credentials.", code)
 
 
+def parse_native_json(stdout):
+    """Accept JSON, or one record surrounded only by pinned Streams diagnostics."""
+    try:
+        return json.loads(stdout)
+    except json.JSONDecodeError as original:
+        lines = [line.removesuffix("\r") for line in stdout.split("\n") if line.strip(" \t\r")]
+        records = []
+        for index, line in enumerate(lines):
+            try:
+                value = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(value, dict):
+                records.append((index, value))
+        if len(records) != 1 or len(lines) < 2:
+            raise ValueError("Expected one native JSON record") from original
+        record_index, payload = records[0]
+        workspace_id = payload.get("workspaceId")
+        if not isinstance(workspace_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]+", workspace_id):
+            raise ValueError("Expected a valid workspace ID") from original
+        # Lody 0.107.2 emits these two exact messages on stdout from its
+        # Streams attach/detach path. No other log line may be discarded.
+        diagnostics = {
+            f"[{workspace_id}] Remote Streams transport attached",
+            f"[{workspace_id}] Remote Streams transport detached",
+        }
+        if any(line not in diagnostics for index, line in enumerate(lines) if index != record_index):
+            raise ValueError("Unexpected text around native JSON") from original
+        print(f"lody4dot: ignored {len(lines) - 1} recognized Streams diagnostic line(s).", file=sys.stderr)
+        return payload
+
+
 def verify_account(cli, data_dir, timeout):
     code, stdout, stderr = run_native(["node", cli, "workspace", "list", "--json"],
                                      data_dir=data_dir, timeout=timeout)
     if code:
         raise native_failure(code, stdout, stderr)
     try:
-        payload = json.loads(stdout)
+        payload = parse_native_json(stdout)
         spaces = payload["workspaces"]
         if payload.get("ok") is not True or not isinstance(spaces, list):
             raise ValueError("unexpected schema")
@@ -165,7 +198,7 @@ def verify_catalog(cli, data_dir, workspace, timeout):
     try:
         # 0.107.2 runDiscoveryList prints the final page's hasMore/nextCursor
         # alongside the accumulated canonical items and a machines alias.
-        payload = json.loads(stdout)
+        payload = parse_native_json(stdout)
         machines = payload["items"]
         if (payload.get("ok", True) is not True or not isinstance(machines, list)
                 or payload.get("hasMore") is not False or payload.get("nextCursor") is not None):

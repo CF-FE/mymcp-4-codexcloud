@@ -6,7 +6,7 @@
 
 用户已发布包含 `*.streams-api-x.loro.dev` 的环境。保存配置读取已无草稿，正式规则中有该后缀；现有进程仍有 `LODY_CLI_TOKEN`。本次不重复写入配置或要求重交凭证。
 
-当前运行实例的 `spec_revision/observed_spec_revision` 仍为 4，生效列表只有四个 Lody 域名。对已确认的 Loro 网关和分片进行无凭证请求仍为 CONNECT 403；完成下述独立准备后再次检查，结果未变。因此 T09 的目录、观察仍被当前实例的网络策略阻断。来源版本号、用户发布或正式配置存在均不能替代实际连通性。
+前次观测的运行实例仍为 revision 4、仅四个域名，Loro 请求 CONNECT 403。本次发布后，同一实例的 `spec_revision/observed_spec_revision` 已均为 **5**，分片规则生效；api/control-b/presence 的无凭证 HTTPS 请求均退出 0、根路径 404。真实账户、完整目录和会话元数据观察随后通过，网络不再是这些检查的阻塞。来源版本号或根路径状态本身仍不能代替业务请求结果。
 
 ## 适配器和真正的 builtin 运行时
 
@@ -25,7 +25,7 @@ SHA-256: 05f9279fcfb76564a1801dd835286a56277c0a4dd97d94f58543e71b2ed5f80c
 size: 115738874
 ```
 
-无凭证 HEAD 返回 200，最终主机仍为 api.lody.ai；没有下载正文或执行该版本。`ManagedAgentRuntimeManager` 会验证大小与哈希后解包并创建受管入口，无需 npm 安装脚本；最终应由官方受管流程执行安装，不伪造完成标记。
+先前仅 HEAD 返回 200；本次已按上列固定输入真实下载，大小和 SHA-256 均匹配，检查归档不存在越界路径、链接或特殊条目后解包到自有缓存。实际二进制 `--version` 退出 0、输出 `codex-cli 0.160.1`。这是独立预检；没有写官方 managed 完成标记。`ManagedAgentRuntimeManager` 会验证大小与哈希后解包并创建受管入口，无需 npm 安装脚本；最终仍应由官方受管流程完成安装。
 
 ## 无模型 ACP 初始化探测
 
@@ -36,6 +36,12 @@ size: 115738874
 依据官方源码，以新的私密 `/tmp` 目录设置单独的 `CODEX_SQLITE_HOME` 后重试一次：仍返回 RPC error **1001**，未初始化成功。错误不再命中此前 SQLite 关键词，但这不证明数据库设置已被采用或其余写入路径可用。没有进一步猜测权限绕过。
 
 两个探测均移除子进程中的 Lody token，没有 `session/new`、`turn/start`、模型提示或认证材料复制；只终止自己启动的进程。受控项目输入和产物断言已在本机临时目录准备，实际产物尚未生成。
+
+为排除仅系统版本不同导致失败，本次使用已校验的 **0.160.1** 重做 bundled ACP `initialize`：默认仍 RPC **1001**，结构化错误包含 SQLite 初始化失败。仅为子进程指定自有 `0700` 临时 `CODEX_SQLITE_HOME` 后重试，仍 RPC **1001**，实际 RPC 错误改为 `read-only`。这次证据来自 RPC 响应，不能与 stderr 的 PATH aliases 警告混为一谈；也不能声称 SQLite 目录调整已让执行可用。两次均无会话、模型、登录或 host；临时状态已清理，已校验二进制仅留在忽略的缓存。
+
+随后仅做源码和文件系统元数据核实，未继续重试：同版本 [app-server 启动](https://github.com/openai/codex/blob/rust-v0.160.1/codex-rs/app-server/src/lib.rs#L777) 在 SQLite 成功后无条件调用 `resolve_installation_id(&config.codex_home).await?`；[实现](https://github.com/openai/codex/blob/rust-v0.160.1/codex-rs/core/src/installation_id.rs#L17) 创建 home，并以 read/write/create 打开 `installation_id` 后加锁，已有合法 ID 也先尝试可写打开。该函数没有独立目录参数；sqlite_home、log_dir 和 cwd 都不改变此路径。本机实际 Codex home 所在文件系统只读且 installation_id 不存在，没有读取 ID 或认证内容。这是源码与元数据证据，不冒称系统调用跟踪。
+
+因此当前托管云机的已验证范围是安装、控制查询和观察。本机 Codex 执行需要平台提供可写执行环境，或另行验收已授权的 Lody worker；不改变 HOME/CODEX_HOME、复制认证或绕过托管要求。此限制属于当前运行环境，不泛化为其他平台均不可执行。
 
 官方配置边界：
 

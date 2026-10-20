@@ -29,6 +29,8 @@ Lody 内置 MCP 的资源发现、会话、operation、调度和角色工具需�
 
 直接启动 bundled adapter 时，`CODEX_PATH` 是该入口明确要求的参数；这种单独预检与 builtin 默认运行链路分别记录。ACP `initialize` 不发送模型任务，但可能启动原生 app-server 并尝试写运行状态；`session/new` 会建立 thread 并查询模型，不能作为零持久化探测。
 
+本次托管云机已校验并运行 managed `0.160.1 --version`，但 bundled ACP `initialize` 返回 RPC1001；单独指定私密 `CODEX_SQLITE_HOME` 后仍返回 read-only 错误。同版本官方启动代码还无条件以可写方式打开 `$CODEX_HOME/installation_id`，当前该文件系统只读；sqlite_home、log_dir 和 cwd 不改变此路径。遵守宿主要求，不改变 HOME/CODEX_HOME 或复制认证来绕过限制。当前安装、控制查询和观察已验证，本机执行需可写环境或另行验收的已授权 worker，不将此限制泛化其他平台。
+
 API-key 路径的 `LodyFleet` 为账户返回的全部工作区建立 runtime 并登记本机/默认配置；任务的 `--workspace` 或 `LODY_WORKSPACE_ID` 不过滤 host 的工作区订阅。用户限定单个工作区时，先核实凭证或宿主是否有受支持的范围限制，不因任务目标已指定就假称 host 只影响该工作区。
 
 不使用 `LODY_E2E` 或标题辅助进程作为认证隔离技巧；对应分支可能创建工作目录 `.codex` 并复制默认认证。受控任务使用明确标题，并保持已有认证边界。
