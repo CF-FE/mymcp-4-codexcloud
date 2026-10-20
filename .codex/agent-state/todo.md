@@ -12,17 +12,23 @@
 | [T04](../../docs/lody4dot-development.md#t04实现可重复且失败可恢复的安装器) | 重复安装与失败恢复 | T02 | done | [安装器验证](../../docs/lody4dot-validation.md)：14项行为测试及真实安装/同锁复用通过 |
 | [T05](../../docs/lody4dot-development.md#t05实现唯一只读-doctor) | 只读诊断 | T02 | done | [诊断与认证验证](../../docs/lody4dot-validation.md)：默认离线inspect真实通过，账户/任务保持未验证 |
 | [T06](../../docs/lody4dot-development.md#t06实现显式认证适配) | 显式认证适配 | T05 | done | [诊断与认证验证](../../docs/lody4dot-validation.md)：显式模式、私密state、假凭证不回显通过；真实授权留T09 |
-| [T07](../../docs/lody4dot-development.md#t07实现自包含构建与云环境接入) | 自包含包与云接入 | T03、T04、T05、T06 | done | [分发与云配置](../../docs/lody4dot-validation.md)：22文件移位安装通过；草稿保存已确认，未发布/加载 |
+| [T07](../../docs/lody4dot-development.md#t07实现自包含构建与云环境接入) | 自包含包与云接入 | T03、T04、T05、T06 | done | [分发与云配置](../../docs/lody4dot-validation.md)：22文件移位安装通过；草稿保存已确认，用户随后确认已发布；实际加载未验 |
 | [T08](../../docs/lody4dot-development.md#t08完成无账户集成与分发回归) | 无账户集成验证 | T07 | done | [无账户验收](../../docs/lody4dot-validation.md)：39项条目测试加8项原仓库测试通过，移位CLI安装及inspect通过 |
-| [T09](../../docs/lody4dot-development.md#t09完成干净云任务加载安装和真实发现) | 真实云端加载、安装、发现 | T08；宿主、身份、网络、工作区 | blocked | [外部条件](../../docs/lody4dot-validation.md)：新任务加载/私密state边界未验；当前缺token，3服务域名仍被拦，草稿待发布 |
+| [T09](../../docs/lody4dot-development.md#t09完成干净云任务加载安装和真实发现) | 真实云端加载、安装、发现 | T08；宿主、身份、网络、工作区 | blocked | [外部条件](../../docs/lody4dot-validation.md)：用户已确认保存发布；当前进程仍无token、3服务域名CONNECT403；待运行实例更新或已发布环境的新任务验收 |
 | [T10](../../docs/lody4dot-development.md#t10验证-agent-任务能力与受控执行闭环) | agent 场景与真实任务 | T09；测试目标、执行凭证 | blocked | 依赖T09；实际工作区、测试目标/Role和底层Agent凭证未验证；离线agent演练单列，不替代闭环 |
 | [T11](../../docs/lody4dot-development.md#t11补齐高级能力的场景与平台边界) | 高级场景与支持矩阵 | T10 | blocked | 高级参考与命令导航已覆盖；真实高级场景依赖T10及隔离目标 |
 | [T12](../../docs/lody4dot-development.md#t12交付复现与支持范围确认) | 复现与交付 | T10、T11 | blocked | 离线实现已审查；T09–T11的真实验收未完成，不标整体交付完成 |
 
-当前首项：T09。独立实现、无账户验证与草稿已完成；待已保存配置发布及当前任务实际收到凭证，再继续真实发现。最新任务检查仍未获得 `LODY_CLI_TOKEN`，只影响真实认证，不要求用户在聊天中重新提供值。
+当前首项：T09。独立实现、无账户验证与草稿已完成；用户已确认保存并发布，不再重复要求添加变量或发布；待运行实例实际获得配置，再继续真实发现。最新任务检查仍未获得 `LODY_CLI_TOKEN`，只影响真实认证，不要求用户在聊天中重新提供值。
 
 后续状态为 `in_progress / blocked / done`。blocked 需注明具体前提及仍可推进的独立项；done 必须链接实际结果与未运行项。任务完成不等于整体发布完成，能力缺口不得被结构检查或 fixture 通过掩盖。
 
 ## 本轮规划复核
 
 2026-10-20，针对 r2/d1 完成独立审视：正常完成、安装失败、关键前提不成立三条路径未发现实质矛盾。5 份新改文档的 38 处本地链接、12 个任务与无环依赖检查通过，8 项现有仓库测试通过。这些是规划与仓库检查证据，不是上述实现任务的完成证据。
+
+## 用户确认发布后的复查
+
+2026-10-20，用户明确回复“已保存并发布”。只读复查：当前进程无任何 LODY 变量；当前运行状态 observations_current=true，spec_revision/observed_spec_revision 均为3，custom allowed_hosts 仅 lody.ai，runtime_variables 为空；三个服务域名实际 HTTPS 仍为 CONNECT 403。保存配置可读为 revision 5、四域名和 pending direct-environment-variable LODY_CLI_TOKEN。用户发布已作为会话事实接收；这些观测仅说明当前实例尚未获得对应配置，不能推断 token 无效或用户未配置。
+
+可用工具不包含当前实例的发布、重启或切换入口。不重复写配置以免制造新草稿；先等待宿主重连/传播后按实际状态复查，若本会话持续保留旧运行实例，可在已发布环境的新云任务继续 T09。新任务先读本队列并复查变量存在性和实际网络，再做显式授权及只读发现；不要重新要求填写 token。
