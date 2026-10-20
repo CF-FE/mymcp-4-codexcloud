@@ -12,7 +12,7 @@
 
 ## 已核实的依据与缺口
 
-研究基线为 2026-10-20 取得的 npm `lody@0.107.2` 发布物，下载内容与 registry 提供的 SHA-512 SRI 一致。已读取包内 README、package.json，并静态检查 CLI 命令注册及 MCP 相关实现；没有执行包代码。
+研究基线为 2026-10-20 取得的 npm `lody@0.107.2` 发布物，下载内容与 registry 提供的 SHA-512 SRI 一致。已读取包内 README、package.json，并静态检查 CLI 命令注册及 MCP 相关实现；没有执行包代码。官网 CLI 文档与快速开始现已成功读取，并交叉确认包名、Node 要求和无头登录入口。
 
 | 已知事实 | 对方案的影响 |
 | --- | --- |
@@ -24,8 +24,10 @@
 | `next` 标签为 `0.94.1`，`latest` 为 `0.107.2` | 不盲用 README 的 `@next`，安装必须固定经验证版本 |
 | 支持 `LODY_DATA_DIR`，登录有 device authorization 和 `--auth` 入口 | 可设计无桌面授权流程及独立状态目录，仍需真实验证 |
 | 此 npm 构建的平台选择固定为 cloud | 不承诺设置一个环境变量就能变成 OSS 构建 |
+| 官网明确 `--help` 是参数与位置参数的权威来源 | 缓存参考用于导航，实际参数仍以所用版本帮助为准 |
+| 官网明确 create/chat/cancel 等操作需要本机运行进程，查询与观察可只要求登录和工作区权限 | 先区分查询能力与执行能力，再确定 daemon 的必要性 |
 
-用户指定的 [官网 CLI 文档](https://lody.ai/zh/docs/cli/) 当前被云环境域名白名单拦截，尚未读取正文。npm README 自述关联 `lody.ai`；SRI 校验只证明下载内容与 registry 一致，不能代替官网对包名、渠道和用法的交叉确认。实施时应先补齐这项核对。
+用户指定的 [官网 CLI 文档](https://lody.ai/zh/docs/cli/) 和 [快速开始](https://lody.ai/zh/docs/quickstart/) 均已返回 HTTP 200。快速开始使用 `npx lody daemon start`，与所研究的 npm 包名对应；Node 版本要求也一致。官网、发布物和未来实际帮助输出应一起维护，不能只依赖其中一份资料。SRI 校验只证明下载内容与 registry 一致，不代表所有运行行为已经验证。
 
 ## 方案的辩证比较
 
@@ -89,7 +91,9 @@ skill 是操作知识的唯一维护位置，plugin 负责交付与安装。构�
 
 ### 两种运行模式
 
-默认先支持云端作为控制端：在 Codex 云环境加载 `lody4dot` 并运行 CLI，操作用户已授权的 Lody 工作区和已连接机器。不能预先假定这一模式的所有命令都不需要本地 daemon；应逐项验证最小运行前提。
+默认先支持云端作为控制端：在 Codex 云环境加载 `lody4dot` 并运行 CLI，发现用户已授权的 Lody 工作区、机器和会话，查询与观察结果。官网明确 `session list/history/observe/show/rename/archive/restore/delete` 不要求本机运行进程，但需要登录与工作区权限；这些操作的副作用仍须遵守任务授权。
+
+`session create/chat/cancel` 和 `agent-config refresh-capabilities` 需要当前机器运行 `lody start` 或 `lody daemon start`。因此纯查询与观察的控制端不能宣称完成全部任务派发能力；执行阶段须准备本地运行进程，或另行验证受支持的现有 MCP 路径，不能假定仅凭 token 和 CLI 就能派发任务。
 
 云端自身作为执行节点是后续可选能力：需要注册机器、运行 daemon 和 agent，并验证进程重启、机器状态与任务恢复。它不能由安装 CLI 自然推导出来，也不能将一次性云任务承诺为永久在线机器。
 
@@ -113,7 +117,7 @@ skill 是操作知识的唯一维护位置，plugin 负责交付与安装。构�
 
 ### 网络与配置
 
-当前已为阅读文档保存仅包含 `lody.ai` 的自定义允许域名草稿；这不等于运行环境已应用。产品要求在环境设置审核、保存并发布后生效。
+`lody.ai` 的允许规则现已发布，并在当前实例观测为已生效；官网请求已成功返回 HTTP 200。判断运行网络是否更新，应核对当前生效规则与实际请求；来源配置版本号仍旧不变，不能单独作为必须新建或切换任务的依据。
 
 包内静态配置还涉及 `convex.lody.ai`、`backend.lody.ai`、`api.lody.ai`。实现阶段按实际连接需求申请准确目的地，保留已有规则，不直接放宽为全网。仅放行官网不足以验证 CLI 连接。代理、CA、WebSocket/长连接及额外资源下载均需实测，不能绕过代理或关闭证书验证解决。
 
@@ -146,7 +150,7 @@ skill 是操作知识的唯一维护位置，plugin 负责交付与安装。构�
 
 ## 资料索引
 
-- [用户指定的官网 CLI 文档](https://lody.ai/zh/docs/cli/)：待网络规则生效后读取并交叉核对。
+- [用户指定的官网 CLI 文档](https://lody.ai/zh/docs/cli/) 与 [快速开始](https://lody.ai/zh/docs/quickstart/)：2026-10-20 已读取，交叉核对安装入口、运行要求、登录与 daemon 依赖。
 - [npm 包页面](https://www.npmjs.com/package/lody) 与 [registry 元数据](https://registry.npmjs.org/lody)：本次版本、标签、运行时要求和下载完整性来源。
 - [lody 0.107.2 发布包](https://registry.npmjs.org/lody/-/lody-0.107.2.tgz)：已校验 SRI；读取 `package.json`、`README.md`、`dist/index.js` 和 `dist/chunks/cloudflared-native-2AOPFkF0.js`。
 - 发布包中的稳定检索符号：`getCliPlatformKind`、`buildBuiltinMcpServers`、`buildSessionToolServer`、`getSessionContext`、`performLoginWithAuthCredential`，以及公开 `program.addCommand(...)` 注册和 `LODY_DATA_DIR`。
