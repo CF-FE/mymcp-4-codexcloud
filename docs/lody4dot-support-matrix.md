@@ -24,7 +24,7 @@
 | [`project`](../skill/lody4dot/references/discovery.md) | 已核实 4 条路径 | 指定工作区的完整项目目录查询通过，`kind=local` 为 1 项 | 没有读取或修改该既有项目文件，未测试 `add/delete`、本机 daemon 项目列表或 Git worktree。远端受控任务未附加既有项目 |
 | [`review`](../skill/lody4dot/references/delivery.md) | 已核实 2 条路径 | **渲染明确失败**：原生命令退出 1，未生成 HTML；匹配 Viewer 的发布资源当前不可取得 | 不能把帮助可读或其他 Viewer 的 SRI 通过当成渲染成功；匹配资源与恢复条件见下节 |
 | [`schedule`](../skill/lody4dot/references/automation.md) | 已核实 9 条路径 | `list` 退出 0；从 `offset=0, limit=100` 查询得到 `schedules=[]`、`matched=0`，没有后续 offset | 只验证目录读取；未创建、编辑、暂停、恢复、立即运行或删除调度，未验证触发、时区、补跑及执行结果。此命令的日志和分页规则见下节 |
-| [`session`](../skill/lody4dot/references/sessions.md) | 已核实 14 条路径 | 真实列表、历史和观察通过；已有远端 Codex 配置的 `create` 与后续只读 `chat` 均完成，最终为 `persisted/synced/latestTurn.completed`，Agent 二次回传的产物字节及随机 challenge 经控制端校验匹配 | 仅覆盖该配置和受控任务；文件证据来自 Agent 回传，公开 history 不含底层工具日志。运行中取消、恢复、归档、改名、删除及其他 Agent/平台未测；本机 Codex ACP 初始化另有明确只读失败 |
+| [`session`](../skill/lody4dot/references/sessions.md) | 已核实 14 条路径 | 真实列表、历史和观察通过；已有远端 Codex 配置的 `create` 与只读 `chat` 两个回合均 completed，Agent 二次回传的产物字节及随机 challenge 经控制端校验匹配。另一个受控回合实际 running 后，以精确 assistantTurnId 取消成功，同一回合持久化为 `persisted/synced/canceled`，无活动回合 | 仅覆盖该配置和受控任务；文件证据来自 Agent 回传，公开 history 不含底层工具日志；回合取消不证明工具进程即时终止。恢复、归档、改名、删除及其他 Agent/平台未测；本机 Codex ACP 初始化另有明确只读失败 |
 | [`start`](../skill/lody4dot/references/setup-cloud.md) | 已核实 1 条路径 | 未启动本机 host | 源码确认 API-key host 会登记全部可见工作区，不能将业务 `--workspace` 当成 host 范围限制；本机 Agent 执行和进程恢复未验收，不为远端派发自动启动 host |
 | [`sync`](../skill/lody4dot/references/delivery.md) | 已核实 1 条路径 | 独立 `lody sync` 命令未运行 | 目录及会话操作中的同步已有真实结果，但不能替代本命令的完整工作区缓存同步验收；同步也不等于 Git 推送、模型执行或产物完成 |
 | [`workspace`](../skill/lody4dot/references/discovery.md) | 已核实 2 条路径 | 真实账户查询退出 0，返回 2 个可访问工作区；后续只使用用户选定的个人工作区 | 未创建、变更或扩大工作区权限；账户列表成功与机器目录、长连接、任务执行分别核验 |

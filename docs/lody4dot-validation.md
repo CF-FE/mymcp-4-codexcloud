@@ -168,6 +168,18 @@ Review做了无账户真实渲染尝试：依据原生review prompt编写覆盖a
 
 当前工具无法创建/附着独立云任务，因此发布确认和本次当前实例复验仍不等同新任务自动接入。剩余外部步骤见[新任务验收](lody4dot-fresh-task-acceptance.md)；既定路线是start_skill云接入，原生插件注册单独保留未验，不作为该路线的额外必选门槛。
 
+## 运行回合的精确取消验收
+
+2026-10-20，继续用户授权的已有远端 Codex Agent 测试，仅使用前述本任务自建的验收会话。新建0700私密认证state后真实登录；按完整标题唯一匹配会话，并检查未归档、messageQueueCount=0、persisted/synced/idle、latestTurn.completed及activeTurns为空。发送前再次观察，确认最新回合未变且仍无活动回合；没有操作用户其他会话。
+
+只发送一次`session chat --json`，提示约束为一个45秒的前台等待命令，不创建文件、访问网络或凭证、变更配置、启动后台工作或重试。保存返回的userTurnId后，observe实际显示persisted/synced/running，唯一active turn的userTurnId匹配本次请求，并取得其assistantTurnId。随后以`session cancel SESSION_ID --workspace WORKSPACE_ID --turn-id ASSISTANT_TURN_ID --json`精确取消；该参数使用assistantTurnId，不是chat返回的userTurnId。
+
+chat、运行中观察、cancel及取消后观察的原始退出码均为0。取消响应ok=true、response.success=true，没有alreadyStopped=true；最终observe的userTurnId及assistantTurnId均与本次选择完全匹配，source=persisted、freshness=synced、latestTurn.state=canceled、state=idle、activeTurns为空。取消边界经独立只读复核；若取消时目标已结束或变为其他回合，CLI的精确turn检查会返回alreadyStopped，不能算本次取消成功。本轮实际没有遇到该分支。
+
+这些证据仅证明该配置的Lody运行回合被精确取消并持久化。公开history不包含工具日志，没有据此证明等待命令已启动、远端进程收到何种系统信号或被即时终止。未测试超时恢复、其他配置/平台、长期worker或独立新云任务加载。自有私密认证state已删除，全局token绑定保留；未启动控制端host/daemon、修改远端配置或重新保存云环境草稿。原0.1.3发布物保持不变，本轮仅补充验收记录。
+
+本轮仓库结构、空白及56项回归检查通过；4份改动文档的本地链接检查通过，差异未包含本轮真实资源标识或凭证。
+
 ## 复现命令
 
 在仓库根目录运行：
