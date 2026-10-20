@@ -1,0 +1,27 @@
+# Local credentials and overrides
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+
+# Dependencies and caches
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Generated outputs
+dist/
+build/
+coverage/
+*.log
+
+# Local editor and OS files
+.idea/
+.vscode/
+.DS_Store
