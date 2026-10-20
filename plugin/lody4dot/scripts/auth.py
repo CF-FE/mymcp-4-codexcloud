@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Explicit login adapter. Login also registers a machine in Lody."""
+"""Explicit login adapter; local identity and remote registration are distinct."""
 from __future__ import annotations
 
 import argparse
@@ -29,13 +29,14 @@ def authenticate(args):
     return result("pass", operation="login" if args.login else "verify-only",
                   credential_environment="present" if token else "missing",
                   account="authenticated", evidence={"kind": "live_read_only_query", "workspace_count": count},
-                  machine_registration="requested_by_login" if args.login else "not_requested")
+                  local_identity="written_by_login" if args.login else "not_modified",
+                  machine_registration="not_verified" if args.login else "not_requested")
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
-    mode.add_argument("--login", action="store_true", help="Use LODY_CLI_TOKEN; also registers this machine.")
+    mode.add_argument("--login", action="store_true", help="Use LODY_CLI_TOKEN; writes identity and may connect/register a machine.")
     mode.add_argument("--verify-only", action="store_true", help="Read-only query using existing state; never log in.")
     parser.add_argument("--prefix", default=DEFAULT_PREFIX)
     parser.add_argument("--data-dir", help="Private per-task state directory (or LODY_DATA_DIR).")

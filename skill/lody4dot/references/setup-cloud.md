@@ -35,7 +35,7 @@ python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --ve
 
 用户通过环境变量 `LODY_CLI_TOKEN` 提供材料；不要求在聊天中重复提供。只观察变量是否非空，不打印值、前缀、长度，不运行环境转储。这个名称是 `lody4dot` 约定，不是已证明会由 CLI 自动读取的变量。
 
-认证适配器区分只读验证已有登录和显式登录。官网的 `login --auth` 也会注册机器，不能把它作为每次诊断的自动步骤。只有当前任务允许登录时才使用显式登录入口；不得在命令文本、日志、异常或包里展开 token。CLI 只能接受 argv 时需遵循适配器已经验证的传递边界，不通过拼接 shell 启动。
+认证适配器区分只读验证已有登录和显式登录。登录会保存本机身份，部分授权流程还会连接/注册机器，不能把它作为每次诊断的自动步骤。0.107.2 的 API-key 路径仅验证 token 并保存身份，不能据此报告远端机器已经注册或在线。只有当前任务允许登录时才使用显式登录入口；不得在命令文本、日志、异常或包里展开 token。CLI 只能接受 argv 时需遵循适配器已经验证的传递边界，不通过拼接 shell 启动。
 
 当前适配器通过不经过 shell 的子进程 argv 调用 CLI 原生授权入口，避免 shell 历史并脱敏输出；这不隐藏操作系统的进程参数，同用户或更高权限进程仍可能观察它。不要在无法满足该运行边界的共享主机上把这种方式当作完全保密的传递通道。
 
@@ -44,6 +44,8 @@ python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --ve
 ## 状态、网络和启动
 
 - Lody 支持 `LODY_DATA_DIR`；依赖目录、任务状态和身份状态分开。环境安装脚本与共享快照只准备依赖，登录在任务启动后显式进行。`/tmp` 路径本身不保证被快照排除；共享包或共享环境快照不得包含登录态，目录名字本身不能证明隔离。
+- 账户查询与目录同步分开诊断：需要目标目录时用 `doctor.py --profile control --connect --workspace WORKSPACE_ID --json`。只读工作区列表成功不能证明机器、Role 或观察链路可用。
+- 当前部署由后端返回 `streams-api-x.loro.dev` 作为 Loro Streams 后缀，目录同步实测访问 `api`、`control-b`、`control-c` 和 `presence` 子域。源码还按同一后缀生成控制、数据、写入和 presence 分片；当前云网络需允许 `*.streams-api-x.loro.dev`，部署变更后重查实际路由，不放宽到整个供应商域。
 - 保留继承的代理与 CA 配置。`lody.ai` 可读只证明官网链路；实际登录、API 和观察连接需分别检验，不关闭 TLS 校验解决错误。
 - 官网明确 `session create/chat/cancel` 与 `agent-config refresh-capabilities` 需要当前机器运行 `lody start` 或 `lody daemon start`。启动 daemon 前确认登录、机器身份、任务授权和原有运行进程。
 - 登录 Lody 不等于目标 Agent 的模型凭证已经准备好。创建任务前核实目标运行时能力和账户条件。

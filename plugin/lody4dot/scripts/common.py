@@ -155,6 +155,30 @@ def verify_account(cli, data_dir, timeout):
     return len(spaces)
 
 
+def verify_catalog(cli, data_dir, workspace, timeout):
+    """Probe the workspace catalog separately from the account-only endpoint."""
+    code, stdout, stderr = run_native(
+        ["node", cli, "machine", "list", "--workspace", workspace, "--all-pages", "--json"],
+        data_dir=data_dir, timeout=timeout)
+    if code:
+        raise native_failure(code, stdout, stderr)
+    try:
+        # 0.107.2 runDiscoveryList prints the final page's hasMore/nextCursor
+        # alongside the accumulated canonical items and a machines alias.
+        payload = json.loads(stdout)
+        machines = payload["items"]
+        if (payload.get("ok", True) is not True or not isinstance(machines, list)
+                or payload.get("hasMore") is not False or payload.get("nextCursor") is not None):
+            raise ValueError("incomplete or unexpected catalog page")
+        if any(not isinstance(machine, dict)
+               or not isinstance(machine.get("id"), str) or not machine["id"].strip()
+               or not isinstance(machine.get("name"), str) for machine in machines):
+            raise ValueError("unexpected machine")
+    except (ValueError, KeyError, TypeError, AttributeError) as exc:
+        raise ToolError(4, "invalid_response", "Machine catalog query returned invalid JSON or incomplete pagination.", code) from exc
+    return len(machines)
+
+
 def offline_version(cli, timeout):
     with tempfile.TemporaryDirectory(prefix="lody4dot-inspect-") as state:
         code, stdout, stderr = run_native(["node", cli, "--version"], data_dir=state, timeout=timeout)

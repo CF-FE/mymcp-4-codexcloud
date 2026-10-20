@@ -16,7 +16,7 @@ python3 plugin/lody4dot/scripts/doctor.py --prefix /workspace/.tools/lody4dot --
 
 安装器使用固定依赖与锁文件，在自有暂存目录安装并验证，成功后切换稳定入口。它不登录、不注册机器、不启动 daemon。失败时保留旧版本与用户状态；不应将工具目录、npm 缓存或登录态提交到仓库。不要将一个已有非空目录直接指定为工具目录。
 
-CLI 研究基线是 `0.107.2`；锁定输入、依赖修订及实际验证以 `runtime/` 和仓库任务队列为准。安装成功与 inspect 通过只证明本地工具前提，不代表账户、长连接或 Agent 任务已经验证。
+CLI 固定版本为 `0.107.2`；锁定输入、依赖修订及实际验证以 `runtime/` 和仓库任务队列为准。安装成功与 inspect 通过只证明本地工具前提，不代表账户、长连接或 Agent 任务已经验证。
 
 ## 认证与云端运行
 
@@ -28,9 +28,17 @@ python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --ve
 python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --login --json
 ```
 
-官网说明登录也会注册机器。CLI 当前的受支持入口通过子进程 argv 接收凭证；适配器不经 shell 展开，也不输出凭证，但本机同权限进程仍可能读取 argv，因此只在可信、隔离的任务环境中使用。凭证存在、登录成功、工作区权限和底层 Agent 凭证是不同条件。`session create/chat/cancel` 等执行操作还需要受支持的本机运行进程；查询可用不能证明这些操作可用。
+登录会保存本机身份，配对或设备授权流程还可能连接/注册机器。0.107.2 的 API-key 路径验证 token 后保存本机身份；远端机器注册和在线状态仍需独立运行证据。CLI 当前的受支持入口通过子进程 argv 接收凭证；适配器不经 shell 展开，也不输出凭证，但本机同权限进程仍可能读取 argv，因此只在可信、隔离的任务环境中使用。凭证存在、登录成功、工作区权限和底层 Agent 凭证是不同条件。`session create/chat/cancel` 等执行操作还需要受支持的本机运行进程；查询可用不能证明这些操作可用。
 
 保留继承的代理与 CA，不关闭 TLS 校验。官网资料使用 `lody.ai`；npm 下载及 CLI 的登录、API、观察链路还需各自网络权限。`convex.lody.ai`、`backend.lody.ai`、`api.lody.ai` 是当前发布物中的服务目的地，仍应按真实连接结果分别确认。配置已保存或官网能访问均不是全部网络通过的证据。
+
+登录后的账户查询与目标工作区目录是两条连接链路。检查目录时显式指定目标；只查询工作区列表不会证明机器目录可用：
+
+```bash
+python3 plugin/lody4dot/scripts/doctor.py --profile control --connect --workspace WORKSPACE_ID --json
+```
+
+当前部署还会返回 Loro Streams 网关与分片后缀 `streams-api-x.loro.dev`。实测 `api`、`control-b`、`control-c`、`presence` 子域在只放行四个 Lody 域时被 CONNECT 403 拦截。源码的控制/数据/写入/presence 分片会使用同一后缀；云网络需包含 `*.streams-api-x.loro.dev`，不以只读账户查询成功替代该链路验证。该后缀属于本次实际返回值，部署变化时应重新核实。
 
 状态通过 Lody 支持的 `LODY_DATA_DIR` 分离；身份不进入插件包和共享环境快照。不修改 `HOME` 或 `CODEX_HOME` 绕过受保护的宿主配置。云端启动说明应显式读取技能入口并运行 doctor；保存说明后仍需要新任务提供实际加载回执。
 

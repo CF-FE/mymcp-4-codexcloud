@@ -1,6 +1,6 @@
 # lody4dot 实现与验证记录
 
-日期：2026-10-20。任务状态权威为 [队列](../.codex/agent-state/todo.md)，接口依据为 [开发契约](lody4dot-development.md)。以下记录当前机器及离线行为，不代替真实账户或宿主加载验收。
+日期：2026-10-20。任务状态权威为 [队列](../.codex/agent-state/todo.md)，接口依据为 [开发契约](lody4dot-development.md)。以下分别记录离线行为和后续真实账户结果；账户成功不代替目录、宿主加载或任务验收。
 
 ## 环境与固定输入（T02）
 
@@ -44,21 +44,21 @@ python3 plugin/lody4dot/scripts/install.py --prefix /workspace/.tools/lody4dot -
 
 真实 `doctor.py --profile inspect --json` 退出 0：Node 和 CLI 通过，凭证观察为 missing，账户、运行进程、任务执行为 not_run。`task` 不会因 CLI 可用就通过。
 
-12 项 fixture 测试验证默认不查账户、control 显式连接要求、task/worker 未验证状态、空/坏 JSON、权限和网络错误、超时终止、不回显假凭证、verify-only 不登录、私密状态要求和外部指针拒绝。
+18 项 fixture 测试验证默认不查账户、control 显式连接要求、task/worker 未验证状态、空/坏 JSON、权限和网络错误、超时终止、不回显假凭证、verify-only 不登录、私密状态要求和外部指针拒绝。
 
-认证仅在显式 `--login` 时将 `LODY_CLI_TOKEN` 传给已核实的 `login --auth` 入口；原生 CLI 仅提供 argv 通道，因此同权限本机进程的参数可见性仍存在。适配器不用 shell、历史、debug 或原生输出转发掩盖这一边界。实际 Lody 授权尚未执行。
+认证仅在显式 `--login` 时将 `LODY_CLI_TOKEN` 传给已核实的 `login --auth` 入口；原生 CLI 仅提供 argv 通道，因此同权限本机进程的参数可见性仍存在。适配器不用 shell、历史、debug 或原生输出转发掩盖这一边界。最初无账户阶段尚未执行实际授权；后续真实授权与目录链路结果见下文。
 
 ## 分发与云配置（T07、T08）
 
 自包含产物共 22 个受哈希管理文件，另有构建 receipt，包含原生清单、marketplace、技能、工具和 runtime 锁定输入。没有依赖安装目录或登录态。
 
-本次 `dist/lody4dot-0.1.0.zip` 共 23 文件、63,549 字节，解压完整性检查通过；SHA-256 为 `ac047a8836c8900103ca6541e605bab28ba424aae13845315c80ce91f130c738`。构建 receipt 的 SHA-256 为 `356547f1918cc72e1ca1990dd8058284ee67b600b7f267a45dfd823181e1bab0`。生成物留在被忽略的 dist，不作为第二份源码提交。
+初版 `dist/lody4dot-0.1.0.zip` 共 23 文件、63,549 字节，解压完整性检查通过；SHA-256 为 `ac047a8836c8900103ca6541e605bab28ba424aae13845315c80ce91f130c738`。构建 receipt 的 SHA-256 为 `356547f1918cc72e1ca1990dd8058284ee67b600b7f267a45dfd823181e1bab0`。生成物留在被忽略的 dist，不作为第二份源码提交。
 
 将整个产物复制到 checkout 外 `/workspace/.cache/lody4dot/relocated-package`，从该位置安装到全新 `relocated-install`：真实首装和 inspect 均退出 0。证明脚本/资源不依赖原 checkout 路径；未证明宿主加载。
 
 10 项构建 fixture 验证移位资源与精确哈希、必需 common、缺资源、包外引用、敏感/额外文件、符号链接、未知输出保护及切换失败恢复。独立代码审查发现的 common 必需依赖漏检已修复，并增加回归测试。
 
-标准命令现递归覆盖 39 项 lody4dot 测试及 8 项原仓库测试，共 **47 项通过**；结构检查为 `mcp=1 skill=1 plugin=1`。独立 worker 检查不计入这 47 项。
+标准命令现递归覆盖 45 项 lody4dot 测试及 8 项原仓库测试，共 **53 项通过**；结构检查为 `mcp=1 skill=1 plugin=1`。独立 worker 检查不计入这 53 项。
 
 完整执行 `.codex/cloud-install.sh` 退出 0，实际完成这些测试、同锁安装复用和离线 inspect，未做认证或启动服务。
 
@@ -77,7 +77,7 @@ python3 plugin/lody4dot/scripts/install.py --prefix /workspace/.tools/lody4dot -
 
 该结果证明这次演练的流程选择；agent 是显式获知技能路径，并非由新云任务自动发现。它没有真实账户/任务结果，不能让 T09 或 T10 的真实闭环通过。
 
-## 外部条件与下一验证（T09–T12）
+## 发布传播的历史观测（T09）
 
 用户截图已经确认该环境添加了 `LODY_CLI_TOKEN` 变量名称。随后的只读复查仍显示：当前进程 missing，运行环境变量元数据为空；保存草稿中该变量为 `pending_runtime_requirements`，直接变量交付。不能由此否定用户已配置，也不能仅从截图推断已注入当前任务。
 
@@ -85,7 +85,36 @@ python3 plugin/lody4dot/scripts/install.py --prefix /workspace/.tools/lody4dot -
 
 用户随后已明确确认保存并发布。再次复查当前实例，仍无 LODY 变量，三个服务域名仍为 CONNECT 403；当前运行元数据仅允许 lody.ai，保存配置仍可读到四域名和待应用变量要求。此处区分用户已完成发布与当前实例尚未获得配置，不否定用户操作，也不依据来源版本号单独推断必须换任务。
 
-下一步是由宿主重连/传播，或在已发布环境的新运行任务中复查真实生效规则及进程变量存在性。当前会话没有重启/切换运行实例工具，不重复保存相同配置制造新草稿。只有变量实际注入后才做显式授权和只读工作区发现；工作区、测试机器/Role及底层 Agent 凭证须由实际结果确定。发布或源码配置版本号本身均不能代替这些检查。宿主新任务读取回执、私密状态/快照边界、真实查询/观察和受控任务仍未通过；整体目标保持未完成。
+当时的下一步是由宿主重连/传播，或在已发布环境的新运行任务中复查真实生效规则及进程变量存在性。当前会话没有重启/切换运行实例工具，不重复保存相同配置制造新草稿。只有变量实际注入后才做显式授权和只读工作区发现；工作区、测试机器/Role及底层 Agent 凭证须由实际结果确定。发布或源码配置版本号本身均不能代替这些检查。宿主新任务读取回执、私密状态/快照边界、真实查询/观察和受控任务仍未通过；整体目标保持未完成；后续状态以下方真实连接记录及任务队列为准。
+
+## 本次真实连接与目录诊断（T09）
+
+用户再次发布后，当前同一任务的运行观测更新到 spec_revision/observed_spec_revision 均为 4，四个 Lody 域名生效，保存配置不再有 pending 变量；进程实测 `LODY_CLI_TOKEN` 为 present。没有新建任务，因此事实推翻了“当前会话必然要换任务才会更新”的假设；此前只将新任务作为恢复尝试，没有用来源版本号判定它必需。
+
+三个服务的无凭证 HTTPS 探测已不受策略阻断：convex 根路径 200，backend/api 根路径 404，curl 均为 0。根路径 404 不表示实际业务 API 已通过。
+
+随后使用当前任务新建的 0700 私密临时目录，显式 `auth.py --login` 退出 0，真实 `workspace list --json` 返回 ok，发现 2 个工作区。再执行 `--verify-only` 退出 0，无重新登录；账户级 `doctor --profile control --connect` 通过。用户已明确选择个人工作区用于后续隔离验收；不在公共仓库存放工作区 ID、机器信息或原始业务响应。
+
+源码复查进一步区分授权路径：0.107.2 的 API-key 登录仅验证 token、取得稳定本机 ID 并保存身份，不调用远端 registerMachine。因此适配器将机器注册报告为 not_verified，新增 local_identity 字段；没有把登录成功当成远端机器注册或在线。配对/设备授权仍有各自连接副作用，登录保持显式操作。
+
+目标工作区的机器与 Role 完整目录查询原始退出 1，不能解释为空目录。一次受控 debug 只在内存提取 hostname 和错误枚举，发现实际依赖的 Loro Streams 端点：
+
+- `api.streams-api-x.loro.dev`
+- `control-b.streams-api-x.loro.dev`
+- `control-c.streams-api-x.loro.dev`
+- `presence.streams-api-x.loro.dev`
+
+上述四个精确域名的无凭证 HTTPS 探测均为 curl 56、HTTP 000、代理 CONNECT 403，证明当前规则遗漏了目录同步服务。没有证书错误证据，未尝试绕过代理。源码 `getLoroStreamsShardUrls` 和 `getLoroStreamsPresenceBaseUrl` 按平台返回的同一后缀生成控制、数据、写入与 presence 分片；因此所需规则限于 `*.streams-api-x.loro.dev`，不放宽到整个 loro.dev。
+
+doctor 0.1.1 增加显式 `--workspace` 目录探测，执行原生 machine list 的全部页，保留账户已认证与目录失败两个独立结果。新增测试覆盖失败不误报成功/空机器、完整分页与坏响应、参数边界，以及登录不误报注册；没有重新包装 session/schedule 业务。
+
+本机 daemon status 退出 1，报告未运行；未启动 daemon，未创建会话或修改已有项目。原生 Codex login status 退出 0 且报告已登录，仅作为后续运行前提线索，没有读取、复制或导出认证材料，仍不能证明 Lody Agent 实际执行成功。
+
+更新后的 `dist/lody4dot-0.1.1.zip` 共 23 文件、65674 字节，完整性检查通过；SHA-256 为 `35a1ac9cb234e61672337598993de7d1693daa1658116ecfdd1f82c445fcb8a0`，构建 receipt SHA-256 为 `329cb72be4bf65659ab1f6c3575663075aafde4377ce48878bcb35e91c4fcc57`。完整云安装脚本再跑退出0，53项测试通过；此复跑不登录、不启动服务。
+
+本次测试身份只写到新建的0700私密临时目录，credentials.json实测0600；保存新网络草稿前已删除整个自有测试state，保留全局安全注入的变量绑定。没有把身份放入依赖或分发物，也没有证明平台可私密跨任务恢复身份。
+
+目录、观察和受控任务需待该服务规则生效后继续。新增规则不是重复添加原来的 token 或四个域名；T09 保留未完成，用户已选工作区无需重新询问。
 
 ## 复现命令
 

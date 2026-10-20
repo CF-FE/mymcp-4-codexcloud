@@ -95,6 +95,23 @@
       "sha256": "e3ee1b9668b26cf2e3a0ea8647b9841dc250099b6542fe41903721814eaefd85",
       "command_count": 70,
       "root_count": 20
+    },
+    {
+      "id": "streams-runtime-routing",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "0.107.2及本次部署返回路由",
+      "scope": "createCliStreamsTransport、getLoroStreamsShardUrls、getLoroStreamsPresenceBaseUrl；脱敏运行诊断发现实际Loro网关与分片，精确hostname的无凭证HTTPS探测确认CONNECT403",
+      "verification": "static_source_and_sanitized_runtime_diagnostic",
+      "observed_shard_host_suffix": "streams-api-x.loro.dev",
+      "observed_hosts": [
+        "api.streams-api-x.loro.dev",
+        "control-b.streams-api-x.loro.dev",
+        "control-c.streams-api-x.loro.dev",
+        "presence.streams-api-x.loro.dev"
+      ],
+      "network_rule": "*.streams-api-x.loro.dev",
+      "note": "规则只涵盖当前服务返回的分片后缀；并未验证放行后的真实目录、观察或任务成功。"
     }
   ],
   "known_differences": [
@@ -103,6 +120,12 @@
       "topic": "--env",
       "website": "官网CLI页曾说明per-session env保存；实际0.107.2帮助标为deprecated",
       "resolution": "不推荐per-session --env；按当前帮助改在Agent config配置。"
+    },
+    {
+      "command": "login",
+      "topic": "机器身份与注册",
+      "website": "官网将登录与机器注册连写；0.107.2 的不同授权路径有差异",
+      "resolution": "API-key路径只validateToken、获取稳定本机ID并saveAuthInfo；远端机器注册/在线另验，配对和设备授权仍有各自连接副作用。"
     }
   ]
 }

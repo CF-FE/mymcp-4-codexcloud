@@ -59,11 +59,86 @@ class DiagnosticTests(unittest.TestCase):
              patch.object(doctor, "offline_version", return_value="0.107.2"), \
              patch.object(doctor.subprocess, "run", return_value=argparse.Namespace(returncode=0, stdout="v24.19.0")), \
              patch.object(doctor, "state_directory", return_value=Path("/private/state")), \
-             patch.object(doctor, "verify_account", return_value=2) as query:
+             patch.object(doctor, "verify_account", return_value=2) as query, \
+             patch.object(doctor, "verify_catalog") as catalog:
             code, value, _ = self.capture(doctor, ["--profile", "control", "--connect"])
         self.assertEqual(code, 0)
         self.assertEqual(value["account"], "authenticated")
+        self.assertEqual(next(c for c in value["checks"] if c["name"] == "workspace_catalog")["status"], "not_run")
         query.assert_called_once()
+        catalog.assert_not_called()
+
+    def test_catalog_query_uses_exact_selector_and_all_pages_as_separate_arguments(self):
+        selector = "workspace with spaces $(not-a-shell-command)"
+        payload = {"items": [{"id": "machine-1", "name": "test machine"}], "hasMore": False}
+        with patch.object(common, "run_native", return_value=(0, json.dumps(payload), "")) as native:
+            count = common.verify_catalog(Path("/cli"), Path("/state"), selector, 2)
+        self.assertEqual(count, 1)
+        self.assertEqual(native.call_args.args[0],
+                         ["node", Path("/cli"), "machine", "list", "--workspace", selector, "--all-pages", "--json"])
+        self.assertEqual(native.call_args.kwargs, {"data_dir": Path("/state"), "timeout": 2})
+
+    def test_catalog_empty_result_is_valid_only_with_complete_pagination(self):
+        with patch.object(common, "run_native", return_value=(0, '{"items":[],"hasMore":false}', "")):
+            self.assertEqual(common.verify_catalog(Path("/cli"), Path("/state"), "workspace", 2), 0)
+        for stdout in ("", "not json", "null", "[]", "{}",
+                       '{"items":[],"hasMore":true}',
+                       '{"items":[],"hasMore":false,"nextCursor":"another-page"}',
+                       '{"items":[{}],"hasMore":false}',
+                       '{"items":[],"hasMore":false,"ok":false}'):
+            with self.subTest(stdout=stdout), patch.object(common, "run_native", return_value=(0, stdout, "")):
+                with self.assertRaises(common.ToolError) as caught:
+                    common.verify_catalog(Path("/cli"), Path("/state"), "workspace", 2)
+                self.assertEqual(caught.exception.code, 4)
+                self.assertEqual(caught.exception.category, "invalid_response")
+
+    def test_catalog_failure_retains_authenticated_account_without_passing_control(self):
+        for profile in ("control", "inspect"):
+            with self.subTest(profile=profile), \
+                 patch.object(doctor, "installed_cli", return_value=Path("/fixture/cli")), \
+                 patch.object(doctor, "offline_version", return_value="0.107.2"), \
+                 patch.object(doctor.subprocess, "run", return_value=argparse.Namespace(returncode=0, stdout="v24.19.0")), \
+                 patch.object(doctor, "state_directory", return_value=Path("/private/state")), \
+                 patch.object(doctor, "verify_account", return_value=2), \
+                 patch.object(doctor, "verify_catalog", side_effect=common.ToolError(4, "network", "Catalog connection failed.", 1)):
+                code, value, _ = self.capture(doctor, ["--profile", profile, "--connect", "--workspace", "chosen-id"])
+            self.assertEqual(code, 4)
+            self.assertEqual(value["status"], "fail")
+            self.assertEqual(value["account"], "authenticated")
+            self.assertEqual(value["error_category"], "network")
+            self.assertEqual(value["raw_exit_code"], 1)
+            checks = {check["name"]: check for check in value["checks"]}
+            self.assertEqual(checks["account"]["status"], "pass")
+            self.assertEqual(checks["workspace_catalog"]["status"], "fail")
+            self.assertNotIn("machine_count", checks["workspace_catalog"]["evidence"])
+
+    def test_catalog_success_passes_control_but_not_task_execution(self):
+        for profile, expected_code in (("control", 0), ("task", 3), ("worker", 3)):
+            with self.subTest(profile=profile), \
+                 patch.object(doctor, "installed_cli", return_value=Path("/fixture/cli")), \
+                 patch.object(doctor, "offline_version", return_value="0.107.2"), \
+                 patch.object(doctor.subprocess, "run", return_value=argparse.Namespace(returncode=0, stdout="v24.19.0")), \
+                 patch.object(doctor, "state_directory", return_value=Path("/private/state")), \
+                 patch.object(doctor, "verify_account", return_value=2), \
+                 patch.object(doctor, "verify_catalog", return_value=3) as catalog:
+                code, value, _ = self.capture(doctor, ["--profile", profile, "--connect", "--workspace", "chosen-id"])
+            self.assertEqual(code, expected_code)
+            checks = {check["name"]: check for check in value["checks"]}
+            self.assertEqual(checks["workspace_catalog"]["status"], "pass")
+            self.assertEqual(checks["workspace_catalog"]["evidence"], {"machine_count": 3, "has_more": False, "all_pages": True})
+            self.assertEqual(checks["task_execution"]["status"], "not_run")
+            catalog.assert_called_once_with(Path("/fixture/cli"), Path("/private/state"), "chosen-id", 30)
+
+    def test_workspace_without_explicit_connect_is_argument_error_before_queries(self):
+        output, errors = io.StringIO(), io.StringIO()
+        with patch.object(doctor, "verify_account") as query, patch.object(doctor, "verify_catalog") as catalog, \
+             redirect_stdout(output), redirect_stderr(errors):
+            with self.assertRaises(SystemExit) as caught:
+                doctor.main(["--workspace", "chosen-id", "--json"])
+        self.assertEqual(caught.exception.code, 2)
+        query.assert_not_called()
+        catalog.assert_not_called()
+        self.assertEqual(output.getvalue(), "")
 
     def test_bad_json_empty_response_and_wrong_schema_are_external_failure(self):
         for stdout in ("", "not json", "{}", '{"ok":false,"workspaces":[]}', '{"ok":true,"workspaces":[{}]}'):
@@ -121,6 +196,21 @@ class DiagnosticTests(unittest.TestCase):
         self.assertEqual(code, 4)
         self.assertNotIn(token, json.dumps(value) + errors)
         self.assertEqual(native.call_args.args[0][-2:], ["--auth", token])
+
+    def test_login_success_does_not_infer_remote_machine_registration(self):
+        token = "fixture-token-that-native-login-echoes"
+        with patch.dict(os.environ, {"LODY_CLI_TOKEN": token}), \
+             patch.object(auth, "installed_cli", return_value=Path("/cli")), \
+             patch.object(auth, "offline_version", return_value="0.107.2"), \
+             patch.object(auth, "state_directory", return_value=Path("/state")), \
+             patch.object(auth, "run_native", return_value=(0, token, token)), \
+             patch.object(auth, "verify_account", return_value=1):
+            code, value, errors = self.capture(auth, ["--login"])
+        self.assertEqual(code, 0)
+        self.assertEqual(value["account"], "authenticated")
+        self.assertEqual(value["machine_registration"], "not_verified")
+        self.assertEqual(value["local_identity"], "written_by_login")
+        self.assertNotIn(token, json.dumps(value) + errors)
 
     def test_state_directory_is_explicit_private_and_does_not_chmod_user_state(self):
         with tempfile.TemporaryDirectory() as base, patch.dict(os.environ, {}, clear=True):

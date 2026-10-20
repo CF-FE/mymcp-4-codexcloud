@@ -9,7 +9,8 @@ import shutil
 import subprocess
 
 from common import (DEFAULT_PREFIX, ToolError, emit, error_result, installed_cli,
-                    offline_version, result, state_directory, supported_node, verify_account)
+                    offline_version, result, state_directory, supported_node,
+                    verify_account, verify_catalog)
 
 
 def diagnose(args):
@@ -34,15 +35,32 @@ def diagnose(args):
     version = offline_version(cli, args.timeout)
     check("runtime", "pass", "Managed CLI reports the supported version.", version=version)
     session = "not_run"
+    catalog_error = None
     if args.connect:
         state = state_directory(args.data_dir)
         count = verify_account(cli, state, args.timeout)
         session = "authenticated"
         check("account", "pass", "Read-only workspace query succeeded.", observation=session, workspace_count=count)
+        if args.workspace:
+            try:
+                count = verify_catalog(cli, state, args.workspace, args.timeout)
+                check("workspace_catalog", "pass", "Selected workspace machine catalog query completed.",
+                      machine_count=count, has_more=False, all_pages=True)
+            except ToolError as exc:
+                catalog_error = exc
+                check("workspace_catalog", "blocked" if exc.code == 3 else "fail", str(exc),
+                      error_category=exc.category, raw_exit_code=exc.raw_exit_code)
+        else:
+            check("workspace_catalog", "not_run", "Pass --workspace with --connect to check the machine catalog; account success does not verify this connection.")
     else:
         check("account", "not_run", "Use --connect with a private state directory for a read-only query.")
+        check("workspace_catalog", "not_run", "No workspace catalog query was requested.")
     check("local_runtime", "not_run", "No daemon was started or inferred from CLI availability.")
     check("task_execution", "not_run", "Agent credentials, target and persisted task results require separate validation.")
+    if catalog_error:
+        value = error_result(catalog_error)
+        value.update(profile=args.profile, checks=checks, credential_environment=credential, account=session)
+        return value, catalog_error.code
     passed = args.profile == "inspect" or (args.profile == "control" and args.connect)
     if not passed:
         check("requested_profile", "blocked", "Requested profile has prerequisites that these checks have not verified.")
@@ -56,12 +74,15 @@ def main(argv=None):
     parser.add_argument("--prefix", default=DEFAULT_PREFIX)
     parser.add_argument("--profile", choices=("inspect", "control", "task", "worker"), default="inspect")
     parser.add_argument("--connect", action="store_true", help="Explicitly perform a read-only workspace query.")
+    parser.add_argument("--workspace", help="Also check this workspace's complete machine catalog; requires --connect.")
     parser.add_argument("--data-dir")
     parser.add_argument("--timeout", type=float, default=30)
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
     if not 0 < args.timeout <= 300:
         parser.error("--timeout must be >0 and <=300")
+    if args.workspace is not None and (not args.connect or not args.workspace.strip()):
+        parser.error("--workspace requires --connect and a nonempty selector")
     try:
         value, code = diagnose(args)
     except ToolError as exc:
