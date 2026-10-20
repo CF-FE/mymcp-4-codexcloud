@@ -1,6 +1,6 @@
 # lody4dot 云端执行前提补充
 
-日期：2026-10-20。本文记录 T10 的独立准备；状态权威仍为 [任务队列](../.codex/agent-state/todo.md)。未启动 Lody host、创建 Session 或发送模型任务。
+日期：2026-10-20。本文先记录本机运行时预检，后记录用户授权使用已有远端 Agent 的实际任务；状态权威仍为 [任务队列](../.codex/agent-state/todo.md)。本机预检没有启动 host 或模型任务；后续远端受控任务见末节。
 
 ## 发布配置与当前实例
 
@@ -61,3 +61,13 @@ size: 115738874
 网络及运行前提满足后的公开 CLI 路线是：在个人工作区登记本机临时项目 → 发现本机已存在的配置 → 确无合适配置时创建一次 → 用固定标题创建一个小任务 → observe/history 与实际产物断言。Role 如绑定其他机器，不能直接套用本机临时路径；Role 覆盖与真实任务能力分别验收。
 
 本次探测结束后已清理自有临时项目和独立数据库目录；保留脱敏结果与上述任务规范，后续真实验收时重新建立隔离输入。全局凭证绑定和用户目录未改变。
+
+## 用户授权已有远端 Agent 后的真实闭环
+
+用户随后明确“用已配置的agent来测试”，继续使用已选个人工作区。0.107.2源码显示控制端可在无host时建立选定工作区的独立client；`ensureTargetMachineOnline`仅在目标是当前CLI机器时要求本机runtime，远端走machine RPC。此前将官网的本机进程概括扩大到远端派发不准确，现已更正技能、索引、方案和启动指引。`refresh-capabilities`仍限本机，未据此跨机器刷新。
+
+真实发现两台可用在线机器和两份已有配置，按明确类型选择唯一在线Codex配置。不带repo/local-project/parent，以固定标题创建一个新会话，未复用用户既有会话或项目。Lody使用执行端的独立chat目录；任务仅要求在OS临时目录创建两份验收文件，并另行读回。此为任务约束，未声称OS沙箱；Lody和Agent自身仍有正常会话状态写入。
+
+公开create退出0、ok=true，返回目标与工作区匹配；随后observe对首回合给出completed。另一个只读chat回合针对同两份文件返回base64字节及随机challenge哈希，控制端逐字节校验input、JSON结果、Unicode/行数/逆序内容及challenge全部匹配。最终observe为source=persisted、freshness=synced、latestTurn.completed、activeTurns=[]；公开history有两对user/assistant记录。公开history没有底层工具执行日志，文件证据来自Agent回传，并非控制端直接远程文件读取；验收范围仅为这一配置及这次任务。
+
+控制端未启动daemon或全工作区host，未写installation_id、改变HOME/CODEX_HOME或复制认证，也未新增机器、Agent配置、项目或Role。原本机只读限制仍成立，但不再阻塞这条远端任务路径。取消、长期worker、其他Agent/平台与高级操作仍需各自证据。

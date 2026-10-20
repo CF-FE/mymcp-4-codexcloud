@@ -27,7 +27,7 @@
 | 支持 `LODY_DATA_DIR`，登录有 device authorization 和 `--auth` 入口 | 可设计无桌面授权流程及独立状态目录，仍需真实验证 |
 | 此 npm 构建的平台选择固定为 cloud | 不承诺设置一个环境变量就能变成 OSS 构建 |
 | 官网明确 `--help` 是参数与位置参数的权威来源 | 缓存参考用于导航，实际参数仍以所用版本帮助为准 |
-| 官网明确 create/chat/cancel 等操作需要本机运行进程，查询与观察可只要求登录和工作区权限 | 先区分查询能力与执行能力，再确定 daemon 的必要性 |
+| 官网概括 create/chat/cancel 需要本机进程；0.107.2源码及后续实测支持直接派发已有远端Agent | 区分控制端与执行端，按实际目标确定daemon要求 |
 
 用户指定的 [官网 CLI 文档](https://lody.ai/zh/docs/cli/) 和 [快速开始](https://lody.ai/zh/docs/quickstart/) 均已返回 HTTP 200。快速开始使用 `npx lody daemon start`，与所研究的 npm 包名对应；Node 版本要求也一致。官网、发布物和未来实际帮助输出应一起维护，不能只依赖其中一份资料。SRI 校验只证明下载内容与 registry 一致，不代表所有运行行为已经验证。
 
@@ -97,9 +97,9 @@ skill 是操作知识的唯一维护位置，plugin 负责交付与安装。构�
 
 默认先支持云端作为控制端：在 Codex 云环境加载 `lody4dot` 并运行 CLI，发现用户已授权的 Lody 工作区、机器和会话，查询与观察结果。官网明确 `session list/history/observe/show/rename/archive/restore/delete` 不要求本机运行进程，但需要登录与工作区权限；这些操作的副作用仍须遵守任务授权。
 
-`session create/chat/cancel` 和 `agent-config refresh-capabilities` 需要当前机器运行 `lody start` 或 `lody daemon start`。因此纯查询与观察的控制端不能宣称完成全部任务派发能力；执行阶段须准备本地运行进程，或另行验证受支持的现有 MCP 路径，不能假定仅凭 token 和 CLI 就能派发任务。
+后续0.107.2源码与真实派发纠正了官网的概括：`session create/chat/cancel` 可由控制端公开CLI直接操作已授权的在线远端machine/config，无需控制端本机daemon；执行端仍需运行进程与底层Agent凭证。当前机器执行及 `agent-config refresh-capabilities` 才需本机运行前提。只有真实派发、持久化结果与产物核对才能证明相应任务能力；不从token或在线目录单独推导成功。
 
-云端自身作为长期执行节点是后续可选能力：需要注册机器、运行 daemon 和 agent，并验证进程重启、机器状态与任务恢复。首版受控任务演练所需的短时运行进程仍须准备，不能因为长期节点延后而省略。安装 CLI 不自动建立执行能力，也不能将一次性云任务承诺为永久在线机器。
+云端自身作为长期执行节点是后续可选能力：需要注册机器、运行 daemon 和 agent，并验证进程重启、机器状态与任务恢复。首版受控任务可复用已有远端Agent，执行端进程仍须可用。安装 CLI 不自动建立执行能力，也不能将一次性云任务承诺为永久在线机器。
 
 ### 安装与启动职责
 

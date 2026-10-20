@@ -10,16 +10,16 @@
 | [T02](../../docs/lody4dot-development.md#t02验证固定版本运行时并生成锁定输入) | 固定版本与锁定输入 | T01 | done | [运行时记录](../../docs/lody4dot-validation.md)：锁定0.107.2和Tinypool2.1.2；冻结安装、native及原始worker通过，audit 0 |
 | [T03](../../docs/lody4dot-development.md#t03实现技能来源与命令覆盖) | 技能、来源、命令覆盖 | T02 | done | [知识检查](../../docs/lody4dot-validation.md)：20类/70路径及帮助哈希匹配，未冒称业务已实测 |
 | [T04](../../docs/lody4dot-development.md#t04实现可重复且失败可恢复的安装器) | 重复安装与失败恢复 | T02 | done | [安装器验证](../../docs/lody4dot-validation.md)：14项行为测试及真实安装/同锁复用通过 |
-| [T05](../../docs/lody4dot-development.md#t05实现唯一只读-doctor) | 只读诊断 | T02 | done | [诊断与认证验证](../../docs/lody4dot-validation.md)：离线inspect、真实账户与完整workspace目录通过；0.1.2窄兼容原生Streams诊断，任务仍未验证 |
+| [T05](../../docs/lody4dot-development.md#t05实现唯一只读-doctor) | 只读诊断 | T02 | done | [诊断与认证验证](../../docs/lody4dot-validation.md)：离线inspect、真实账户与完整workspace目录通过；窄兼容Streams诊断，doctor不推导任务成功，真实任务另见T10 |
 | [T06](../../docs/lody4dot-development.md#t06实现显式认证适配) | 显式认证适配 | T05 | done | [诊断与认证验证](../../docs/lody4dot-validation.md)：显式模式、私密state、假凭证不回显通过；真实login/verify-only已通过，不误报机器注册 |
 | [T07](../../docs/lody4dot-development.md#t07实现自包含构建与云环境接入) | 自包含包与云接入 | T03、T04、T05、T06 | done | [分发与云配置](../../docs/lody4dot-validation.md)：22文件移位安装通过；草稿保存已确认，用户随后确认已发布；实际加载未验 |
 | [T08](../../docs/lody4dot-development.md#t08完成无账户集成与分发回归) | 无账户集成验证 | T07 | done | [无账户验收](../../docs/lody4dot-validation.md)：48项条目测试加8项原仓库测试通过，移位CLI安装及inspect通过 |
 | [T09](../../docs/lody4dot-development.md#t09完成干净云任务加载安装和真实发现) | 真实云端加载、安装、发现 | T08；宿主、身份、网络、工作区 | blocked | [真实目录](../../docs/lody4dot-validation.md)：revision5分片规则已生效，真实授权、完整目录、metadata及定点persisted观察通过；仍缺新云任务加载回执及跨任务私密状态边界验证 |
-| [T10](../../docs/lody4dot-development.md#t10验证-agent-任务能力与受控执行闭环) | agent 场景与真实任务 | T09；测试目标、执行凭证 | blocked | [运行前提补充](../../docs/lody4dot-runtime-findings.md)：实时只读agent演练通过；官方managed0.160.1实测ACP初始化RPC1001，独立SQLite目录仍read-only；host会写全部可见工作区，未创建会话 |
-| [T11](../../docs/lody4dot-development.md#t11补齐高级能力的场景与平台边界) | 高级场景与支持矩阵 | T10 | blocked | 高级参考与命令导航已覆盖；真实高级场景依赖T10及隔离目标 |
-| [T12](../../docs/lody4dot-development.md#t12交付复现与支持范围确认) | 复现与交付 | T10、T11 | blocked | 离线实现已审查；T09–T11的真实验收未完成，不标整体交付完成 |
+| [T10](../../docs/lody4dot-development.md#t10验证-agent-任务能力与受控执行闭环) | agent 场景与真实任务 | T09已验证的发现；测试目标、执行凭证 | done | [远端验收](../../docs/lody4dot-validation.md)：用户授权已有Agent；无控制端host的既有远端Codex create/chat两个回合completed，persisted/synced；Agent二次读回字节及challenge由控制端校验匹配，不冒称直接FS读取 |
+| [T11](../../docs/lody4dot-development.md#t11补齐高级能力的场景与平台边界) | 高级场景与支持矩阵 | T10 | in_progress | 高级参考与70路径导航已覆盖；取消、Role/MCP/调度等仍逐项保留未实测，不从本次Codex成功扩展推论 |
+| [T12](../../docs/lody4dot-development.md#t12交付复现与支持范围确认) | 复现与交付 | T10、T11 | blocked | 远端基本闭环通过；T09新云任务加载与T11高级场景未完成，不标整体交付完成 |
 
-当前首项：T09。用户发布已在同一实例生效；token、分片网络、真实授权、完整目录和只读观察均通过，无需重新配置或重复发布。T09剩余为新云任务入口读取回执及跨任务状态边界，当前对话agent演练不冒充该证据。并行推进T10时复现managed Codex初始化只读失败，未绕过宿主配置或启动影响全部工作区的host；用户已选个人workspace，保留选择。
+当前首项：T09的新云任务加载回执及状态边界，T11高级场景可独立推进。已有token和分片网络无需重配；T10已通过指定已有远端Codex的基本任务闭环。本机只读限制不再是远端派发的阻塞；不启动覆盖全部工作区的host，不把当前对话演练冒充新云任务自动加载。个人workspace选择保留。
 
 后续状态为 `in_progress / blocked / done`。blocked 需注明具体前提及仍可推进的独立项；done 必须链接实际结果与未运行项。任务完成不等于整体发布完成，能力缺口不得被结构检查或 fixture 通过掩盖。
 
@@ -52,3 +52,13 @@
 0.107.2原生目录在JSON前后输出两种精确Streams日志，导致此前工具误报无效响应；窄兼容已修复、独立审查通过，新增边界测试后共56项通过。实时agent从cloud-start与技能参考独立完成完整目录和观察：all观察2项synced/metadata，定点观察已有会话为synced/persisted且存在latestTurn。未发消息或取消已有任务；没有新任务或产物证据。该演练显式获知入口，不能证明新云任务自动加载。
 
 本地daemon确实未运行。已校验官方managed0.160.1下载及版本，bundled ACP initialize仍RPC1001；只迁移子进程SQLite目录后实际RPC仍read-only。同版本官方代码和只读元数据确认额外强制写入CODEX_HOME/installation_id，而当前该文件系统只读；不存在独立目录选项可由sqlite_home/log_dir/cwd替代。当前支持安装、控制查询和观察；本机执行需平台提供可写环境或另行验收已授权worker。0.1.2自包含包及云安装脚本通过，包内真实control检查通过；全局凭证绑定保留，自有测试私密state已清理，没有新草稿或登录态快照。
+
+## 已有远端Agent的受控验收
+
+用户明确授权并指定“用已配置的agent来测试”。源码复核纠正先前关于控制端必须运行daemon的概括：公开0.107.2 CLI可独立连接指定工作区并向已有在线远端machine/config派发。本机执行与refresh-capabilities的前提不变；没有写入受保护installation_id或改HOME/CODEX_HOME。
+
+已选择个人工作区唯一在线Codex配置，不附加既有项目，以固定标题新建一次会话。首回合创建临时验收文件并completed；后续只读chat回传文件字节和随机challenge，控制端验证input逐字节、结果JSON、Unicode/行数/逆序内容和challenge全匹配。最终observe为persisted/synced/latestTurn.completed且无activeTurns；history有两对user/assistant记录。独立验收审查通过，明确文件证据来自Agent回传，公开history不含底层工具执行日志，未声称直接远程FS读取。
+
+没有新增机器、Agent配置、项目或Role，没有启动控制端host或影响其他工作区。已有用户会话未被操作；仅保留本次新建验收会话和临时产物。取消、其他Agent/平台、长期worker和高级操作仍未实测。T10的远端结果独立成立，T09新云任务加载仍须另验。
+
+0.1.3的56项回归、结构检查、自包含构建和ZIP完整性通过，已生成不含身份的验收产物包；本轮私密认证state已清理。更正后的start_skill草稿已确认saved/requires_publish=true，仅供后续任务复用，未重配网络或变量；当前验收不再等待环境发布。原生插件注册、新云任务读取回执和高级场景仍分别留在T09/T11。

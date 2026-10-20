@@ -20,7 +20,7 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 仓库结构检查无需安装第三方依赖，也没有公共服务需要启动。运行单个 MCP 时需按其 README 准备依赖和配置。后续导入按照 [导入步骤](docs/architecture.md#导入已有插件) 迁移，并在此补充条目入口。
 
-lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安装、只读诊断、显式认证和自包含打包。在当前 Linux 云机已验证 CLI 安装、同锁复用和移位分发；真实授权、完整目录和会话元数据观察已通过，56 项回归测试通过。宿主新任务加载仍需回执；本机任务还受 Codex ACP 初始化及 host 工作区范围限制，未宣称执行闭环完成。见 [产品方案](docs/lody4dot-plan.md)、[开发契约](docs/lody4dot-development.md)、[验证记录](docs/lody4dot-validation.md) 和 [任务队列](.codex/agent-state/todo.md)。
+lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安装、只读诊断、显式认证和自包含打包。当前 Linux 云机已验证安装、真实授权和完整目录；通过已有远端 Codex Agent 完成了创建、执行、继续验证和持久化观察，并校验 Agent 二次读回的产物字节。控制端无需本机 daemon，56 项回归测试通过。宿主新任务加载仍需回执；本机 Codex 执行的只读状态限制单独保留。见 [产品方案](docs/lody4dot-plan.md)、[开发契约](docs/lody4dot-development.md)、[验证记录](docs/lody4dot-validation.md) 和 [任务队列](.codex/agent-state/todo.md)。
 
 ## 开发与验证
 

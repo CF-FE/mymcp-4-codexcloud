@@ -9,11 +9,13 @@
 | cloud 构建 | 可使用已授权的 cloud 查询，仍需验证网络与登录 |
 | OSS/local platform | 不具有全部 cloud 查询；不能仅设置一个变量就把 cloud 发布包切换为 OSS |
 | Codex 云端 control | 可以实现登录后的发现和观察；不能默认承担全部本机执行 |
-| Codex 云端 task | 需实际本机运行进程、Agent 凭证与明确目标，或另外已验证的调用路径 |
+| Codex 云端 task | 执行端需运行进程、Agent 凭证与明确目标；远端派发不要求控制端启动 daemon |
 | 长期 worker | 需独立验证启动、机器注册、进程与任务恢复；不承诺一次性云任务永久在线 |
 | 桌面 app、模拟器、原生 provider 能力 | 条件支持，先检查目标平台与实际能力协商 |
 
 公开的 `lody` npm 构建选择 cloud 平台；不要假定 `LODY_PLATFORM` 是支持的切换入口。`LODY_DATA_DIR` 的目录选择也不证明私密隔离、跨任务恢复或共享快照安全。
+
+`0.107.2` 的会话 CLI 可以在无本机 host 时创建工作区 client。本机目标才由 `ensureTargetMachineOnline` 要求本机运行进程；远端目标通过机器 RPC 检查、创建和继续，活动回合的取消也按目标路由。无活动回合时 `cancel` 可返回 `alreadyStopped`。因此控制端 daemon 缺失不能作为拒绝远端派发的依据，`agent-config refresh-capabilities` 的本机要求则不变。本次已有远端 Codex 配置的 create/chat 与两个回合的持久化完成已通过，Agent 二次读回的文件字节及随机 challenge 经控制端校验匹配；不推导取消、其他配置或全部平台已通过，也不称控制端直接读取远端文件系统。
 
 ## CLI 与已有 MCP
 
@@ -29,7 +31,7 @@ Lody 内置 MCP 的资源发现、会话、operation、调度和角色工具需�
 
 直接启动 bundled adapter 时，`CODEX_PATH` 是该入口明确要求的参数；这种单独预检与 builtin 默认运行链路分别记录。ACP `initialize` 不发送模型任务，但可能启动原生 app-server 并尝试写运行状态；`session/new` 会建立 thread 并查询模型，不能作为零持久化探测。
 
-本次托管云机已校验并运行 managed `0.160.1 --version`，但 bundled ACP `initialize` 返回 RPC1001；单独指定私密 `CODEX_SQLITE_HOME` 后仍返回 read-only 错误。同版本官方启动代码还无条件以可写方式打开 `$CODEX_HOME/installation_id`，当前该文件系统只读；sqlite_home、log_dir 和 cwd 不改变此路径。遵守宿主要求，不改变 HOME/CODEX_HOME 或复制认证来绕过限制。当前安装、控制查询和观察已验证，本机执行需可写环境或另行验收的已授权 worker，不将此限制泛化其他平台。
+本次托管云机已校验并运行 managed `0.160.1 --version`，但 bundled ACP `initialize` 返回 RPC1001；单独指定私密 `CODEX_SQLITE_HOME` 后仍返回 read-only 错误。同版本官方启动代码还无条件以可写方式打开 `$CODEX_HOME/installation_id`，当前该文件系统只读；sqlite_home、log_dir 和 cwd 不改变此路径。遵守宿主要求，不改变 HOME/CODEX_HOME 或复制认证来绕过限制。该结果限制当前云机作为执行端，不否定它作为控制端向已授权远端派发，也不泛化其他平台；远端执行结果仍单独验收。
 
 API-key 路径的 `LodyFleet` 为账户返回的全部工作区建立 runtime 并登记本机/默认配置；任务的 `--workspace` 或 `LODY_WORKSPACE_ID` 不过滤 host 的工作区订阅。用户限定单个工作区时，先核实凭证或宿主是否有受支持的范围限制，不因任务目标已指定就假称 host 只影响该工作区。
 

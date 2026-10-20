@@ -28,7 +28,9 @@ python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --ve
 python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --login --json
 ```
 
-登录会保存本机身份，配对或设备授权流程还可能连接/注册机器。0.107.2 的 API-key 路径验证 token 后保存本机身份；远端机器注册和在线状态仍需独立运行证据。CLI 当前的受支持入口通过子进程 argv 接收凭证；适配器不经 shell 展开，也不输出凭证，但本机同权限进程仍可能读取 argv，因此只在可信、隔离的任务环境中使用。凭证存在、登录成功、工作区权限和底层 Agent 凭证是不同条件。`session create/chat/cancel` 等执行操作还需要受支持的本机运行进程；查询可用不能证明这些操作可用。
+登录会保存本机身份，配对或设备授权流程还可能连接/注册机器。0.107.2 的 API-key 路径验证 token 后保存本机身份；远端机器注册和在线状态仍需独立运行证据。CLI 当前的受支持入口通过子进程 argv 接收凭证；适配器不经 shell 展开，也不输出凭证，但本机同权限进程仍可能读取 argv，因此只在可信、隔离的任务环境中使用。凭证存在、登录成功、工作区权限和底层 Agent 凭证是不同条件。
+
+`0.107.2` 的 `session create/chat/cancel` 按目标区分运行前提：本机目标需要本机运行进程，远端可由控制端经机器 RPC 派发，无需控制端启动 host/daemon；执行端仍需运行进程、Agent 配置及凭证。取消返回 `alreadyStopped` 不证明本次取消了运行回合。`agent-config refresh-capabilities` 仍针对本机，不能套用远端派发规则。只读查询和请求被接受均不能单独证明任务完成。
 
 保留继承的代理与 CA，不关闭 TLS 校验。官网资料使用 `lody.ai`；npm 下载及 CLI 的登录、API、观察链路还需各自网络权限。`convex.lody.ai`、`backend.lody.ai`、`api.lody.ai` 是当前发布物中的服务目的地，仍应按真实连接结果分别确认。配置已保存或官网能访问均不是全部网络通过的证据。
 
@@ -80,3 +82,5 @@ python3 scripts/check_repository.py
 离线测试验证工具行为和分发边界，不能代替真实账户、长连接、宿主加载或任务产物验收。完整命令资料的帮助证据也不等于全部业务功能已经实测。当前实现进度和真实验证缺口统一记录在仓库的 `.codex/agent-state/todo.md`。
 
 `0.1.2` 修复了原生 Streams 诊断日志导致目录 JSON 误报的问题。当前云机的安装、真实授权、完整目录和已有会话的持久化观察已通过；本机 Codex ACP 初始化仍遇到只读状态写入错误，未通过真实任务验收。host 还会登记凭证可见的全部工作区，不能把任务的 workspace 参数当成 host 范围限制；详见技能的兼容性参考。
+
+`0.1.3` 更正了会话操作无条件要求控制端 daemon 的知识错误。无控制端 host/daemon 时，已有远端 Codex Agent 的创建、执行、继续验证和持久化观察已通过；两个回合均完成，Agent 二次读回的文件字节、JSON与随机 challenge 哈希经控制端核对匹配。公开 history 不含底层工具执行日志，该产物证据来自 Agent 回传，不能称控制端直接读取远端文件系统。取消、其他配置、平台和高级操作未因此算作通过。当前云机 ACP 的只读限制只涉及本机执行，不能据此否定远端派发。

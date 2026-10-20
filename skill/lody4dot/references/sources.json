@@ -120,7 +120,7 @@
       "version_scope": "0.107.2",
       "scope": "resolveBuiltinACPProcessLaunch、mergeACPProcessEnv、ManagedAgentRuntimeManager、LodyFleet.startWorkspaceSubscription/applyRemoteWorkspaceList、prepareCodexHomeEnv；builtin managed版本及host全工作区订阅边界",
       "verification": "static_source_and_sanitized_runtime_diagnostic",
-      "note": "adapter --version实测1.12.0；managed0.160.1官方artifact大小/hash匹配，安全解包后--version通过；bundled ACP initialize仍RPC1001，单独SQLite目录重试仍read-only；没有会话/模型/host或官方安装完成标记。"
+      "note": "adapter --version实测1.12.0；managed0.160.1官方artifact大小/hash匹配，安全解包后--version通过；bundled ACP initialize仍RPC1001，单独SQLite目录重试仍read-only；本机ACP预检没有创建会话、发送模型任务、启动host或写官方安装完成标记；该失败不否定控制端远端派发。"
     },
     {
       "id": "codex-sqlite-config",
@@ -138,6 +138,15 @@
       "scope": "app-server初始化在SQLite后无条件resolve_installation_id；以read/write/create打开CODEX_HOME/installation_id，独立sqlite_home/log_dir/cwd不能改变该路径",
       "verification": "official_source_and_readonly_filesystem_metadata",
       "note": "本次托管home所在文件系统只读且installation_id不存在；未读取ID值或认证。不能据此泛化其他平台均不可执行。"
+    },
+    {
+      "id": "session-target-runtime-routing",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz",
+      "retrieved_at": "2026-10-20",
+      "version_scope": "0.107.2",
+      "scope": "withWorkspaceManager、ensureTargetMachineOnline及create/chat/cancel本机与远端路由；无host时独立workspace client，远端machine RPC，本机目标ensureLocalRuntimeAvailable，cancel可alreadyStopped",
+      "verification": "static_source_and_sanitized_remote_acceptance",
+      "note": "公开CLI无控制端host/daemon派发已有远端Codex配置；create/chat两个回合completed，Agent二次回传的文件字节、JSON及随机challenge哈希经控制端校验匹配。history不含底层工具日志，不称控制端直接远程FS读取；未测cancel、其他配置或平台；refresh-capabilities仍限本机。"
     }
   ],
   "known_differences": [
@@ -158,6 +167,12 @@
       "topic": "stdout诊断与JSON",
       "website": "原生JSON用于结构化结果，但0.107.2部分目录命令未将Streams attach/detach日志路由至stderr",
       "resolution": "源码Lody.attachStreamsTransport/detachStreamsTransport的同workspace精确日志可夹在compact JSON前后；插件仅接受唯一完整JSON及这两种精确诊断，其他输出继续失败。session命令另有routeLoggerToStderr。"
+    },
+    {
+      "command": "session create / session chat / session cancel",
+      "topic": "控制端与执行端运行前提",
+      "website": "官网概括这些会话命令需要本机运行进程，先前资料据此写为控制端必须运行daemon。",
+      "resolution": "0.107.2源码按目标机器分支：本机目标需本机运行进程，远端经机器RPC且控制端可无host/daemon；无活动回合的cancel可alreadyStopped。本次已实测指定已有远端Codex的create/chat完成与Agent回传字节校验，不推导cancel、其他配置或所有平台已通过。"
     }
   ]
 }

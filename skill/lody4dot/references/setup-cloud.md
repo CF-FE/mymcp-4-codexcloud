@@ -2,13 +2,13 @@
 
 ## 目标与运行前提
 
-先决定当前任务只需诊断和查询，还是需要在这台机器执行 Agent。Node 需满足 Lody 所支持的 `>=22.14.0 <23` 或 `>=23.6.0`；本知识基线为 `lody@0.107.2`。原生依赖、代理与 CA、长连接、宿主加载和底层 Agent 凭证仍需分别验证。
+先决定当前任务只需诊断和查询、从控制端派发远端任务，还是需要在这台机器执行 Agent。Node 需满足 Lody 所支持的 `>=22.14.0 <23` 或 `>=23.6.0`；本知识基线为 `lody@0.107.2`。原生依赖、代理与 CA、长连接、宿主加载和执行端 Agent 凭证仍需分别验证。
 
 | 配置 | 能做什么 | 不能据此推导什么 |
 | --- | --- | --- |
 | inspect | 检查安装、版本、资料、凭证是否存在 | 不能证明已登录或任务可执行 |
 | control | 已授权资源发现、会话历史与观察 | 不能证明当前 CLI 能创建或控制本机任务 |
-| task | 满足本机运行前提后完成受控任务 | 不能证明永久在线、跨任务恢复或其他模型可用 |
+| task | 核对实际执行端运行进程与凭证后完成受控任务；执行端可为远端 | 不能证明永久在线、跨任务恢复或其他模型可用 |
 | worker | 长期承载机器与 Agent | 需另有进程和身份恢复证据，不能由文件快照推导 |
 
 ## 仓库工具入口
@@ -47,7 +47,8 @@ python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --ve
 - 账户查询与目录同步分开诊断：需要目标目录时用 `doctor.py --profile control --connect --workspace WORKSPACE_ID --json`。只读工作区列表成功不能证明机器、Role 或观察链路可用。
 - 当前部署由后端返回 `streams-api-x.loro.dev` 作为 Loro Streams 后缀，目录同步实测访问 `api`、`control-b`、`control-c` 和 `presence` 子域。源码还按同一后缀生成控制、数据、写入和 presence 分片；当前云网络需允许 `*.streams-api-x.loro.dev`，部署变更后重查实际路由，不放宽到整个供应商域。
 - 保留继承的代理与 CA 配置。`lody.ai` 可读只证明官网链路；实际登录、API 和观察连接需分别检验，不关闭 TLS 校验解决错误。
-- 官网明确 `session create/chat/cancel` 与 `agent-config refresh-capabilities` 需要当前机器运行 `lody start` 或 `lody daemon start`。启动 daemon 前确认登录、机器身份、任务授权和原有运行进程。
+- `0.107.2` 的 `session create/chat/cancel` 按目标选择路径：本机目标需要本机运行进程；远端目标经机器 RPC，控制端无 host/daemon 也可派发，执行端仍需运行进程与 Agent 凭证。取消在无活动回合时还可直接返回 `alreadyStopped`，不能据此报告实际取消。`agent-config refresh-capabilities` 仍保留本机要求。
+- 仅在确需本机执行时考虑启动 `lody start` 或 daemon；先确认登录、机器身份、任务授权和原有运行进程。host 的工作区登记范围另见兼容性参考，不能因为要派发远端任务就自动启动本机 host。
 - 登录 Lody 不等于目标 Agent 的模型凭证已经准备好。创建任务前核实目标运行时能力和账户条件。
 - 服务进程不会因为仓库文件和依赖恢复就自动恢复；长期启动使用稳定安装入口，并检查运行中的版本。只管理自己启动的进程。
 

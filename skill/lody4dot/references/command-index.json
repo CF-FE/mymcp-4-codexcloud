@@ -1187,7 +1187,7 @@
       "requires": {
         "authentication": true,
         "workspace": true,
-        "local_runtime": true
+        "local_runtime": false
       },
       "effect": "execute",
       "output_formats": [
@@ -1202,7 +1202,8 @@
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
       "verification": "documented",
-      "help_sha256": "40a9c1264c21b2f672f72ae17e37336d27c0ea4029ee72cf75dc8c9d10f58fde"
+      "help_sha256": "40a9c1264c21b2f672f72ae17e37336d27c0ea4029ee72cf75dc8c9d10f58fde",
+      "runtime_note": "有活动回合时按目标机器选择本机或远端取消路径，远端不要求控制端host/daemon；无活动回合或指定turn不匹配时可alreadyStopped，不代表本次取消成功。远端cancel源码已核实，未实测。"
     },
     {
       "command": "session chat",
@@ -1210,7 +1211,7 @@
       "requires": {
         "authentication": true,
         "workspace": true,
-        "local_runtime": true
+        "local_runtime": false
       },
       "effect": "execute",
       "output_formats": [
@@ -1226,7 +1227,8 @@
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
       "verification": "documented",
-      "help_sha256": "b874bc9964671425b27fb2bee1ffd4aad505b2b6b2e4edef7665624763fd07a5"
+      "help_sha256": "b874bc9964671425b27fb2bee1ffd4aad505b2b6b2e4edef7665624763fd07a5",
+      "runtime_note": "按会话machine选择本机或远端路径；本机目标需本机运行进程，远端控制端无需host/daemon，执行端仍需运行进程和Agent凭证。已有远端Codex的只读验证回合、持久化完成与回传字节校验已实测。"
     },
     {
       "command": "session create",
@@ -1234,7 +1236,7 @@
       "requires": {
         "authentication": true,
         "workspace": true,
-        "local_runtime": true
+        "local_runtime": false
       },
       "effect": "execute",
       "output_formats": [
@@ -1250,7 +1252,8 @@
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
       "verification": "documented",
-      "help_sha256": "b1ebe8ef9f63aacce8b3838ba8f24056b3eee5c997df68c93ab106351eaabf16"
+      "help_sha256": "b1ebe8ef9f63aacce8b3838ba8f24056b3eee5c997df68c93ab106351eaabf16",
+      "runtime_note": "本机目标需本机Lody运行进程；远端目标经机器RPC派发，控制端无需host/daemon，执行端仍需运行进程和Agent凭证。已有远端Codex的创建、持久化完成和Agent回传字节校验已实测，不推导其他配置或平台。"
     },
     {
       "command": "session delete",

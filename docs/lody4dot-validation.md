@@ -136,6 +136,22 @@ doctor 0.1.1 增加显式 `--workspace` 目录探测，执行原生 machine list
 
 完整 `.codex/cloud-install.sh` 退出 0，56 项测试、同锁复用安装和离线 inspect 通过；脚本不登录或启动服务。0.1.2 自包含产物构建通过，直接从产物运行真实 control+完整目录检查也退出 0。`dist/lody4dot-0.1.2.zip` 共 23 文件、69,005 字节，解压完整性通过；SHA-256 为 `bf8d2d1fe0b27486d0789939aad494b8051f1614523d4ecda0e7358857934626`，receipt SHA-256 为 `e61149fc1653782fcff61d2cd6a1943bccb26f1a092eb285931070c20f03a95e`。产物保留在忽略目录，不提交为源码。结束后已删除本轮自有私密认证 state；全局安全注入变量保留，没有新建环境草稿或把登录态放入快照。
 
+## 已有远端 Agent 的真实验收（0.1.3）
+
+用户明确授权“用已配置的agent来测试”，继续已选个人工作区。已复验2台机器online且canUse=true、2份已有配置；按明确类型选择唯一在线Codex配置。全程使用公开CLI、现有全局token和新建0700私密任务state；未启动控制端host/daemon，未新增机器、配置、项目或Role。
+
+固定标题、省略repo/local-project/parent，`session create --workspace ... --machine ... --agent-config ... --prompt-file ... --json` 原始退出0，ok=true，返回的工作区、机器和配置均与选择匹配。执行端建立独立chat上下文，任务约束仅在OS临时目录创建input.txt及result.json；不声称OS强制隔离。首回合follow观察匹配userTurn并报告completed。
+
+随后仅对这个新建会话发送一次只读 `session chat --json --wait`，退出0、ok=true并返回新turn标识。该回合要求重新读两份文件，回传base64字节及随机challenge的SHA-256。控制端从公开history获取回复并独立解码校验：input为65字节，逐字节与预设UTF-8输入一致；result为225字节，nonce、输入哈希、3行文本及逆序内容完全匹配；challenge哈希匹配。输入SHA-256为 `f0eb020f6939c19b062490387d3c497d7f2ff723c422126d105b46c5616a105e`，结果SHA-256为 `1d1b3bf40d4b03b411d18075e1cf8869f12ec9880514a647aba8737f56102e08`。
+
+最终observe原始退出0、source=persisted、freshness=synced、latestTurn.state=completed、activeTurns为空，公开history有4条可见记录（两对user/assistant）。独立验收复核通过。artifact解析器的重复匹配数不计为额外磁盘读取；实际二次验证来自另一只读回合。公开history不暴露底层工具执行日志，产物证据为Agent回传后控制端校验，不称控制端直接读取远端文件系统。
+
+这些结果证明该已有远端Codex配置的创建→执行→继续验证→持久化观察闭环。此前将本机daemon要求扩大到远端的知识错误已更正，并保留官网概括与0.107.2发布源码的差异记录。控制端的installation_id只读限制仍在，但不阻塞此远端路径；未用mock、改HOME/CODEX_HOME或复制认证。取消、其他配置/平台、高级操作、长期worker和新云任务自动加载均未据此标为通过。
+
+本轮56项回归、结构和空白检查通过。重建时发现上轮从产物运行Python留下的一个`__pycache__`额外文件，构建器按保护规则拒绝覆盖；已完整保留旧目录后在新目录构建成功，没有放宽receipt检查。0.1.3插件ZIP为23文件、71,929字节，完整性检查通过；SHA-256为 `6b30af467ac907a8dbf39f09565f68cde224d2f0babbf25aa99aa64b37a2a3ea`，receipt为 `2c331adbd3e09370d111ee0e6d7d7b87c3f99bfa71d2755a8fe06f1a6d2b70de`。另有四文件验收包，包含Agent回传的input/result副本、脱敏校验摘要和来源说明，不含账户/资源标识；均留在忽略的dist。
+
+已清理本轮0700私密认证state，保留全局token绑定；本次新建远端会话和验收临时文件保留用于追溯，未操作用户既有会话或项目。修正后的完整云启动说明已由后端确认status=saved、requires_publish=true；只更新start_skill，网络、凭证及安装脚本均未重配。该草稿供后续云任务复用，仍需环境设置中的发布；当前远端验收结果不依赖再次发布。
+
 ## 复现命令
 
 在仓库根目录运行：
