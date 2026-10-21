@@ -274,6 +274,20 @@ doctor保持schema1旧字段/退出码，新增时间、真实通过的检查范
 
 此包采用已核实的Codex0.163.0格式；ChatGPT上传扫描、ZIP包装接受、安装与Dot实际读取尚未运行。GitHub marketplace导入是官方支持的路线，但不会运行本仓库builder，因此未添加指向缺失skills的源码catalog。正式云来源仍是0.2.0，本轮未新建升级草稿；0.2.1的新提示策略仅适用于执行新版脚本的端，未来任务若要使用新版须选用对应源码，不能把本工作副本完成当作正式环境自动升级。当前任务可以继续验证，无需重配token。当前工具没有插件UI导入或建立独立平台任务入口，相关真实验收及未知Dot生命周期契约继续在队列保留。
 
+## 远端内置MCP只读查询与C07有限双端验收
+
+在CLI版本提示策略交付后继续检查替代入口。本机0.107.2公开发布物的`buildBuiltinMcpServers`及ACP new/load/resume路径会在上下文成立时加入内置Lody MCP，可使用HTTP或宿主`process.execPath`，不要求Agent shell的PATH有Node/npm/CLI。源码存在不证明远端实际注入，因此没有仅凭这一发现关闭C07。
+
+随后复用既有授权的Darwin/arm64 Agent及本任务原验收会话，新增**一个明确的只读模型验收回合**。它不是重发此前产物业务；此前发布后身份恢复阶段的0新回合结果仍成立。控制端另建0700私密身份显式登录，先确认原准确读回回合persisted/synced/completed、无activeTurns，再只发送一次该验证目标。没有新增会话、配置、Role或服务。
+
+远端回执报告实际暴露内置MCP，并成功调用`mcp__lody__lody_session_status_many`和`mcp__lody__lody_session_history`。控制端逐项核对两次参数只指向原session/URI：状态返回1项、machine online、observation fresh；execution busy对应正在执行的验证自身，不当作旧产物未完成。history返回8项、无后页；远端按原两次assistant引用从查询结果取得旧回执，返回完整273字节结果、SHA-256及challenge重算值。
+
+控制端验证新nonce、准确原生引用、完整base64解码字节、长度、SHA-256、原challenge及远端computed各项全部匹配。远端声明未修改文件。最终本次新验证回合persisted/synced/completed、无activeTurns；本次临时控制身份已清理。脱敏结论为`dist/lody4dot-0.2.1-evidence/native-mcp-summary.json`，准确引用/提示/完整回执仅存忽略目录私密位置。
+
+结合此前Darwin解包读取技能、单写产物和Linux控制端复验，C07的两个实际宿主协作及各端原生查询子范围已具备证据。远端使用宿主合法内置MCP，不另装CLI、不共享控制端登录文件；不再以PATH缺少CLI阻塞此范围。证据强度为远端Agent的结构化调用回执和控制端独立字节核验，公开history没有底层工具trace；不宣称直接访问远端FS、macOS受管runtime安装、原生插件注册或Dot接入。C05首次独立加载、C08真实宿主重建及C09/C10含Dot验收仍保留。
+
+本次只新增验收记录，插件源码、0.2.1候选包字节和127项测试结果未变。
+
 ## 复现命令
 
 在仓库根目录运行：

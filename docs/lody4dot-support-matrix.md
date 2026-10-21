@@ -18,7 +18,7 @@
 | [`login`](../skill/lody4dot/references/setup-cloud.md) | 已核实 1 条路径 | 全新 `0700` 任务状态在登录前 `verify-only` 退出 4、类别为 `authentication`；显式登录随后退出 0、账户为 `authenticated` | 前一结果是无登录态的预期拒绝，不是 token 登录失败。验证的是 API-key 路径；设备授权、配对、真实 keyring 存取和跨任务身份恢复未测，登录不证明远端机器已注册 |
 | [`logout`](../skill/lody4dot/references/setup-cloud.md) | 已核实 1 条路径 | 未运行 | 没有注销或撤销用户既有身份；CLI 注销的实际范围与后续状态未测。删除本任务拥有的临时状态不等于测试了 `logout` |
 | [`machine`](../skill/lody4dot/references/discovery.md) | 已核实 2 条路径 | 真实完整目录查询通过，返回 2 台 `online` 且 `canUse=true` 的已有机器；其中所选远端机器完成了受控任务 | 未新增或注册机器；其他机器的 Agent、所有协议能力及长期在线行为未逐项执行 |
-| [`mcp`](../skill/lody4dot/references/configuration.md) | 已核实 5 条路径 | 已授权工作区的完整 MCP 配置目录查询通过，当前为 0 项 | `add/set/remove`、连接、宿主注入及真实工具调用未测；空配置目录不证明当前 Agent 已加载 MCP，也不提供通用内部启动入口 |
+| [`mcp`](../skill/lody4dot/references/configuration.md) | 已核实 5 条路径 | 已授权工作区的完整MCP配置目录查询通过，当时为0项；后续Darwin Agent另有内置MCP的两项只读工具调用回执，见下文 | `add/set/remove`和新连接配置未测；配置目录与内置会话工具分开，不提供通用内部启动入口 |
 | [`migrate`](../skill/lody4dot/references/delivery.md) | 已核实 1 条路径 | 未运行迁移 | 需要受支持的 OSS 源数据与明确目标；源关闭、记录和附件迁移、恢复续跑及导入后执行禁用行为未实测 |
 | [`operation`](../skill/lody4dot/references/automation.md) | 已核实 2 条路径 | 在本次控制端私密本机 store 中，以本任务自有 requester 查询成功，返回 0 项且 `hasMore=false` | 结果仅属于该本机 store、请求方及筛选范围，不能报告远端机器无 Operation；真实持久 Operation 的执行、恢复与协作未测，不能把 MCP 工具名当成公开 CLI 子命令 |
 | [`project`](../skill/lody4dot/references/discovery.md) | 已核实 4 条路径 | 指定工作区的完整项目目录查询通过，`kind=local` 为 1 项 | 没有读取或修改该既有项目文件，未测试 `add/delete`、本机 daemon 项目列表或 Git worktree。远端受控任务未附加既有项目 |
@@ -53,7 +53,7 @@ Operation 的空结果只针对当前控制端的私密本机 store 与本任务
 | --- | --- | --- |
 | 正式云配置 | 已发布0.2.0、来源`d27f1a0`，无待发布草稿 | 当前源码0.2.1已发布、独立新任务已加载或原生插件已注册 |
 | 当前运行观测 | `spec_revision/observed_spec_revision=9`，`observations_current=true`；网络与变量readiness仍为`unknown` | 将unknown填成ready/enforced，或仅凭版本变化宣布整机重建 |
-| 发布后原任务复验 | 当前技能/接入资料读取、依赖检查及沿原Lody任务的只读对账通过；本轮新增模型回合为0 | 独立控制端查询、首次入口送达、独立新云任务接入、真实磁盘重建或Dot自身执行 |
+| 发布后原任务恢复阶段 | 技能/接入资料读取、依赖检查及沿原Lody任务的只读对账通过；该阶段新增模型回合为0 | 首次入口送达、独立新云任务接入、真实磁盘重建或Dot自身执行；后续独立端MCP验证另记1个只读回合 |
 | 源码0.2.1候选 | 补充Dot知识、接入材料及非阻塞版本策略；本轮127项回归、自包含构建、ZIP逐文件校验、包内安装复用与启动检查通过，安装输入基线仍0.107.2 | ChatGPT界面扫描/安装、正式云来源升级或独立新任务加载 |
 
 较早0.1.3正式来源`a2e6796`、完整云准备脚本56项测试、同锁复用与离线inspect，保留为历史验收。0.1.4的56项回归、自包含包及包内安装/inspect也有独立记录；这些结果不能补齐旧截图任务当时缺少的版本和入口来源，也不能替代本次发布后的验证。
@@ -66,7 +66,7 @@ Operation 的空结果只针对当前控制端的私密本机 store 与本任务
 | --- | --- | --- |
 | 共享知识与包交付 | Linux端自主检索3场景；Darwin/arm64已有Agent经原生附件收包、显式读技能，摘要匹配 | 不能据此声称原生注册或平台自动注入 |
 | 受管runtime安装/身份/进程边界 | Linux实跑；Win32/Darwin模拟结构化不支持；远端报告无Node/npm/LodyCLI | macOS native与WSL实测，Windows原生模型未定义 |
-| 跨端工件复验 | Darwin单写273字节结果；Linux核对两次完整字节、摘要、随机challenge和准确原生引用 | 证据为Agent读回；第二独立控制端自身Lody查询未运行 |
+| 跨端工件复验 | Darwin单写273字节结果；Linux核对完整字节、摘要、challenge和原生引用；后续Darwin通过内置MCP查询同一会话并复验 | 证据为Agent回执及控制端字节核验，无底层工具trace；不推广至Dot、macOS受管安装或任意配置 |
 | 依赖与身份恢复 | 自有临时prefix实际恢复；新私密state重新认证后沿原会话只读对账；本次发布后原任务再次只读对账通过 | C08实际宿主重建、新启动入口回执及Dot存储生命周期；同一任务恢复不替代这些证据 |
 | 离线交接 | 27项行为测试；真实无产物回执blocked/3，完整记录pass/0 | 校验不证明实时身份、ACL、产物内容或业务真实性 |
 
@@ -82,10 +82,12 @@ Operation 的空结果只针对当前控制端的私密本机 store 与本任务
 | skills-only插件分发 | 官方支持含skills的插件ZIP上传及GitHub marketplace导入；候选提供[Dot宿主说明](../plugin/lody4dot/hosts/dot.md)与[Dot验收流程](lody4dot-dot-acceptance.md) | 包格式候选采用已核实Codex0.163.0契约；ChatGPT界面扫描、ZIP包装接受、安装和实际原生加载未运行，完整格式指南仍CONNECT403 |
 | GitHub导入 | 是正式支持的内容分发方式；不替代用户连接授权 | 当前三目录源码需builder收集技能，不能直接把未构建的`plugin/lody4dot/`当完整source；未执行导入/同步 |
 | Dot委托Codex云任务 | 官方支持使用事先准备的Codex环境，可复用已发布0.2.0控制端路线 | Dot实际发起、执行位置、入口来源与该任务只读工具回执尚未取得；不是Dot自身CLI安装证明 |
-| Dot连接本地电脑 | 官方要求在目标电脑的ChatGPT桌面App连接并Allow access；连接Codex或Work Sync不能替代 | lody4dot在该端的安装/技能读取和独立控制端自身查询未验；C07仍缺第二独立控制端证据 |
+| Dot连接本地电脑 | 官方要求在目标电脑的ChatGPT桌面App连接并Allow access；连接Codex或Work Sync不能替代 | lody4dot在Dot连接的本地端安装/读取未验；Lody现有Darwin Agent的内置MCP查询不证明该电脑已连接Dot |
 | 准备、存储与恢复 | Dot主动Reset是产品/上下文删除；Codex Cloud默认最多7天VM恢复规则有独立作用范围 | Dot自身prepare/maintenance、周期磁盘重置及重建hooks仍未知；不将Codex会话hook、发布配置或原任务对账当成C08重建通过 |
 
-0.2.1的29个内容文件及receipt已构建成候选ZIP，127项回归、包内同锁复用和只检查通过；字节数与摘要见[验证记录](lody4dot-validation.md#dot官方契约指引与021候选)。Lody CLI实际版本不同或探测失败只warn，不作为执行准入；显式`--check-updates`本轮取得npm latest0.107.2，网络失败/非最新版只提醒，默认启动保持离线且不自动升级。Dot完整接入、独立控制端查询和实际宿主重建仍需按对应任务取得实际证据。
+0.2.1的29个内容文件及receipt已构建成候选ZIP，127项回归、包内同锁复用和只检查通过；字节数与摘要见[验证记录](lody4dot-validation.md#dot官方契约指引与021候选)。Lody CLI实际版本不同或探测失败只warn，不作为执行准入；显式`--check-updates`本轮取得npm latest0.107.2，网络失败/非最新版只提醒，默认启动保持离线且不自动升级。
+
+后续已有Darwin Agent实际通过内置`lody_session_status_many/history`查询原会话，准确引用、273字节及challenge匹配，补齐C07有限双端范围；它使用宿主已有上下文，不依赖shell PATH的CLI。新增1个明确只读模型验收回合，最终persisted/synced/completed且无activeTurns，身份已清理。证据为Agent调用回执及控制端字节核验，不是底层工具trace或远端FS直读。详见[内置MCP验收](lody4dot-validation.md#远端内置mcp只读查询与c07有限双端验收)。Dot完整接入、独立新任务首次读取和实际宿主重建继续按各任务另验。
 
 当前可用路径是 Codex 云端作为控制端，复用已有授权、在线的远端 Agent。当前云机的 managed Codex `0.160.1` bundled ACP 初始化返回 RPC1001；独立 SQLite 目录后仍有只读错误，官方代码还要求读写 Codex home 下的 `installation_id`。该本机失败不否定已通过的远端任务路径，也不泛化其他平台。
 

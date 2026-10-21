@@ -121,10 +121,10 @@ T11按开发契约完成支持范围和场景覆盖：20根/70路径数量、来
 | C04 | 平台安装边界 | blocked；Linux与统一边界通过52项相关测试，Win32/Darwin模拟退出5；真实Darwin/arm64报告无Node/npm，native安装前提缺失，WSL未提供，不宣布跨平台runtime支持 |
 | C05 | 按宿主分发与加载 | blocked；0.2.0包/移位及Darwin显式读取已有回执，正式0.2.0现已发布；0.2.1的29内容文件候选包、ZIP完整性、包内安装复用/启动检查均通过。首次独立任务入口送达/读取仍未验；原生注册单列未验，不作为云接入路线额外门槛 |
 | C06 | 最小交接整理/校验 | done；27项离线行为测试及分发回归通过，输入不改写、无网络/登录/派发；仅结构/声明一致性，真实性/ACL/产物内容未核验 |
-| C07 | 两独立宿主协作 | blocked；既有[真实交接](../../docs/lody4dot-validation.md#020-linux云端与darwin-agent的实际交接)及本轮新私密state沿原引用/回执/摘要只读对账通过，0新模型回合；第二独立控制端自身查询仍未运行，按[独立控制端验收](../../docs/lody4dot-dot-acceptance.md)继续 |
+| C07 | 两独立宿主协作 | done（有限范围）；Linux控制端与Darwin解包/显式读技能宿主完成原产物交接，Darwin随后通过自身内置MCP只读查询原session/history，准确引用、273字节、SHA及challenge均匹配。新增1个明确只读模型回合，最终persisted/synced/completed且无activeTurns；证据为Agent调用回执与控制端核验，无底层tool trace，见[内置MCP验收](../../docs/lody4dot-validation.md#远端内置mcp只读查询与c07有限双端验收)。不扩为macOS受管安装、原生注册或Dot |
 | C08 | 初始化与恢复演练 | blocked；上轮临时prefix恢复与7项测试已测；本轮bootstrap仅doctor pass、新私密身份认证及原会话对账通过。无旧实例基线或其他实际重建回执，首次独立启动仍未验；未知Dot hook不阻塞这些已完成子范围 |
 | C09 | Dot合法接入 | blocked；官方候选路线已知，[Dot接入说明](../../docs/lody4dot-dot-acceptance.md)已提供。native UI上传/扫描、实际安装读取及工具调用仍未通过；共享插件连接不自动赋予CLI身份、本地文件或模型权限 |
-| C10 | 含Dot闭环与交付 | blocked；依赖C07/C08/C09真实证据，先交付有证据的0.2.0子范围 |
+| C10 | 含Dot闭环与交付 | blocked；C07有限双端范围已完成，仍依赖C08真实重建及C09 Dot实际参与证据；0.2.1工具/知识和既有跨端业务范围分别交付 |
 
 已发布0.2.0的准备脚本复用bootstrap准备入口，启动指引要求读取技能并检查/修复缺失依赖；本轮按该入口实际执行只运行doctor并通过。它不证明平台首次送达或独立任务已加载。恢复路线继续采用幂等准备、入口检查、执行中保存和原任务对账，未知Dot自身存储hook不是所有接入路线的总前置。
 
@@ -157,3 +157,11 @@ T11按开发契约完成支持范围和场景覆盖：20根/70路径数量、来
 用户最新要求优先于旧版严格验证：Lody CLI版本差异、探测失败均只warn；安装、诊断和认证继续按实际命令结果执行。0.107.2只代表知识/默认安装输入基线，旧收据版本不再用于执行准入。显式`doctor --check-updates`对固定npm地址做一次最多5秒查询，非最新版/不可比较/查询失败只提醒；默认inspect/bootstrap离线，不自动升级，实际权限和命令失败保留原退出码。
 
 127项全量回归和结构检查通过，包含41项诊断、4项版本策略、21项安装及8项生命周期行为测试；bootstrap文本也展示warn。真实npm查询本轮actual/latest同为0.107.2，账户not_run。最终包29内容文件+receipt，包内安装reused=true、启动仅doctor通过；ZIP完整性与逐文件摘要通过。最终ZIP及receipt摘要见[0.2.1验证记录](../../docs/lody4dot-validation.md#dot官方契约指引与021候选)，不再使用追加版本策略前的内部候选摘要。没有为版本检查创建业务任务、登录或升级CLI。
+
+## C07内置MCP补证（V01完成后的独立验收阶段）
+
+公开0.107.2源码确认会话可由宿主注入MCP，并不依赖Agent shell的PATH；于是复用既有Darwin Agent和自有原会话，只发送一次明确的只读验证目标，没有重发原产物业务。远端回执报告实际暴露36个Lody工具，只调用status_many/history两只读工具，参数唯一指向原session/URI，状态1项与历史8项、无后页；原两回合引用、273字节、SHA与challenge经控制端及另一只读审查上下文重算均匹配。Darwin Lody实际版本未知，不追加版本硬门槛。
+
+新只读回合最终persisted/synced/completed、无activeTurns；本次新增模型回合为1，与此前发布后恢复阶段0新回合分别记录。新私密认证目录已清理，未新增会话/配置/Role/服务。脱敏结果在忽略的`dist/lody4dot-0.2.1-evidence/native-mcp-summary.json`；公开只记范围与匹配结论，不存实际引用或产物字节。
+
+C07按卡中允许“执行节点属于其中一端”的范围完成：Linux CLI控制＋Darwin技能读取/原执行与随后内置MCP只读复验。证据仍是远端Agent结构化回执，无底层MCP tool trace，不扩为受管macOS安装或Dot。C05独立首次加载、C08真实宿主重建、C09/C10仍blocked；候选包和代码字节未改，本次只更新记录。

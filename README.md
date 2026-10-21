@@ -30,7 +30,7 @@ lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安�
 
 当前源码候选为0.2.1：补齐官方Dot知识、接入说明与候选分发材料，并将CLI版本检查改为非阻塞提示。0.107.2保留为知识及默认可复现安装基线；实际版本不同或查询失败只warn。显式`doctor.py --check-updates`可查询npm latest，默认inspect/启动检查离线，不自动升级。真实命令、身份、权限和安装完整性问题按实际结果处理，受管runtime仅支持Linux。构建与回归结果见[验证记录](docs/lody4dot-validation.md)，实际支持范围见[支持矩阵](docs/lody4dot-support-matrix.md)。现有云准备入口可复用；Dot安装及独立控制端按[接入运行单](docs/lody4dot-dot-acceptance.md)验收。Review上游Viewer缺失、旧截图入口补证及Dot自有存储hooks分别保留缺口。
 
-此前通过Lody原生附件将0.2.0包交给Darwin/arm64已有Agent，解包后的receipt/技能摘要匹配，273字节产物二次读回及随机challenge验证通过；未独立核验远端原始ZIP字节。远端缺Node/npm/LodyCLI，独立控制查询与macOS受管安装仍待条件；真实云主机重建及Dot接入也尚未验证。
+此前通过Lody原生附件将0.2.0包交给Darwin/arm64已有Agent，解包后的receipt/技能摘要匹配，273字节产物二次读回及随机challenge验证通过；未独立核验远端原始ZIP字节。随后远端通过实际暴露的内置MCP查询同一会话，原引用、产物字节与challenge再次匹配，补齐有限双端控制/复验范围。缺少PATH中的Node/npm/CLI不等于缺少宿主内置工具；macOS受管安装、真实云主机重建及Dot接入仍未验证。
 
 ## 开发与验证
 
