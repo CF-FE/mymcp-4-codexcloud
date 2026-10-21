@@ -28,7 +28,7 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安装、只读诊断、显式认证和自包含打包。当前 Linux 云机已验证安装、真实授权和完整目录；通过已有远端 Codex Agent 完成了创建、执行、继续验证和持久化观察，并校验 Agent 二次读回的产物字节。控制端无需本机 daemon。已收到用户的安装、认证、目录和手动读取截图，仍需补齐入口来源与版本等回执；本机 Codex 执行的只读状态限制单独保留。见 [产品方案](docs/lody4dot/plan.md)、[开发契约](docs/lody4dot/development.md)、[验证记录](docs/lody4dot/validation.md) 和 [任务队列](.codex/agent-state/todo.md)。
 
-正式云环境已发布0.2.0，来源为`d27f1a0`；本轮运行配置revision9，启动依赖检查通过，新私密身份沿原Lody引用完成只读对账，没有重发模型任务。这证明发布后控制端恢复子范围，尚不证明独立新任务加载或整机重建。平台网络/变量readiness仍为unknown，实际连接与认证结果单独记录。
+正式云环境来源仍固定为0.2.0的`d27f1a0`；最新运行配置为revision11。当前工作副本0.2.1的完整准备脚本与127项测试通过，正式配置、实际工作副本和升级草稿分别记录。此前新私密身份沿原Lody引用只读对账的结果保留，但不证明独立新任务加载或整机重建。平台网络/变量readiness仍为unknown，实际连接与认证结果单独记录。
 
 当前源码候选为0.2.1：补齐官方Dot知识、接入说明与候选分发材料，并将CLI版本检查改为非阻塞提示。0.107.2保留为知识及默认可复现安装基线；实际版本不同或查询失败只warn。显式`doctor.py --check-updates`可查询npm latest，默认inspect/启动检查离线，不自动升级。真实命令、身份、权限和安装完整性问题按实际结果处理，受管runtime仅支持Linux。构建与回归结果见[验证记录](docs/lody4dot/validation.md)，实际支持范围见[支持矩阵](docs/lody4dot/support-matrix.md)。现有云准备入口可复用；Dot安装及独立控制端按[接入运行单](docs/lody4dot/dot-acceptance.md)验收。Review上游Viewer缺失、旧截图入口补证及Dot自有存储hooks分别保留缺口。
 

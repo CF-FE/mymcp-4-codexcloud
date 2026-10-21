@@ -37,7 +37,7 @@ Dot自己的云电脑、其创建的Codex云任务、已连接的本地电脑是
 
 当选择Dot委托Codex任务时，使用已发布的目标环境。官方说明新任务有独立工作区，不恢复另一任务未提交的文件；保存VM状态默认最多7天可恢复是Codex Cloud规则，不是Dot存储reset hook。参见[Using Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud)。
 
-本会话的子Agent不构成独立云任务。当前可用工具未提供新建该平台任务或操作插件导入界面的入口，不能用同实例子进程替代真实独立性。
+本会话的子Agent不构成独立云任务。已发现Codex CLI正式cloud exec入口，但本轮其cloud list所需chatgpt.com被代理拒绝，尚无经服务核实的Cloud ENV_ID，不能猜ID提交任务。当前没有插件导入界面工具；同实例子进程也不能替代独立任务。
 
 已有远端Agent也可成为另一控制端：本轮Darwin端实际通过其会话内置Lody MCP查询原会话，补齐了有限双端复验，不再要求为C07另建平台云任务。该结果不证明独立新任务的首次技能加载，后者仍属于C05，也不证明Dot自身调用。
 

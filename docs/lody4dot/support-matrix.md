@@ -52,11 +52,13 @@ Operation 的空结果只针对当前控制端的私密本机 store 与本任务
 | 对象 | 已核实状态 | 不可据此推导 |
 | --- | --- | --- |
 | 正式云配置 | 已发布0.2.0、来源`d27f1a0`，无待发布草稿 | 当前源码0.2.1已发布、独立新任务已加载或原生插件已注册 |
-| 当前运行观测 | `spec_revision/observed_spec_revision=9`，`observations_current=true`；网络与变量readiness仍为`unknown` | 将unknown填成ready/enforced，或仅凭版本变化宣布整机重建 |
+| 当前运行观测 | `spec_revision/observed_spec_revision=11`，`observations_current=true`；网络与变量readiness仍为`unknown` | 将unknown填成ready/enforced，或仅凭版本变化宣布整机重建 |
 | 发布后原任务恢复阶段 | 技能/接入资料读取、依赖检查及沿原Lody任务的只读对账通过；该阶段新增模型回合为0 | 首次入口送达、独立新云任务接入、真实磁盘重建或Dot自身执行；后续独立端MCP验证另记1个只读回合 |
 | 源码0.2.1候选 | 补充Dot知识、接入材料及非阻塞版本策略；本轮127项回归、自包含构建、ZIP逐文件校验、包内安装复用与启动检查通过，安装输入基线仍0.107.2 | ChatGPT界面扫描/安装、正式云来源升级或独立新任务加载 |
 
 较早0.1.3正式来源`a2e6796`、完整云准备脚本56项测试、同锁复用与离线inspect，保留为历史验收。0.1.4的56项回归、自包含包及包内安装/inspect也有独立记录；这些结果不能补齐旧截图任务当时缺少的版本和入口来源，也不能替代本次发布后的验证。
+
+spec11下实际工作副本0.2.1的完整cloud-install及127项回归再次通过，依赖准备未认证或发起业务。正式ref仍固定0.2.0，源码升级与实际发布分开；已核实Codex CLI有cloud exec入口，但其cloud list及chatgpt.com请求受代理拒绝，独立新任务尚未提交。当前内核启动时间与旧资料关系只证明环境变化，不能替代基础设施重建回执，见[本轮记录](validation.md#spec11发布复查与文档归档)。
 
 ## 0.2.0 多宿主增量范围
 

@@ -288,6 +288,16 @@ doctor保持schema1旧字段/退出码，新增时间、真实通过的检查范
 
 本次只新增验收记录，插件源码、0.2.1候选包字节和127项测试结果未变。
 
+## spec11发布复查与文档归档
+
+2026-10-21，用户再次发布后，正式配置读取无草稿，来源仍为`d27f1a0`/0.2.0；运行spec/observed均11且current=true。实际checkout保留0.2.1代码，执行完整`.codex/cloud-install.sh`退出0：仓库结构及127项测试通过，bootstrap prepare中的install/doctor均通过，认证/daemon/业务恢复not_run。CLI版本策略保持只告警，没有为验收创建新的Lody模型回合。
+
+当前内核启动时间为2026-10-21T07:51:35Z，晚于旧spec9观测时间；旧/tmp官方资料缓存不存在，dist验收资料保留。已在忽略的`dist/lody4dot-environment-checks/spec11/`保存当前启动摘要和本次准备结果供后续比较。没有旧boot标识或平台重建回执，不能据此宣布特定VM重建、磁盘reset、Dot生命周期hook或独立任务首次启动。网络/变量readiness仍unknown，实际检查结果单独记录。
+
+发现并读取Codex CLI0.163.0正式`cloud exec/list/status`帮助。一次`codex cloud list --limit 1 --json`实际发起任务目录请求，但返回HTTP request failed；其PATH aliases只读警告不是已证实的主因。随后对chatgpt.com作无凭证HTTPS检查，代理明确CONNECT403；当前规则未包含此目的地。未发起cloud exec、未猜Cloud ENV_ID，也未将托管实例ID当该服务环境ID。后续升级准备保留原规则并追加chatgpt.com及官方格式指南所在learn.chatgpt.com，实际保存与发布分别取证。
+
+另按用户要求迁移14篇专属文档至本目录并去除冗余前缀，9份图资源移至diagrams，新增README阅读索引。迁移后的本地链接及渲染命令检查通过，8份非Markdown图资源字节完全相同；独立审查确认旧文档除路径外事实和命令语义不变。开发规范写入AGENTS与[仓库架构说明](../architecture.md#文档归档规范)。能力源码、CLI依赖锁和已验收候选包字节均未因文档归档改变。
+
 ## 复现命令
 
 在仓库根目录运行：
