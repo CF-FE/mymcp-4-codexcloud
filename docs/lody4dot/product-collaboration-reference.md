@@ -23,11 +23,69 @@
 | 名称 | 主要用途 | 与其他对象的关系 |
 | --- | --- | --- |
 | Chat／聊天 | 问答、解释、构思、对话起草 | “聊天”也可能泛指一个 Work 或 Codex 会话，不能仅凭侧栏名称判断运行环境。 |
-| Work／工作任务 | 委派研究、分析、文档制作、定时工作等多步骤成果 | 需要工具和执行资源；不等于用户配置的 GitHub 编码环境。 |
+| Work／工作任务 | 委派研究、分析、文档制作、定时工作等多步骤成果 | 可在本地或平台托管云端执行；不是“尚未配置云环境的 Codex 会话”。 |
 | Codex | 构建、调试、测试、审查软件及开发工具 | 可使用本地或云端等执行位置。 |
 | Dot | 持续承担责任、跟进变化、组织任务的 Agent | 可以自己工作，也能委派 Work 或 Codex；Dot 不等于某一台电脑。 |
 
 这是产品定位，能力会重叠。例如 Dot 自己也能处理编码工作，不存在“凡是写代码都必须委派”的已知规则。[产品使用方式](https://learn.chatgpt.com/docs/use-chatgpt)、[Work](https://learn.chatgpt.com/docs/get-started-with-work)、[Dots](https://learn.chatgpt.com/docs/dots)
+
+### Work、Work Cloud 和 Codex Cloud 的关系
+
+Work 是面向通用成果的任务模式；Work Cloud 是在平台托管环境运行的 Work。Codex 面向软件开发，Codex Cloud 则使用已发布的仓库、依赖、工具和访问准备执行开发任务。Work Cloud 不要求先创建 GitHub 编码环境，也不会因为配置了该环境而自动变成 Codex Cloud。[Work 入门](https://learn.chatgpt.com/docs/get-started-with-work)、[Codex Cloud](https://learn.chatgpt.com/docs/environments/cloud-environments)
+
+Work Cloud 使用 Codex 的任务执行框架，共享部分核心执行与隔离机制，但工具、权限和管理控制不完全相同。Work Cloud 由平台管理其执行环境，不能直接套用 Codex Cloud 的 VM 规格、每任务状态或插件配置规则。[执行框架与边界](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security#where-cloud-tasks-run)
+
+### Work Cloud 能做什么
+
+| 能力类别 | 可用于什么 | 取决于什么 |
+| --- | --- | --- |
+| 资料研究与分析 | 汇集来源、比较信息、分析文件、形成有依据的结论 | 实际提供的输入、项目资料、连接器和可用工具。 |
+| 制作交付文件 | 生成报告、演示文稿、表格及其他可审阅成果 | 相应文件制作能力、输出格式与本次工具支持。 |
+| 网页工作 | 获取批准网站的内容，或用支持的云浏览器完成工作 | 云浏览器/网络权限、网站访问及账户身份。 |
+| 插件与远程MCP | 检索外部服务，执行其支持且已授权的动作 | 兼容插件、工具动作、连接授权、对象权限和审批。 |
+| 资料空间文件 | 使用主动附加的资料，保存符合条件的文件 | 资料入口可用、目标对象及保存方式；不代表任意Page/原附件可覆盖。 |
+| 时间或事件运行 | 定期更新、跟进检查，或响应支持的应用事件 | 已保存且启用的计划、套餐/工作区、触发器和实际运行。 |
+| 连接本地资源 | 云协调任务在获批准的在线电脑上完成所需步骤 | 启用相应本地访问后的合资格新任务、本机在线和独立授权；云端不自动继承本机状态。 |
+
+这些是产品支持类别，不保证每个账号或任务同时提供全部能力。资料处理、连接业务工具、创建其他任务分别核实；平台管理的云端执行也不等于可任意配置GitHub编码环境。[Work能力](https://learn.chatgpt.com/docs/get-started-with-work)、[云任务资料与本地访问](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security#what-a-cloud-task-can-access)
+
+### 常见场景怎么选
+
+下表是帮助选择入口的例子，不是互斥能力清单，也不是本账号已经逐项验收的结果。任务实际可用的工具、授权和输出要求优先。
+
+| 想让它完成什么 | 通常选择 | 关键条件与分工 |
+| --- | --- | --- |
+| “解释这段报错，先告诉我可能原因” | Chat | 主要交付解释；尚未要求访问仓库或修改文件。 |
+| “把这段说明改得更清楚，给我三个版本” | Chat | 短文本起草与讨论即可完成。 |
+| “汇总这些资料，形成带来源的调研报告” | Work Cloud | 使用获授权的上传、项目资料、插件或网页来源。 |
+| “读取指定资料空间文件，分析后制作 PPT 并保存” | Work Cloud | 需要实际文件读取、制作品和保存入口；本账号整条链路尚未实测。 |
+| “比较多份报价，生成带公式的表格” | Work | 云端可取得资料时用 Work Cloud；需本机文件时选择获授权本地执行。 |
+| “整理我电脑指定文件夹中的文档” | 本地 Work | 需要本机文件权限；使用云协调加本地访问时，相关电脑须在线。 |
+| “通过已连接的业务系统，整理本周问题清单” | Work Cloud | 使用兼容插件或远程 MCP，操作范围由连接与对象权限决定。 |
+| “打开批准的网站，收集资料并导出报告” | Work Cloud | 须有支持的云浏览器或网页工具；不能把此能力套给 Codex Cloud。 |
+| “每天检查指定网站，更新一份简报” | Work 的计划任务 | 显式设置并核对计划；执行位置、可用资料和实际运行结果分别确认。 |
+| “修复指定 GitHub 仓库的 bug，运行测试并提交” | Codex Cloud | 使用已发布的相应仓库环境；文件、命令和检查结果属于该任务。 |
+| “修改当前本地项目，并用本机工具预览” | 本地 Codex | 使用实际本地 checkout、工具与权限。 |
+| “持续跟进项目，拆分工作并收敛多个任务结果” | Dot | 持续协调责任；具体任务的执行位置和工具另记。 |
+| “把资料交给 Cloud 修改仓库，完成后将结果存回资料空间” | Dot＋Codex Cloud | 沿用公子已试通的中转，由 Dot 负责资料交接与回存，Cloud 负责开发处理。 |
+| “向已有远端 Agent 派发工作，并持续核对同一回合” | 具备合法 Lody 工具的控制端 | 使用 Lody 原生 session／turn；不把它当作 Codex 平台任务的自动镜像。 |
+
+同一个“做一份报告”的需求也可有不同分工：直接整理资料并生成文件，通常用 Work；若还要将分析脚本纳入仓库、补测试和提交，开发部分可交给 Codex；若需长期跟进多个任务，由 Dot 组织。最终按所需操作选择，而不是只按产物扩展名判断。
+
+### Work Cloud 可以怎样创建或触发
+
+Work Cloud 不只支持用户手动点击创建。应分别识别“创建任务”“向已有会话发起新一轮”和“定时触发运行”，它们不是同一事件。
+
+| 方式 | 当前可确认的范围 | 需要保留的边界 |
+| --- | --- | --- |
+| 用户从网页或支持的桌面入口创建 | 选择 Work，并使用云端执行方式；网页 Work 使用平台托管环境 | 以当前账号的可用入口和工作区设置为准。 |
+| 当前本地助手经首方客户端工具代建 | 本次会话工具声明提供 `mcp__codex_app__create_thread`，目标可选 `chatgptWorkCloud`；用户明确要求后可使用 | 属于本次工具快照，本轮没有调用；不是已公布的通用外部 HTTP API，其他会话不保证暴露相同入口。 |
+| 平台按时间或支持的应用事件触发 | 可从 Chat／Work 请求创建计划任务；网页任务可在原会话继续，或按设置产生独立运行／新会话 | 事件触发受套餐、工作区和支持事件限制；不把所有桌面计划任务都叫 Work Cloud。 |
+| Dot 创建独立云会话 | 官方明确 Dot 可启动可见云会话并跟进；本项目的 Codex Cloud 创建由 Dot 负责 | 这不单独证明每种 Dot 入口都能创建指定 Work Cloud 类型，应记录实际创建工具及返回类型。 |
+
+来源：[选择云端或本地 Work](https://learn.chatgpt.com/docs/use-chatgpt#choose-cloud-or-local-work)、[计划与事件触发任务](https://learn.chatgpt.com/docs/automations)、[Dot 委派](https://learn.chatgpt.com/docs/dots/tasks-and-memory#assigned-work)。首方客户端工具一行来自本次实际工具声明，不是公开 API 文档或已创建成功的回执。
+
+本次没有建立“任意外部程序可调用统一 Work Cloud API”的结论。能调用某个业务 MCP，只说明有该服务的相应动作；若要让它创建 Work Cloud，还需要实际任务创建入口、身份与授权，不能从 MCP 连接成功直接推导。
 
 ## 2. 云电脑、云任务、云环境分别是什么
 
@@ -124,6 +182,20 @@ Space 是资料和协作入口，官方将其描述为原 Library 的演进，�
 
 谁能操作，取决于具体对象的查看／评论／编辑权限、账号与工作区策略，以及当前产品实际提供的工具。页面可读不保证其链接原附件可读；能编辑原生表格或页面，也不等于能上传任意二进制文件。分享页面不自动分享私人聊天或全部记忆。[资料协作与权限](https://learn.chatgpt.com/docs/space/collaboration)
 
+### Work Cloud 能直接读写资料空间吗
+
+官方已建立受支持的文件读取与保存路径，不必把 Dot 设为这些操作的必经中转；这里的“直接”指产品提供的授权入口，不是将整个资料空间挂载进云电脑。
+
+| 操作 | 官方支持与当前边界 |
+| --- | --- |
+| 读取资料文件 | 可使用用户主动从 Library 附加、上传或通过项目提供的文件，以及已启用应用通过合法连接取得的内容。不是默认读取账号下全部文件。 |
+| 保存结果文件 | Library 可用时，符合条件的上传或生成文件可保存其中；不据此保证覆盖原附件、保留任意格式或处理任意大小。 |
+| 创建、修改 Page | Space 支持 ChatGPT 创建和修订页面；某个 Work Cloud 会话仍须实际提供所需工具并通过对象访问检查。文件保存能力不单独证明任意 Page 都可编辑。 |
+
+来源：[云任务可以访问什么](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security#what-a-cloud-task-can-access)、[Cloud Work 文件保存](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-overview#cloud-work)、[Page 操作](https://learn.chatgpt.com/docs/space/pages)。资料空间的部分文件说明仍使用 Library 名称，应按实际对象入口判断。
+
+以上是官方支持范围，本次没有在公子的 Work Cloud 会话完成“读取→处理→保存→目的地回读”实测。此前缺工具的回执针对那个 Codex Cloud 任务，不能套用为 Work Cloud 的运行结果。
+
 ## 5. 本地 Codex 通过什么操作资料空间
 
 本次本地 Codex Desktop 会话暴露了首方资料工具，示例包括：
@@ -144,6 +216,19 @@ MCP 是工具连接协议。要使用它，还需要服务器实现、传输与�
 
 插件连接可按官方约定在已授予范围跨产品复用，但共享连接不保证某一次任务实际暴露全部工具。工具暴露、对象权限、本地电脑访问、浏览器会话、CLI 身份及模型凭证仍应分开核实。仓库的进一步依据见[宿主契约](host-contracts.md)。
 
+### Work Cloud 与 Codex Cloud 的插件和 MCP 有何区别
+
+| 对比 | Work Cloud | Codex Cloud |
+| --- | --- | --- |
+| 产品内插件入口 | 官方明确 hosted Work 可安装并连接兼容插件，使用其连接器和远程 MCP 工具 | 不能从桌面 Codex／CLI 支持插件，推定每个 Codex Cloud 任务自动加载。 |
+| 远程 MCP 注册 | 通过受支持的 ChatGPT 插件连接入口使用；网页不会自动采用本地 Codex 配置 | 当前核对的环境指南未建立任意 MCP／插件的通用原生注册方法；不是所有云端调用永远不可能。 |
+| 本机 STDIO 服务 | 不会自动搬进云端；通过已连接电脑使用本地能力时，另核实本地工具、在线状态及认证 | 本地 `codex mcp add`／`config.toml` 不直接成为已验证的 Cloud 配置。 |
+| 服务器网络调用 | 兼容插件工具由产品及连接策略提供 | 任务可在获授权的网络与身份范围使用服务客户端；在 shell 安装 SDK 或发 HTTP，不等于注册成模型原生 MCP 工具。 |
+
+来源：[MCP 的托管 Work 与本地主机支持面](https://learn.chatgpt.com/docs/extend/mcp)、[插件支持面](https://learn.chatgpt.com/docs/plugins)、[Codex Cloud 配置](https://learn.chatgpt.com/docs/environments/cloud-environments)。`Desktop only` 插件需要桌面支持；服务器是远程 HTTPS，并不能单独证明整个插件可在网页或纯云端使用。
+
+MCP 并非天然只读。写操作需要工具本身提供相应动作、连接身份获授权、对象允许访问，并满足工作区动作控制和审批。首方资料工具与外部 MCP 是不同入口，不能从“已连接某个 MCP”推导额外的 Space 权限，也不能用单一套餐标签概括所有 MCP 的读写能力。[连接能力与动作控制](https://learn.chatgpt.com/docs/enterprise/apps-and-connectors#step-2-manage-capabilities)
+
 ## 6. 实际验证得出了什么
 
 | 证据来源 | 实际观察 | 可支持的结论 |
@@ -152,6 +237,7 @@ MCP 是工具连接协议。要使用它，还需要服务器实现、传输与�
 | 同轮后续本地调用 | `read_page` 返回 `page_read_forbidden`。 | 页面访问存在实际拒绝，不能把前述成功推广为稳定的全部读写链路；也不能抹去已成功的步骤。 |
 | 用户贴回的 Codex Cloud 实测结果 | 该任务无 Space／Pages／Library 工具；未读取输入，未计算、未保存结果、未回读。 | 该次任务缺少直接访问所需的入口；不是已证明文件不存在或用户没权限。 |
 | 用户明确确认 | Dot 中转已试通，要求不再验证。 | **资料空间 ⇄ Dot ⇄ Codex Cloud 是本次已成立的可行路线。** |
+| Work Cloud 官方资料与本地工具声明 | 已读取文件附加／保存、插件远程 MCP、计划任务和创建入口的说明；本轮未调用 Work Cloud 创建工具或资料读写。 | 有产品支持依据和本会话工具入口证据，尚无本账号端到端运行回执。 |
 
 Cloud 结论来自用户提供的执行回执，本整理会话没有独立进入那个 Cloud 任务。资源与模板枚举为空只是其中一项信息；MCP 的 Tools、Resources、Templates 不是同一清单，不能只靠空资源列表判断没有工具。
 

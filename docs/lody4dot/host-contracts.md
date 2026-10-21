@@ -59,6 +59,8 @@ Dot官方FAQ明确：**“Plugin permissions are shared across dots, ChatGPT, Ch
 
 ## Portable格式与用户运行setup
 
+Work Cloud与Codex Cloud的支持面另见下节；本节插件清单事实不证明相同清单可在所有托管环境加载。
+
 [Package your plugin](https://developers.openai.com/plugins/build/plugins)推荐的根级`plugin.json`使用`https://agent-plugins.org/schemas/1.0.0/plugin.schema.json`，并声明`name`、`version`、`description`；根级`skills/`自动发现，无需portable `skills`字段。原文明确：“Existing `.codex-plugin/plugin.json` files remain supported as a compatibility fallback.” 因此无需为有效性强制迁移现有0.2.1。
 
 若使用portable清单，`extensions.com.openai`对象会整体替换`.codex-plugin/plugin.json`提供的OpenAI overlay，两者不合并；root identity和portable components仍以根级清单为准。本轮0.2.2候选保留兼容清单，只加入以下可选字段，setup技能源码仍由builder收集：
@@ -70,6 +72,30 @@ Dot官方FAQ明确：**“Plugin permissions are shared across dots, ChatGPT, Ch
 该字段相对插件根，必须指向随包提供的技能。官方原文：“When users run setup, it invokes the skill in a new conversation, or in the existing conversation if they installed the plugin during that conversation.” 因此验收需分别记录用户运行setup、新会话/当前安装会话的入口与实际读取。它不承诺安装时自动执行，也不提供Dot电脑reset通知；候选构建、上传、安装及实际调用分别取证。
 
 同版本官方[`resolve_openai_onboarding_skill`](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/manifest.rs)也解析该嵌套字段，补充其合法性的源码旁证；解析支持不证明CLI或UI已提供可执行setup入口，实际调用仍未验。
+
+## Work Cloud资料、插件与创建支持面
+
+2026-10-21本地文档轮次实际检索并读取下列OpenAI正文；这些是官方产品支持或本地工具声明，未安装插件、连接新MCP、创建Work Cloud任务或测试资料读写。本轮基于`2d8dd52`补充，保留0.2.3既有知识实现与Linux验证记录。
+
+| 能力 | 本次核对结果 | 不推导什么 |
+| --- | --- | --- |
+| Work Cloud资料输入/输出 | 可使用主动附加自Library、上传或项目提供的文件；Library可用时保存符合条件的上传/生成文件 | 全空间自动挂载、任意Page编辑、原附件覆盖或本账号闭环已通过。 |
+| hosted Work插件/MCP | 官方明确通过兼容插件使用连接器和远程MCP；网页不自动采用本地Codex配置，Desktop only限制仍适用 | 桌面stdio服务已迁入云端、首方Space服务可导出，或Codex Cloud自动继承全部插件。 |
+| MCP写动作 | 由具体动作、连接身份、对象权限、工作区控制与审批共同决定 | MCP协议一律只读，或安装插件自动授予外部服务写权限。 |
+| 当前本地首方代建入口 | 工具声明提供`create_thread`的`chatgptWorkCloud`目标；用户明确要求后可调用，本次未调用 | 该入口是公共API、其他宿主也提供相同工具、或本轮创建已成功。 |
+| 计划、事件及Dot | 网页Work可设置时间/支持应用事件运行；Dot可创建独立可见云会话 | 每次运行必建新会话，或所有Dot云会话都已证实是指定Work Cloud类型。 |
+
+上表是对产品入口、工具协议和具体权限的分项说明。此前专用custom MCP入口所记录的套餐限制只属于该入口的核对范围，不推广为Work Cloud全部插件的统一只读/可写规则；选择该专用入口时仍核实其现行条件，不能因为其他页面未重复说明就认定原有限制已撤销。Codex Cloud当前环境指南没有建立任意MCP/插件的通用原生注册流程，但不禁止在授权网络与身份范围使用外部服务客户端；shell调用不等于模型原生工具注册。
+
+| 官方来源 | 支持的事实 |
+| --- | --- |
+| [Work入门](https://learn.chatgpt.com/docs/get-started-with-work)、[云端或本地Work](https://learn.chatgpt.com/docs/use-chatgpt#choose-cloud-or-local-work) | 通用任务模式、执行位置与产品入口。 |
+| [云任务可访问内容](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security#what-a-cloud-task-can-access)、[Cloud Work文件](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-overview#cloud-work) | 显式附加文件、合法连接及符合条件文件保存。 |
+| [Space页面](https://learn.chatgpt.com/docs/space/pages)、[Space Agent](https://learn.chatgpt.com/docs/space/agents) | ChatGPT页面创建/修订；不是任意Work Cloud会话工具保证。 |
+| [MCP](https://learn.chatgpt.com/docs/extend/mcp)、[插件](https://learn.chatgpt.com/docs/plugins)、[动作控制](https://learn.chatgpt.com/docs/enterprise/apps-and-connectors#step-2-manage-capabilities) | hosted Work远程MCP、支持面、连接及写动作边界。 |
+| [计划任务](https://learn.chatgpt.com/docs/automations)、[Dot委派](https://learn.chatgpt.com/docs/dots/tasks-and-memory#assigned-work) | 时间/事件运行与云会话委派；不构成公开统一任务创建API。 |
+
+当前本地代建工具的证据来自本会话实际工具声明，未列为官方公开API。对方案的作用与本项目任务创建所有权见[c3补充](collaboration-development.md#work-cloud补充能力入口与任务创建分别核实)；不从Work Cloud的资料或MCP能力推导它能替代Dot创建Codex云任务。
 
 ## 初始化、存储与会话事件
 

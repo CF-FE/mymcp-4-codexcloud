@@ -20,6 +20,7 @@ c2已经要求优先复用合法连接、按实际能力选最小路线，不先
 | 公子贴回某次Cloud任务回执：无Space/Pages/Library工具，未取得原文件，处理和回存未执行 | 该次任务缺直接工具入口 | 所有Cloud永久不支持、用户无权限或文件不存在。 |
 | 本地Desktop成功创建页面、上传776字节附件、追加链接及独立回读附件，后续Page读取返回`page_read_forbidden` | 具体步骤成功，且另有真实对象访问拒绝 | 稳定的完整本地读写链路已通过，或所有本地Codex均有这些工具。 |
 | 当前`handoff.py`与对应测试 | schema1是Lody专用、严格字段的离线检查 | 它已经读取资料空间或能够检查任意产品工作流。 |
+| Work Cloud官方文件／插件指引与当前本地任务创建工具声明 | 有资料文件附加/保存、hosted Work远程MCP及首方客户端代建Work Cloud的支持依据 | 本账号Work Cloud闭环已验收、任意Page/附件可写、或任何MCP都能创建云任务。 |
 
 前两项分别属于公子已验证的路线和公子提供的Cloud执行回执；本地整理会话未独立进入该Cloud任务。官方设计、本地逐步调用、用户回执、工程建议的来源与范围见[分享版第6节](product-collaboration-reference.md#6-实际验证得出了什么)。
 
@@ -39,6 +40,14 @@ c2已经要求优先复用合法连接、按实际能力选最小路线，不先
 两条主要路线可在同一目标中组合，但不虚构产品间的RPC或自动转换原生ID。Dot执行资料读写、Cloud执行计算时，分别记录实际责任者；若处理部分确实经Lody，再关联对应Lody记录。已有插件连接在授予范围内复用，不代表每个任务暴露同一工具，更不复制浏览器登录、CLI身份或模型凭证。
 
 任务可见性也分系统：Dot发起的Codex云任务A在ChatGPT／Codex会话和桌面Dot个人资料的Activity查看；若A经Lody创建会话B，Lody显示的是B及其回合，A不自动变成Lody session或machine。用现有记录关联两边原生引用即可，不预设已有统一任务界面，也不为此自动注册worker。[官方查看入口](https://learn.chatgpt.com/docs/dots/tasks-and-memory#assigned-work)
+
+### Work Cloud补充：能力入口与任务创建分别核实
+
+Work Cloud是通用任务的托管执行方式，与Codex Cloud共享部分执行框架，但不自动采用用户发布的GitHub环境。官方支持经授权附加Library/项目文件，并将符合条件文件保存到Library；hosted Work可通过兼容插件使用连接器和远程MCP。页面修改、原附件覆盖与工具写动作仍依对象、连接及本次工具能力判断；本账号尚无Work Cloud资料闭环回执。[能力与创建方式](product-collaboration-reference.md#work-cloud-能直接读写资料空间吗)
+
+创建/触发按实际入口分开：手动创建；具备首方客户端工具的助手在用户要求下代建；网页计划或支持的应用事件发起运行；Dot创建云会话。计划返回原会话与创建独立会话不是同一行为；本地当前`chatgptWorkCloud`工具目标存在也不等于已经调用或提供公共API。Dot创建的云会话是否为特定Work Cloud类型，须保留实际返回类型。[创建支持面](product-collaboration-reference.md#work-cloud-可以怎样创建或触发)
+
+对当前方案的增量是把Work Cloud纳入可评估的资料处理入口，复用0.2.3现有资料交接知识和原生引用，不新增调度层或更改schema1。能读写资料、能调用MCP、能创建Codex Cloud任务是三项能力：前两者不推出第三者，本项目仍由Dot创建独立Codex云任务。官方能力不推进插件支持矩阵或C09/C10；新增宿主适配按真实需要和既有授权继续，不为文档例子新增业务实测。
 
 ### 资料交接与既有schema1保持边界
 
