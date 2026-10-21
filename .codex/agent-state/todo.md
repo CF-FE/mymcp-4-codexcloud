@@ -6,22 +6,23 @@
 
 ## 当前环境与下一步
 
-2026-10-21更新。环境元数据沿用较早spec14的最近一次已核实观测；本轮薄知识实施未重新读取云环境状态，也未改发布配置。发布状态只在本节维护；其他文档保留静态契约、历史验证及本节链接，不将旧readiness或测试轮次冒充当前状态。
+2026-10-21用户确认发布并要求持续推进后复查。发布已应用为spec16，但正式仓库引用仍固定旧来源；现已准备0.2.5来源修正草稿。发布状态只在本节维护；历史spec14的ready/enforced保留原义，不覆盖本轮unknown。
 
 | 项目 | 本次实际结果 |
 | --- | --- |
-| 正式配置 | 最近已核实为固定`ed9096b837edd31a4446a8db1d49159b42262fd5`/0.2.1，无草稿；发布不自动更新固定ref |
-| 工作副本 | 开始时main `cb5cee65c796c918e6e84ecc330c8138f497b332`且干净，再次ff-only拉取确认最新且包含cb5cee6；在其上实施独立0.2.5知识候选，保留aea6798/0.2.4，不回退较新提交或替代正式ref |
-| 运行观测 | 最近spec/observed14，observations_current=true，running/connected；本轮未刷新 |
-| 网络与变量 | 最近元数据为network enforced、LODY_CLI_TOKEN及GITEE_ACCESS_TOKEN ready；本轮未读取或输出值，也未据此推导其他服务授权 |
-| 本轮依赖检查 | 0.2.5移位包离线bootstrap仅doctor并pass，包/锁来源consistent；install、认证、daemon、业务恢复not_run，子进程未转发LODY/GITEE变量 |
+| 正式配置 | 本次实际为固定`ed9096b837edd31a4446a8db1d49159b42262fd5`/0.2.1；发布生效不自动更新固定ref。源修正草稿不代表正式升级 |
+| 工作副本 | 本轮开始于干净`984dad4ee34ecdc270ecb86a796abbf447987331`/0.2.5，拉取无更新；随后只补本次发布记录，不新增插件版本或业务代码 |
+| 运行观测 | spec/observed16，observations_current=true，running/connected；来源修正保存后仍为原活动版本，未因saved草稿声称已应用 |
+| 网络与变量 | 本轮元数据network state及两变量state均unknown；实际进程LODY_CLI_TOKEN非空，仅记录存在性。Git HTTPS读取成功不证明Lody服务、账户或全部网络就绪；未输出凭证 |
+| 本轮依赖检查 | 完整`.codex/cloud-install.sh`通过：结构、132测试、bootstrap prepare的install/doctor；启动`--repair-missing`仅doctor通过，runtime锁来源consistent。认证、daemon、业务恢复not_run |
+| 待发布来源修正 | 首次草稿已保存并回读pin984dad4；收尾目标为含本记录的提交，提交后再固定实际HEAD并回读。成员/挂载、install/start、网络、变量及secret要求保留；saved不等于发布 |
 | 独立Codex云任务入口 | 由Dot创建，用户已确认Dot具备权限；当前云任务不派生Codex云任务，不查询OpenAI任务目录。历史Cloud CLI/401尝试已撤下，不作插件前置或阻塞 |
 | 用户setup入口 | 0.2.5沿用0.2.4入口及Work适用范围，本轮未改setup；官方0.163.0 parser亦支持字段。已核实的CLI无独立setup/validate/dry-run，原生实际调用未验 |
 | 当前知识候选 | 0.2.5已通过132项Linux回归、构建及移位来源核对；平台/当前证据/项目分工知识和最终分发范围见文末本轮记录，不是原生加载或业务验收 |
-| Work创建入口观测 | 前轮目录未见本地文档提到的create_thread/chatgptWorkCloud，本轮未刷新工具目录或尝试创建；只保留原观测，不推导账号无权限或Work全产品无入口 |
+| Work创建入口观测 | 本轮可调用目录仍未见create_thread/chatgptWorkCloud；没有创建尝试。这仅描述本端工具范围，不推导Dot无权限或全产品无入口 |
 | Role/Project验证范围 | 既有只读目录与Agent配置执行已测；先前帮助/源码确认多Role可复用配置、会话可组合Role与项目。多个Role创建/用户保存、项目登记及按Role运行未实测，见[关系核实](../../docs/lody4dot/validation.md#agent配置role与project关系核实) |
 | 历史运行中恢复实验 | 单次新chat，准确回合running时SIGTERM本地follow观察进程并清理A身份；新B身份前4次仍见同turn running，第5次persisted/synced/completed。新274字节/SHA/challenge匹配，原8条历史未变、总10条；两身份清理。不是控制主机重启 |
-| 下一步 | 余下按既有合法入口取得集成回执：Dot以已有权限创建独立Codex验收任务并保存任务/环境关联，取得首次读取和Lody工具回执；Work目标保留实际类型，加载/运行与资料交付分项验收。前轮本端无产品创建/UI入口，本轮未复探；不改用CLI路线或索取已有权限，原生setup与未验证恢复另取证，不重验中转 |
+| 下一步 | 在环境设置保存并发布源修正草稿，再核对实际来源；其后由Dot沿已有权限创建独立验收任务并交接任务/环境关联，取得首次读取和Lody工具回执。本端没有新增Dot/UI入口，不改用CLI/目录或重复索权；Work类型、原生setup、恢复与资料交付分别验收，不重验中转 |
 
 ## 原有交付任务
 
@@ -50,7 +51,7 @@
 
 ## r2/d1历史执行记录（2026-10-20至2026-10-21较早轮次）
 
-以下历史段落的“当前”“本次”“仍”仅指各自轮次。较早正式版本、readiness、未运行项及草稿记录按当时事实保留；最新状态见开头唯一快照、C任务表及文末spec14记录。
+以下历史段落的“当前”“本次”“仍”仅指各自轮次。较早正式版本、readiness、未运行项及草稿记录按当时事实保留；最新状态见开头唯一快照、C任务表及文末spec16记录。
 
 ### 本轮规划复核
 
@@ -140,7 +141,7 @@ T11按开发契约完成支持范围和场景覆盖：20根/70路径数量、来
 | C02 | 共享技能与协作知识 | done；aea6798/0.2.4的Work、资料及setup能力保留。0.2.5仅补平台/访问证据/项目分工，最终本项目Dot约束与其他项目授权两类新上下文均正确区分；只是给定技能入口后的知识使用，不证明原生加载或业务调用，见[本轮验证](../../docs/lody4dot/validation.md#平台入口与项目职责知识025候选) |
 | C03 | doctor上下文、范围与来源 | done；42项诊断测试及真实包内inspect/来源检查通过，setup内容变化可见为mismatch。schema1保留范围、来源和真实失败分类；版本只提示，来源仅证明本地文件一致性 |
 | C04 | 平台安装边界 | blocked；Linux与统一边界通过52项相关测试，Win32/Darwin模拟退出5；真实Darwin/arm64报告无Node/npm，native安装前提缺失，WSL未提供，不宣布跨平台runtime支持 |
-| C05 | 按宿主分发与加载 | blocked（候选实现完成）；0.2.5沿用原分发/官方setup，132项回归、32文件ZIP及移位来源核对通过。独立Codex云任务由已具权限的Dot创建，待实际任务/环境关联及首次读取回执；UI导入和新/既有对话run setup仍未验，薄知识修订不证明原生加载。Cloud CLI/401不作阻塞，不重复索权 |
+| C05 | 按宿主分发与加载 | blocked（候选及源修正准备完成）；0.2.5包/回归保留，本轮完整准备和启动检查通过，已保存新来源草稿待发布。仍缺Dot独立任务/环境关联及首次读取、原生UI安装和setup实际调用；不以环境发布代替加载，不恢复Cloud CLI/401或重复索权 |
 | C06 | 最小交接整理/校验 | done；27项离线行为测试及分发回归通过，输入不改写、无网络/登录/派发；仅结构/声明一致性，真实性/ACL/产物内容未核验 |
 | C07 | 两独立宿主协作 | done（有限范围）；Linux控制端与Darwin解包/显式读技能宿主完成原产物交接，Darwin随后通过自身内置MCP只读查询原session/history，准确引用、273字节、SHA及challenge均匹配。新增1个明确只读模型回合，最终persisted/synced/completed且无activeTurns；证据为Agent调用回执与控制端核验，无底层tool trace，见[内置MCP验收](../../docs/lody4dot/validation.md#远端内置mcp只读查询与c07有限双端验收)。不扩为macOS受管安装、原生注册或Dot |
 | C08 | 初始化与恢复演练 | partial（受测Codex子范围done）；spec12的不同内核上下文/旧结果恢复保留。spec14另新增1个验收回合：真实follow在running时退出并清理身份，新身份沿同准确turn观察running→持久化completed，新274字节/SHA/challenge匹配、原8历史未变，两身份清理。整个协调脚本未退出；VM/磁盘机制、完全缺失结束通知及Dot lifecycle仍未证实，见[运行中恢复](../../docs/lody4dot/validation.md#运行中观察进程和身份清理后的恢复) |
@@ -250,3 +251,11 @@ AGENTS保留短指引，详细边界与交接步骤落在环境指引、设计�
 最终0.2.5的132项Linux回归、结构、32文件ZIP/收据/CRC及移位离线doctor通过；本项目Dot约束、其他项目明确授权两类新上下文均正确应用项目条件，见[验证记录](../../docs/lody4dot/validation.md#平台入口与项目职责知识025候选)。0.2.4原ZIP与全部历史记录保留，更早0.2.3/0.2.2/0.2.1 ZIP也未变。
 
 本轮未运行Codex Cloud CLI/任务目录、恢复401调查、重验Dot、创建平台任务或写入资料，没有新服务/契约/权限/部署；正式元数据和工具目录未刷新。知识演练不是独立产品宿主或真实业务，C05/C08/C09/C10及T09/T12保持原证据门槛，企业聊天委派继续排除。
+
+## spec16发布复查与0.2.5来源修正
+
+2026-10-21，用户确认发布后实际spec/observed16、current=true；正式配置仍为ed9096b/0.2.1，起初无草稿。当前984dad4/0.2.5已推送且干净。两份已保存脚本与旧正式及当前源码逐字相同，差异是仓库固定ref，不是缺变量或新安装逻辑；本轮不重新认证、对账或发模型任务。
+
+按已授权setup范围完成全/workspace发现和准备后复查：仅1个实际项目，精确HEAD及mount已核实；空的受保护/workspace/.git目录不是Git仓库，runtime内部链接的真实目标已遍历，缓存不列为项目。完整cloud-install的132测试和install/doctor、启动repair-missing仅doctor均通过；未改代码/锁、网络或凭证。
+
+仓库源修正草稿已saved且requires_publish，回读确认仅repo ref改变，其他配置一致。以984dad4为软件基线，收尾固定到含本记录的实际提交并回读，避免新任务缺本轮进度；精确目标见交付提交及草稿。详见[本轮验证](../../docs/lody4dot/validation.md#spec16发布复查与来源修正)。这是来源变更，不是重复保存相同配置；产品发布仍待环境设置操作，独立任务首次加载、Dot实际调用和C09/C10不据此关闭。

@@ -477,6 +477,23 @@ ZIP SHA-256为`e87dd9aaafb2b8459c6b024cf5bac4cdb1aa875b9b1ec1a8a8de24a91c6674fa`
 
 没有真实Work/Codex平台创建、Lody业务认证、资料读写、Dot基础可行性重验、Cloud CLI/任务目录调用、401调查、权限/连接或部署变化。正式环境及工具目录本轮未刷新；历史macOS失败、C04跨平台、C05加载、C08剩余恢复、C09/C10及T09/T12补证继续保留各自范围。知识候选不代替原生集成或正式发布。
 
+## spec16发布复查与来源修正
+
+2026-10-21，用户确认发布并要求持续推进。实际环境spec/observed16、observations_current=true、running/connected，起初无草稿；正式源仍固定ed9096b/0.2.1。当前checkout为已推送的干净984dad4/0.2.5，完整安装和启动指引与配置内保存值及旧正式源码逐字一致。发布已生效，固定ref未自动升级；本轮按原setup授权修正仓库来源，未新增服务、权限、业务接口或插件版本。
+
+| 检查 | 本轮实际结果与边界 |
+| --- | --- |
+| 全量仓库发现 | 准备前后遍历/workspace的1004个目录，发现1个实际项目，origin身份、精确HEAD、真实mount、无重叠/子模块、干净状态核对通过。另一个.git标记是空的受保护目录，Git也不识别为仓库，未造unborn记录；runtime内部符号链接目标已遍历，6个缓存目录单独归类，未删除或移动文件。 |
+| 完整准备与启动 | 实际运行`.codex/cloud-install.sh`退出0：结构及132项测试通过，bootstrap prepare的install与doctor通过。随后按保存指引运行`--repair-missing`仅doctor通过；认证、daemon、任务恢复均not_run。是当前0.2.5工作副本检查，不冒称正式0.2.5或独立首次加载。 |
+| 变量与网络 | 当前元数据network及两变量state为unknown，进程LODY_CLI_TOKEN非空。仅核对存在性，不打印值、不重配绑定；Git读取成功不替代其他服务或账户验证。旧spec14的ready/enforced保留历史，不覆盖本轮结果。 |
+| 源修正草稿 | repositories仅保留该项目、原mount及精确提交；首次以软件基线984dad4保存，状态saved/requires_publish，并回读确认install/start、network、secret及runtime要求均未变。收尾顺序为提交本记录→固定到实际HEAD→回读确认，精确目标以交付提交/草稿为准；保存不执行脚本、不发布或更新活动来源。 |
+
+独立只读审查对比ed9096b与984dad4：安装、认证、doctor、bootstrap、handoff、依赖锁及cloud脚本不变；Python增量仅薄setup的构建/来源范围及既有回归，未发现重大服务/契约/权限变化。0.2.5原包、0.2.4历史交付及验收均保留，不重复构建知识版本或模型演练。
+
+本轮未运行Codex Cloud CLI、查询OpenAI任务目录、恢复401调查、重新认证、创建业务任务/计划、写资料或重验Dot中转。当前工具仍未暴露本地文档中的create_thread/chatgptWorkCloud；不以目录缺入口推断Dot无权限。发布不证明VM/磁盘重建，原C08恢复实验不重做；C05/C09/C10、原生setup与旧T09/T12继续保留真实验收门槛。
+
+脱敏结果及日志在忽略的`dist/lody4dot-publish-current-*`、`dist/lody4dot-publish-preflight.json`和`dist/lody4dot-publish-source-correction.json`。正式来源、草稿与后续动作统一见[当前环境与下一步](../../.codex/agent-state/todo.md#当前环境与下一步)，源修正发布后仍需按实际新任务/宿主分别验收。
+
 ## 复现命令
 
 在仓库根目录运行：
