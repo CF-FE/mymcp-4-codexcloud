@@ -494,6 +494,16 @@ ZIP SHA-256为`e87dd9aaafb2b8459c6b024cf5bac4cdb1aa875b9b1ec1a8a8de24a91c6674fa`
 
 脱敏结果及日志在忽略的`dist/lody4dot-publish-current-*`、`dist/lody4dot-publish-preflight.json`和`dist/lody4dot-publish-source-correction.json`。正式来源、草稿与后续动作统一见[当前环境与下一步](../../.codex/agent-state/todo.md#当前环境与下一步)，源修正发布后仍需按实际新任务/宿主分别验收。
 
+## spec17来源升级生效与启动复查
+
+2026-10-21，用户再次发布后，实际spec/observed17、observations_current=true、running/connected且failure=null；正式ref为0a044f14622902b6d8d93418338df2251b7a38f8/0.2.5，无草稿和pending要求。network enforced、LODY_CLI_TOKEN及GITEE_ACCESS_TOKEN ready，进程LODY变量存在性为true；未输出值。正式install/start与该提交文件逐字一致。本轮起始checkout同ref且干净，ff-only拉取无更新。
+
+已实际读取`.codex/cloud-start.md`、`skill/lody4dot/SKILL.md`及`references/setup-cloud.md`，入口来自已有会话上下文与仓库检索，不证明平台首次送达。运行保存入口的`bootstrap.py --repair-missing --json`退出0，步骤仅doctor、status=pass；插件清单观测0.2.5，CLI0.107.2，runtime锁b1baf3ab…来源consistent。bundle收据在源码checkout中not_provided，不称包已复验；install未运行、reused未填写，authentication/daemon/task_recovery均not_run。132回归和完整prepare沿用上一轮对相同软件源码的实际结果，本轮只做启动及文档检查。
+
+据此关闭“0.2.5正式来源升级待发布”子门槛；原生ZIP安装/setup仍是未验候选，独立新任务首次读取和Dot实际调用未取得。当前工具目录无create_thread/chatgptWorkCloud，不创建下游Codex任务或查询OpenAI任务目录，不做新的Lody认证/模型回合、资料读写或Dot中转验证。内核boot摘要较spec16不同，只记内核上下文变化，不推断VM身份或磁盘重建。
+
+本轮仅同步唯一队列和本记录，不改变源码/锁或环境配置，不为记录提交再次固定ref、保存草稿或要求发布。静态方案、任务卡和现有验收流程已足够复用；C05/C08剩余项/C09/C10及旧T09/T12的证据门槛保持。脱敏启动结果在忽略的`dist/lody4dot-spec17-startup.json`，来源与状态摘要在`dist/lody4dot-spec17-summary.json`；当前状态统一见[任务队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
+
 ## 复现命令
 
 在仓库根目录运行：
