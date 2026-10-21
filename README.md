@@ -16,7 +16,7 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 云任务、运行实例、本地环境、Dot、会话引用和协作空间权限的区别，见[环境与权限指引](docs/lody4dot-environment-model.md)：先读一分钟速查和执行链路，再按问题查表。跨环境协作的对象关系、记录模板与评审清单见[架构设计参考](docs/lody4dot-environment-design.md)。
 
-多处加载安装、经Lody协作及环境初始化/恢复的下一轮设计，见[多宿主协作开发方案](docs/lody4dot-collaboration-development.md)与[C01–C10任务卡](docs/lody4dot-collaboration-tasks.md)。Dot按用户所指的ChatGPT云服务作为独立宿主；其官方接入与存储事件仍待核实。新方案不代表这些能力已经实现。
+多处加载安装、经Lody协作及环境初始化/恢复，见[多宿主协作开发方案](docs/lody4dot-collaboration-development.md)与[C01–C10任务卡](docs/lody4dot-collaboration-tasks.md)。Dot按用户所指的ChatGPT云服务作为独立宿主；其官方接入与存储事件仍待核实。各项实现与真实验收分别记录在[任务队列](.codex/agent-state/todo.md)。
 
 ## 当前状态
 
@@ -24,9 +24,9 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 仓库结构检查无需安装第三方依赖，也没有公共服务需要启动。运行单个 MCP 时需按其 README 准备依赖和配置。后续导入按照 [导入步骤](docs/architecture.md#导入已有插件) 迁移，并在此补充条目入口。
 
-lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安装、只读诊断、显式认证和自包含打包。当前 Linux 云机已验证安装、真实授权和完整目录；通过已有远端 Codex Agent 完成了创建、执行、继续验证和持久化观察，并校验 Agent 二次读回的产物字节。控制端无需本机 daemon，56 项回归测试通过。已收到用户的安装、认证、目录和手动读取截图，仍需补齐入口来源与版本等回执；本机 Codex 执行的只读状态限制单独保留。见 [产品方案](docs/lody4dot-plan.md)、[开发契约](docs/lody4dot-development.md)、[验证记录](docs/lody4dot-validation.md) 和 [任务队列](.codex/agent-state/todo.md)。
+lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安装、只读诊断、显式认证和自包含打包。当前 Linux 云机已验证安装、真实授权和完整目录；通过已有远端 Codex Agent 完成了创建、执行、继续验证和持久化观察，并校验 Agent 二次读回的产物字节。控制端无需本机 daemon。已收到用户的安装、认证、目录和手动读取截图，仍需补齐入口来源与版本等回执；本机 Codex 执行的只读状态限制单独保留。见 [产品方案](docs/lody4dot-plan.md)、[开发契约](docs/lody4dot-development.md)、[验证记录](docs/lody4dot-validation.md) 和 [任务队列](.codex/agent-state/todo.md)。
 
-当前源码与分发为0.1.4：已验证自有运行回合取消及无后代会话的改名、归档/恢复，补齐级联范围、资源释放与取消竞态指引。正式云环境仍为已核实的0.1.3，新包不等于环境已升级。具体实测、条件支持和未运行项见[支持矩阵](docs/lody4dot-support-matrix.md)。Review仍受上游匹配Viewer缺失限制；[接入验收](docs/lody4dot-fresh-task-acceptance.md)先在已有截图对应任务补充记录，不重复建任务或登录。
+当前源码版本为0.2.0：新增多宿主协作参考、带范围和来源的诊断、离线交接校验，以及幂等依赖准备/缺失修复；Linux以外平台明确返回不支持。108项回归测试通过，CLI及依赖锁仍为0.107.2。正式云来源的已核实基线仍为0.1.3，源码版本不等于环境已升级。具体实测、条件支持和未运行项见[支持矩阵](docs/lody4dot-support-matrix.md)。Review仍受上游匹配Viewer缺失限制；[接入验收](docs/lody4dot-fresh-task-acceptance.md)先在已有截图对应任务补充记录，不重复建任务或登录。
 
 ## 开发与验证
 

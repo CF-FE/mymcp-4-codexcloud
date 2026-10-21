@@ -1,16 +1,16 @@
 # lody4dot 多宿主协作任务卡
 
-本页定义C01–C10的静态开发任务，服从[多宿主协作开发方案](lody4dot-collaboration-development.md)。本页不保存实时状态；进度、执行证据和阻塞仅在[任务队列](../.codex/agent-state/todo.md)维护。方案与测试命令不是已实现或已通过的声明。
+本页定义C01–C10的静态开发任务，服从[多宿主协作开发方案](lody4dot-collaboration-development.md)。本页不保存实时状态；进度、执行证据和阻塞仅在[任务队列](../.codex/agent-state/todo.md)维护。已有工具的实际用法见[插件说明](../plugin/lody4dot/README.md)和[交接说明](lody4dot-handoff.md)；命令与验收条件不代表真实宿主或业务检查已经通过。
 
 目标是让多个实际安装宿主通过Lody服务协作。Dot指用户指定的ChatGPT云服务，是独立宿主；控制端、执行端和混合角色分别验收。不得将控制端接入收缩为全部目标，也不得把安装成功升级为machine注册或worker可用。
 
 ## 共用约束与依赖
 
 - 权威：用户确认的多宿主目标、主方案、[环境指引](lody4dot-environment-model.md)、[设计参考](lody4dot-environment-design.md)。已有实现契约仍见[开发方案d1](lody4dot-development.md)；有冲突先记录具体范围，不用任务卡默改契约。
-- 当前基线：源码/包0.1.4、CLI0.107.2；正式云配置既有记录为0.1.3。T09/T12的既有回执缺口单独保留，C任务不自动关闭它们。
+- 本轮插件版本0.2.0，CLI仍固定0.107.2；正式云配置来源当前仍为0.1.3，仓库更新不自动升级实例。T09/T12的既有回执缺口单独保留，C任务不自动关闭它们。
 - 验证命令在各目标宿主的仓库根目录执行；`python3`须指向Python3.10+。未提供shell或CLI的宿主使用实际可用的只读工具取证，不凭空填写命令或能力。
 - 需要安装前缀的命令先将非秘密变量`LODY4DOT_PREFIX`设为该端安装回执的实际prefix；认证检查使用该端已有私密`LODY_DATA_DIR`。这些变量只选择本端路径，不复制登录态；缺路径时先补输入，不套用另一端的`/workspace`。
-- 每项变更交付前均执行`python3 scripts/check_repository.py`、`python3 -m unittest discover -s tests -v`和`git diff --check`。卡内命令是受影响范围的补充；注明“待实现”的文件和测试当前尚不存在。
+- 实现交付由集成执行者统一运行`python3 scripts/check_repository.py`、`python3 -m unittest discover -s tests -v`和`git diff --check`；并行文档工作只做对应链接、示例与一致性检查，避免重复干扰。卡内命令用于受影响范围；已有测试不替代真实宿主、身份或业务证据。
 - 默认不登录、不注册machine、不启动host；业务请求、模型执行和部署按既有授权及明确目标进行。凭证不进入包、日志或公开回执，各宿主身份状态分别保存。
 - 公开证据只记录脱敏结论、版本和必要摘要；真实业务引用及原始回执放各自受保护的私密记录，不建共享凭证库或全局调度数据库。
 
@@ -21,7 +21,7 @@
 | C05宿主分发与加载 | C01实际加载契约、C02资源、C04对应平台的证据 |
 | C06最小交接 | C02引用规则、C03证据格式；包内新增工具再补C05分发回归 |
 | C07两个独立宿主协作 | C05两个可用端、C06交接、实际Lody目标及授权 |
-| C08重建恢复 | C01生命周期约定、C05引导与安装、C07可追溯业务结果 |
+| C08重建恢复 | 本地依赖bootstrap可单独验证；真实重建与业务对账须有C01生命周期、C05引导与C07原生引用 |
 | C09 Dot接入 | C01 Dot入口记录、C02知识、C03报告、C05适用分发、C06交接；不依赖C07完成才开始能力发现 |
 | C10含Dot闭环与交付 | C07协作、C08恢复、C09 Dot真实接入；部分交付与整体完成分别报告 |
 
@@ -45,7 +45,7 @@ codex plugin marketplace --help
 ## C02 共享技能与运行位置知识
 
 - **权威/依赖**：主方案的协作行为与环境指引；无代码前置。C01尚未知的能力写成条件，不等待未知能力才能修复已知误述。
-- **文件范围**：`skill/lody4dot/SKILL.md`、`references/{setup-cloud,compatibility,discovery,sessions}.md`、来源记录；拟新增`references/collaboration.md`；不复制第二套CLI命令索引。
+- **文件范围**：`skill/lody4dot/SKILL.md`、`references/{setup-cloud,compatibility,discovery,sessions,collaboration}.md`及来源记录；不复制第二套CLI命令索引。
 - **步骤**：增加宿主识别→控制/执行角色→明确Lody目标→操作→持久化观察→交接的任务导航；将Dot与Agent、本地参照物、协作空间与目录分别表述；按包内资源路径引导，云专用绝对路径保留在云说明。修正compatibility中取消范围的旧措辞，只承认已测自有普通回合；说明命令索引local_runtime字段的控制端参照及本机目标条件，必要的schema调整另做兼容评审。
 - **验收**：给新Agent业务目标而非现成命令，能找到参考、选择已有明确目标并说明操作位置；缺CLI仍可读取资料但不声称可派发；用户提供路径、自主检索与平台引导分别记录，不新增全文自动注入门槛。
 - **验证**：下列知识测试已存在；补充目标选择、未知能力、Role覆盖及错误引用的行为案例，实际Agent演练回执独立记录。
@@ -77,10 +77,10 @@ python3 -m unittest discover -s tests/lody4dot -p test_build.py -v
 ## C04 平台安装层与结构化不支持结果
 
 - **权威/依赖**：主方案的平台范围、C03报告语义；Linux已验证路径为基线。macOS/WSL仅为候选探测，Windows原生执行支持后置。
-- **文件范围**：`plugin/lody4dot/scripts/{install,common,doctor,auth}.py`；拟增`plugin/lody4dot/scripts/platform_support.py`与`tests/lody4dot/test_platform_support.py`，复用既有安装测试。
+- **文件范围**：`plugin/lody4dot/scripts/{install,common,doctor,auth,platform_support}.py`、`tests/lody4dot/test_platform_support.py`及既有安装测试。
 - **步骤**：把平台识别提前到POSIX专属导入与操作前；局部封装路径、锁、稳定入口、私密state检查和超时清理；保留Linux事务行为；在实际macOS/WSL逐项探测native依赖与权限，只有证据满足的组合才加入支持矩阵。
 - **验收**：Linux重复安装、失败切换恢复和旧state保护不回退；不支持平台返回脱敏JSON与退出码5，而非`fcntl/getuid/killpg`崩溃。只去掉Linux判断不算跨平台；WSL不算原生Windows，候选失败不触发自动登录、host或权限放宽。
-- **验证**：第一行测试文件待实现；第二行为已有测试。OS mock只证明分支行为，macOS/WSL支持须另附实际OS/架构的安装、native、重复安装和失败恢复记录。
+- **验证**：下列测试均已提供。OS mock只证明分支行为，macOS/WSL支持须另附实际OS/架构的安装、native、重复安装和失败恢复记录。
 
 ```bash
 python3 -m unittest discover -s tests/lody4dot -p test_platform_support.py -v
@@ -109,14 +109,15 @@ python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-collaboration --
 ## C06 最小handoff整理与校验
 
 - **权威/依赖**：C02引用规则、C03证据语义和主方案的交接边界；新增工具纳入C05的allowlist与分发回归，不形成循环前置。
-- **文件范围**：拟增`plugin/lody4dot/scripts/handoff.py`、`tests/lody4dot/test_handoff.py`及小型公开格式示例；同步`plugin/lody4dot/scripts/build.py`所需allowlist，不新增业务SDK。
-- **步骤**：定义最小交接内容：目标/授权、控制与执行位置、版本、原生资源引用、实际观察、结果证据与未知项；只整理/校验调用方已提供记录；资源引用带系统与类型，操作意图、服务端观察及产物结果分开。
-- **验收**：格式正确不等于实时授权或业务完成；未知字段可保留，缺关键关联则指出具体缺口。检查可识别的引用类型错误、来源缺失/矛盾、凭证内容和声明范围冲突；未核验的来源不能升级为“已验证”。离线工具不能识别任意伪造或证明实时ACL。不发网络请求、不重发任务、不保存全局业务数据库。
-- **验证**：下列测试文件待实现；必须包括有效记录、未知引用、错误类型、陈旧观察、敏感输入拒绝及无网络/登录副作用案例。
+- **文件范围**：`plugin/lody4dot/scripts/handoff.py`、`tests/lody4dot/test_handoff.py`及[公开虚构示例](lody4dot-handoff.md)；同步`plugin/lody4dot/scripts/build.py`所需allowlist，不新增业务SDK。
+- **步骤**：调用方准备目标/授权、控制与执行位置、版本、原生资源引用、实际观察、结果证据与未知项，再以`--input PATH --stage intent|dispatched|result --json`校验；工具不从Lody取回或生成记录。资源引用带系统与类型，操作意图、服务端观察及产物结果分开。
+- **验收**：格式正确不等于实时授权或业务完成；未知值按阶段允许null，未知字段被拒绝，缺关键关联指出具体缺口。检查可识别的引用类型错误、来源缺失/声明矛盾、已知模式凭证内容和声明范围冲突；未核验的来源不能升级为“已验证”。`not_verified`保留身份、ACL、授权、来源、业务结果、工件内容、实时新鲜度和执行器身份映射。离线工具不能识别任意伪造，不发网络请求、不重发任务、不保存全局业务数据库。
+- **验证**：现有测试覆盖有效记录、缺失引用、错误类型、声明过期观察、敏感输入拒绝及无网络/登录副作用；时间检查只验证格式与声明顺序，不验证当前新鲜度。最后一条用调用方私密记录；可先按公开虚构示例演练，fixture通过不证明真实业务。
 
 ```bash
 python3 -m unittest discover -s tests/lody4dot -p test_handoff.py -v
 python3 -m unittest discover -s tests/lody4dot -p test_build.py -v
+python3 plugin/lody4dot/scripts/handoff.py --input /path/to/private-handoff.json --stage result --json
 ```
 
 - **证据/恢复**：测试使用虚构fixture标识并标明非平台对象；真实记录留在私密位置，公开只保留脱敏结果。失败保留输入，不覆盖已有交接文件。
@@ -140,15 +141,17 @@ python3 plugin/lody4dot/scripts/auth.py --prefix "$LODY4DOT_PREFIX" --verify-onl
 
 ## C08 重建与恢复演练
 
-- **权威/依赖**：C01实际生命周期约定、C05安装/启动入口、C07可追溯业务结果。知识引导、依赖bootstrap及身份/业务恢复分别验证。
-- **文件范围**：`.codex/cloud-install.sh`、`.codex/cloud-start.md`、恢复验收说明；拟增`tests/lody4dot/test_lifecycle.py`仅验证可自动检查的本地行为。
-- **步骤**：先冻结演练端与自有资源；依实际支持机制重建或切换自有安装目录；重复幂等bootstrap并重新读取启动指引；核对新实例实际版本和未继承的私密状态；通过原生引用只读定位C07结果，不自动恢复模型任务。
+- **权威/依赖**：本地依赖准备与缺失恢复可独立验收；真实宿主重建另依赖C01生命周期、C05安装/启动入口，业务对账另依赖C07可追溯原生结果。知识引导、依赖bootstrap及身份/业务恢复分别验证。
+- **文件范围**：`plugin/lody4dot/scripts/bootstrap.py`、`tests/lody4dot/test_lifecycle.py`、`.codex/cloud-install.sh`、`.codex/cloud-start.md`及恢复验收说明；本地测试不证明真实平台生命周期。
+- **步骤**：先冻结演练端与自有资源；环境准备使用`--prepare`，运行入口默认inspect或显式`--repair-missing`。只有诊断明确为缺少受管运行时才修复，版本不符或来源损坏不自动覆盖。依实际支持机制重建或切换自有安装目录后重新读取技能，核对新实例版本及本端身份；再通过原生引用只读定位C07结果，不自动恢复模型任务。
 - **验收**：bootstrap可复用同锁且失败保留旧入口；startup记录实际发现/读取来源。无官方reset hook时不杜撰自动挂钩；临时目录演练只证明文件恢复。未收到身份不自动复制登录态，原session仍可定位不等于进程恢复或允许重发。
-- **验证**：首行测试待实现；该测试不代替实际宿主重建回执。第二行仅检查恢复后的本地工具，不触发认证。
+- **验证**：下列本地测试已提供，不代替实际宿主重建回执。三个bootstrap命令分别为明确准备、默认检查、缺失修复，按场景选择，`--prepare`和`--repair-missing`不能合用；均不触发认证、daemon或业务恢复。不要为了演练在用户现有目录删除依赖。
 
 ```bash
 python3 -m unittest discover -s tests/lody4dot -p test_lifecycle.py -v
-python3 plugin/lody4dot/scripts/doctor.py --prefix "$LODY4DOT_PREFIX" --profile inspect --json
+python3 plugin/lody4dot/scripts/bootstrap.py --prefix "$LODY4DOT_PREFIX" --prepare --json
+python3 plugin/lody4dot/scripts/bootstrap.py --prefix "$LODY4DOT_PREFIX" --json
+python3 plugin/lody4dot/scripts/bootstrap.py --prefix "$LODY4DOT_PREFIX" --repair-missing --json
 ```
 
 - **证据/恢复**：记录重建前后真实宿主/版本与观察时间，未暴露标识保留未知；演练失败恢复自有稳定入口或保留旧产物，不触碰受保护HOME/CODEX_HOME或他人进程。

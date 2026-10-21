@@ -1,6 +1,6 @@
 # lody4dot 支持与验证矩阵
 
-核实日期：2026-10-21。CLI基线为 `lody@0.107.2`，当前源码/分发为 `lody4dot 0.1.4`，已发布云环境仍为0.1.3；实际控制端为当前 Linux Codex 云环境。本文覆盖全部 **20 个公开命令根、70 条公开命令路径**；逐条参数与帮助哈希见[命令索引](../skill/lody4dot/references/command-index.json)和[帮助快照](../skill/lody4dot/references/help-snapshot.json)。
+核实日期：2026-10-21。CLI基线为 `lody@0.107.2`，当前源码为 `lody4dot 0.2.0`，已核实的正式云来源基线仍为0.1.3；实际控制端为当前 Linux Codex 云环境。本文覆盖全部 **20 个公开命令根、70 条公开命令路径**；逐条参数与帮助哈希见[命令索引](../skill/lody4dot/references/command-index.json)和[帮助快照](../skill/lody4dot/references/help-snapshot.json)。
 
 所有路径的帮助已核实，不代表所有业务功能已经运行。下表的“通过”只覆盖列出的操作、目标及结果；“未运行”与“明确失败”分别记录。空目录查询通过，只证明该查询范围内当前没有条目。任务状态仍以[任务队列](../.codex/agent-state/todo.md)为准，已有实测细节见[验证记录](lody4dot-validation.md)及[运行前提](lody4dot-runtime-findings.md)。
 
