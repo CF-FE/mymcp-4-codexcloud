@@ -2,17 +2,27 @@
 
 适用：已发布的lody4dot 0.1.3，Lody CLI 0.107.2。状态仍以[任务队列](../.codex/agent-state/todo.md)为准。
 
+环境、对话/任务引用和协作空间权限的区别见[环境模型](lody4dot-environment-model.md)；不要仅凭“新聊天”推断独立云任务或相同发布环境。
+
 本轮已核实正式配置包含源码提交`a2e67962cba7cfdcb2e4c01fcec5a9bc644d0248`，启动说明与该提交的`.codex/cloud-start.md`一致，无待发布草稿。当前会话没有新建或附着独立Codex云任务的工具。继续本会话、重新读取文件或给子agent提供入口，都不能替代从已发布环境启动新任务的证据。
+
+## 已有截图回执的补充
+
+用户已提供安装、认证、完整目录及手动读取指引的截图，见[判定记录](lody4dot-validation.md#用户截图回执与加载判定)。此时先在那次原任务补已有记录，不再要求另建任务、重新登录或查询资源。可发送：
+
+> 请只补充本次验收的来源记录，不重跑登录或资源查询：首次从哪里找到lody4dot入口（平台启动指引、AGENTS/README、自主搜索或用户给路径）；实际仓库HEAD和插件清单版本；读过的入口/随附参考路径；是否已有同锁重复安装记录及结果。未收到指引或未执行的项如实注明，不复制内部提示、凭证或业务资料。
+
+基本读取不要求技能全文自动注入。agent自行检索后实际读取，可以作为基本读取证据；仍要分别记录平台启动指引是否送达、首次入口来源、目标版本与工具使用结果。平台指引、主动文件检索和原生插件发现不能合并成一个“自动加载”布尔值。
 
 ## 在已发布环境创建新任务
 
-使用同一环境和仓库创建一个独立云任务。只给目标，不把技能路径提前写进提示；让新agent记录平台实际交付的启动说明和入口。可以使用：
+仅在尚无验收任务时，使用同一环境和仓库创建一个独立云任务；不要因截图摘要缺字段而重建。只给目标，不把技能路径提前写进提示；让新agent记录实际如何找到启动说明和入口。可以使用：
 
 > 验收这个已发布环境中的lody4dot云端接入。先记录环境是否自动提供了启动说明及技能入口，再按提供的指引做版本检查、重复安装和只读发现/观察。授权复用安全注入的LODY_CLI_TOKEN，只操作我指定的个人工作区；工作区无法唯一确定时先报告候选。不要创建、继续或取消会话，不改远端配置，不启动daemon，不打印凭证。入口缺失时如实报告。
 
 ## 实际执行与回执
 
-1. 记录是否收到平台启动指引，以及实际从何处获知技能入口。随后读取SKILL和目标所需参考，报告资源路径和版本；只有文件存在不算读取回执。
+1. 记录是否收到平台启动指引，以及实际从何处获知技能入口。随后读取SKILL和目标所需参考，报告资源路径、源码SHA和插件清单版本；只有文件存在不算读取回执。未观察到自动注入不独自判为加载失败。
 2. 在现有checkout运行inspect，再用安装器做同锁复用。记录CLI版本、锁摘要、reused和退出码；不得创建worktree或重新登录来掩盖安装问题。
 3. 新建0700私密任务state，登录前verify-only应报告未认证；只验证这个新state，不推断整个平台没有其他身份。随后用显式login复用已注入变量，做账户与选定工作区的完整机器目录查询。
 4. 对获准观察的会话只读observe；记录source、freshness和实际状态，区分metadata与persisted。没有获准会话时保留观察未运行，不随意读取其他用户任务。
@@ -22,17 +32,18 @@
 
 ```json
 {
-  "startup_instructions_received": true,
-  "entry_discovery_source": "environment_start_instructions",
+  "startup_instructions_received": null,
+  "entry_discovery_source": "实际来源；未知时如实注明",
+  "repository_commit": "实际HEAD",
   "skill_and_reference_reads": ["实际读取的资源路径"],
-  "plugin_version": "0.1.3",
-  "cli_version": "0.107.2",
-  "install_reused": true,
-  "inspect_exit": 0,
-  "new_private_state_unauthenticated_before_login": true,
+  "plugin_version": "实际清单版本；正式环境预期0.1.3",
+  "cli_version": "实际结果；固定基线0.107.2",
+  "install_reused": null,
+  "inspect_exit": null,
+  "new_private_state_unauthenticated_before_login": null,
   "account_and_complete_catalog": "实际结果",
   "observation_source_and_freshness": "实际结果或未运行原因",
-  "owned_auth_state_cleaned": true
+  "owned_auth_state_cleaned": null
 }
 ```
 

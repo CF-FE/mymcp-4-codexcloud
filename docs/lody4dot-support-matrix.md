@@ -54,3 +54,5 @@ Operation 的空结果只针对当前控制端的私密本机 store 与本任务
 当前可用路径是 Codex 云端作为控制端，复用已有授权、在线的远端 Agent。当前云机的 managed Codex `0.160.1` bundled ACP 初始化返回 RPC1001；独立 SQLite 目录后仍有只读错误，官方代码还要求读写 Codex home 下的 `installation_id`。该本机失败不否定已通过的远端任务路径，也不泛化其他平台。
 
 已选择的云接入路线是平台 `start_skill`；独立新云任务收到指引、读取技能和随附资源，以及组件登录态在新任务中的边界仍需实际回执。原生注册是另一种接入模式，单独保留未验证，不追加为所选云接入路线的必选前提。范围依据见[平台契约](lody4dot-platform-contract.md)、[云端准备](../skill/lody4dot/references/setup-cloud.md)和[验证记录](lody4dot-validation.md)。
+
+用户新提供的截图已报告安装、认证、完整目录和手动读取通过。基本读取不要求技能全文自动注入；首次入口来源、实际版本、随附参考及重复安装记录仍待原验收任务补充，见[补充流程](lody4dot-fresh-task-acceptance.md#已有截图回执的补充)。不据摘要推断平台指引已送达或加载失败，不要求重复建任务、登录或发布。
