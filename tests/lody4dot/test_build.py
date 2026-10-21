@@ -34,7 +34,7 @@ class BuildTests(unittest.TestCase):
         self.write_json(self.plugin / ".codex-plugin/plugin.json", {
             "name": "lody4dot", "version": "0.1.0", "skills": "./skills",
         })
-        for name in ("install.py", "doctor.py", "auth.py", "common.py"):
+        for name in ("install.py", "doctor.py", "auth.py", "common.py", "platform_support.py"):
             self.write(self.plugin / "scripts" / name, "print('fixture')\n")
         self.write(self.plugin / "scripts/build.py", "# source-only builder\n")
         for name in ("package.json", "package-lock.json", "build-policy.json"):

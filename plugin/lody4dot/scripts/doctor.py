@@ -3,70 +3,103 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import os
 import platform
+from pathlib import Path
 import shutil
 import subprocess
 
 from common import (DEFAULT_PREFIX, ToolError, emit, error_result, installed_cli,
-                    offline_version, result, state_directory, supported_node,
-                    verify_account, verify_catalog)
+                    local_provenance, offline_version, require_runtime_platform, result,
+                    state_directory, supported_node, verify_account, verify_catalog)
 
 
 def diagnose(args):
+    observed_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     checks = []
     def check(name, status, message, **evidence):
-        checks.append(dict(name=name, status=status, message=message, evidence=evidence))
+        value = dict(name=name, status=status, message=message, evidence=evidence)
+        for index, previous in enumerate(checks):
+            if previous["name"] == name:
+                checks[index] = value
+                return
+        checks.append(value)
+
     credential = "present" if os.environ.get("LODY_CLI_TOKEN", "").strip() else "missing"
     check("credential_environment", "pass" if credential == "present" else "not_run",
           "LODY_CLI_TOKEN presence only; no authentication inferred.", observation=credential)
-    if platform.system() != "Linux":
-        raise ToolError(5, "unsupported_platform", "This installer supports Linux only.")
-    if not shutil.which("node"):
-        raise ToolError(3, "missing_executable", "Node is unavailable.")
+    for name, message in (
+        ("node", "Node version was not checked."),
+        ("runtime", "Managed CLI was not checked."),
+        ("account", "No successful read-only account query was observed."),
+        ("workspace_catalog", "No complete workspace machine catalog was observed."),
+        ("local_runtime", "No daemon was started or inferred from CLI availability."),
+        ("task_execution", "Agent credentials, target and persisted task results require separate validation."),
+    ):
+        check(name, "not_run", message)
+    session, cli, failure = "not_run", None, None
+    active = "platform"
     try:
-        node = subprocess.run(["node", "--version"], capture_output=True, text=True, timeout=args.timeout)
-    except subprocess.TimeoutExpired as exc:
-        raise ToolError(4, "timeout", "Node version check timed out.") from exc
-    if node.returncode or not supported_node(node.stdout):
-        raise ToolError(5, "unsupported_node", "Node must be >=22.14 <23 or >=23.6.")
-    check("node", "pass", "Supported Node version.", version=node.stdout.strip())
-    cli = installed_cli(args.prefix)
-    version = offline_version(cli, args.timeout)
-    check("runtime", "pass", "Managed CLI reports the supported version.", version=version)
-    session = "not_run"
-    catalog_error = None
-    if args.connect:
-        state = state_directory(args.data_dir)
-        count = verify_account(cli, state, args.timeout)
-        session = "authenticated"
-        check("account", "pass", "Read-only workspace query succeeded.", observation=session, workspace_count=count)
-        if args.workspace:
-            try:
+        require_runtime_platform()
+        active = "node"
+        if not shutil.which("node"):
+            raise ToolError(3, "missing_executable", "Node is unavailable.")
+        try:
+            node = subprocess.run(["node", "--version"], capture_output=True, text=True, timeout=args.timeout)
+        except subprocess.TimeoutExpired as exc:
+            raise ToolError(4, "timeout", "Node version check timed out.") from exc
+        if node.returncode or not supported_node(node.stdout):
+            raise ToolError(5, "unsupported_node", "Node must be >=22.14 <23 or >=23.6.")
+        check("node", "pass", "Supported Node version.", version=node.stdout.strip())
+        active = "runtime"
+        cli = installed_cli(args.prefix)
+        version = offline_version(cli, args.timeout)
+        check("runtime", "pass", "Managed CLI reports the supported version.", version=version)
+        if args.connect:
+            active = "account"
+            state = state_directory(args.data_dir)
+            count = verify_account(cli, state, args.timeout)
+            session = "authenticated"
+            check("account", "pass", "Read-only workspace query succeeded.",
+                  observation=session, workspace_count=count)
+            if args.workspace:
+                active = "workspace_catalog"
                 count = verify_catalog(cli, state, args.workspace, args.timeout)
                 check("workspace_catalog", "pass", "Selected workspace machine catalog query completed.",
                       machine_count=count, has_more=False, all_pages=True)
-            except ToolError as exc:
-                catalog_error = exc
-                check("workspace_catalog", "blocked" if exc.code == 3 else "fail", str(exc),
-                      error_category=exc.category, raw_exit_code=exc.raw_exit_code)
+            else:
+                check("workspace_catalog", "not_run", "Pass --workspace with --connect to check the machine catalog; account success does not verify this connection.")
         else:
-            check("workspace_catalog", "not_run", "Pass --workspace with --connect to check the machine catalog; account success does not verify this connection.")
+            check("account", "not_run", "Use --connect with a private state directory for a read-only query.")
+            check("workspace_catalog", "not_run", "No workspace catalog query was requested.")
+    except ToolError as exc:
+        failure = exc
+    except (OSError, ValueError, TypeError):
+        failure = ToolError(10, "internal", "Diagnostic failed; native details withheld.")
+    if failure:
+        evidence = dict(error_category=failure.category, raw_exit_code=failure.raw_exit_code)
+        if failure.failure_layer is not None:
+            evidence["failure_layer"] = failure.failure_layer
+        check(active, "blocked" if failure.code == 3 else "fail", str(failure), **evidence)
+        value, code = error_result(failure), failure.code
     else:
-        check("account", "not_run", "Use --connect with a private state directory for a read-only query.")
-        check("workspace_catalog", "not_run", "No workspace catalog query was requested.")
-    check("local_runtime", "not_run", "No daemon was started or inferred from CLI availability.")
-    check("task_execution", "not_run", "Agent credentials, target and persisted task results require separate validation.")
-    if catalog_error:
-        value = error_result(catalog_error)
-        value.update(profile=args.profile, checks=checks, credential_environment=credential, account=session)
-        return value, catalog_error.code
-    passed = args.profile == "inspect" or (args.profile == "control" and args.connect)
-    if not passed:
-        check("requested_profile", "blocked", "Requested profile has prerequisites that these checks have not verified.")
-    return result("pass" if passed else "blocked", profile=args.profile, checks=checks,
-                  credential_environment=credential, account=session,
-                  error_category=None if passed else "unverified_prerequisites"), 0 if passed else 3
+        passed = args.profile == "inspect" or (args.profile == "control" and args.connect)
+        if not passed:
+            check("requested_profile", "blocked", "Requested profile has prerequisites that these checks have not verified.")
+        value = result("pass" if passed else "blocked",
+                       error_category=None if passed else "unverified_prerequisites")
+        code = 0 if passed else 3
+    value.update(profile=args.profile, checks=checks, credential_environment=credential, account=session,
+                 observed_at=observed_at,
+                 verified_scope=[item["name"] for item in checks
+                                 if item["status"] == "pass" and item["name"] != "credential_environment"],
+                 control_environment={"tool": "lody4dot-doctor", "os": platform.system(),
+                                      "architecture": platform.machine(),
+                                      "script_path": str(Path(__file__).resolve()),
+                                      "cli_path": str(cli) if cli is not None else None},
+                 provenance=local_provenance(args.prefix, Path(__file__).resolve().parent.parent))
+    return value, code
 
 
 def main(argv=None):

@@ -4,12 +4,14 @@ import importlib.util
 import json
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
 
 
 SCRIPT = Path(__file__).resolve().parents[2] / "plugin/lody4dot/scripts/install.py"
+sys.path.insert(0, str(SCRIPT.parent))
 spec = importlib.util.spec_from_file_location("lody4dot_install", SCRIPT)
 installer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(installer)
@@ -112,6 +114,15 @@ class InstallTests(unittest.TestCase):
             self.perform()
         self.assertEqual(error.exception.exit_code, 5)
         self.assertFalse(self.prefix.exists())
+
+    def test_unsupported_platform_precedes_runtime_input_and_does_not_create_prefix(self):
+        with patch.object(installer.sys, "platform", "win32"):
+            with self.assertRaises(installer.InstallError) as error:
+                installer.install(self.prefix, runtime_dir=self.root / "missing-runtime")
+        self.assertEqual(error.exception.exit_code, 5)
+        self.assertEqual(error.exception.category, "unsupported")
+        self.assertFalse(self.prefix.exists())
+        self.assertEqual(self.commands, [])
 
     def test_npm_failure_preserves_previous_entry_and_state(self):
         before = self.prepare_upgrade()

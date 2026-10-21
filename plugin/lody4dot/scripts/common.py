@@ -2,13 +2,16 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import signal
 import subprocess
 import sys
 import tempfile
+
+import platform_support
 
 SCHEMA_VERSION = 1
 LODY_VERSION = "0.107.2"
@@ -16,9 +19,18 @@ DEFAULT_PREFIX = "/workspace/.tools/lody4dot"
 
 
 class ToolError(Exception):
-    def __init__(self, code: int, category: str, message: str, raw_exit_code=None):
+    def __init__(self, code: int, category: str, message: str, raw_exit_code=None, *, failure_layer=None):
         super().__init__(message)
         self.code, self.category, self.raw_exit_code = code, category, raw_exit_code
+        self.failure_layer = failure_layer
+
+
+def require_runtime_platform():
+    """Reject unsupported systems before POSIX state or native process work."""
+    try:
+        platform_support.require_supported_platform()
+    except platform_support.UnsupportedPlatform as exc:
+        raise ToolError(5, "unsupported_platform", str(exc)) from None
 
 
 def result(status, **fields):
@@ -35,8 +47,11 @@ def emit(value, as_json):
 
 
 def error_result(error):
-    return result("blocked" if error.code == 3 else "fail", error_category=error.category,
-                  message=str(error), raw_exit_code=error.raw_exit_code)
+    value = result("blocked" if error.code == 3 else "fail", error_category=error.category,
+                   message=str(error), raw_exit_code=error.raw_exit_code)
+    if error.failure_layer is not None:
+        value["failure_layer"] = error.failure_layer
+    return value
 
 
 def supported_node(version):
@@ -56,7 +71,7 @@ def installed_cli(prefix):
         marker_path = prefix / ".lody4dot-managed.json"
         if marker_path.is_symlink():
             raise ValueError("symlink marker")
-        marker = json.loads(marker_path.read_text())
+        marker, _ = _provenance_json(prefix, ".lody4dot-managed.json")
         if marker.get("owner") != "lody4dot" or marker.get("schema_version") != 1:
             raise ValueError("foreign marker")
         current = prefix / "current"
@@ -71,7 +86,7 @@ def installed_cli(prefix):
         receipt_path = version_dir / "receipt.json"
         if receipt_path.is_symlink():
             raise ValueError("external receipt")
-        receipt = json.loads(receipt_path.read_text())
+        receipt, _ = _provenance_json(version_dir, "receipt.json")
         if receipt.get("schema_version") != 1 or receipt.get("lock_sha256") != relative.name:
             raise ValueError("invalid receipt")
         cli = version_dir / "node_modules/lody/dist/index.js"
@@ -84,7 +99,131 @@ def installed_cli(prefix):
         raise ToolError(3, "missing_runtime", "Managed Lody runtime is unavailable; run install.py.") from exc
 
 
+def _provenance_bytes(root, relative, limit=2 * 1024 * 1024):
+    """Read bounded local evidence without following package members out of root."""
+    name = PurePosixPath(relative)
+    if (not isinstance(relative, str) or not relative or "\\" in relative or ":" in relative
+            or name.is_absolute() or name.as_posix() != relative or ".." in name.parts):
+        raise ValueError("invalid evidence path")
+    root = Path(root).absolute()
+    if root.resolve() != root:
+        raise ValueError("symlinked evidence root")
+    path = root
+    for part in name.parts:
+        path = path / part
+        if path.is_symlink():
+            raise ValueError("symlinked evidence")
+    if not path.is_file() or path.stat().st_size > limit:
+        raise ValueError("unavailable evidence")
+    with path.open("rb") as stream:
+        raw = stream.read(limit + 1)
+    if len(raw) > limit:
+        raise ValueError("evidence exceeds limit")
+    return raw
+
+
+def _provenance_json(root, relative):
+    raw = _provenance_bytes(root, relative)
+    try:
+        value = json.loads(raw)
+    except RecursionError as exc:
+        raise ValueError("evidence nesting exceeds parser limit") from exc
+    if not isinstance(value, dict):
+        raise ValueError("invalid evidence object")
+    return value, hashlib.sha256(raw).hexdigest()
+
+
+def _bundle_member(name):
+    """Limit hashes to the existing package layout, never identity/cache files."""
+    if not isinstance(name, str):
+        return False
+    parts = PurePosixPath(name).parts
+    sensitive_name = r"(^\.env($|\.)|(^|[._-])(token|credentials?|secrets?)([._-]|$)|\.(pem|key|p12|pfx)$)"
+    if any(re.search(sensitive_name, part, re.IGNORECASE) for part in parts):
+        return False
+    return (name in {"README.md", ".codex-plugin/plugin.json", ".agents/plugins/marketplace.json"}
+            or name in {"hosts/codex-cloud.md", "hosts/codex-cli.md"}
+            or len(parts) == 2 and parts[0] == "scripts" and parts[1].endswith(".py")
+            or name in {"runtime/package.json", "runtime/package-lock.json", "runtime/build-policy.json"}
+            or name == "skills/lody4dot/SKILL.md"
+            or len(parts) == 4 and parts[:3] == ("skills", "lody4dot", "references")
+            and PurePosixPath(name).suffix in {".md", ".json"})
+
+
+def local_provenance(prefix, package_root):
+    """Report independent local sources; hashes are not signatures or release proof."""
+    value = {"assurance": "local_file_consistency_only",
+             "plugin": {"status": "not_provided"},
+             "bundle": {"status": "not_provided", "coverage": "receipt_listed_files_only"},
+             "runtime": {"status": "not_provided"}}
+    package_root = Path(package_root).absolute()
+    semver = r"[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?"
+    manifest_version = None
+    manifest_path = package_root / ".codex-plugin/plugin.json"
+    if manifest_path.exists() or manifest_path.is_symlink():
+        try:
+            manifest, digest = _provenance_json(package_root, ".codex-plugin/plugin.json")
+            version = manifest.get("version")
+            if manifest.get("name") != "lody4dot" or not isinstance(version, str) or not re.fullmatch(semver, version):
+                raise ValueError("invalid plugin manifest")
+            manifest_version = version
+            value["plugin"] = {"status": "observed", "version": version,
+                               "source": ".codex-plugin/plugin.json", "manifest_sha256": digest}
+        except (OSError, ValueError, TypeError):
+            value["plugin"] = {"status": "invalid"}
+    receipt_path = package_root / ".lody4dot-build.json"
+    if receipt_path.exists() or receipt_path.is_symlink():
+        try:
+            receipt, digest = _provenance_json(package_root, ".lody4dot-build.json")
+            files, version = receipt.get("files"), receipt.get("plugin_version")
+            if (receipt.get("schema_version") != 1 or receipt.get("tool") != "lody4dot-build"
+                    or not isinstance(version, str) or not re.fullmatch(semver, version)
+                    or not isinstance(files, dict) or not 0 < len(files) <= 512
+                    or ".codex-plugin/plugin.json" not in files
+                    or any(not _bundle_member(name) or not isinstance(digest, str)
+                           or not re.fullmatch(r"[a-f0-9]{64}", digest) for name, digest in files.items())):
+                raise ValueError("invalid bundle receipt")
+            consistent = manifest_version == version
+            total = 0
+            for name, expected in files.items():
+                try:
+                    raw = _provenance_bytes(package_root, name)
+                    total += len(raw)
+                    if total > 16 * 1024 * 1024:
+                        consistent = False
+                        break
+                    consistent = hashlib.sha256(raw).hexdigest() == expected and consistent
+                except (OSError, ValueError):
+                    consistent = False
+            value["bundle"] = {"status": "consistent" if consistent else "mismatch",
+                               "receipt_sha256": digest, "plugin_version": version,
+                               "listed_file_count": len(files), "coverage": "receipt_listed_files_only"}
+        except (OSError, ValueError, TypeError):
+            value["bundle"] = {"status": "invalid", "coverage": "receipt_listed_files_only"}
+    marker = Path(prefix).absolute() / ".lody4dot-managed.json"
+    if marker.exists() or marker.is_symlink():
+        try:
+            cli = installed_cli(prefix)
+            runtime = cli.parents[3]
+            receipt, digest = _provenance_json(runtime, "receipt.json")
+            expected = receipt.get("lock_sha256")
+            if not isinstance(expected, str) or not re.fullmatch(r"[a-f0-9]{64}", expected):
+                raise ValueError("invalid runtime receipt")
+            actual = None
+            try:
+                actual = hashlib.sha256(_provenance_bytes(runtime, "package-lock.json")).hexdigest()
+            except (OSError, ValueError):
+                pass
+            value["runtime"] = {"status": "consistent" if actual == expected else "mismatch",
+                                "lody_version": LODY_VERSION, "receipt_sha256": digest,
+                                "lock_sha256": expected, "actual_lock_sha256": actual}
+        except (ToolError, OSError, ValueError, TypeError, IndexError):
+            value["runtime"] = {"status": "invalid"}
+    return value
+
+
 def state_directory(argument, *, create=False):
+    require_runtime_platform()
     raw = argument or os.environ.get("LODY_DATA_DIR")
     if not raw:
         raise ToolError(3, "missing_state_directory", "Set a private per-task LODY_DATA_DIR or pass --data-dir.")
@@ -103,6 +242,7 @@ def state_directory(argument, *, create=False):
 
 def run_native(argv, *, data_dir, timeout=30, keep_token=False):
     """Capture native output without ever echoing it or subprocess arguments."""
+    require_runtime_platform()
     env = os.environ.copy()
     env.update(LODY_DATA_DIR=str(data_dir), NO_COLOR="1")
     if not keep_token:
@@ -128,7 +268,11 @@ def run_native(argv, *, data_dir, timeout=30, keep_token=False):
 def native_failure(code, stdout, stderr):
     # Classify without forwarding output: even arbitrary token encodings stay private.
     content = (stdout + "\n" + stderr).lower()
-    if any(s in content for s in ("invalid or expired", "unauthorized", "login required", "not authenticated", "please login", "run `lody login`", "not logged in")):
+    # These signals identify a rejected proxy tunnel, not an object ACL decision.
+    proxy_denial = bool(re.search(r"tunnel connection failed:\s*(?:403|407)\b|\bconnect\s+(?:403|407)\b", content))
+    if proxy_denial:
+        category = "network"
+    elif any(s in content for s in ("invalid or expired", "unauthorized", "login required", "not authenticated", "please login", "run `lody login`", "not logged in")):
         category = "authentication"
     elif any(s in content for s in ("permission", "forbidden", "access denied")):
         category = "permission"
@@ -136,7 +280,8 @@ def native_failure(code, stdout, stderr):
         category = "network"
     else:
         category = "native_command"
-    return ToolError(4, category, "Lody command failed; native output was withheld to protect credentials.", code)
+    return ToolError(4, category, "Lody command failed; native output was withheld to protect credentials.", code,
+                     failure_layer="proxy_transport" if proxy_denial else None)
 
 
 def parse_native_json(stdout):
@@ -213,6 +358,7 @@ def verify_catalog(cli, data_dir, workspace, timeout):
 
 
 def offline_version(cli, timeout):
+    require_runtime_platform()
     with tempfile.TemporaryDirectory(prefix="lody4dot-inspect-") as state:
         code, stdout, stderr = run_native(["node", cli, "--version"], data_dir=state, timeout=timeout)
     if code:

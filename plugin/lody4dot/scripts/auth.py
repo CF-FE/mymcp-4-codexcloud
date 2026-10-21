@@ -6,11 +6,12 @@ import argparse
 import os
 
 from common import (DEFAULT_PREFIX, ToolError, emit, error_result, installed_cli,
-                    native_failure, offline_version, result, run_native,
+                    native_failure, offline_version, require_runtime_platform, result, run_native,
                     state_directory, verify_account)
 
 
 def authenticate(args):
+    require_runtime_platform()
     token = os.environ.get("LODY_CLI_TOKEN", "").strip()
     if args.login and not token:
         raise ToolError(3, "missing_credential", "LODY_CLI_TOKEN is not injected; no login was attempted.")

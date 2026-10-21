@@ -3,7 +3,6 @@
 
 import argparse
 import contextlib
-import fcntl
 import hashlib
 import json
 import os
@@ -13,6 +12,8 @@ import shutil
 import subprocess
 import sys
 import tempfile
+
+import platform_support
 
 
 MARKER = ".lody4dot-managed.json"
@@ -120,8 +121,6 @@ def _inputs(runtime_dir):
 
 
 def _preflight():
-    if sys.platform != "linux":
-        raise InstallError("The installer currently supports Linux only", 5, "unsupported")
     node, npm = shutil.which("node"), shutil.which("npm")
     if not node or not npm:
         raise InstallError("Node.js and npm are required")
@@ -224,6 +223,10 @@ def _activate(prefix, digest):
 
 
 def install(prefix, *, runtime_dir=None):
+    try:
+        platform_support.require_supported_platform()
+    except platform_support.UnsupportedPlatform as exc:
+        raise InstallError(str(exc), 5, "unsupported") from None
     prefix = Path(os.path.abspath(os.path.expanduser(str(prefix))))
     runtime_dir = Path(runtime_dir) if runtime_dir is not None else RUNTIME_DIR
     version, digest = _inputs(runtime_dir)
@@ -234,7 +237,7 @@ def install(prefix, *, runtime_dir=None):
         _write_json(prefix / MARKER, OWNER)
     with (prefix / ".install.lock").open("a", encoding="utf-8") as lockfile:
         try:
-            fcntl.flock(lockfile, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            platform_support.acquire_install_lock(lockfile)
         except BlockingIOError:
             raise InstallError("Another installation owns this prefix; retry after it finishes") from None
         _check_layout(prefix)
