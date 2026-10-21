@@ -20,6 +20,7 @@ lody4dot的设计、接入、验收和配套图表集中在本目录；实际任
 | [产品方案 r2](plan.md) | 目标、范围、取舍和交付定义 |
 | [开发契约 d1](development.md) | 实现边界、接口、T01–T12任务与验收 |
 | [多宿主协作方案 c3](collaboration-development.md) | 保留Lody主干，结合已验证Dot资料中转、schema1边界与回存完成口径的辩证修订 |
+| [随包资料交接知识](../../skill/lody4dot/references/material-handoff.md) | Agent执行入口：路线、输入表示、处理/保存/目的地回读分别取证；不是另一套开发方案 |
 | [C01–C10任务卡](collaboration-tasks.md) | 多宿主方案的实施步骤与证据要求 |
 | [环境架构设计参考](environment-design.md) | 对象关系、记录模板及架构评审问题 |
 

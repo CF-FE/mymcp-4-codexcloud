@@ -18,7 +18,7 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 云任务、运行实例、本地环境、Dot、会话引用和协作空间权限的区别，见[环境与权限指引](docs/lody4dot/environment-model.md)：先读一分钟速查和执行链路，再按问题查表。跨环境协作的对象关系、记录模板与评审清单见[架构设计参考](docs/lody4dot/environment-design.md)。
 
-多处加载安装、经Lody协作及环境初始化/恢复，见[多宿主协作开发方案c3](docs/lody4dot/collaboration-development.md)与[C01–C10任务卡](docs/lody4dot/collaboration-tasks.md)。c3结合产品对话与实测：保留Lody主干，复用公子已试通的Dot资料中转，明确schema1与资料回存的边界；本轮仅迭代文档。官方已确认Dot是ChatGPT中的常驻Agent产品，拥有自己的云电脑，也可创建独立的Codex云任务或使用获授权的本地电脑；三种执行位置分别建模。插件连接可在已授予范围内跨产品共享，本地访问、CLI身份和模型凭证另行核对。来源见[宿主契约](docs/lody4dot/host-contracts.md)，实现与真实验收见[任务队列](.codex/agent-state/todo.md)。
+多处加载安装、经Lody协作及环境初始化/恢复，见[多宿主协作开发方案c3](docs/lody4dot/collaboration-development.md)与[C01–C10任务卡](docs/lody4dot/collaboration-tasks.md)。c3结合产品对话与实测：保留Lody主干，复用公子已试通的Dot资料中转，明确schema1与资料回存的边界；现已落入候选包的资料交接知识。官方已确认Dot是ChatGPT中的常驻Agent产品，拥有自己的云电脑，也可创建独立的Codex云任务或使用获授权的本地电脑；三种执行位置分别建模。插件连接可在已授予范围内跨产品共享，本地访问、CLI身份和模型凭证另行核对。来源见[宿主契约](docs/lody4dot/host-contracts.md)，实现与真实验收见[任务队列](.codex/agent-state/todo.md)。
 
 本次完整讨论沉淀为两种阅读入口：[产品协作参考（分享版）](docs/lody4dot/product-collaboration-reference.md)讲解概念、云环境、资料空间、MCP与图标；[云端任务交接版](docs/lody4dot/space-cloud-handoff.md)对照仓库实现，给出方案取舍、最小优化与验收边界。主方案仍为上面的c3，运行状态仍只在任务队列维护。
 
@@ -34,7 +34,7 @@ lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安�
 
 本项目独立Codex云任务由Dot创建，用户已确认Dot具备权限；云任务加载lody4dot后，通过Lody与其他节点协作并回传结果。云任务不派生Codex云任务，OpenAI任务目录API及其历史401不属于插件前置或项目阻塞；具体交接见[新任务验收](docs/lody4dot/fresh-task-acceptance.md)。
 
-当前源码候选0.2.2增加官方用户运行setup的[薄入口技能](skill/lody4dot-setup/SKILL.md)，复用核心知识与bootstrap；它不是安装自动执行或存储重置hook。132项测试、自包含打包、移位检查与包来源对账通过，平台原生调用尚未验收。正式0.2.1已有的CLI版本策略继续保留：版本不同、探测或显式latest查询失败只warn，默认离线，不自动升级。受管runtime仅支持Linux，真实命令、身份、权限和完整性错误分别处理。见[验证记录](docs/lody4dot/validation.md)、[支持矩阵](docs/lody4dot/support-matrix.md)及[Dot接入运行单](docs/lody4dot/dot-acceptance.md)。
+当前源码候选0.2.3补充[资料交接知识](skill/lody4dot/references/material-handoff.md)，分别处理路线、输入表示、处理结果、保存和目的地回读；沿用0.2.2官方用户运行setup的[薄入口技能](skill/lody4dot-setup/SKILL.md)。两者均复用现有工具，不是安装自动执行或存储重置hook，平台原生调用尚未验收。正式0.2.1已有的CLI版本策略继续保留：版本不同、探测或显式latest查询失败只warn，默认离线，不自动升级。受管runtime仅支持Linux，真实命令、身份、权限和完整性错误分别处理。各候选的验证范围见[验证记录](docs/lody4dot/validation.md)、[支持矩阵](docs/lody4dot/support-matrix.md)及[Dot接入运行单](docs/lody4dot/dot-acceptance.md)。
 
 spec12恢复演练已验证不同内核上下文下依赖、身份及原会话/产物对账，该阶段0新模型回合；后续实验各自计数，见[验证记录](docs/lody4dot/validation.md)。它不证明具体VM身份、磁盘重建机制、Dot hook或独立新任务首次加载。Review上游Viewer、旧截图来源及Dot实际接入仍按各自缺口跟进。
 

@@ -1,7 +1,7 @@
 {
   "name": "lody4dot",
-  "version": "0.2.2",
-  "description": "Lody multi-host collaboration and recoverable setup guidance",
+  "version": "0.2.3",
+  "description": "Lody multi-host collaboration, material handoff and recoverable setup guidance",
   "skills": "./skills",
   "extensions": {
     "com.openai": {

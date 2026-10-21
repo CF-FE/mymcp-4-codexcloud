@@ -4,6 +4,8 @@ Dot是ChatGPT的常驻Agent产品，有自己的云电脑；它还可以创建�
 
 ## 选择接入路线
 
+先区分资料交接与Lody任务控制。对当前任务已有用户确认的“资料空间→Dot→Codex Cloud→Dot→资料空间”路线，直接复用：Dot负责资料读写及结果收取，Cloud负责处理；不为统一形式额外创建Lody会话、注册machine或部署MCP。输入表示、保存和回读规则见包根`skills/lody4dot/references/material-handoff.md`，源码为`skill/lody4dot/references/material-handoff.md`。这不代替本插件的Dot加载或Lody工具验收。
+
 | 当前条件 | 使用方式 | 需要单独验证 |
 | --- | --- | --- |
 | 已有合法Lody app/MCP连接 | 在已授予权限内复用实际提供的工具 | 真实工具名、目标workspace与只读查询；不猜内部MCP入口 |
@@ -18,7 +20,7 @@ Dot可使用既有插件连接，连接和插件权限可在dots、ChatGPT、Wor
 
 本包是skills及辅助脚本组成的原生Codex格式自包含包，不声明MCP服务器或预设Lody app ID。准确入口为`skills/lody4dot/SKILL.md`，协作规则在`skills/lody4dot/references/collaboration.md`；先确认实际产品界面是否送达并读取这些资源。
 
-OpenAI帮助文档确认：有上传权限时，可在ChatGPT web的Admin console→目标workspace→Plugins→Add→Upload plugin上传ZIP；也可由管理员导入GitHub marketplace。个人账号、角色及产品界面的可用入口需以实际界面为准。本包格式已按Codex0.163.0契约验证，ChatGPT导入/扫描/启用仍须取得实际回执；完整格式指南当前无法读取，不能声称ZIP包装层级已被ChatGPT接受。
+OpenAI帮助文档确认：有上传权限时，可在ChatGPT web的Admin console→目标workspace→Plugins→Add→Upload plugin上传ZIP；也可由管理员导入GitHub marketplace。个人账号、角色及产品界面的可用入口需以实际界面为准。已读取的[官方打包指南](https://developers.openai.com/plugins/build/plugins)支持现有兼容清单及用户运行setup的入口；其存在不能证明ZIP外层包装已被ChatGPT接受。导入、扫描、启用和实际技能调用仍须回执，不再沿用早期“完整指南当前无法读取”的访问结论。
 
 本仓库源码的`plugin/lody4dot/`尚需builder收集外部技能。GitHub marketplace导入只读取源文件，不替你构建包；不能把这个未构建目录直接当完整插件source。当前先交付构建产物供候选导入，保持能力源码唯一。
 

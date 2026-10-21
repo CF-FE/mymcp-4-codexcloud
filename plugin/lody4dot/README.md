@@ -1,6 +1,6 @@
 # lody4dot
 
-为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码候选为`0.2.2`，正式云环境当前来源为`0.2.1`；`0.107.2`是已验证知识与默认可复现CLI安装基线，不是唯一允许运行的版本。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际CLI的其他运行要求另行核对。
+为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码候选为`0.2.3`，编写本候选时已核实的正式云来源为`0.2.1`；`0.107.2`是已验证知识与默认可复现CLI安装基线，不是唯一允许运行的版本。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际CLI的其他运行要求另行核对。
 
 核心能力源码在仓库的 `skill/lody4dot/`，薄setup入口在`skill/lody4dot-setup/`；本目录负责组合、运行时锁定和分发，不新增 MCP 服务。Lody 已有 MCP 只有在宿主提供有效 session/workspace/machine 上下文时才使用，不能将其内部入口当作独立通用服务。
 
@@ -19,6 +19,12 @@
 | 只有知识可读 | 可规划与交接，工具调用、派发和执行保持未验证。 |
 
 Dot、ChatGPT、ChatGPT Work和Codex可共享插件连接及已授予权限；技能安装/管理与具体工具暴露仍可能按产品区分。共享连接不复制浏览器登录、本地文件访问或模型凭证。本轮优先复用上述入口，不先部署MCP或Sites服务。
+
+## 资料交接与任务结果
+
+0.2.3增加随包的资料交接参考，由共享技能按需导航。对已确认可用且获授权的Dot资料中转直接复用；需要Lody节点发现、派发和观察时才组合Lody路线。分别记录原附件/正文/摘要、处理结果、保存回执和目的地回读；保存成功而回读受阻时保留两项事实，不盲目重复上传或替换对象。当前云任务不派生独立Codex云任务，任务创建由Dot承担。
+
+纯Cloud/Space资料记录不填入schema1的Lody引用，也不送给`handoff.py`冒充Lody业务结果。真实Lody部分仍使用原校验器；本次不增加JSON字段、schema2、远程桥接或工具调用入口。知识导航、分发检查不证明Dot实际加载或新的业务读写已验收。
 
 ## 从仓库安装 CLI
 
@@ -180,5 +186,7 @@ python3 scripts/check_repository.py
 `0.2.1`已正式发布，修正Dot官方身份、共享连接与运行位置知识，补充随包Dot接入指引，并将CLI实际版本作为非阻塞提示、增加显式更新查询。默认安装与知识基线仍为0.107.2。
 
 `0.2.2`候选只增加官方用户setup入口及其分发/来源校验，复用现有bootstrap，保留受支持的兼容清单；尚未迁移为portable根`plugin.json`。Linux以外受管安装、ChatGPT web导入、原生setup调用、Dot工具接入及完整重建各自保留验收前提，知识和工具测试不代替这些证据。候选不自动升级正式环境，也不改变CLI锁定输入。
+
+`0.2.3`补充资料路线与输入表示、保存/回读分层、资料写入超时先对账，以及schema1适用边界；修正Dot随包说明的过时访问结论。复用现有核心和工具，不更改CLI依赖、校验器契约或正式云环境；实际接入与业务验收仍按各端证据判断。
 
 官方依据：[Dot入门](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot)、[Dot权限FAQ](https://help.openai.com/en/articles/20001529-dots-privacy-security-and-safety-faqs)、[Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud)、[Plugins](https://help.openai.com/en/articles/20001256-plugins-in-chatgpt)、[GitHub marketplace导入](https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github)、[Skills](https://help.openai.com/en/articles/20001066-skills-in-chatgpt)（读取于2026-10-21）。

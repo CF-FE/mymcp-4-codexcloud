@@ -1,6 +1,6 @@
 ---
 name: lody4dot
-description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent 配置和角色，创建、跟进、观察、调度与交付会话任务；也用于多宿主协作、上下文交接，以及在受支持宿主安装、诊断或排查 Lody。覆盖公开命令发现、版本差异、运行位置和结果核验。
+description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent 配置和角色，创建、跟进、观察、调度与交付会话任务；也用于多宿主协作、资料空间与Dot中转、结果存回、上下文交接，以及在受支持宿主安装、诊断或排查 Lody。覆盖公开命令发现、版本差异、运行位置和结果核验。
 ---
 
 # 使用 Lody 完成任务
@@ -13,6 +13,7 @@ description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent
 
 | 当前目标 | 阅读 |
 | --- | --- |
+| 资料空间与Dot中转、输入交接或结果存回 | [资料交接](references/material-handoff.md) |
 | 多处安装、跨端协作、上下文交接或重建后继续 | [多宿主协作](references/collaboration.md) |
 | 安装、凭证、云环境准备 | [云端准备](references/setup-cloud.md) |
 | 找工作区、机器、项目或可用能力 | [资源发现](references/discovery.md) |
@@ -26,6 +27,8 @@ description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent
 完整导航见 [命令索引](references/command-index.json)，来源和适用范围见 [来源记录](references/sources.json)。不要一次加载全部参考。
 
 ## 执行流程
+
+先按目标选择资料中转、直接工具或Lody处理；资料路线见[资料交接](references/material-handoff.md)。下列流程用于实际涉及Lody的部分，纯资料交接不要求发现machine、创建Lody会话或填写Lody引用。
 
 1. **识别宿主、角色和入口。** 区分知识读取、控制端、执行节点或混合角色；每次工具操作分别定位执行器。使用安装器或 doctor 报告的稳定绝对入口，参考中的 `lody` 代表该入口。观察实际版本，遇到参数差异查 `lody <group> <subcommand> --help`。`0.107.2`是已验证知识和默认可复现安装基线，不是唯一允许运行的版本；版本差异或版本查询失败只提示，不据此阻塞任务。兼容性按实际命令与结果判断。
 2. **确认请求属于哪类操作。** 帮助和本地诊断、账户资源查询、创建/修改任务、长期执行节点的前提不同。复用当前任务已有授权，不要求每条命令重复确认，也不自动扩大目标、权限或副作用。
