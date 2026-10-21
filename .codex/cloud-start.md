@@ -11,7 +11,7 @@ python3 plugin/lody4dot/scripts/bootstrap.py --prefix /workspace/.tools/lody4dot
 
 此启动说明属于云环境接入，不证明原生插件已经注册或新任务已经加载。首次任务需要记录入口和资源读取回执。
 
-`bootstrap.py`默认只做inspect；`--prepare`在环境准备时安装并检查；`--repair-missing`先检查，仅在受管依赖缺失时安装。版本不支持、网络失败或身份问题不会触发盲目重装。它不恢复登录态、启动daemon或重建模型任务。环境中断后先按已持久化的原生session/turn引用查询原任务，核对产物；状态未知时停止重派。
+`bootstrap.py`默认只做inspect；`--prepare`在环境准备时安装并检查；`--repair-missing`先检查，仅在受管依赖缺失时安装。Lody CLI版本差异或版本探测失败只warn，不阻塞或触发重装；需要查最新版时显式运行`doctor.py --check-updates`，查询失败也只提醒，不自动升级。网络、身份或实际运行错误分别处理。它不恢复登录态、启动daemon或重建模型任务。环境中断后先按已持久化的原生session/turn引用查询原任务，核对产物；状态未知时停止重派。
 
 安装与环境快照只保存依赖，不登录、不注册机器、不启 daemon。需要账户操作时，在当前任务的同一 shell 中先创建私密状态目录：
 

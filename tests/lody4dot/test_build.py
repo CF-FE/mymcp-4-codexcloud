@@ -37,7 +37,7 @@ class BuildTests(unittest.TestCase):
         for name in ("install.py", "doctor.py", "auth.py", "common.py",
                      "platform_support.py", "bootstrap.py", "handoff.py"):
             self.write(self.plugin / "scripts" / name, "print('fixture')\n")
-        for name in ("codex-cloud.md", "codex-cli.md"):
+        for name in ("codex-cloud.md", "codex-cli.md", "dot.md"):
             self.write(self.plugin / "hosts" / name, "# Host\n[Prepare](../scripts/bootstrap.py)\n")
         self.write(self.plugin / "scripts/build.py", "# source-only builder\n")
         for name in ("package.json", "package-lock.json", "build-policy.json"):
@@ -68,6 +68,7 @@ class BuildTests(unittest.TestCase):
         self.assertTrue((relocated / "scripts/bootstrap.py").is_file())
         self.assertTrue((relocated / "scripts/handoff.py").is_file())
         self.assertTrue((relocated / "hosts/codex-cloud.md").is_file())
+        self.assertTrue((relocated / "hosts/dot.md").is_file())
         marketplace = json.loads((relocated / ".agents/plugins/marketplace.json").read_text())
         self.assertEqual(marketplace["plugins"][0]["source"], {"source": "local", "path": "."})
 

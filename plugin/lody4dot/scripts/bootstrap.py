@@ -64,10 +64,15 @@ def bootstrap(args):
 
 
 def report(outcome, requested, steps, inspection):
+    warnings = [
+        {"code": item["name"], "status": "warn", "message": item["message"]}
+        for item in (inspection or {}).get("checks", [])
+        if item.get("name") in {"runtime", "cli_version", "cli_updates"} and item.get("status") == "warn"
+    ]
     return result(outcome["status"], requested_action=requested,
                   error_category=outcome.get("error_category"),
                   raw_exit_code=outcome.get("raw_exit_code"), steps=steps,
-                  inspection=inspection, authentication="not_run", daemon="not_run",
+                  inspection=inspection, warnings=warnings, authentication="not_run", daemon="not_run",
                   task_recovery="not_run", verification_scope="owned_dependency_readiness")
 
 

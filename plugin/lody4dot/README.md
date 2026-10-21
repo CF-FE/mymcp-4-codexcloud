@@ -1,10 +1,24 @@
 # lody4dot
 
-为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前插件版本为`0.2.0`，CLI仍固定`0.107.2`。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm和Lody支持的Node：`>=22.14.0 <23`或`>=23.6.0`。
+为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码候选为`0.2.1`，正式云环境当前来源为`0.2.0`；`0.107.2`是已验证知识与默认可复现CLI安装基线，不是唯一允许运行的版本。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际CLI的其他运行要求另行核对。
 
 能力源码在仓库的 `skill/lody4dot/`；本目录负责运行时锁定和分发，不新增 MCP 服务。Lody 已有 MCP 只有在宿主提供有效 session/workspace/machine 上下文时才使用，不能将其内部入口当作独立通用服务。
 
-多宿主知识与工具基础已提供，具体宿主的加载、控制与执行能力仍分别验收。Dot指用户所说的ChatGPT云服务，独立于Agent；其官方标识和接入接口待核实。macOS、WSL2和原生Windows未因此进入实际支持列表，安装成功也不自动注册machine或启用worker。
+多宿主知识与工具基础已提供，具体宿主的加载、控制与执行能力仍分别验收。OpenAI官方确认Dot是ChatGPT中的always-on agent产品，有自己的云电脑；它也能向预先配置的Codex云环境创建任务，或使用另行授权连接的本地电脑。这些执行位置分别核对，Dot不作为任意Agent的通用别名。macOS、WSL2和原生Windows未因此进入本插件实际安装支持列表，安装成功也不自动注册machine或启用worker。
+
+## Dot与其他宿主如何接入
+
+先读取共享技能，再按实际可用入口选择；完整规则见随包的[Dot接入指引](hosts/dot.md)。
+
+| 当前条件 | 最小路线与边界 |
+| --- | --- |
+| Dot已有合法Lody app/MCP连接 | 在已授予权限内复用实际工具；不因换产品重复授权，也不推导具备全部写权限。 |
+| Dot可使用已准备的Codex云环境 | 委托该已发布环境创建云任务，在任务中读取共享技能并使用该端CLI；任务与Dot自有云电脑分开。 |
+| Dot当前执行器实际具备CLI前提 | 按该执行器的OS、工具和合法身份入口安装/检查；另一台机器的成功不能替代本端证据。 |
+| Dot连接的本地电脑 | 需该电脑单独Allow access、在线且桌面应用运行；local skills需该连接，Codex连接或Work Sync不能代替。 |
+| 只有知识可读 | 可规划与交接，工具调用、派发和执行保持未验证。 |
+
+Dot、ChatGPT、ChatGPT Work和Codex可共享插件连接及已授予权限；技能安装/管理与具体工具暴露仍可能按产品区分。共享连接不复制浏览器登录、本地文件访问或模型凭证。本轮优先复用上述入口，不先部署MCP或Sites服务。
 
 ## 从仓库安装 CLI
 
@@ -18,7 +32,27 @@ python3 plugin/lody4dot/scripts/doctor.py --prefix /workspace/.tools/lody4dot --
 
 安装器使用固定依赖与锁文件，在自有暂存目录安装并验证，成功后切换稳定入口。它不登录、不注册机器、不启动 daemon。失败时保留旧版本与用户状态；不应将工具目录、npm 缓存或登录态提交到仓库。不要将一个已有非空目录直接指定为工具目录。
 
-CLI 固定版本为 `0.107.2`；锁定输入、依赖修订及实际验证以 `runtime/` 和仓库任务队列为准。安装成功与 inspect 通过只证明本地工具前提，不代表账户、长连接或 Agent 任务已经验证。
+默认安装使用`0.107.2`的锁定输入；依赖修订及实际验证以`runtime/`和仓库任务队列为准。已有CLI版本不必严格匹配；版本差异或版本查询失败只提示，不据此阻塞使用，也不自动重装或升级。安装锁/摘要/来源完整性、OS/Node支持和依赖实际可用性仍独立检查。安装成功与inspect通过只证明已检查范围，不代表账户、长连接或Agent任务已经验证。
+
+## 可选更新检查与版本提示
+
+默认inspect和启动bootstrap保持离线。需要知道npm当前latest时，在仓库根目录显式运行：
+
+```bash
+python3 plugin/lody4dot/scripts/doctor.py --prefix /workspace/.tools/lody4dot --profile inspect --check-updates --json
+```
+
+这是对官方npm latest的单次查询，最多5秒，不安装、不切换CLI、不自动升级，也不在查询失败后反复重试。独立包使用`python3 scripts/doctor.py`及同样参数。`checks`中名为`cli_updates`的检查，其`evidence.observation`有三类warn：
+
+| warn情况 | 含义与后续 |
+| --- | --- |
+| `update_available` | 实际CLI低于查到的latest，有更新可选；继续当前任务，是否升级单独决定。 |
+| `comparison_unknown` | 无法可靠判断是否落后，例如实际版本未知、比latest更高或含prerelease；不推断过期或不兼容。 |
+| `unavailable` | npm latest查询失败或不可用；保留已有CLI，不推断它过期或不可用。 |
+
+实际版本与基线不一致时，`cli_version`也只warn；版本探测失败时，`runtime`的warn只表示入口存在，未证明版本命令执行成功。仍可按实际命令帮助和返回继续任务，不据此拒绝执行。查到与latest相同则为`current/pass`；更新和版本提示不进入`verified_scope`，不增加业务能力证明。
+
+这些提示本身不改变成功退出码：其他必要检查通过时仍退出0；版本不同也不构成“语义不兼容”的证据。真实命令、身份/权限、Node/OS、依赖或安装完整性失败仍保留原有错误码和分类，`control/task/worker`所需证据不会被版本warn替代。参数或输出确实不兼容时，按实际错误核对帮助与适配，不按版本号预先拦截。
 
 ## 环境准备与恢复检查
 
@@ -36,9 +70,11 @@ python3 plugin/lody4dot/scripts/bootstrap.py --prefix /workspace/.tools/lody4dot
 | 不传动作参数 | 只做inspect；缺运行时也不自动安装。 |
 | `--repair-missing` | 先inspect，仅在退出3且类别为`missing_runtime`时尝试受管安装，再复检；目录所有权和来源检查仍由安装器执行。 |
 
-`--prepare`和`--repair-missing`不能同时使用。版本不支持等其他错误不触发自动修复；陌生或被修改的安装目录也不会被当作可覆盖目录。报告的`verification_scope`为`owned_dependency_readiness`，`authentication`、`daemon`和`task_recovery`均为`not_run`：此工具不登录、不启daemon、不恢复或重发模型任务，调用方既有身份state保持独立。
+`--prepare`和`--repair-missing`不能同时使用。版本差异或版本查询失败只提示，不触发安装或升级；Node/OS不支持、来源完整性等实际错误也不被当作缺失自动修复。陌生或被修改的安装目录不会被当作可覆盖目录。报告的`verification_scope`为`owned_dependency_readiness`，`authentication`、`daemon`和`task_recovery`均为`not_run`：此工具不登录、不启daemon、不恢复或重发模型任务，调用方既有身份state保持独立；默认也不联网查更新。
 
 已有环境准备入口可调用`--prepare`，运行入口可选择只检查或明确允许的`--repair-missing`。这不表示Dot支持存储重置hook。初始化后仍需核对本端身份与原Lody session/turn，再决定如何处理业务；详见包内`skills/lody4dot/references/collaboration.md`（源码为`skill/lody4dot/references/collaboration.md`）。
+
+Codex Cloud官方说明：已发布setup更新用于新任务，已有任务保留自身状态；保存VM状态默认从最近turn启动或任务resume起最多可恢复7天。这不是会话历史保留期，也不是Dot自有云电脑的磁盘重置规则。Dot文档中的Reset是主动删除Dot的产品操作，尚无已读官方依据可注入Dot云电脑初始化hook。
 
 ## 离线交接校验
 
@@ -108,6 +144,10 @@ codex plugin list --json
 
 原生清单和 marketplace 格式依据 Codex CLI `0.163.0` 同版本官方源码。构建成功、注册成功、新任务加载技能分别验收；当前托管环境的受保护配置不能通过改写环境目录绕过。托管云配置的 `start_skill` 接入应报告为云环境接入，不能冒称已经原生注册。
 
+OpenAI官方支持ChatGPT web的插件ZIP上传，以及由管理员从GitHub导入marketplace。当前先按已核实的Codex0.163.0格式准备自包含目录/ZIP候选；需保留隐藏清单与完整包内资源，实际构建和哈希以交付回执为准。ChatGPT web的上传、扫描、启用及技能读取仍需实测；完整Plugin Management格式指南的精确URL当前CONNECT403，不能据此声称ChatGPT已接受ZIP包装层级。
+
+GitHub导入读取源文件，不会替仓库运行builder。当前`mcp/`、`skill/`、`plugin/`三目录源码中的`plugin/lody4dot/`需构建才能包含完整技能，不能新增catalog直接指向该未构建目录，也不提交生成分发物。后续自动同步路线须先确定可完整读取的发布来源与格式。声明MCP即使指向远程HTTPS，也可能使导入插件标为Desktop only；添加`.app.json`不会自动解除限制。详见[Dot接入指引](hosts/dot.md)。
+
 ## 验证与支持范围
 
 在仓库根目录执行：
@@ -127,4 +167,8 @@ python3 scripts/check_repository.py
 
 已对本任务自有、无后代的空闲会话完成改名往返、归档和恢复；原标题及未归档状态已还原，6条可见历史、最新回合、空队列及空活动列表保持一致。该元数据验收不扩大为级联或执行进程恢复成功。
 
-`0.2.0`增加多宿主协作参考、诊断来源与范围、离线handoff校验和依赖bootstrap；CLI与锁定输入保持不变。Linux以外平台的实际安装、Dot工具接入、独立多端闭环和真实宿主重建各自保留验收前提，工具与fixture测试不代替这些证据。正式云来源当前仍按0.1.3记录，源码0.2.0不代表环境自动升级；实际版本和发布状态以任务队列回执为准。
+`0.2.0`增加多宿主协作参考、诊断来源与范围、离线handoff校验和依赖bootstrap；CLI与锁定输入保持不变。正式云环境已发布到0.2.0，当前metadata也对应0.2.0；平台readiness未知、依赖inspect通过、身份与原会话只读对账分别解释，不扩大为新独立任务加载、真实重建或worker验收。具体证据统一在仓库任务队列维护。
+
+`0.2.1`候选修正Dot官方身份、共享连接与运行位置知识，补充随包Dot接入指引，并将CLI实际版本作为非阻塞提示、增加显式更新查询。默认安装与知识基线仍为0.107.2。Linux以外安装、ChatGPT web导入、Dot工具接入、独立多端闭环和真实宿主重建各自保留验收前提，知识和工具测试不代替这些证据。本轮修改后仍需最终重建候选，旧候选大小/摘要不适用于新包；本次修订不需要重配token或重复保存相同云准备草稿，也不自动升级已发布环境。
+
+官方依据：[Dot入门](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot)、[Dot权限FAQ](https://help.openai.com/en/articles/20001529-dots-privacy-security-and-safety-faqs)、[Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud)、[Plugins](https://help.openai.com/en/articles/20001256-plugins-in-chatgpt)、[GitHub marketplace导入](https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github)、[Skills](https://help.openai.com/en/articles/20001066-skills-in-chatgpt)（读取于2026-10-21）。

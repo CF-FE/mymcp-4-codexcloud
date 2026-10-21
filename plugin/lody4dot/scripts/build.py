@@ -19,13 +19,13 @@ RECEIPT = ".lody4dot-build.json"
 TOOL = "lody4dot-build"
 SCRIPT_NAMES = {"install.py", "doctor.py", "auth.py", "common.py", "build.py",
                 "platform_support.py", "bootstrap.py", "handoff.py"}
-HOST_NAMES = {"codex-cloud.md", "codex-cli.md"}
+HOST_NAMES = {"codex-cloud.md", "codex-cli.md", "dot.md"}
 RUNTIME_NAMES = {"package.json", "package-lock.json", "build-policy.json"}
 REQUIRED = (
     "README.md", ".codex-plugin/plugin.json", "scripts/install.py",
     "scripts/doctor.py", "scripts/auth.py", "scripts/common.py",
     "scripts/platform_support.py", "scripts/bootstrap.py", "scripts/handoff.py",
-    "hosts/codex-cloud.md", "hosts/codex-cli.md", "runtime/package.json",
+    "hosts/codex-cloud.md", "hosts/codex-cli.md", "hosts/dot.md", "runtime/package.json",
     "runtime/package-lock.json", "runtime/build-policy.json",
 )
 SKILL_REQUIRED = (

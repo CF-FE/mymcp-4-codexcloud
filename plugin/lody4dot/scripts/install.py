@@ -14,6 +14,7 @@ import sys
 import tempfile
 
 import platform_support
+from common import parse_cli_version, version_warnings
 
 
 MARKER = ".lody4dot-managed.json"
@@ -171,7 +172,15 @@ def _check_layout(prefix):
 
 
 def _write_json(path, value):
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    # A failed refresh must not truncate the active runtime's ownership receipt.
+    fd, filename = tempfile.mkstemp(prefix=f".{path.name}-", dir=path.parent)
+    os.close(fd)
+    try:
+        Path(filename).write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        os.replace(filename, path)
+    finally:
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(filename)
 
 
 def _verify(directory, node, version):
@@ -182,10 +191,14 @@ def _verify(directory, node, version):
         env = os.environ.copy()
         env.pop("LODY_CLI_TOKEN", None)
         env.update({"LODY_DATA_DIR": state, "NO_COLOR": "1"})
-        actual = _run([node, str(cli), "--version"], cwd=directory, env=env,
-                      timeout=45).stdout.strip()
-        if actual != version:
-            raise InstallError("Installed Lody version does not match the lockfile", 5, "unsupported")
+        try:
+            reported = _run([node, str(cli), "--version"], cwd=directory, env=env,
+                            timeout=5).stdout
+        except (InstallError, UnicodeError):
+            actual = None
+        else:
+            actual = parse_cli_version(reported)
+        warnings = version_warnings(actual, baseline=version)
         help_text = _run([node, str(cli), "--help"], cwd=directory, env=env,
                          timeout=45).stdout
         if "Usage: lody" not in help_text:
@@ -194,6 +207,7 @@ def _verify(directory, node, version):
                       env=env, timeout=45).stdout
         if native.strip() != "native-ok":
             raise InstallError("Installed native module check failed", 4, "native")
+    return actual, warnings
 
 
 def _activate(prefix, digest):
@@ -251,11 +265,12 @@ def install(prefix, *, runtime_dir=None):
             _read_json(destination / "package-lock.json")
             _read_json(destination / "package.json")
             if (receipt.get("schema_version") != 1 or receipt.get("lock_sha256") != digest
-                    or receipt.get("lody_version") != version
                     or hashlib.sha256((destination / "package-lock.json").read_bytes()).hexdigest() != digest
                     or (destination / "package.json").read_bytes() != (runtime_dir / "package.json").read_bytes()):
                 raise InstallError("Existing version does not match its managed receipt")
-            _verify(destination, node, version)
+            actual, warnings = _verify(destination, node, version)
+            receipt.update({"lody_version": actual, "baseline_lody_version": version})
+            _write_json(destination / "receipt.json", receipt)
         else:
             with tempfile.TemporaryDirectory(prefix=".staging-", dir=prefix / "versions") as temporary:
                 staging = Path(temporary)
@@ -265,17 +280,20 @@ def install(prefix, *, runtime_dir=None):
                 env.pop("LODY_CLI_TOKEN", None)
                 _run([npm, "ci", "--ignore-scripts", "--no-fund", "--no-audit",
                       "--cache", str(prefix / "cache")], cwd=staging, env=env, timeout=300)
-                _verify(staging, node, version)
+                actual, warnings = _verify(staging, node, version)
                 _write_json(staging / "receipt.json", {
-                    "schema_version": 1, "lody_version": version, "lock_sha256": digest,
+                    "schema_version": 1, "lody_version": actual,
+                    "baseline_lody_version": version, "lock_sha256": digest,
                     "node_version": node_version, "platform": "linux", "native_modules": NATIVE_MODULES})
                 staging.rename(destination)
                 # TemporaryDirectory cleanup tolerates the renamed staging path.
         _activate(prefix, digest)
     return {"schema_version": 1, "status": "pass", "error_category": None,
-            "lody_version": version, "lock_sha256": digest, "reused": reused,
+            "lody_version": actual, "actual_lody_version": actual,
+            "baseline_lody_version": version, "warnings": warnings,
+            "lock_sha256": digest, "reused": reused,
             "prefix": str(prefix), "cli": str(prefix / "bin/lody"),
-            "evidence": ["version", "help", "native_modules"],
+            "evidence": (["version"] if actual is not None else []) + ["help", "native_modules"],
             "authentication": "not_run", "daemon": "not_run"}
 
 
@@ -301,7 +319,12 @@ def main(argv=None):
     elif code:
         print(result["message"], file=sys.stderr)
     else:
-        print(f"Lody {result['lody_version']} ready: {result['cli']} (reused={result['reused']})")
+        for warning in result["warnings"]:
+            print(f"WARN: {warning['message']} "
+                  f"(baseline={warning['baseline']}, actual={warning['actual'] or 'unknown'})",
+                  file=sys.stderr)
+        print(f"Lody {result['lody_version'] or 'version unknown'} ready: "
+              f"{result['cli']} (reused={result['reused']})")
     return code
 
 

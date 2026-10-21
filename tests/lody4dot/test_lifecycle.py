@@ -72,14 +72,30 @@ class LifecycleTests(unittest.TestCase):
         self.assertEqual([p["tool"] for p in report["steps"]], ["install", "doctor"])
         self.assertEqual(report["inspection"]["account"], "not_run")
 
-    def test_version_failure_is_not_treated_as_missing_installation(self):
+    def test_real_runtime_failure_is_not_treated_as_missing_installation(self):
         (self.tools / "doctor.py").write_text(
-            "import json; print(json.dumps({'schema_version':1,'status':'fail','error_category':'unsupported_version'})); raise SystemExit(5)"
+            "import json; print(json.dumps({'schema_version':1,'status':'fail','error_category':'subprocess'})); raise SystemExit(4)"
         )
         code, report = self.run_bootstrap("--repair-missing")
-        self.assertEqual(code, 5)
-        self.assertEqual(report["error_category"], "unsupported_version")
+        self.assertEqual(code, 4)
+        self.assertEqual(report["error_category"], "subprocess")
         self.assertFalse(self.prefix.exists())
+
+    def test_version_warning_continues_without_install_and_is_visible_in_text(self):
+        (self.tools / "doctor.py").write_text(
+            "import json; print(json.dumps({'schema_version':1,'status':'pass','checks':"
+            "[{'name':'cli_version','status':'warn','message':'CLI version unknown; execution continues.'}]}))"
+        )
+        code, report = self.run_bootstrap("--repair-missing")
+        self.assertEqual(code, 0)
+        self.assertEqual([step["tool"] for step in report["steps"]], ["doctor"])
+        self.assertEqual(report["warnings"][0]["code"], "cli_version")
+        self.assertFalse(self.prefix.exists())
+        output = io.StringIO()
+        with patch.object(bootstrap, "SCRIPTS", self.tools), redirect_stdout(output):
+            code = bootstrap.main(["--prefix", str(self.prefix), "--repair-missing"])
+        self.assertEqual(code, 0)
+        self.assertIn("warn: CLI version unknown", output.getvalue())
 
     def test_failed_install_preserves_caller_files_and_stops_before_inspect(self):
         self.prefix.mkdir()

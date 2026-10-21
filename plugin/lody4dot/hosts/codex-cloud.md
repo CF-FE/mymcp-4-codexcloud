@@ -12,6 +12,8 @@ python3 scripts/bootstrap.py --prefix "$LODY4DOT_PREFIX" --prepare --json
 
 [准备工具](../scripts/bootstrap.py)复用锁定安装与离线inspect，不登录、不登记machine、不启动host。准备入口可使用平台实际提供的install_script；该字段保存步骤，保存本身不执行或发布。仓库模式使用`plugin/lody4dot/scripts/bootstrap.py`，当前云目录示例为`/workspace/.tools/lody4dot`，不要将此路径当作所有宿主的默认目录。
 
+默认可复现安装和已验证知识基线为Lody`0.107.2`，不限制只能运行该版本。实际CLI不同或版本查询失败只提示，不触发升级；锁/摘要/来源完整性与Node/OS要求仍按实际结果检查。
+
 ## Agent进入任务
 
 平台实际提供启动指引时，指向包内`skills/lody4dot/SKILL.md`并按目标读取参考，再执行：
@@ -20,7 +22,7 @@ python3 scripts/bootstrap.py --prefix "$LODY4DOT_PREFIX" --prepare --json
 python3 scripts/bootstrap.py --prefix "$LODY4DOT_PREFIX" --repair-missing --json
 ```
 
-工具先检查；仅在诊断明确为缺少受管runtime时调用安装器，安装器仍检查prefix所有权与输入。版本不符或其他失败不会被当作缺失而覆盖。只有依赖就绪得到证明，账户、目标Agent、任务与worker仍分别验收。启动说明送达与实际读取分别记录，不要求技能全文自动注入。
+工具先检查；仅在诊断明确为缺少受管runtime时调用安装器，安装器仍检查prefix所有权与输入。实际版本差异/版本查询失败只warn，不重装；其他真实失败不会被当作缺失覆盖。默认inspect与启动bootstrap不联网查更新；只有显式`python3 scripts/doctor.py --prefix "$LODY4DOT_PREFIX" --profile inspect --check-updates --json`单次查npm latest，旧版或查询失败均不自动升级。版本提示不影响其他必要检查通过时的退出0，命令/身份/权限等失败保留原码。依赖检查、账户、目标Agent、任务与worker分别验收；启动说明送达与实际读取分别记录，不要求技能全文自动注入。
 
 ## 身份与任务恢复
 

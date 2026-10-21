@@ -4,15 +4,73 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+import json
 import os
 import platform
 from pathlib import Path
+import re
 import shutil
 import subprocess
+import sys
 
-from common import (DEFAULT_PREFIX, ToolError, emit, error_result, installed_cli,
+from common import (DEFAULT_PREFIX, LODY_VERSION, ToolError, emit, error_result, installed_cli,
                     local_provenance, offline_version, require_runtime_platform, result,
-                    state_directory, supported_node, verify_account, verify_catalog)
+                    parse_cli_version, state_directory, supported_node, verify_account,
+                    verify_catalog, version_warnings)
+
+
+# A short-lived, isolated child gives the complete network operation a wall-clock
+# deadline, including DNS. Only the selected version crosses this boundary.
+_LATEST_QUERY = '''import json
+from urllib.request import Request, HTTPRedirectHandler, build_opener
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+try:
+    request = Request("https://registry.npmjs.org/lody/latest", headers={"Accept": "application/json"})
+    with build_opener(NoRedirect()).open(request, timeout=5) as response:
+        if response.status != 200:
+            raise ValueError("registry response")
+        payload = response.read(65537)
+    if len(payload) > 65536:
+        raise ValueError("registry response size")
+    value = json.loads(payload)["version"]
+    if not isinstance(value, str) or len(value) > 128:
+        raise ValueError("registry version")
+    print(json.dumps(value))
+except Exception:
+    raise SystemExit(1)
+'''
+
+
+def _registry_latest(timeout):
+    """Best-effort latest tag query; never return native response or fail a task."""
+    env = os.environ.copy()
+    for name in ("LODY_CLI_TOKEN", "GITEE_ACCESS_TOKEN", "NPM_TOKEN", "NODE_AUTH_TOKEN"):
+        env.pop(name, None)
+    try:
+        response = subprocess.run([sys.executable, "-I", "-B", "-c", _LATEST_QUERY],
+                                  env=env, stdin=subprocess.DEVNULL, capture_output=True,
+                                  text=True, timeout=min(timeout, 5), check=False)
+        if response.returncode or len(response.stdout) > 1024:
+            return None
+        return parse_cli_version(json.loads(response.stdout))
+    except (OSError, ValueError, TypeError, subprocess.TimeoutExpired):
+        return None
+
+
+def _update_check(actual, latest):
+    evidence = dict(actual=actual, latest=latest,
+                    source="https://registry.npmjs.org/lody/latest", automatic_upgrade=False)
+    if latest is None:
+        return "warn", "Latest-version check was unavailable; execution continues.", dict(evidence, observation="unavailable")
+    if actual == latest:
+        return "pass", "Installed CLI matches the registry latest tag.", dict(evidence, observation="current")
+    stable = r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)"
+    if (actual is not None and re.fullmatch(stable, actual) and re.fullmatch(stable, latest)
+            and tuple(map(int, actual.split("."))) < tuple(map(int, latest.split(".")))):
+        return "warn", "A newer Lody CLI is available; execution continues without upgrading.", dict(evidence, observation="update_available")
+    return "warn", "The installed version cannot be classified as behind latest; execution continues.", dict(evidence, observation="comparison_unknown")
 
 
 def diagnose(args):
@@ -32,6 +90,8 @@ def diagnose(args):
     for name, message in (
         ("node", "Node version was not checked."),
         ("runtime", "Managed CLI was not checked."),
+        ("cli_version", "CLI version observation was not run."),
+        ("cli_updates", "Latest-version check was not requested; use --check-updates for an advisory query."),
         ("account", "No successful read-only account query was observed."),
         ("workspace_catalog", "No complete workspace machine catalog was observed."),
         ("local_runtime", "No daemon was started or inferred from CLI availability."),
@@ -55,7 +115,21 @@ def diagnose(args):
         active = "runtime"
         cli = installed_cli(args.prefix)
         version = offline_version(cli, args.timeout)
-        check("runtime", "pass", "Managed CLI reports the supported version.", version=version)
+        if version is None:
+            check("runtime", "warn", "Managed CLI entrypoint exists; version execution was not verified.", version=None)
+        else:
+            check("runtime", "pass", "Managed CLI version command completed; no version restriction is applied.", version=version)
+        warnings = version_warnings(version)
+        if warnings:
+            warning = warnings[0]
+            check("cli_version", "warn", warning["message"], code=warning["code"],
+                  actual=warning["actual"], baseline=warning["baseline"])
+        else:
+            check("cli_version", "pass", "CLI version matches the tested baseline; this is advisory.",
+                  actual=version, baseline=LODY_VERSION)
+        if args.check_updates:
+            status, message, evidence = _update_check(version, _registry_latest(args.timeout))
+            check("cli_updates", status, message, **evidence)
         if args.connect:
             active = "account"
             state = state_directory(args.data_dir)
@@ -93,7 +167,8 @@ def diagnose(args):
     value.update(profile=args.profile, checks=checks, credential_environment=credential, account=session,
                  observed_at=observed_at,
                  verified_scope=[item["name"] for item in checks
-                                 if item["status"] == "pass" and item["name"] != "credential_environment"],
+                                 if item["status"] == "pass"
+                                 and item["name"] not in {"credential_environment", "cli_version", "cli_updates"}],
                  control_environment={"tool": "lody4dot-doctor", "os": platform.system(),
                                       "architecture": platform.machine(),
                                       "script_path": str(Path(__file__).resolve()),
@@ -107,6 +182,7 @@ def main(argv=None):
     parser.add_argument("--prefix", default=DEFAULT_PREFIX)
     parser.add_argument("--profile", choices=("inspect", "control", "task", "worker"), default="inspect")
     parser.add_argument("--connect", action="store_true", help="Explicitly perform a read-only workspace query.")
+    parser.add_argument("--check-updates", action="store_true", help="Best-effort npm latest-version query (up to 5 seconds); warnings never block execution or upgrade the CLI.")
     parser.add_argument("--workspace", help="Also check this workspace's complete machine catalog; requires --connect.")
     parser.add_argument("--data-dir")
     parser.add_argument("--timeout", type=float, default=30)

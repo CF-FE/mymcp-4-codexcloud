@@ -18,6 +18,30 @@ LODY_VERSION = "0.107.2"
 DEFAULT_PREFIX = "/workspace/.tools/lody4dot"
 
 
+def parse_cli_version(value):
+    """Retain only a bounded version token, never arbitrary command output."""
+    if not isinstance(value, str) or len(value) > 128:
+        return None
+    value = value.strip()
+    match = re.fullmatch(
+        r"v?([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)", value)
+    return match.group(1) if match else None
+
+
+def version_warnings(actual, baseline=LODY_VERSION):
+    """Versions are observations and advice, never execution prerequisites."""
+    actual, baseline = parse_cli_version(actual), parse_cli_version(baseline)
+    if actual is None:
+        return [{"code": "cli_version_unknown", "status": "warn", "actual": None,
+                 "baseline": baseline,
+                 "message": "Lody CLI version is unknown; continue with actual command results."}]
+    if actual != baseline:
+        return [{"code": "cli_version_differs_from_baseline", "status": "warn", "actual": actual,
+                 "baseline": baseline,
+                 "message": "Lody CLI differs from the tested baseline; execution is not blocked."}]
+    return []
+
+
 class ToolError(Exception):
     def __init__(self, code: int, category: str, message: str, raw_exit_code=None, *, failure_layer=None):
         super().__init__(message)
@@ -44,6 +68,8 @@ def emit(value, as_json):
         print(f"{value['status']}: {value.get('message', value.get('profile', 'lody4dot'))}")
         for check in value.get("checks", []):
             print(f"  {check['name']}: {check['status']} — {check['message']}")
+        for warning in value.get("warnings", []):
+            print(f"  warn: {warning['message']}")
 
 
 def error_result(error):
@@ -92,8 +118,6 @@ def installed_cli(prefix):
         cli = version_dir / "node_modules/lody/dist/index.js"
         if not cli.is_file() or not cli.resolve().is_relative_to(version_dir.resolve()):
             raise ValueError("missing CLI")
-        if receipt.get("lody_version") != LODY_VERSION:
-            raise ToolError(5, "unsupported_version", "Installed Lody version is unsupported.")
         return cli
     except (OSError, ValueError, TypeError, AttributeError) as exc:
         raise ToolError(3, "missing_runtime", "Managed Lody runtime is unavailable; run install.py.") from exc
@@ -142,7 +166,7 @@ def _bundle_member(name):
     if any(re.search(sensitive_name, part, re.IGNORECASE) for part in parts):
         return False
     return (name in {"README.md", ".codex-plugin/plugin.json", ".agents/plugins/marketplace.json"}
-            or name in {"hosts/codex-cloud.md", "hosts/codex-cli.md"}
+            or name in {"hosts/codex-cloud.md", "hosts/codex-cli.md", "hosts/dot.md"}
             or len(parts) == 2 and parts[0] == "scripts" and parts[1].endswith(".py")
             or name in {"runtime/package.json", "runtime/package-lock.json", "runtime/build-policy.json"}
             or name == "skills/lody4dot/SKILL.md"
@@ -215,7 +239,10 @@ def local_provenance(prefix, package_root):
             except (OSError, ValueError):
                 pass
             value["runtime"] = {"status": "consistent" if actual == expected else "mismatch",
-                                "lody_version": LODY_VERSION, "receipt_sha256": digest,
+                                "lody_version": parse_cli_version(receipt.get("lody_version")),
+                                "version_source": "installation_receipt",
+                                "baseline_lody_version": parse_cli_version(receipt.get("baseline_lody_version")),
+                                "receipt_sha256": digest,
                                 "lock_sha256": expected, "actual_lock_sha256": actual}
         except (ToolError, OSError, ValueError, TypeError, IndexError):
             value["runtime"] = {"status": "invalid"}
@@ -359,10 +386,9 @@ def verify_catalog(cli, data_dir, workspace, timeout):
 
 def offline_version(cli, timeout):
     require_runtime_platform()
-    with tempfile.TemporaryDirectory(prefix="lody4dot-inspect-") as state:
-        code, stdout, stderr = run_native(["node", cli, "--version"], data_dir=state, timeout=timeout)
-    if code:
-        raise native_failure(code, stdout, stderr)
-    if stdout.strip() != LODY_VERSION:
-        raise ToolError(5, "unsupported_version", "Runtime did not report the supported Lody version.", code)
-    return LODY_VERSION
+    try:
+        with tempfile.TemporaryDirectory(prefix="lody4dot-inspect-") as state:
+            code, stdout, _ = run_native(["node", cli, "--version"], data_dir=state, timeout=min(timeout, 5))
+        return parse_cli_version(stdout) if code == 0 else None
+    except (ToolError, OSError, ValueError, TypeError):
+        return None

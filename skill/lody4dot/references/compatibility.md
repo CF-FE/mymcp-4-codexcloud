@@ -1,8 +1,14 @@
 # 兼容性、调用路径与结果状态
 
-本知识基线为 `lody@0.107.2`。命令帮助在实际安装版本中核对；资料记载某项能力，不代表当前账户、机器、provider 和宿主都支持它。已采集资料与帮助证据见 [来源记录](sources.json)。
+本知识与默认可复现安装基线为`lody@0.107.2`，不是唯一允许运行的版本。实际版本不同或版本查询失败只提示，不按版本号阻塞；命令帮助与实际返回决定具体参数和行为。资料记载某项能力不代表当前账户、机器、provider和宿主都支持它。已采集资料与帮助证据见[来源记录](sources.json)，不把基线帮助哈希冒充其他版本证据。
 
-宿主、OS/架构与运行角色分别识别。Dot按本项目用户称呼指ChatGPT云服务宿主，Agent是处理目标并调用工具的主体；Dot的官方产品标识、加载入口和工具契约未核实前，不等同于Codex或已有执行节点。多端目标与交接见[协作参考](collaboration.md)。
+## 版本提示与实际失败
+
+doctor默认inspect及启动bootstrap保持离线；显式`--check-updates`才单次查询npm latest，不自动升级。实际CLI较旧、实际版本查询失败或npm查询失败只warn；其余必要检查通过时仍退出0。版本提示不证明全部命令兼容，也不要求先升级才能使用：按当前命令帮助与真实结果继续已有授权任务。
+
+安装锁、包摘要和来源收据的完整性仍需校验，不能把损坏当作版本差异放过。Node/OS支持和依赖缺失也是独立前提。真实业务命令、身份、权限或实际语义不兼容按原错误码和分类报告；不能为保持退出0吞掉这些失败。`control/task/worker`原本需要的连接或执行证据也不因版本仅warn就算通过。
+
+宿主、OS/架构与运行角色分别识别。OpenAI官方确认Dot是ChatGPT中的always-on agent产品，具备自己的云电脑，也可向预先配置的Codex云环境创建任务；产品Dot不作为任意Agent的通用别名。Dot云电脑、Codex云任务和另行授权的本地电脑分别核实工具与任务位置，不等同于已有Lody执行节点；lody4dot在这些位置的实际加载与工具调用仍分项验收。多端目标与交接见[协作参考](collaboration.md)。
 
 ## 平台和运行位置
 
@@ -10,12 +16,17 @@
 | --- | --- |
 | cloud 构建 | 可使用已授权的 cloud 查询，仍需验证网络与登录 |
 | OSS/local platform | 不具有全部 cloud 查询；不能仅设置一个变量就把 cloud 发布包切换为 OSS |
+| Dot自有云电脑 | 受Dot和工作区实际云能力约束；不假定使用Codex准备脚本、相同目录或相同浏览器登录 |
+| Dot创建Codex云任务 | 使用已预先配置的Codex环境；该任务的加载、身份和执行证据与Dot自身分别记录 |
+| Dot连接本地电脑 | 本地访问默认关闭，需本机ChatGPT应用单独连接授权、在线；Codex连接或Work Sync不能代替 |
 | Codex 云端 control | 可以实现登录后的发现和观察；不能默认承担全部本机执行 |
 | Codex 云端 task | 执行端需运行进程、Agent 凭证与明确目标；远端派发不要求控制端启动 daemon |
 | 长期 worker | 需独立验证启动、机器注册、进程与任务恢复；不承诺一次性云任务永久在线 |
 | 桌面 app、模拟器、原生 provider 能力 | 条件支持，先检查目标平台与实际能力协商 |
 
 公开的 `lody` npm 构建选择 cloud 平台；不要假定 `LODY_PLATFORM` 是支持的切换入口。`LODY_DATA_DIR` 的目录选择也不证明私密隔离、跨任务恢复或共享快照安全。
+
+Dot与ChatGPT、ChatGPT Work、Codex共享插件连接和已授予权限；它们不自动提供本地文件访问、全部协作空间访问、写入权、其他端登录态或Lody目标Agent的模型凭证。local skills要求电脑已连接到Dot，插件共享设置本身不证明每个任务实际加载了技能或工具。官方Reset是主动删除Dot的产品控制；未证明周期磁盘重置、自动初始化hook或云目录持久化。
 
 `0.107.2` 的会话 CLI 可以在无本机 host 时创建工作区 client。本机目标才由 `ensureTargetMachineOnline` 要求本机运行进程；远端目标通过机器 RPC 检查、创建和继续，活动回合的取消也按目标路由。无活动回合时 `cancel` 可返回 `alreadyStopped`。因此控制端 daemon 缺失不能作为拒绝远端派发的依据，`agent-config refresh-capabilities` 的本机要求则不变。
 
@@ -60,4 +71,4 @@ API-key 路径的 `LodyFleet` 为账户返回的全部工作区建立 runtime �
 
 状态不明就明确保留未验证、待确认或进行中。不要以 mock、帮助输出、文字声明或错误退出被隐藏的管道代替真实业务结果。
 
-来源：[CLI 文档](https://lody.ai/zh/docs/cli/)、[快速开始](https://lody.ai/zh/docs/quickstart/)、[ACP 与扩展能力](https://lody.ai/zh/docs/acp-feature-support/)、[npm 发布元数据](https://registry.npmjs.org/lody)。
+来源：[CLI 文档](https://lody.ai/zh/docs/cli/)、[快速开始](https://lody.ai/zh/docs/quickstart/)、[ACP 与扩展能力](https://lody.ai/zh/docs/acp-feature-support/)、[npm 发布元数据](https://registry.npmjs.org/lody)、[Dot入门](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot)、[Dot工作区管理](https://help.openai.com/en/articles/20001554-manage-dots-in-chatgpt-workspaces)、[Dot隐私与权限FAQ](https://help.openai.com/en/articles/20001529-dots-privacy-security-and-safety-faqs)（Dot资料读取于2026-10-21）。

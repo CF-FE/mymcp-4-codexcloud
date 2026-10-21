@@ -21,6 +21,8 @@ python3 scripts/bootstrap.py --prefix "$LODY4DOT_PREFIX" --repair-missing --json
 
 准备与检查不登录或启host。需要连接Lody时使用该端独立凭证通道与私密状态，工具入口来自本端安装回执；不从云端复制认证。控制端、执行节点和混合角色分别验证。两处安装不会自动成为两个在线Lody节点。
 
+Lody`0.107.2`是默认可复现安装与知识基线，不是严格运行门槛；这里的Lody版本提示与上面的Codex插件清单契约分别判断。实际CLI不同或版本查询失败只warn，继续按命令帮助和真实结果使用。默认inspect与启动bootstrap离线；需查更新时显式运行`python3 scripts/doctor.py --prefix "$LODY4DOT_PREFIX" --profile inspect --check-updates --json`，只做单次npm latest查询，不自动升级。旧版或查询失败本身不改变成功退出码，真实命令/身份/权限、Node/OS或完整性失败仍按原错误报告。
+
 任务交接使用实际workspace/machine/config/session/user/assistant引用和所属执行器，产物通过获授权的通道传递。包内`skills/lody4dot/references/collaboration.md`给出选择与恢复规则；[离线交接工具](../scripts/handoff.py)只检查结构和声明一致性，不能证明真实权限或任务完成。
 
 来源：[官方Codex清单源码](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/manifest.rs)与本机0.163.0帮助；在目标宿主取得真实注册/读取回执后才确认其接入。未知产品、版本或接口保持未知。

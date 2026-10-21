@@ -1,6 +1,7 @@
 """Transactional installer behavior; subprocesses are controlled fixtures."""
 
 import importlib.util
+import io
 import json
 from pathlib import Path
 import subprocess
@@ -41,6 +42,7 @@ class InstallTests(unittest.TestCase):
         self.commands = []
         self.failure = None
         self.node_version = "v24.19.0"
+        self.reported_version = "0.107.2"
         self.patches = [patch.object(installer, "_run", side_effect=self.run_fixture),
                         patch.object(installer.shutil, "which", side_effect=lambda name: "/usr/bin/" + name),
                         patch.object(installer.sys, "platform", "linux")]
@@ -61,9 +63,23 @@ class InstallTests(unittest.TestCase):
             cli.write_text("// fixture CLI\n")
             return subprocess.CompletedProcess(args, 0, "installed", "")
         if args[-1] == "--version":
-            version = "0.1.0" if self.failure == "version" else "0.107.2"
+            if self.failure == "version_timeout":
+                raise installer.InstallError("Subprocess timed out", 4, "timeout")
+            if self.failure == "version_failed":
+                raise installer.InstallError("Required subprocess failed; output withheld", 4,
+                                             "subprocess", 7)
+            if self.failure == "version_invalid":
+                return subprocess.CompletedProcess(args, 0, "unexpected fixture-secret output\n", "")
+            if self.failure == "version_invalid_encoding":
+                raise UnicodeDecodeError("utf-8", b"\xff", 0, 1, "fixture decoding failure")
+            version = "0.1.0" if self.failure == "version" else self.reported_version
             return subprocess.CompletedProcess(args, 0, version + "\n", "")
         if args[-1] == "--help":
+            if self.failure == "help":
+                return subprocess.CompletedProcess(args, 0, "not the expected CLI help\n", "")
+            if self.failure == "help_failed":
+                raise installer.InstallError("Required subprocess failed; output withheld", 4,
+                                             "subprocess", 7)
             return subprocess.CompletedProcess(args, 0, "Usage: lody [options] [command]\n", "")
         if "--input-type=module" in args:
             if self.failure == "native":
@@ -96,6 +112,7 @@ class InstallTests(unittest.TestCase):
         second = self.perform()
         self.assertFalse(first["reused"])
         self.assertTrue(second["reused"])
+        self.assertEqual(second["warnings"], [])
         self.assertEqual(sum("ci" in command for command, _, _ in self.commands), 1)
         self.assertEqual((self.prefix / "state/sentinel").read_text(), "keep")
         self.assertIn("current", (self.prefix / "bin/lody").read_text())
@@ -133,18 +150,126 @@ class InstallTests(unittest.TestCase):
 
     def test_native_failure_preserves_previous_entry_and_state(self):
         before = self.prepare_upgrade()
+        self.reported_version = "0.108.0"
         self.failure = "native"
         with self.assertRaises(installer.InstallError):
             self.perform()
         self.assert_old_install_survives(before)
 
-    def test_version_mismatch_preserves_previous_entry_and_state(self):
+    def test_version_mismatch_warns_and_activates_without_changing_state(self):
         before = self.prepare_upgrade()
         self.failure = "version"
-        with self.assertRaises(installer.InstallError) as error:
-            self.perform()
-        self.assertEqual(error.exception.exit_code, 5)
+        result = self.perform()
+        self.assertEqual(result["status"], "pass")
+        self.assertEqual(result["lody_version"], "0.1.0")
+        self.assertEqual(result["actual_lody_version"], "0.1.0")
+        self.assertEqual(result["baseline_lody_version"], "0.107.2")
+        warning = result["warnings"][0]
+        self.assertEqual(warning["code"], "cli_version_differs_from_baseline")
+        self.assertEqual(warning["status"], "warn")
+        self.assertEqual(warning["baseline"], "0.107.2")
+        self.assertEqual(warning["actual"], "0.1.0")
+        self.assertNotEqual((self.prefix / "current").readlink(), before)
+        self.assertEqual((self.prefix / "state/sentinel").read_text(), "keep")
+        self.assertTrue((self.prefix / "bin/lody").is_file())
+        receipt = json.loads((self.prefix / "current/receipt.json").read_text())
+        self.assertEqual(receipt["lody_version"], "0.1.0")
+        self.assertEqual(receipt["baseline_lody_version"], "0.107.2")
+
+    def test_unknown_or_unavailable_version_warns_and_checks_actual_functionality(self):
+        for failure in ("version_invalid", "version_invalid_encoding", "version_failed", "version_timeout"):
+            with self.subTest(failure=failure):
+                self.prefix = self.root / failure
+                self.failure = failure
+                self.commands.clear()
+                result = self.perform()
+                self.assertEqual(result["status"], "pass")
+                self.assertIsNone(result["lody_version"])
+                self.assertIsNone(result["actual_lody_version"])
+                self.assertEqual(result["baseline_lody_version"], "0.107.2")
+                self.assertEqual(result["warnings"][0]["code"], "cli_version_unknown")
+                self.assertNotIn("fixture-secret", json.dumps(result))
+                self.assertTrue(any(command[-1] == "--help" for command, _, _ in self.commands))
+                self.assertTrue(any("--input-type=module" in command
+                                    for command, _, _ in self.commands))
+                receipt = json.loads((self.prefix / "current/receipt.json").read_text())
+                self.assertIsNone(receipt["lody_version"])
+                self.assertEqual(receipt["baseline_lody_version"], "0.107.2")
+
+    def test_recorded_actual_version_does_not_block_same_lock_reuse(self):
+        self.perform()
+        receipt_path = self.prefix / "current/receipt.json"
+        receipt = json.loads(receipt_path.read_text())
+        receipt["lody_version"] = "0.108.0"
+        receipt_path.write_text(json.dumps(receipt))
+        (self.prefix / "state").mkdir()
+        (self.prefix / "state/sentinel").write_text("keep")
+        result = self.perform()
+        self.assertTrue(result["reused"])
+        self.assertEqual(result["lody_version"], "0.107.2")
+        self.assertEqual(json.loads(receipt_path.read_text())["lody_version"], "0.107.2")
+        self.assertEqual(sum("ci" in command for command, _, _ in self.commands), 1)
+        self.assertEqual((self.prefix / "state/sentinel").read_text(), "keep")
+
+    def test_failed_receipt_refresh_keeps_previous_receipt_runtime_and_state(self):
+        self.perform()
+        before = (self.prefix / "current").readlink()
+        (self.prefix / "state").mkdir()
+        (self.prefix / "state/sentinel").write_text("keep")
+        receipt_path = self.prefix / "current/receipt.json"
+        previous_receipt = receipt_path.read_bytes()
+        self.reported_version = "0.108.0"
+        write_text = Path.write_text
+
+        def partial_receipt_write(path, data, *args, **kwargs):
+            if path.parent == receipt_path.resolve().parent and "receipt" in path.name:
+                write_text(path, "{", *args, **kwargs)
+                raise OSError("fixture partial write")
+            return write_text(path, data, *args, **kwargs)
+
+        with patch.object(Path, "write_text", partial_receipt_write):
+            with self.assertRaises(OSError):
+                self.perform()
+        self.assertEqual(receipt_path.read_bytes(), previous_receipt)
+        self.assertEqual(list(receipt_path.resolve().parent.glob(".receipt.json-*")), [])
         self.assert_old_install_survives(before)
+
+    def test_failed_help_remains_blocking_and_preserves_old_runtime(self):
+        before = self.prepare_upgrade()
+        self.reported_version = "0.108.0"
+        for failure in ("help", "help_failed"):
+            with self.subTest(failure=failure):
+                self.failure = failure
+                with self.assertRaises(installer.InstallError):
+                    self.perform()
+                self.assert_old_install_survives(before)
+
+    def test_text_output_prints_version_warning(self):
+        self.failure = "version"
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with patch.object(installer, "RUNTIME_DIR", self.runtime), \
+                patch.object(installer.sys, "stdout", stdout), \
+                patch.object(installer.sys, "stderr", stderr):
+            code = installer.main(["--prefix", str(self.prefix)])
+        self.assertEqual(code, 0)
+        self.assertIn("warn", stderr.getvalue().lower())
+        self.assertIn("0.107.2", stderr.getvalue())
+        self.assertIn("0.1.0", stderr.getvalue())
+        self.assertIn("ready", stdout.getvalue())
+
+    def test_json_output_reports_unknown_version_without_raw_output(self):
+        self.failure = "version_invalid"
+        stdout = io.StringIO()
+        with patch.object(installer, "RUNTIME_DIR", self.runtime), \
+                patch.object(installer.sys, "stdout", stdout):
+            code = installer.main(["--prefix", str(self.prefix), "--json"])
+        self.assertEqual(code, 0)
+        result = json.loads(stdout.getvalue())
+        self.assertEqual(result["status"], "pass")
+        self.assertIsNone(result["actual_lody_version"])
+        self.assertEqual(result["baseline_lody_version"], "0.107.2")
+        self.assertEqual(result["warnings"][0]["status"], "warn")
+        self.assertNotIn("fixture-secret", stdout.getvalue())
 
     def test_failure_before_switch_preserves_previous_entry(self):
         before = self.prepare_upgrade()

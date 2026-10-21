@@ -2,9 +2,11 @@
 
 ## 目标与运行前提
 
-先决定当前任务只需诊断和查询、从控制端派发远端任务，还是需要在这台机器执行 Agent。Node 需满足 Lody 所支持的 `>=22.14.0 <23` 或 `>=23.6.0`；本知识基线为 `lody@0.107.2`。原生依赖、代理与 CA、长连接、宿主加载和执行端 Agent 凭证仍需分别验证。
+先决定当前任务只需诊断和查询、从控制端派发远端任务，还是需要在这台机器执行 Agent。`lody@0.107.2`是已验证知识和默认可复现安装基线，不是版本准入条件；差异或版本查询失败只提示。工具的Node支持范围仍为`>=22.14.0 <23`或`>=23.6.0`，实际CLI的其他运行要求另核对。原生依赖、OS、代理与CA、长连接、宿主加载和执行端Agent凭证仍分别验证。
 
 本页的绝对路径和POSIX权限示例服务于Linux Codex云端。迁移到其他宿主时使用该端实际安装回执与已验证接入，不能只替换路径就宣称跨平台；宿主与控制/执行角色的选择见[多宿主协作](collaboration.md)。下表是检查或验收范围，不是doctor已经证明角色可用；doctor不会派发模型任务。
+
+Dot是ChatGPT中的always-on agent产品，其自有云电脑与它创建的Codex云任务分开。官方支持Dot使用预先在Codex配置好的云环境创建任务；本页的Codex准备入口适用于实际选中的Codex环境，不自动覆盖Dot自己的云电脑。Dot使用本地电脑另需该电脑在ChatGPT桌面应用明确连接授权并在线，local skills也需该连接；已有Codex连接或Work Sync不授予Dot本地访问。共享插件权限仍限已授予的应用连接，不证明任务已加载技能或具备Lody执行条件。
 
 | 配置 | 能做什么 | 不能据此推导什么 |
 | --- | --- | --- |
@@ -22,7 +24,13 @@ python3 plugin/lody4dot/scripts/install.py --prefix /workspace/.tools/lody4dot
 python3 plugin/lody4dot/scripts/doctor.py --prefix /workspace/.tools/lody4dot --profile inspect --json
 ```
 
-inspect 默认离线，不会隐式登录或启动服务。需要验证已有账户状态时，在当前任务准备独立私密目录，或使用已经核实属于当前身份的目录：
+inspect与启动bootstrap默认离线，不会隐式登录、检查npm更新或启动服务。需要查最新版本时显式运行：
+
+```bash
+python3 plugin/lody4dot/scripts/doctor.py --prefix /workspace/.tools/lody4dot --profile inspect --check-updates --json
+```
+
+这只发起一次npm latest查询，不安装或升级。实际CLI较旧、实际版本探测失败、更新查询失败均作为warn；没有其他失败时仍退出0。版本不同或未知时继续按当前命令帮助和真实响应判断，认证/权限、缺依赖和其他必要检查失败不被掩盖。需要验证已有账户状态时，在当前任务准备独立私密目录，或使用已经核实属于当前身份的目录：
 
 ```bash
 export LODY_DATA_DIR="$(mktemp -d /tmp/lody4dot-state.XXXXXX)"
@@ -56,14 +64,14 @@ python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --ve
 
 ## 环境准备与恢复
 
-准备阶段复用已有安装与离线inspect，依赖可以按平台约定保留或恢复；不把登录态放进共享包或快照，不同时登录、注册machine或启host。运行入口先做轻量检查，明确缺少所属受管依赖时才按支持方式修复；版本、来源不一致或陌生prefix应先报告，不能以重装覆盖它们。
+准备阶段复用已有安装与离线inspect，依赖可以按平台约定保留或恢复；不把登录态放进共享包或快照，不同时登录、注册machine或启host。运行入口先做轻量检查，明确缺少所属受管依赖时才按支持方式修复。实际CLI版本差异或探测失败只提示，不触发重装；锁/摘要/来源完整性失败与陌生prefix是另一类问题，仍按原错误处理，不能以覆盖安装掩盖。
 
 恢复后分别验证当前身份与目标范围，再用已有原生session/turn对账；任务仍运行则恢复观察，已完成则核验对应产物。没有关联记录就保留未知，不凭相同标题重建任务，不把初始化当成继续业务的授权。任务过程中把必要关联与成果保存到实际持久化目的地，不能依赖重置前通知或本地临时目录。
 
-平台准备脚本、Agent启动指引、会话hook和存储重置事件各自核实。Dot的存储重置hook尚未确认，不能用Codex会话事件或其他宿主能力代替。跨端身份、文件和失败处理见[协作参考](collaboration.md)。
+平台准备脚本、Agent启动指引、会话hook和存储重置事件各自核实。官方Dot文档的Reset是用户主动删除Dot的产品操作，未说明定期磁盘重置，也未给出可注入初始化的存储事件hook。Codex云准备脚本可以为该Codex环境准备依赖，不能据此声称已挂到Dot云电脑启动或重置；不猜事件名、不自动注册服务。跨端身份、文件和失败处理见[协作参考](collaboration.md)。
 
 ## 成功证据与退出
 
-分别记录插件实际加载、CLI 版本/帮助可用、账户资源查询和任务闭环结果。inspect 通过时允许账户/任务为未执行，不能把它们一起标为成功。安装失败保留旧版本与用户状态；授权失败继续独立资料或本地诊断，不改配置范围、不自行创建 workspace。
+分别记录插件实际加载、CLI实际版本或查询未知、帮助/命令结果、账户资源查询和任务闭环。inspect可带版本warn通过，账户/任务仍可能未执行，不能把它们一起标为成功。安装失败保留旧版本与用户状态；真实命令、身份和权限失败保留原有退出码与分类，继续已有授权内不依赖该失败的工作，不改配置范围或自行创建workspace。
 
-来源：[快速开始](https://lody.ai/zh/docs/quickstart/)、[CLI 文档](https://lody.ai/zh/docs/cli/)、[npm 发布元数据](https://registry.npmjs.org/lody)。
+来源：[快速开始](https://lody.ai/zh/docs/quickstart/)、[CLI 文档](https://lody.ai/zh/docs/cli/)、[npm 发布元数据](https://registry.npmjs.org/lody)、[Dot入门](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot)、[Dot工作区管理](https://help.openai.com/en/articles/20001554-manage-dots-in-chatgpt-workspaces)、[Dot隐私与权限FAQ](https://help.openai.com/en/articles/20001529-dots-privacy-security-and-safety-faqs)（Dot资料读取于2026-10-21）。

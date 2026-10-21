@@ -7,7 +7,7 @@ import os
 
 from common import (DEFAULT_PREFIX, ToolError, emit, error_result, installed_cli,
                     native_failure, offline_version, require_runtime_platform, result, run_native,
-                    state_directory, verify_account)
+                    state_directory, verify_account, version_warnings)
 
 
 def authenticate(args):
@@ -16,7 +16,7 @@ def authenticate(args):
     if args.login and not token:
         raise ToolError(3, "missing_credential", "LODY_CLI_TOKEN is not injected; no login was attempted.")
     cli = installed_cli(args.prefix)
-    offline_version(cli, args.timeout)
+    version = offline_version(cli, args.timeout)
     state = state_directory(args.data_dir, create=args.login)
     if args.login:
         # The verified CLI accepts credentials via argv only. No shell, history,
@@ -31,7 +31,8 @@ def authenticate(args):
                   credential_environment="present" if token else "missing",
                   account="authenticated", evidence={"kind": "live_read_only_query", "workspace_count": count},
                   local_identity="written_by_login" if args.login else "not_modified",
-                  machine_registration="not_verified" if args.login else "not_requested")
+                  machine_registration="not_verified" if args.login else "not_requested",
+                  cli_version=version, warnings=version_warnings(version))
 
 
 def main(argv=None):

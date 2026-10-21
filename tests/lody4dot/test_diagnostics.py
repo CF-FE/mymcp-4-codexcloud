@@ -8,6 +8,7 @@ import io
 import json
 import os
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -266,6 +267,132 @@ class DiagnosticTests(unittest.TestCase):
         self.assertEqual(value["account"], "not_run")
         state.assert_not_called()
         query.assert_not_called()
+
+    def test_default_inspect_does_not_check_registry(self):
+        with patch.object(doctor, "installed_cli", return_value=Path("/fixture/cli")), \
+             patch.object(doctor, "offline_version", return_value="0.107.2"), \
+             patch.object(doctor.subprocess, "run", return_value=argparse.Namespace(returncode=0, stdout="v24.19.0")), \
+             patch.object(doctor, "_registry_latest", create=True) as registry:
+            code, value, _ = self.capture(doctor, [])
+        self.assertEqual(code, 0)
+        registry.assert_not_called()
+        self.assertEqual(next(c for c in value["checks"] if c["name"] == "cli_updates")["status"], "not_run")
+
+    def test_different_cli_version_warns_without_blocking_account_or_catalog(self):
+        with patch.object(doctor, "installed_cli", return_value=Path("/fixture/cli")), \
+             patch.object(doctor, "offline_version", return_value="0.108.0"), \
+             patch.object(doctor.subprocess, "run", return_value=argparse.Namespace(returncode=0, stdout="v24.19.0")), \
+             patch.object(doctor, "state_directory", return_value=Path("/private/state")), \
+             patch.object(doctor, "verify_account", return_value=2), \
+             patch.object(doctor, "verify_catalog", return_value=3):
+            code, value, _ = self.capture(doctor, ["--profile", "control", "--connect", "--workspace", "chosen-id"])
+        self.assertEqual(code, 0)
+        self.assertEqual(value["account"], "authenticated")
+        checks = {c["name"]: c for c in value["checks"]}
+        self.assertEqual(checks["cli_version"]["status"], "warn")
+        self.assertEqual(checks["workspace_catalog"]["status"], "pass")
+        self.assertNotIn("cli_version", value["verified_scope"])
+
+    def test_unknown_cli_version_is_advisory_and_still_performs_account_query(self):
+        with patch.object(doctor, "installed_cli", return_value=Path("/fixture/cli")), \
+             patch.object(doctor, "offline_version", return_value=None), \
+             patch.object(doctor.subprocess, "run", return_value=argparse.Namespace(returncode=0, stdout="v24.19.0")), \
+             patch.object(doctor, "state_directory", return_value=Path("/private/state")), \
+             patch.object(doctor, "verify_account", return_value=2):
+            code, value, _ = self.capture(doctor, ["--profile", "control", "--connect"])
+        self.assertEqual(code, 0)
+        self.assertEqual(value["account"], "authenticated")
+        checks = {c["name"]: c for c in value["checks"]}
+        self.assertEqual(checks["runtime"]["status"], "warn")
+        self.assertEqual(checks["cli_version"]["status"], "warn")
+        self.assertNotIn("runtime", value["verified_scope"])
+
+    def test_update_advisories_never_change_success_exit_code(self):
+        cases = (("0.107.2", "0.108.0", "warn", "update_available"),
+                 ("0.108.0", "0.108.0", "pass", "current"),
+                 ("0.109.0", "0.108.0", "warn", "comparison_unknown"),
+                 ("0.108.0-beta.1", "0.108.0", "warn", "comparison_unknown"),
+                 (None, "0.108.0", "warn", "comparison_unknown"),
+                 ("0.107.2", None, "warn", "unavailable"))
+        for actual, latest, status, observation in cases:
+            with self.subTest(actual=actual, latest=latest), \
+                 patch.object(doctor, "installed_cli", return_value=Path("/fixture/cli")), \
+                 patch.object(doctor, "offline_version", return_value=actual), \
+                 patch.object(doctor.subprocess, "run", return_value=argparse.Namespace(returncode=0, stdout="v24.19.0")), \
+                 patch.object(doctor, "_registry_latest", return_value=latest, create=True):
+                code, value, errors = self.capture(doctor, ["--check-updates"])
+            self.assertEqual(code, 0)
+            self.assertEqual(value["status"], "pass")
+            updates = next(c for c in value["checks"] if c["name"] == "cli_updates")
+            self.assertEqual(updates["status"], status)
+            self.assertEqual(updates["evidence"]["observation"], observation)
+            self.assertNotIn("cli_updates", value["verified_scope"])
+            self.assertEqual(errors, "")
+
+    def test_business_failure_preserves_update_warning_and_its_original_exit_code(self):
+        with patch.object(doctor, "installed_cli", return_value=Path("/fixture/cli")), \
+             patch.object(doctor, "offline_version", return_value="0.107.2"), \
+             patch.object(doctor.subprocess, "run", return_value=argparse.Namespace(returncode=0, stdout="v24.19.0")), \
+             patch.object(doctor, "_registry_latest", return_value="0.108.0", create=True), \
+             patch.object(doctor, "state_directory", return_value=Path("/private/state")), \
+             patch.object(doctor, "verify_account", side_effect=common.ToolError(4, "network", "Account query failed.", 1)):
+            code, value, _ = self.capture(doctor, ["--check-updates", "--profile", "control", "--connect"])
+        self.assertEqual(code, 4)
+        self.assertEqual(value["error_category"], "network")
+        self.assertEqual(next(c for c in value["checks"] if c["name"] == "cli_updates")["status"], "warn")
+
+    def test_registry_subprocess_is_bounded_isolated_and_sanitized(self):
+        with patch.dict(os.environ, {"LODY_CLI_TOKEN": "fixture-lody-secret", "GITEE_ACCESS_TOKEN": "fixture-gitee-secret",
+                                     "HTTPS_PROXY": "fixture-proxy", "SSL_CERT_FILE": "fixture-ca"}), \
+             patch.object(doctor.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, '"0.108.0"\n', "")) as run:
+            self.assertEqual(doctor._registry_latest(30), "0.108.0")
+        options = run.call_args.kwargs
+        self.assertLessEqual(options["timeout"], 5)
+        self.assertNotIn("LODY_CLI_TOKEN", options["env"])
+        self.assertNotIn("GITEE_ACCESS_TOKEN", options["env"])
+        self.assertEqual(options["env"]["HTTPS_PROXY"], "fixture-proxy")
+        self.assertEqual(options["env"]["SSL_CERT_FILE"], "fixture-ca")
+        self.assertIn("-I", run.call_args.args[0])
+        self.assertNotIn("fixture-lody-secret", repr(run.call_args.args))
+
+    def test_registry_failure_and_untrusted_version_are_not_forwarded(self):
+        outputs = ('"fixture-sensitive-material"', '"0.108.0\\nfixture-sensitive-material"',
+                   '{"version":"0.108.0"}', '"' + '9' * 70000 + '"')
+        for output in outputs:
+            with self.subTest(length=len(output)), \
+                 patch.object(doctor.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, output, "fixture-sensitive-material")):
+                self.assertIsNone(doctor._registry_latest(1))
+        for error in (OSError("fixture-sensitive-material"), subprocess.TimeoutExpired(["fixture"], 1, output="fixture-sensitive-material")):
+            with self.subTest(error=type(error).__name__), patch.object(doctor.subprocess, "run", side_effect=error):
+                self.assertIsNone(doctor._registry_latest(1))
+
+    def test_registry_query_limits_response_and_refuses_redirects_without_credentials(self):
+        response = io.BytesIO(b'{"version":"0.108.0"}')
+        response.status = 200
+        opener = argparse.Namespace(open=lambda request, timeout: response)
+        output = io.StringIO()
+        with patch("urllib.request.build_opener", return_value=opener) as build, redirect_stdout(output):
+            namespace = {}
+            exec(doctor._LATEST_QUERY, namespace)
+        self.assertEqual(json.loads(output.getvalue()), "0.108.0")
+        redirect = build.call_args.args[0]
+        self.assertIsNone(redirect.redirect_request(None, None, 302, "", {}, "https://untrusted.invalid/"))
+
+        requests = []
+        def oversized(request, timeout):
+            requests.append((request.full_url, request.header_items(), timeout))
+            response = io.BytesIO(b' ' * 65537 + b'{"version":"0.108.0"}')
+            response.status = 200
+            return response
+        output = io.StringIO()
+        with patch("urllib.request.build_opener", return_value=argparse.Namespace(open=oversized)), \
+             redirect_stdout(output), self.assertRaises(SystemExit) as caught:
+            exec(doctor._LATEST_QUERY, {})
+        self.assertEqual(caught.exception.code, 1)
+        self.assertEqual(output.getvalue(), "")
+        self.assertEqual(requests[0][0], "https://registry.npmjs.org/lody/latest")
+        self.assertFalse(any(name.lower() == "authorization" for name, value in requests[0][1]))
+        self.assertLessEqual(requests[0][2], 5)
 
     def test_control_and_task_do_not_infer_success_from_installed_cli(self):
         for profile in ("control", "task", "worker"):
