@@ -6,6 +6,8 @@
 
 Dot的官方身份已核实：[Getting started with your dot](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot)将其称为“an always-on agent in ChatGPT”，并明确拥有自己的cloud computer。本文把Dot作为具体产品与宿主建模；Agent仍是参与任务的主体类别。Dot、Dot自己的云电脑，以及它创建的Codex云任务是不同对象。
 
+用户已确认本项目由Dot创建独立Codex云任务，且Dot具有该权限；当前云任务负责接入Lody、控制与执行，不创建下游Codex云任务或查询OpenAI任务目录。这是本项目宿主边界，不是对所有CLI宿主的官方绝对限制。执行链路见[环境指引](environment-model.md#dot的执行去向与lody接入)；当前未暴露Dot创建工具，只保留实际发起及任务读取回执未验，不反推Dot无权限。
+
 已读Dot、Codex Cloud、插件和技能的官方帮助页；spec12发布后又读到完整插件格式与Dot电脑指南，补齐了portable/兼容清单、GitHub source和用户运行setup的契约。**仍未取得Dot自身云电脑的准备脚本、maintenance、定期磁盘重置或重建hook契约**。官方`onboardingSkill`是用户运行setup的入口，不能当作这些生命周期事件。
 
 环境发布与访问的历史证据如下，各行只代表该轮观测，不作为实时状态表：
@@ -16,8 +18,10 @@ Dot的官方身份已核实：[Getting started with your dot](https://help.opena
 | spec9历史轮次，14:46起 | spec/observed为9，正式无草稿；`observations_current=true`，网络策略为`unknown`，`/etc`网络快照已有三个OpenAI域名；帮助站9篇正文及官网索引HTTP200，开发站环境指南与Plugin Management仍CONNECT403 |
 | spec12发布历史 | 当时正式源码`ed9096b`、插件0.2.1；spec/observed均为12、`observations_current=true`，无草稿；当时网络与运行变量readiness为`unknown`，保留原始观测 |
 | spec12实际HTTPS，16:59–17:01 | 下列4篇完整指南均HTTP200，包括Plugin Management和开发站插件包装指南；这更新了旧轮次对这些精确URL的访问结论，不证明其他路径或UI操作通过 |
-| spec12 Cloud CLI | `codex cloud list`从旧轮次代理拒绝变为HTTP401；本地`codex login status`显示ChatGPT登录，但Cloud API本次未授权。未取得可用Cloud ENV_ID，不猜原因或提交任务 |
+| spec12 Cloud CLI（已撤下的验收尝试） | `codex cloud list`从旧轮次代理拒绝变为HTTP401；本地`codex login status`显示ChatGPT登录，但该API请求未授权。该尝试不证明当前云任务可创建下游任务，也不作为项目阻塞 |
 | spec14发布复查 | 当轮spec/observed均为14、`observations_current=true`，网络`enforced`、LODY/GITEE变量`ready`；Cloud list仍401、未见403，bootstrap只读doctor通过。后续实时值与进行中验收见[唯一状态表](../../.codex/agent-state/todo.md#当前环境与下一步) |
+
+上表Cloud CLI结果保留为历史；该验收路径已撤下，不再调查或调用`cloud list/exec`，不以OpenAI API授权作为Lody协作前置，也不要求补token或重复发布环境。
 
 本节资料查证保留继承代理、CA与TLS校验，没有修改云配置、重复保存草稿、认证、读取凭证值或安装新插件；发布后原Lody任务的独立只读复验见验证记录。当前工具目录没有网页检索或官方文档搜索工具，采用官方帮助站搜索及页面实际链接做有限查证。
 
@@ -28,7 +32,7 @@ Dot的官方身份已核实：[Getting started with your dot](https://help.opena
 | 宿主/目标 | 加载与工具入口 | 身份及路径边界 | 准备、启动与恢复 | 当前结论 |
 | --- | --- | --- | --- | --- |
 | 当前Linux托管Codex环境 | 已保存`start_skill`引导读取`skill/lody4dot/SKILL.md`；当前CLI有plugin/marketplace帮助 | 使用本实例允许的仓库、prefix和私密state；受保护配置不因此变成可写 | `install_script`已有安装/inspect，`start_skill`已有读取/inspect | 已有配置和CLI入口；新任务读取、原生注册、worker执行仍各需回执 |
-| Codex Cloud任务 | 官方要求先准备并发布环境；Dot可在已有Codex环境创建云任务 | 每任务独立workspace和工作文件；共享环境不自动共享他人的任务、编辑权或GitHub仓库权限 | 已发布setup用于新任务；已有任务保留自身状态；VM恢复窗口见下表 | 可复用已核实环境接入路线；不能把一个任务的工具证明成Dot自身云电脑工具 |
+| Codex Cloud任务 | 官方支持Dot使用已准备环境创建云任务；本项目由Dot选择已发布环境和仓库发起，创建权限已由用户确认 | 每任务独立workspace和工作文件；共享环境不自动共享他人的任务、编辑权或GitHub仓库权限 | 已发布setup用于新任务；已有任务保留自身状态；VM恢复窗口见下表 | 当前云任务接入Lody并协作已有节点，不负责创建下游云任务；实际Dot发起、绑定和首次读取另取回执 |
 | 用户本地Codex CLI | 0.163.0源码定义原生清单、skills和marketplace；目标端版本与注册另验 | 使用该端授权配置、安装prefix和私密状态 | 采用目标端实际加载入口；会话hook还受版本和管理策略限制 | 可准备匹配格式的分发，不声称用户电脑已加载 |
 | Dot自身云电脑 | 官方确认独立cloud computer，可使用共享的插件连接；企业设置分别控制云浏览器、code/shell联网和桌面使用 | Dot拥有者、工作区角色、连接服务账号、动作权限分别约束；不自动继承本地VPN、浏览器登录或设备策略 | 官方称电脑可在使用间隔保留状态，拥有自己的文件、软件和浏览器会话；未给永久保留、重置周期或setup/maintenance、重建hook契约 | 产品与部分工具能力已确认；lody4dot在该电脑的CLI安装、技能读取及执行位置尚未实测 |
 | Dot连接的本地电脑 | 通过该电脑的ChatGPT桌面App连接并Allow access后，可创建Work/Codex任务、使用local skills | 连接Codex或开启Work Sync不等于授权Dot；本地访问默认关闭 | 电脑需在线且App打开；本地工作在单独任务；切换选择不会搬迁已有任务 | 官方支持本地技能路径的产品能力；lody4dot加载格式和目标机实际读取仍待回执 |

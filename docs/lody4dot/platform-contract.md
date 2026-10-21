@@ -36,6 +36,8 @@ dist/lody4dot/
 
 保存启动说明不等于已加载；新任务读取入口、随附资源和工具的回执仍属于 T09。T01 完成的是实际可选路线与格式契约，不声称原生注册或新任务加载通过。
 
+用户已确认Dot具备创建独立Codex云任务的权限，本项目由Dot选择已发布环境和仓库发起；当前云任务负责加载lody4dot、接入Lody及控制/执行，不查询OpenAI任务目录或创建下游云任务。这是本项目宿主边界，不由CLI存在cloud命令推导当前云任务可创建任务。实际入口未暴露只表示发起与读取回执待验，不要求重复授权；步骤见[Dot验收流程](dot-acceptance.md#复用已准备的云控制端)。
+
 ## 运行与工具契约
 
 - CLI 依赖与稳定入口在 `/workspace/.tools/lody4dot/`，位于 checkout 外；不与登录态混合。
@@ -49,7 +51,7 @@ dist/lody4dot/
 
 ## C01补充：准备入口与hooks
 
-`install_script`调用`bootstrap --prepare`，`start_skill`引导读取技能后调用`--repair-missing`，复用即可；保存字段与实际新任务执行分别取证。spec12的四篇HTTP200、当时readiness unknown和Cloud list 401保留在[历史观测](host-contracts.md#本轮结论)，不作为当前快照。本地ChatGPT登录状态不等于Cloud API授权，不能据此猜Cloud ENV_ID。
+`install_script`调用`bootstrap --prepare`，`start_skill`引导读取技能后调用`--repair-missing`，复用即可；保存字段与实际新任务执行分别取证。spec12的四篇HTTP200、当时readiness unknown和Cloud list 401保留在[历史观测](host-contracts.md#本轮结论)，不作为当前快照。Cloud CLI验收尝试已撤下，401或OpenAI API授权不作为本项目阻塞。
 
 官方0.163.0源码包含`hooks`及会话级`SessionStart/SessionEnd`。新包装指南仅支持手动安装于Codex desktop的lifecycle hooks，web安装不部署脚本；用户运行`onboardingSkill`又是另一入口。这些证据均不能合并成“Dot支持存储重置hook”。Codex Cloud新任务各有独立workspace，已发布setup用于新任务，默认VM恢复窗口最多7天；不推广为Dot规则。Dot电脑官方可在使用间隔保持状态，但永久保留、重置周期和初始化回调未给出；主动Reset是产品及上下文删除操作。
 

@@ -350,6 +350,21 @@ B使用另一新0700目录显式认证，没有复制A身份/缓存；从已保�
 
 本轮没有改0.2.2源码/包字节或CLI锁，旧ZIP摘要保持一致；再次执行根目录结构检查、132项全量回归及差异检查均通过。本轮环境状态与证据整理仅修改项目文档和任务记录。
 
+## Agent配置、Role与Project关系核实
+
+2026-10-21，用户询问能否基于已配置Agent创建多个角色，再用项目组织角色，以及是否已验证。本次仅只读核对`0.107.2`公开帮助、已安装发布源码和历史验收；没有生成角色提议、保存角色、登记项目或发起新模型任务。本轮官网请求未取得正文，故不将此结论扩大为其他版本或所有UI的功能保证。
+
+| 关系 | 已查到的契约/源码 | 真实验收范围 |
+| --- | --- | --- |
+| Agent config与Role | 多个不同Role可引用同一machineId+agentConfigId；Role加入角色说明及提示词前缀，执行时可应用保存的运行设置 | 既有配置执行已测；多个Role实际创建、保存和执行未测 |
+| 创建Role | `agent-role create/update`只发布提议卡片，须请求用户在Lody保存；该版本create字段限name/description/promptPrefix/machineId/agentConfigId，初始runConfig为空 | 之前只做过完整Role目录查询，当时0项；不能把提议成功算持久化完成，或承诺CLI可编辑全部运行设置 |
+| Project | 公开CLI为`project add/delete/list`，add登记当前机器本地目录；会话项目引用可为local project或GitHub repo | 只读完整目录查询已测，未测add/delete，也没有在已有项目中写文件 |
+| Project与Role | 创建会话可组合`--agent-role`与`--local-project`或`--repo`；Role先确定实际机器/配置，本地项目须属于最终目标机器 | 可确认“按某Role执行某项目任务”的接口；未核实“Project持久拥有一组Role”的绑定，不能据此断言其他UI没有组织功能 |
+
+源码依据为官方[0.107.2发布物](https://registry.npmjs.org/lody/-/lody-0.107.2.tgz)中的`AgentRoleCreateProposalSchema`、`applyAgentRoleProposal`、`agentRoleWriteCommand`、`resolveAgentRoleCreate`、`ProjectRefSchema`及`projectAddCommand`。会话保存project和agentRoleId/revision，帮助快照列明Role覆盖machine/config/mode/model/config-option。CLI提议还会路由到当前登录机器的会话工具；角色的目标machineId只是绑定字段，不能用远端会话派发成功推导无daemon控制端也能生成提议。
+
+后续若开展受控创建验收，应复用同一既有配置生成两个不同私有角色，经合法会话工具生成提议、用户在Lody保存并只读get核验，再在执行端登记专用临时项目，各按不同Role创建一次项目会话，核对实际目录、配置、Role引用及持久化结果。此处仅记录待验证步骤，不代表已执行或已取得本次配置写入授权；不用普通Lody会话测试替代这些证据。
+
 ## 复现命令
 
 在仓库根目录运行：

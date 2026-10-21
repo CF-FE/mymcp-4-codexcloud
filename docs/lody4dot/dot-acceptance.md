@@ -42,9 +42,17 @@ Dot自己的云电脑、其创建的Codex云任务、已连接的本地电脑是
 
 复用[状态表](../../.codex/agent-state/todo.md#当前环境与下一步)所列的已发布环境，分别记录正式来源、执行脚本与实际版本。0.2.0启动检查和原任务只读对账保留为历史验收；spec12的unknown观测见[宿主历史记录](host-contracts.md#本轮结论)。CLI默认安装输入为0.107.2，实际版本不同或探测失败不阻塞；可显式`doctor.py --check-updates`查询npm latest，旧版或查询失败也只warn。复用已有准备入口，不重配token或注册machine。
 
-当选择Dot委托Codex任务时，使用已发布的目标环境。官方说明新任务有独立工作区，不恢复另一任务未提交的文件；保存VM状态默认最多7天可恢复是Codex Cloud规则，不是Dot存储reset hook。参见[Using Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud)。
+用户已确认Dot有创建独立Codex云任务的权限。本项目按以下链路验收，不再重复确认该权限：
 
-本会话的子Agent不构成独立云任务。Codex CLI有正式cloud exec入口；历史spec12中，cloud list已由代理拒绝转为HTTP401，本地ChatGPT登录未证明Cloud API授权。后续结果以状态表为准，不猜失败原因或Cloud ENV_ID提交任务。没有可用插件导入界面或setup执行入口时，保留未验；同实例子进程不能替代独立任务。
+1. Dot发起独立云任务，选择已发布的Codex环境和目标仓库，记录实际任务关联。
+2. 新云任务读取lody4dot及随附资源，记录首次入口来源、版本和执行位置。
+3. 该任务通过本端合法身份接入Lody，核实目标workspace和可用工具。
+4. 通过Lody与已有节点协作，沿准确session/turn观察持久化结果并核对产物。
+5. 将原生引用与结果回传Dot；私密标识仅经授权渠道传递，公开资料保留脱敏证据。
+
+新任务有独立工作区，不恢复另一任务未提交的文件；默认最多7天VM恢复是Codex Cloud规则，不是Dot存储reset hook。参见[Using Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud)。
+
+当前云任务及其子Agent不负责创建下游Codex云任务或查询OpenAI任务目录。此前CLI有cloud命令、cloud list从403转401的尝试已撤下，保留历史且不作为项目阻塞；不再调查或调用`cloud list/exec`，不为此索要token或重复发布环境。当前未暴露Dot创建工具，不等于Dot无权限；待取得的是实际发起、环境/仓库绑定和新任务读取结果。插件导入或setup执行入口未暴露时也保留相应未验，同实例子进程不能替代独立任务。
 
 已有远端Agent也可成为另一控制端：本轮Darwin端实际通过其会话内置Lody MCP查询原会话，补齐了有限双端复验，不再要求为C07另建平台云任务。该结果不证明独立新任务的首次技能加载，后者仍属于C05，也不证明Dot自身调用。
 
