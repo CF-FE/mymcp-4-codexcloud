@@ -38,6 +38,8 @@ c2已经要求优先复用合法连接、按实际能力选最小路线，不先
 
 两条主要路线可在同一目标中组合，但不虚构产品间的RPC或自动转换原生ID。Dot执行资料读写、Cloud执行计算时，分别记录实际责任者；若处理部分确实经Lody，再关联对应Lody记录。已有插件连接在授予范围内复用，不代表每个任务暴露同一工具，更不复制浏览器登录、CLI身份或模型凭证。
 
+任务可见性也分系统：Dot发起的Codex云任务A在ChatGPT／Codex会话和桌面Dot个人资料的Activity查看；若A经Lody创建会话B，Lody显示的是B及其回合，A不自动变成Lody session或machine。用现有记录关联两边原生引用即可，不预设已有统一任务界面，也不为此自动注册worker。[官方查看入口](https://learn.chatgpt.com/docs/dots/tasks-and-memory#assigned-work)
+
 ### 资料交接与既有schema1保持边界
 
 当前`plugin/lody4dot/scripts/handoff.py`根字段有白名单；`dispatched`/`result`要求Lody workspace、session、user_turn，`result`再要求assistant_turn及匹配的持久化终态；工件要求executor_ref、SHA-256及字节数。对应说明与行为测试见[交接契约](handoff.md)和[测试](../../tests/lody4dot/test_handoff.py)。

@@ -17,7 +17,7 @@
 | 5 | [技能协作参考](../../skill/lody4dot/references/collaboration.md)、[Dot 宿主材料](../../plugin/lody4dot/hosts/dot.md) | 运行时知识已有的路由、交接、恢复规则，避免重复实现。 |
 | 6 | [唯一任务队列](../../.codex/agent-state/todo.md)与[验证记录](validation.md) | 当前进度、真实证据与剩余缺口；本文不覆盖即时状态。 |
 
-本轮只读核对基线为 `8d46d5eee3ea6f71e1d6719c405de3344d5fc7ad`。接收方先看当前 diff 与 HEAD；后续代码有变化时重新核对相关事实，不把这个基线当最新发布来源。
+初次只读核对基线为 `8d46d5eee3ea6f71e1d6719c405de3344d5fc7ad`。随后公子合并了项目更新，本页已按合并提交 `c5b35b4` 复核，保留其中 `3c5fd4a` 的Dot任务创建职责与Role/Project证据边界。接收方先看当前 diff 与 HEAD；这些是审查基线，不是最新正式发布来源。
 
 ## 2. 对话新增的事实：不要退回假设
 
@@ -29,8 +29,17 @@
 | E4 | **资料空间 ⇄ Dot ⇄ Codex Cloud 中转已由公子实际试通，不需要再做基础可行性验证。** | 公子明确确认；没有附带任意大小、格式、吞吐或全部自动化程度的保证。 |
 | E5 | 当前桌面首方工具名称和 schema，不证明可导出的 Space MCP server URL 或会话外身份。 | 当前工具快照与接口边界；shell 可访问远程服务也不能补足该证据。 |
 | E6 | `library-file:`、`project-file:`、Sediment ID、路径和 Git 引用不可互换。 | 该次 Cloud 的 `download_file` 只接受 Sediment ID；不能靠改前缀取得原附件。 |
+| E7 | 本项目独立 Codex 云任务由 Dot 创建，Dot 权限已由公子确认；当前云任务只负责自身接入和 Lody 协作，不派生下游 Codex 云任务、不查询 OpenAI 任务目录。 | 合并后仓库规则与项目路由；历史 Cloud API 401 已撤下，不作为插件前置，也不需重复索取创建权限。此约束不泛化为全部产品宿主的通用禁止。 |
 
 E4 解决的是产品协作路径可行性，**不替代** lody4dot 技能加载、Dot 实际调用 Lody、独立宿主复验或 C09／C10 的插件验收。既不能再把 Dot 中转列为未知，也不能因此把 C09／C10 改成完成。
+
+合并更新还保留了[Agent配置、Role与Project的只读核实](validation.md#agent配置role与project关系核实)：多个Role可引用同一配置，不等于多个Role已经创建并执行；Project与Role可组合用于会话，不等于已验证Project持久绑定一组Role。本次没有新增这类创建或执行验收，不用资料中转结果替代它们。
+
+### 平台任务与Lody记录在哪里可见
+
+Dot创建的独立云任务在ChatGPT／Codex会话中可见，桌面端可从Dot个人资料的**Activity**打开；官方说明新云会话也出现在网页和移动端。它不会自动成为Lody session。若Cloud任务A通过Lody创建会话B，Lody记录的是B及其回合和执行节点；A的平台任务仍在ChatGPT／Codex。[官方入口](https://learn.chatgpt.com/docs/dots/tasks-and-memory#assigned-work)
+
+现有CLI安装不注册machine，不启worker，不自动创建业务会话。需要跨系统追踪时，在现有记录中同时保留A的平台任务引用与B的原生Lody引用，以及实际发起、处理和结果交回关系；纯Cloud任务没有B时保持无此关联。不能把“可追踪的引用”写成Lody界面已经能展示或控制全部Codex任务。
 
 ## 3. 辩证后的方案取舍
 
@@ -130,6 +139,8 @@ Dot 中转表示产品协作，不预设 Cloud 有实时“调用 Dot”RPC。�
 
 当前文档改动按仓库要求执行结构检查、现有单元测试和 diff 检查；它们不证明真实 Cloud／Dot／Space 运行通过。后续有运行时改动再做受影响的打包或真实行为验证。
 
+本轮本地检查与原提交对照见[文档合并复核记录](validation.md#本地文档迭代与合并复核)：结构、链接/锚点及差异检查通过；macOS上132项全套测试未通过，失败/错误项与原基线一致，不作为新增回归，也不写成全套通过。合并仅涉及文档及任务记录，运行时代码未变；此前Linux验收仍按原轮次解读。
+
 ## 9. 可直接发给云端任务的提示
 
 ```text
@@ -141,6 +152,8 @@ collaboration-development.md c3 和现有仓库规则、契约、任务队列。
 确认已实测可用，不再重做基础可行性验证，也不要将它误认作插件 C09/C10 已完成。
 
 先说明现有实现哪些足够、哪些具体缺口影响任务，再选最小改动。
+独立Codex云任务由Dot创建，当前云任务不再派生Cloud任务，不查询OpenAI任务目录；
+历史401不作为插件前置，不因本端没有创建工具而重复索取Dot已有权限。
 优先完善资料责任、带类型引用、实际能力路由与保存/回读完成口径。
 纯 Cloud/Space 对象不要伪装成 Lody schema1 的 session/turn；不新增通用调度、
 凭证池、远程 MCP 服务或 schema2 来预支需求。

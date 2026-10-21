@@ -58,6 +58,20 @@ Dot 自己的云电脑与 Codex Cloud 任务，应当按**分别管理的执行�
 
 “让 Dot 把编码任务委派到该环境”，指它创建相应的 Codex Cloud 编码任务。该任务接收为工作准备的指令和上下文，不自动获得与 Dot 的全部对话。更换 Dot 当前选择的电脑，也不会迁移已有任务。[委派与上下文](https://learn.chatgpt.com/docs/dots/tasks-and-memory#assigned-work)
 
+### Dot 创建的云任务在哪里看？Lody 能看到吗？
+
+官方说明，新云会话会出现在桌面、网页和移动端应用，具有自己的对话。在桌面端可以打开 **Dot 的个人资料 → Activity → 对应任务**，检查进度、文件、结果或输入请求。[任务可见性与 Activity](https://learn.chatgpt.com/docs/dots/tasks-and-memory#assigned-work)
+
+Codex 平台任务不会自动同步成 Lody 会话。两边的可见对象分别是：
+
+| 操作 | 在哪里查看 |
+| --- | --- |
+| Dot 创建 Codex Cloud 任务 A | ChatGPT／Codex 的独立会话及 Dot Activity。 |
+| A 只读取 lody4dot、安装 CLI 或查询 Lody | A 仍属于 Codex；这些动作不会自动创建 Lody session，也不会自动注册 machine。 |
+| A 通过 Lody 向已有节点派发，创建 Lody 会话 B | B 及其回合、执行节点由 Lody 记录；A 的平台进度仍在 ChatGPT／Codex 查看。 |
+
+需要端到端追踪时，在协作记录中关联 A 的平台任务引用与 B 的 Lody session／turn。记录关联不代表 Lody 界面已经提供 Codex 任务的统一视图，也不要求为了“可见”把 Cloud 任务注册成 worker。
+
 ## 3. GitHub 配置的 Codex Cloud 环境给谁用
 
 环境准备可包括 GitHub 仓库、依赖与工具、安装和启动安排、网络、环境变量及受支持的网络密钥等。它主要用于**选择该环境的新 Codex Cloud 任务**，包括用户直接创建，以及 Dot 委派过去的编码任务。
