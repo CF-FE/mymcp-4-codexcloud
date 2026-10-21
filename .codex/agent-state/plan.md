@@ -23,7 +23,7 @@
 
 当前可按[Dot接入验收](../../docs/lody4dot/dot-acceptance.md)推进已证实的插件/技能、既有连接或委托云端路线。Darwin端通过实际内置MCP查询原会话后，C07有限双端范围已完成；剩余Dot自有电脑生命周期hook、首次独立加载、真实宿主重建及产品界面扫描/安装分别取证。未知hook不阻塞不依赖它的路线。若确需新增MCP身份代理，先按实际接口核对边界后设计，不在资料调查中部署。
 
-已核实Codex CLI有正式cloud exec新任务入口，但本轮cloud list在chatgpt.com目的地请求失败，普通HTTPS证实该域被代理CONNECT403拒绝；不能将PATH别名只读警告误作此失败原因，也不能猜Cloud ENV_ID。升级准备需同步正式仓库ref、已验证install/start，并在原网络规则上追加chatgpt.com及官方Plugin Management所在的learn.chatgpt.com；实际保存/发布状态以配置回执为准，不用旧固定ref冒称0.2.1正式生效。
+已核实Codex CLI有正式cloud exec新任务入口，但本轮cloud list在chatgpt.com目的地请求失败，普通HTTPS证实该域被代理CONNECT403拒绝；不能将PATH别名只读警告误作此失败原因，也不能猜Cloud ENV_ID。升级草稿已实际保存并核对：源码切到本轮已验收0.2.1，install/start与仓库一致，原网络规则仅追加chatgpt.com及learn.chatgpt.com；requires_publish=true。实际发布与后续访问仍另取回执，不用旧固定ref冒称新版已生效，也不重新索要token。
 
 当前实现的局部边界记录：C03为schema1追加可选检查范围/来源并保留旧字段语义；C06为调用方提供记录的纯离线校验，不取得业务写权限或新真实性证明。数据所有权、原生CLI业务入口和依赖方向保持原有约定；通过旧字段兼容、无账户行为及失败路径验证，不引入新的凭证或全局调度层。安装与恢复仅管理自有prefix，不把环境准备授权扩大为业务重发。
 

@@ -21,7 +21,7 @@
 
 既有r2/d1尚缺旧截图对应任务的来源和版本等记录，按[验收流程](../../docs/lody4dot/fresh-task-acceptance.md)核对后继续T12；不为补旧字段重新创建任务、登录或查询资源。自主检索后实际读取可以证明基本读取，首次入口来源仍须如实区分。T10远端闭环与T11支持矩阵已完成，不把T09旧补证设为c2独立工作的隐藏总前置。个人workspace及已有Agent测试授权保留；本机只读限制不阻塞获准远端控制。
 
-当前源码及候选包为0.2.1，含非阻塞CLI版本提示；最终包已重建并通过127项回归，摘要见验证记录。0.107.2保留为知识/默认安装基线，版本差异不作为执行准入。最新正式来源仍为0.2.0的`d27f1a0e6ec2890cd60e301118fc925d32872d46`，最新观测spec/observed11、observations_current=true，网络/变量readiness仍unknown。实际工作副本0.2.1的完整cloud-install及127项回归本次再次通过；新的源码/网络升级准备与已发布版本分开，以实际配置回执为准。文档现集中于docs/lody4dot/，当前入口见[索引](../../docs/lody4dot/README.md)。
+当前源码及候选包为0.2.1，含非阻塞CLI版本提示；最终包已重建并通过127项回归，摘要见验证记录。0.107.2保留为知识/默认安装基线，版本差异不作为执行准入。最新正式来源仍为0.2.0的`d27f1a0e6ec2890cd60e301118fc925d32872d46`，最新观测spec/observed11、observations_current=true，网络/变量readiness仍unknown。实际0.2.1完整cloud-install及127项回归本次再次通过；源码/网络升级草稿已保存并逐字核对，requires_publish=true，正式生效仍另取回执。文档集中于docs/lody4dot/，入口见[索引](../../docs/lody4dot/README.md)。
 
 环境、任务、实例、Dot会话引用及协作空间/Lody权限分别识别，见[环境模型](../../docs/lody4dot/environment-model.md)。不承诺某客户端或网页必然能选到此环境；“本机ACP”指当前云执行实例，不是用户电脑。
 
@@ -173,3 +173,5 @@ C07按卡中允许“执行节点属于其中一端”的范围完成：Linux CL
 重新核实本机Codex CLI正式支持cloud exec；最小只读cloud list确实发往chatgpt.com，但请求失败，公开HTTPS进一步证实CONNECT403。没有提交新云任务、猜环境ID或更换认证。升级准备需在保留原8条自定义规则与已有变量的基础上追加chatgpt.com、learn.chatgpt.com，按实际HEAD保存新源码及已验证install/start；草稿不等于正式发布，最终状态依配置回执。
 
 按用户要求将14篇专属文档及9份图资源归入docs/lody4dot/，去掉冗余文件名前缀并新增README索引；内部与仓库入口链接同步更新，图源/SVG/配置/渲染脚本字节保持不变。AGENTS及docs/architecture.md固化项目文档按文件夹归档、配图归属、运行技能资源例外及移动更新引用的开发规范。
+
+升级草稿保存实际返回saved/requires_publish=true，读取revision18确认源码为本轮0.2.1验收及文档整理基线、mount保持mymcp-4-codexcloud，install/start与仓库文件逐字一致，原8条自定义规则保留且只追加chatgpt.com、learn.chatgpt.com；未改已有变量/凭证绑定。最终交接仅同步包含本记录的完整HEAD，具体固定SHA以配置回执为准，已测工具与候选包字节不变。这里是新源码/新目的地的升级草稿，不将此前发布旧固定ref当成该升级已生效；无需重配token。

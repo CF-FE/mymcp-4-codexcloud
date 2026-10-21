@@ -298,6 +298,8 @@ doctor保持schema1旧字段/退出码，新增时间、真实通过的检查范
 
 另按用户要求迁移14篇专属文档至本目录并去除冗余前缀，9份图资源移至diagrams，新增README阅读索引。迁移后的本地链接及渲染命令检查通过，8份非Markdown图资源字节完全相同；独立审查确认旧文档除路径外事实和命令语义不变。开发规范写入AGENTS与[仓库架构说明](../architecture.md#文档归档规范)。能力源码、CLI依赖锁和已验收候选包字节均未因文档归档改变。
 
+在完整遍历/workspace并确认唯一项目Git根后，保存0.2.1升级草稿，回执saved/requires_publish=true；读取revision18确认源码为本轮验收/归档基线，install/start与对应仓库文件逐字一致，10条自定义规则正好是原8条加chatgpt.com和learn.chatgpt.com。/workspace/.git经核实为空的非仓库标记，两个node_modules依赖目录不声明为项目checkout；未删除或移动任何checkout。未重配变量/凭证、发布或切换运行实例。交接时仅同步包含最终记录的完整HEAD，测试代码和候选包字节保持不变；源码固定SHA以最终配置读取回执确定。
+
 ## 复现命令
 
 在仓库根目录运行：
