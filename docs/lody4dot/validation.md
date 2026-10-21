@@ -300,6 +300,34 @@ doctor保持schema1旧字段/退出码，新增时间、真实通过的检查范
 
 在完整遍历/workspace并确认唯一项目Git根后，保存0.2.1升级草稿，回执saved/requires_publish=true；读取revision18确认源码为本轮验收/归档基线，install/start与对应仓库文件逐字一致，10条自定义规则正好是原8条加chatgpt.com和learn.chatgpt.com。/workspace/.git经核实为空的非仓库标记，两个node_modules依赖目录不声明为项目checkout；未删除或移动任何checkout。未重配变量/凭证、发布或切换运行实例。交接时仅同步包含最终记录的完整HEAD，测试代码和候选包字节保持不变；源码固定SHA以最终配置读取回执确定。
 
+## spec12正式发布与0.2.2用户setup候选
+
+2026-10-21，本次正式配置已固定`ed9096b837edd31a4446a8db1d49159b42262fd5`，对应0.2.1；无草稿，spec/observed均12、observations_current=true。工作副本开始时与正式来源相符，编辑前离线启动检查通过；随后开发0.2.2候选。网络/变量元数据readiness仍unknown，与下述实测分别记录，没有再保存草稿、发布或重配凭证。
+
+四篇此前部分受阻的官方精确地址本次HTTP200：Plugin Management、Package your plugin、Dot computers and apps、Dot getting started。来源与摘录见[宿主契约](host-contracts.md)。官方接受现有兼容清单；新portable清单与OpenAI overlay的规则已记录，但本轮不迁移双清单。明确可用的是安装后**用户运行setup**，不是安装自动执行、环境准备或存储重置hook。ZIP包装的UI接受、导入扫描和实际调用仍未验收。
+
+Cloud CLI0.163.0的最小只读`cloud list --limit 1 --json`返回HTTP401，本地`codex login status`同时报告ChatGPT登录。二者只说明本地登录状态与Cloud任务API授权不能等同；401的具体原因尚未知。历史CONNECT403不再作为当前原因。未提交`cloud exec`、猜Cloud ENV_ID、复制身份或改HOME；此缺口不阻塞本轮离线实现和Lody恢复对账。
+
+### 不同内核上下文的有限恢复
+
+spec11保存的实际观测为08:01:10Z、内核启动07:51:35Z；本次内核启动08:55:43Z且私密boot摘要不同，启动晚于旧实际观测。这支持不同内核启动上下文的结论。旧dist证据与受管运行时仍可读，prefix内目标、锁摘要、实际锁与收据一致；不由此推断准确VM身份、磁盘曾清空或恢复机制。
+
+本轮对账期间工作副本已含未提交0.2.2候选，HEAD仍ed9096b；`c08-runtime-summary.json`及bootstrap原始provenance均据实际记录0.2.2，不能将这次脚本调用写成纯正式0.2.1源码安装验收。`bootstrap --repair-missing`退出0，**仅doctor**，未运行install，不填reused；既有CLI0.107.2保持不变，bootstrap自身认证/daemon/业务恢复not_run。
+
+另建0700私密state，经现有auth适配器单次真实认证，再沿原工作区/session精确引用只读observe及完整history。23项核验全通过：persisted/synced/completed、无activeTurns，原8条历史及artifact/readback/MCP三份结构化回执一致，准确user/assistant引用、273字节、SHA和原challenge均重算匹配。没有新模型回合、daemon或资源维护操作，临时auth在finally清理，注入绑定保留。摘要在忽略的`dist/lody4dot-environment-checks/spec12/`，原始引用/响应只留私密子目录，不入库。
+
+C08的“Codex发布后不同内核上下文恢复”子范围完成；准确VM/磁盘重建机制、Dot lifecycle、独立新任务首次接入与平台首次送达均未由此证明。入口来源是本会话显式读取，不能冒称平台自动加载；旧T09截图来源仍单独补证。
+
+### 官方用户setup的本地候选
+
+0.2.2代码来源`727a18c3e784f22b0ad2165047ced4780272207e`，在兼容清单声明`extensions.com.openai.onboardingSkill: "./skills/lody4dot-setup/SKILL.md"`；唯一源码为`skill/lody4dot-setup/SKILL.md`，薄入口复用核心和bootstrap。它识别真实执行器、平台/工具和自有prefix，再选择离线检查、获授权准备或现成合法工具路线。版本仅warn，默认不登录、不注册machine、不启daemon或重发业务。局部边界与保留的所有权见[c2方案](collaboration-development.md#4-模块所有权与依赖)。
+
+结构检查及**132项测试**通过：构建15、诊断42、版本策略4、安装21、生命周期8、知识3、平台4、交接27、仓库8。新增回归检查错误/包外/缺失setup目标与资源、symlink、额外setup资源拒绝及旧产物保留；新入口修改在来源核对中为mismatch。独立审查发现的builder接受额外setup资源、provenance却不认可的不一致已修复，薄目录仅允许SKILL.md。
+
+自包含包为30内容文件加receipt，ZIP31文件、110,840字节，CRC及全部receipt摘要匹配，`.codex-plugin/plugin.json`直接在ZIP根。ZIP SHA-256为`37e9bc335782cacfcf4a9c7db68865c1b2fd349ce589415cf341d52737082faa`，receipt SHA-256为`c579c92afda15ac5c7ce139441659545575832d35911f01134f583dcda6f54ac`。从移位包运行bootstrap仅doctor通过，包内provenance consistent、插件0.2.2；无登录、安装或业务操作。旧0.2.1 ZIP摘要保持不变，生成物仍仅在忽略dist内。
+
+这些是本地分发与依赖检查证据。官方要求的安装后在新对话及安装所在对话分别运行setup、ChatGPT/Dot原生UI接受和真实Lody工具闭环，仍由C05/C09/C10分别验收；不因候选完成要求重复发布当前正式环境。
+
 ## 复现命令
 
 在仓库根目录运行：

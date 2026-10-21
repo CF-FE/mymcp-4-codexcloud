@@ -7,6 +7,7 @@
 | 要验证什么 | 可用路线 | 完成证据 |
 | --- | --- | --- |
 | Dot能正确理解Lody工作流 | 有权限的ChatGPT插件ZIP导入，安装技能包；实际调用时选择该插件 | 界面导入/启用结果、首次入口来源、实际读取的技能和插件版本 |
+| 用户能主动运行插件setup | 安装含`extensions.com.openai.onboardingSkill`的候选后，用户运行setup | setup入口、所在会话、实际读到的setup技能及授权范围；不以清单字段存在代替调用 |
 | Dot能使用Lody工具 | 复用真实可用的Lody连接，或由Dot创建已准备的Codex云任务使用该端CLI | 当前合法身份的只读workspace/session查询；执行位置明确 |
 | 第二独立控制端能复验 | 在实际独立的授权任务/执行器取得无凭证交接记录，用自身连接查同一Lody原生引用 | 独立性来源、查询回执、同一产物及挑战值匹配 |
 | Dot自己的电脑可自动重建依赖 | 仅在其正式准备/恢复接口已核实后绑定同一bootstrap | 实际触发与重建回执；Codex任务恢复不能替代 |
@@ -15,13 +16,19 @@ Dot自己的云电脑、其创建的Codex云任务、已连接的本地电脑是
 
 ## ZIP候选与导入入口
 
-候选目录由仓库builder收集唯一技能源码后生成。ZIP中包含原生`.codex-plugin/plugin.json`、`skills/lody4dot/`、三份hosts说明和辅助脚本；没有MCP服务器声明或预设app ID。按包内清单检查完整性，不能拿源码中尚未生成skills目录的`plugin/lody4dot/`代替产物。
+候选目录由仓库builder收集唯一技能源码后生成。0.2.1 ZIP含兼容清单`.codex-plugin/plugin.json`、`skills/lody4dot/`、三份hosts说明和辅助脚本；没有MCP服务器声明或预设app ID。0.2.2候选已加入包内setup技能，保留兼容格式，不迁移portable根清单。各版按自己的receipt检查完整性，不能拿源码中尚未生成skills目录的`plugin/lody4dot/`代替产物。
 
 [官方Plugins文档](https://help.openai.com/en/articles/20001256-plugins-in-chatgpt)提供的web上传入口是Admin console→目标workspace→Plugins→Add→Upload plugin，前提是账号/角色有该入口和权限。上传后记录扫描、导入和安装结果；如界面不提供入口，报告当前账号能力缺口，不假定个人计划具备管理员入口。
 
-候选使用已核实的Codex0.163.0清单。完整[Plugin Management](https://learn.chatgpt.com/docs/enterprise/plugin-management)正文当前CONNECT403，ChatGPT的ZIP包装/扫描尚未实测；不能把目录校验成功写成UI安装成功。遇到格式错误保留报告，先定位包装层级或清单问题，不添加未经验证的MCP/app字段。
+完整[Plugin Management](https://learn.chatgpt.com/docs/enterprise/plugin-management)与[包装指南](https://developers.openai.com/plugins/build/plugins)本轮均HTTP200，确认portable根清单与现有`.codex-plugin/plugin.json`兼容fallback。两篇未规定ZIP外层包装的接受规则，ChatGPT上传扫描、安装和加载仍未实测；目录校验不能当作UI安装成功。遇到格式错误保留报告，定位包装或清单问题，不添加未经验证的MCP/app字段。
 
-可在有权限时使用GitHub marketplace同步，但当前三目录源码必须先构建才自包含。GitHub导入不会替你运行builder；不得添加指向缺失skills目录的catalog。生成分发物不提交到源码分支，GitHub分发目录/发布策略另行确定。参见[官方GitHub导入说明](https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github)。
+可在有权限时使用GitHub marketplace同步：Source填仓库URL，Path填包含清单的目录；本地条目路径相对所选marketplace根，`url`/`git-subdir`另按完整指南填写。当前三目录源码必须先构建才自包含；导入不会运行builder，不得添加指向缺失skills目录的catalog。生成分发物不提交到源码分支，GitHub分发目录/发布策略另行确定。参见[官方GitHub导入说明](https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github)。
+
+## 用户运行setup的候选验收
+
+官方可选字段为`extensions.com.openai.onboardingSkill`；0.2.2候选已在兼容清单声明`./skills/lody4dot-setup/SKILL.md`，路径相对插件根且技能随包提供。用户运行setup时，宿主会在新会话调用；若在当前会话安装插件，则可在当前会话调用。字段存在、builder通过和用户实际运行分别取证，不能声称自动安装、Dot环境准备或存储reset时会执行。
+
+安装与扫描通过后，分别验收新会话及当前安装会话中的用户运行setup。记录入口、插件版本/来源、技能实际读取和诊断结果；只在支持的执行环境与允许写入的prefix准备依赖。登录、注册machine、启动daemon、派发任务均需各自授权与条件，setup声明不扩大权限。无shell或不支持安装时应报告能力缺口并指向已有控制端，不将引导文本当成工具执行成功。当前没有该候选的UI安装或setup实际调用回执。
 
 ## 先做知识读取验收
 
@@ -33,11 +40,11 @@ Dot自己的云电脑、其创建的Codex云任务、已连接的本地电脑是
 
 ## 复用已准备的云控制端
 
-本轮已发布环境使用0.2.0及CLI0.107.2，启动检查和原任务只读对账已实测；0.2.1补充知识/接入材料，并改为非阻塞的CLI版本提示。默认安装输入仍为0.107.2，但实际版本不同或探测失败不阻塞；可显式`doctor.py --check-updates`查询npm latest，旧版或查询失败也只warn。现有准备入口可复用，不重配token或注册machine；正式源码版本与当前执行脚本分别记录。
+本轮正式环境已发布`ed9096b`的0.2.1，spec/observed均为12且无草稿；网络与运行变量readiness仍`unknown`。0.2.0启动检查和原任务只读对账保留为历史验收，0.2.2用户运行setup仍是候选。CLI默认安装输入仍0.107.2，实际版本不同或探测失败不阻塞；可显式`doctor.py --check-updates`查询npm latest，旧版或查询失败也只warn。复用已有准备入口，不重配token或注册machine；正式来源、实际执行脚本与版本分别记录。
 
 当选择Dot委托Codex任务时，使用已发布的目标环境。官方说明新任务有独立工作区，不恢复另一任务未提交的文件；保存VM状态默认最多7天可恢复是Codex Cloud规则，不是Dot存储reset hook。参见[Using Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud)。
 
-本会话的子Agent不构成独立云任务。已发现Codex CLI正式cloud exec入口，但本轮其cloud list所需chatgpt.com被代理拒绝，尚无经服务核实的Cloud ENV_ID，不能猜ID提交任务。当前没有插件导入界面工具；同实例子进程也不能替代独立任务。
+本会话的子Agent不构成独立云任务。Codex CLI有正式cloud exec入口；旧轮次cloud list曾遭代理拒绝，spec12本次已转为HTTP401。本地`codex login status`显示ChatGPT登录，但Cloud API本次未授权，不猜原因；尚无经服务核实的Cloud ENV_ID，不猜ID提交任务。当前没有插件导入界面工具；同实例子进程也不能替代独立任务。
 
 已有远端Agent也可成为另一控制端：本轮Darwin端实际通过其会话内置Lody MCP查询原会话，补齐了有限双端复验，不再要求为C07另建平台云任务。该结果不证明独立新任务的首次技能加载，后者仍属于C05，也不证明Dot自身调用。
 
@@ -65,4 +72,4 @@ status的execution/observation与CLI observe字段不同；自查所在会话时
 
 ## 结论如何分层
 
-记录知识读取、合法工具调用、跨端产物复验、实际宿主重建四项结果。任一项未执行保留未执行；Dot主动Reset、Codex会话事件或插件更新均不替代磁盘重建回调。真实记录仅保留在授权的私密位置，公开只记版本、来源、摘要匹配和具体缺口。
+分别记录知识读取、用户运行setup、合法工具调用、跨端产物复验、实际宿主重建。任一项未执行保留未执行；Dot官方电脑可在使用间隔保留状态，但没有永久保留、重置周期或重建hook契约。用户运行setup、Dot主动Reset、Codex会话事件或插件更新均不替代该回调。真实记录仅保留在授权的私密位置，公开只记版本、来源、摘要匹配和具体缺口。

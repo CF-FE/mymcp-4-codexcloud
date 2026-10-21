@@ -9,6 +9,7 @@ lody4dot的设计、接入、验收和配套图表集中在本目录；实际任
 | Dot、云任务、本地环境、会话引用和权限有什么区别 | [环境与权限指引](environment-model.md) |
 | 当前哪些能力已测、哪些有条件或未运行 | [支持矩阵](support-matrix.md) |
 | 如何安装、诊断和使用工具 | [插件说明](../../plugin/lody4dot/README.md)与[技能入口](../../skill/lody4dot/SKILL.md) |
+| 安装后运行setup有什么作用 | [setup技能](../../skill/lody4dot-setup/SKILL.md)及[入口说明](../../plugin/lody4dot/README.md#安装后运行-setup)；平台调用仍待实际验收 |
 
 ## 设计方案
 

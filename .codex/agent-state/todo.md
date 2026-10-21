@@ -21,7 +21,7 @@
 
 既有r2/d1尚缺旧截图对应任务的来源和版本等记录，按[验收流程](../../docs/lody4dot/fresh-task-acceptance.md)核对后继续T12；不为补旧字段重新创建任务、登录或查询资源。自主检索后实际读取可以证明基本读取，首次入口来源仍须如实区分。T10远端闭环与T11支持矩阵已完成，不把T09旧补证设为c2独立工作的隐藏总前置。个人workspace及已有Agent测试授权保留；本机只读限制不阻塞获准远端控制。
 
-当前源码及候选包为0.2.1，含非阻塞CLI版本提示；最终包已重建并通过127项回归，摘要见验证记录。0.107.2保留为知识/默认安装基线，版本差异不作为执行准入。最新正式来源仍为0.2.0的`d27f1a0e6ec2890cd60e301118fc925d32872d46`，最新观测spec/observed11、observations_current=true，网络/变量readiness仍unknown。实际0.2.1完整cloud-install及127项回归本次再次通过；源码/网络升级草稿已保存并逐字核对，requires_publish=true，正式生效仍另取回执。文档集中于docs/lody4dot/，入口见[索引](../../docs/lody4dot/README.md)。
+正式来源现为0.2.1的`ed9096b837edd31a4446a8db1d49159b42262fd5`，spec/observed12、observations_current=true，无草稿；网络/变量readiness仍unknown。源码随后开发0.2.2候选，增加官方用户setup薄入口，132项回归、31文件ZIP、移位bootstrap与来源对账通过；正式runtime未被候选替换。CLI0.107.2仍只是知识/默认安装基线，版本不同或不可查询仅warn。完整结果见文末spec12及[验证记录](../../docs/lody4dot/validation.md#spec12正式发布与022用户setup候选)。
 
 环境、任务、实例、Dot会话引用及协作空间/Lody权限分别识别，见[环境模型](../../docs/lody4dot/environment-model.md)。不承诺某客户端或网页必然能选到此环境；“本机ACP”指当前云执行实例，不是用户电脑。
 
@@ -29,7 +29,7 @@
 
 ## r2/d1历史执行记录（2026-10-20至2026-10-21较早轮次）
 
-以下历史段落的“当前”“本次”“仍”仅指各自轮次。较早正式版本、readiness、未运行项及草稿记录按当时事实保留；最新状态见开头概述、C任务表及文末spec9记录。
+以下历史段落的“当前”“本次”“仍”仅指各自轮次。较早正式版本、readiness、未运行项及草稿记录按当时事实保留；最新状态见开头概述、C任务表及文末spec12记录。
 
 ### 本轮规划复核
 
@@ -115,18 +115,18 @@ T11按开发契约完成支持范围和场景覆盖：20根/70路径数量、来
 
 | 任务 | 内容 | 状态与输入 |
 | --- | --- | --- |
-| C01 | 宿主与生命周期契约 | blocked（部分完成）；[宿主契约](../../docs/lody4dot/host-contracts.md)已核实9篇官方Help、Dot身份/共享连接/委托路线及既有Codex契约；Help正文200，开发站仍403。剩Dot自有环境生命周期hooks与实际集成证据，不再以产品身份未知阻塞已支持路线 |
-| C02 | 共享技能与协作知识 | done；既有共享协作导航及全新上下文3目标场景通过；0.2.1候选按官方资料更正Dot分类与共享权限说明。知识实现不证明Dot实际UI加载或工具调用 |
-| C03 | doctor上下文、范围与来源 | done；本轮41项诊断测试及真实离线inspect/显式latest查询通过；schema1保留早期checks、后续not_run、范围/来源和代理拒绝分层，来源仅证明本地文件一致性；版本提示见V01 |
+| C01 | 宿主与生命周期契约 | blocked（部分完成）；原9篇Help及本轮4篇官方Plugin/Dot资料HTTP200，portable/兼容清单、marketplace source及用户onboardingSkill入口已核实。未知Dot重置hook仅限制该分支；实际产品集成分别验收，见[宿主契约](../../docs/lody4dot/host-contracts.md) |
+| C02 | 共享技能与协作知识 | done；既有共享协作导航及全新上下文3目标场景通过，正式0.2.1已更正Dot分类与共享权限；0.2.2薄setup复用核心。知识实现不证明Dot实际UI加载或工具调用 |
+| C03 | doctor上下文、范围与来源 | done；42项诊断测试及真实包内inspect/来源检查通过，setup内容变化可见为mismatch。schema1保留范围、来源和真实失败分类；版本只提示，来源仅证明本地文件一致性 |
 | C04 | 平台安装边界 | blocked；Linux与统一边界通过52项相关测试，Win32/Darwin模拟退出5；真实Darwin/arm64报告无Node/npm，native安装前提缺失，WSL未提供，不宣布跨平台runtime支持 |
-| C05 | 按宿主分发与加载 | blocked；已有包/移位及Darwin读取回执，0.2.1构建/包内检查通过，本次spec11下完整准备与127项测试通过。正式来源仍d27f1a0；已发现codex cloud exec入口，但实际cloud list及chatgpt.com访问受代理拒绝，尚无经该服务核实的Cloud ENV_ID。独立新任务读取未验，原生注册不是云接入额外门槛 |
+| C05 | 按宿主分发与加载 | blocked（候选实现完成）；正式0.2.1已应用。0.2.2包含官方用户setup入口，132项回归及移位bootstrap/来源一致性通过。Cloud CLI入口存在，但cloud list返回401，虽本地ChatGPT登录也未证明API授权；尚无服务核实的ENV_ID，未提交任务。独立首次加载、UI导入和新/既有对话run setup调用仍未验 |
 | C06 | 最小交接整理/校验 | done；27项离线行为测试及分发回归通过，输入不改写、无网络/登录/派发；仅结构/声明一致性，真实性/ACL/产物内容未核验 |
 | C07 | 两独立宿主协作 | done（有限范围）；Linux控制端与Darwin解包/显式读技能宿主完成原产物交接，Darwin随后通过自身内置MCP只读查询原session/history，准确引用、273字节、SHA及challenge均匹配。新增1个明确只读模型回合，最终persisted/synced/completed且无activeTurns；证据为Agent调用回执与控制端核验，无底层tool trace，见[内置MCP验收](../../docs/lody4dot/validation.md#远端内置mcp只读查询与c07有限双端验收)。不扩为macOS受管安装、原生注册或Dot |
-| C08 | 初始化与恢复演练 | blocked；依赖缺失恢复、8项生命周期测试及身份/原会话对账已测；spec11下完整prepare检查再次通过，已记录当前内核启动时间与私密boot摘要供后续对比。环境变化不等于基础设施/磁盘重建或官方hook触发，首次独立启动仍未验 |
+| C08 | 初始化与恢复演练 | partial（Codex恢复子范围done）；本轮与spec11实测对比证明不同内核上下文，候选工作副本bootstrap仅doctor通过，新0700身份与原8条历史/273字节/SHA/challenge对账通过，0新模型回合且auth清理。准确VM/磁盘重建机制、Dot lifecycle与独立首次启动仍未证实，见[spec12记录](../../docs/lody4dot/validation.md#spec12正式发布与022用户setup候选) |
 | C09 | Dot合法接入 | blocked；官方候选路线已知，[Dot接入说明](../../docs/lody4dot/dot-acceptance.md)已提供。native UI上传/扫描、实际安装读取及工具调用仍未通过；共享插件连接不自动赋予CLI身份、本地文件或模型权限 |
 | C10 | 含Dot闭环与交付 | blocked；C07有限双端范围已完成，仍依赖C08真实重建及C09 Dot实际参与证据；0.2.1工具/知识和既有跨端业务范围分别交付 |
 
-已发布0.2.0的准备脚本复用bootstrap准备入口，启动指引要求读取技能并检查/修复缺失依赖；本轮按该入口实际执行只运行doctor并通过。它不证明平台首次送达或独立任务已加载。恢复路线继续采用幂等准备、入口检查、执行中保存和原任务对账，未知Dot自身存储hook不是所有接入路线的总前置。
+正式0.2.1的准备脚本复用bootstrap，启动指引要求读取技能并检查/修复缺失依赖。0.2.2候选的用户setup入口是新增的显式引导，不冒充平台首次送达、独立任务加载或重置hook。恢复继续采用幂等准备、入口检查、执行中保存和原任务对账；未知Dot hook不是所有路线的总前置。
 
 2026-10-21较早的c1实施轮次，正式规则已有三个OpenAI域名，但当时实例revision5仍只有5条Lody规则，三个官网请求CONNECT403；当时凭证ready且Lody可用。这些是旧轮次观测，不能作为本轮spec9的网络或变量readiness结论。
 
@@ -175,3 +175,13 @@ C07按卡中允许“执行节点属于其中一端”的范围完成：Linux CL
 按用户要求将14篇专属文档及9份图资源归入docs/lody4dot/，去掉冗余文件名前缀并新增README索引；内部与仓库入口链接同步更新，图源/SVG/配置/渲染脚本字节保持不变。AGENTS及docs/architecture.md固化项目文档按文件夹归档、配图归属、运行技能资源例外及移动更新引用的开发规范。
 
 升级草稿保存实际返回saved/requires_publish=true，读取revision18确认源码为本轮0.2.1验收及文档整理基线、mount保持mymcp-4-codexcloud，install/start与仓库文件逐字一致，原8条自定义规则保留且只追加chatgpt.com、learn.chatgpt.com；未改已有变量/凭证绑定。最终交接仅同步包含本记录的完整HEAD，具体固定SHA以配置回执为准，已测工具与候选包字节不变。这里是新源码/新目的地的升级草稿，不将此前发布旧固定ref当成该升级已生效；无需重配token。
+
+## spec12正式生效与0.2.2 setup候选（本轮）
+
+用户确认发布后，实际正式来源为ed9096b/0.2.1，spec/observed12且观测当前，无草稿；readiness仍unknown。开始编辑前0.2.1启动检查通过，随后实现0.2.2候选。原升级不再待发布，不重新添加token或保存相同配置。四篇官方开发/管理/Dot资料HTTP200，onboardingSkill、兼容清单与source规则已核实；Dot电脑可跨使用间隔保状态，但没有永久或周期reset承诺。
+
+C08有限恢复范围取得新证据：本次内核启动08:55:43Z，晚于spec11真实观测08:01:10Z且boot摘要不同；旧证据和同锁runtime可读。对账时工作副本已开发未提交0.2.2，bootstrap仅doctor通过，不冒称纯正式源码安装或install reused。新0700私密身份单次认证，原session/turn与8条history、273字节、SHA/challenge全部匹配，persisted/synced/completed且无activeTurns，0新模型回合、auth已清理。摘要在忽略的dist/lody4dot-environment-checks/spec12/；准确VM/磁盘重建机制、Dot lifecycle、独立首次加载仍未证实。
+
+0.2.2候选增加官方用户run setup入口，唯一薄技能复用核心与bootstrap，清单目标、打包收集及receipt允许范围同步。132项全量回归和结构检查通过；15项构建、42项诊断覆盖新增入口资源/路径拒绝、旧输出保留及内容修改可见。独立审查指出的额外setup资源契约不一致已修复。最终ZIP31文件、110840字节，CRC/逐文件摘要通过，移位包bootstrap仅doctor与来源consistent；旧0.2.1包未改。完整摘要见[验证记录](../../docs/lody4dot/validation.md#spec12正式发布与022用户setup候选)。
+
+剩余可恢复条件：C05 Cloud CLI虽有创建入口，cloud list现HTTP401；本地ChatGPT登录不等于该API授权，具体原因未知，缺服务核实的Cloud ENV_ID，未提交任务。C05/C09原生UI安装及新/既有对话run setup无可调用界面，保持未验；不伪造hook/身份或重复派发。C10等待Dot真实参与及剩余恢复证据，T09/T12旧截图在原任务补来源。没有把未知hook作为所有路线的前置，也没有将同实例子Agent当新宿主。本轮文档继续按项目目录归档。

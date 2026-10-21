@@ -28,9 +28,11 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安装、只读诊断、显式认证和自包含打包。当前 Linux 云机已验证安装、真实授权和完整目录；通过已有远端 Codex Agent 完成了创建、执行、继续验证和持久化观察，并校验 Agent 二次读回的产物字节。控制端无需本机 daemon。已收到用户的安装、认证、目录和手动读取截图，仍需补齐入口来源与版本等回执；本机 Codex 执行的只读状态限制单独保留。见 [产品方案](docs/lody4dot/plan.md)、[开发契约](docs/lody4dot/development.md)、[验证记录](docs/lody4dot/validation.md) 和 [任务队列](.codex/agent-state/todo.md)。
 
-正式云环境来源仍固定为0.2.0的`d27f1a0`；最新运行配置为revision11。当前工作副本0.2.1的完整准备脚本与127项测试通过，正式配置、实际工作副本和升级草稿分别记录。此前新私密身份沿原Lody引用只读对账的结果保留，但不证明独立新任务加载或整机重建。平台网络/变量readiness仍为unknown，实际连接与认证结果单独记录。
+本次正式云环境已发布到0.2.1的`ed9096b`，运行配置spec/observed12且观测当前，无待发布草稿。平台网络/变量readiness仍为unknown，实际结果单独记录：四篇官方开发/管理文档HTTP200；Cloud任务API返回401，虽本机报告ChatGPT已登录，仍未取得Cloud任务服务授权。没有提交新云任务或猜环境ID。
 
-当前源码候选为0.2.1：补齐官方Dot知识、接入说明与候选分发材料，并将CLI版本检查改为非阻塞提示。0.107.2保留为知识及默认可复现安装基线；实际版本不同或查询失败只warn。显式`doctor.py --check-updates`可查询npm latest，默认inspect/启动检查离线，不自动升级。真实命令、身份、权限和安装完整性问题按实际结果处理，受管runtime仅支持Linux。构建与回归结果见[验证记录](docs/lody4dot/validation.md)，实际支持范围见[支持矩阵](docs/lody4dot/support-matrix.md)。现有云准备入口可复用；Dot安装及独立控制端按[接入运行单](docs/lody4dot/dot-acceptance.md)验收。Review上游Viewer缺失、旧截图入口补证及Dot自有存储hooks分别保留缺口。
+当前源码候选0.2.2增加官方用户运行setup的[薄入口技能](skill/lody4dot-setup/SKILL.md)，复用核心知识与bootstrap；它不是安装自动执行或存储重置hook。132项测试、自包含打包、移位检查与包来源对账通过，平台原生调用尚未验收。正式0.2.1已有的CLI版本策略继续保留：版本不同、探测或显式latest查询失败只warn，默认离线，不自动升级。受管runtime仅支持Linux，真实命令、身份、权限和完整性错误分别处理。见[验证记录](docs/lody4dot/validation.md)、[支持矩阵](docs/lody4dot/support-matrix.md)及[Dot接入运行单](docs/lody4dot/dot-acceptance.md)。
+
+本次与上次实际观测相比，内核启动时间和私密boot摘要已改变；现有依赖检查、新私密身份及原会话/产物只读恢复对账通过，0新模型回合。它证明新的内核上下文下可恢复原任务关联，不证明具体VM身份、磁盘重建机制、Dot hook或独立新任务首次加载。Review上游Viewer、旧截图来源及Dot实际接入仍按各自缺口跟进。
 
 此前通过Lody原生附件将0.2.0包交给Darwin/arm64已有Agent，解包后的receipt/技能摘要匹配，273字节产物二次读回及随机challenge验证通过；未独立核验远端原始ZIP字节。随后远端通过实际暴露的内置MCP查询同一会话，原引用、产物字节与challenge再次匹配，补齐有限双端控制/复验范围。缺少PATH中的Node/npm/CLI不等于缺少宿主内置工具；macOS受管安装、真实云主机重建及Dot接入仍未验证。
 
