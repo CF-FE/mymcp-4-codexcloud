@@ -4,6 +4,8 @@
 
 官方已确认Dot是ChatGPT中的常驻Agent产品/服务；通用Agent角色与该产品名称并非互斥。建模时将Dot及其工作上下文，与Dot云电脑、它创建的Codex云任务环境和获授权本地电脑分别关联；不把Dot当任意Agent或单台机器的别名。多宿主协作的具体方案见[开发方案](collaboration-development.md)。
 
+结合本次资料空间讨论，开发方案已原位修订为[c3](collaboration-development.md#0-c3辩证结论与本轮修订)：保留本页既有对象分工，允许直接复用公子已试通的Dot资料中转；不把纯Cloud/Space对象塞入Lody专用schema1。资料交接的[文档记录卡](space-cloud-handoff.md#5-资料交接记录先用文档约定)与本页示意JSON均不是当前`handoff.py`可执行输入。
+
 ## 建模前先检验这些假设
 
 现有指引将容易混淆的对象分别识别，这一方向成立；进一步设计时，还要处理以下反例。

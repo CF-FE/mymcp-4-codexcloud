@@ -7,6 +7,8 @@ lody4dot的设计、接入、验收和配套图表集中在本目录；实际任
 | 想了解什么 | 阅读入口 |
 | --- | --- |
 | Dot、云任务、本地环境、会话引用和权限有什么区别 | [环境与权限指引](environment-model.md) |
+| 对外分享Chat、Work、Dot、云电脑、Codex Cloud、资料空间与侧栏图标的完整概念 | [产品协作参考（分享版）](product-collaboration-reference.md) |
+| 把本次对话结论交给继续开发的云端任务 | [资料空间与Cloud协作交接](space-cloud-handoff.md) |
 | 当前哪些能力已测、哪些有条件或未运行 | [支持矩阵](support-matrix.md) |
 | 如何安装、诊断和使用工具 | [插件说明](../../plugin/lody4dot/README.md)与[技能入口](../../skill/lody4dot/SKILL.md) |
 | 安装后运行setup有什么作用 | [setup技能](../../skill/lody4dot-setup/SKILL.md)及[入口说明](../../plugin/lody4dot/README.md#安装后运行-setup)；平台调用仍待实际验收 |
@@ -17,7 +19,7 @@ lody4dot的设计、接入、验收和配套图表集中在本目录；实际任
 | --- | --- |
 | [产品方案 r2](plan.md) | 目标、范围、取舍和交付定义 |
 | [开发契约 d1](development.md) | 实现边界、接口、T01–T12任务与验收 |
-| [多宿主协作方案 c2](collaboration-development.md) | 经Lody组织Dot、云端及本地协作的技术路线 |
+| [多宿主协作方案 c3](collaboration-development.md) | 保留Lody主干，结合已验证Dot资料中转、schema1边界与回存完成口径的辩证修订 |
 | [C01–C10任务卡](collaboration-tasks.md) | 多宿主方案的实施步骤与证据要求 |
 | [环境架构设计参考](environment-design.md) | 对象关系、记录模板及架构评审问题 |
 

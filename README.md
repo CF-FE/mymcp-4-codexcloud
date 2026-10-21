@@ -18,7 +18,9 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 云任务、运行实例、本地环境、Dot、会话引用和协作空间权限的区别，见[环境与权限指引](docs/lody4dot/environment-model.md)：先读一分钟速查和执行链路，再按问题查表。跨环境协作的对象关系、记录模板与评审清单见[架构设计参考](docs/lody4dot/environment-design.md)。
 
-多处加载安装、经Lody协作及环境初始化/恢复，见[多宿主协作开发方案c2](docs/lody4dot/collaboration-development.md)与[C01–C10任务卡](docs/lody4dot/collaboration-tasks.md)。官方已确认Dot是ChatGPT中的常驻Agent产品，拥有自己的云电脑，也可创建独立的Codex云任务或使用获授权的本地电脑；三种执行位置分别建模。插件连接可在已授予范围内跨产品共享，本地访问、CLI身份和模型凭证另行核对。来源见[宿主契约](docs/lody4dot/host-contracts.md)，实现与真实验收见[任务队列](.codex/agent-state/todo.md)。
+多处加载安装、经Lody协作及环境初始化/恢复，见[多宿主协作开发方案c3](docs/lody4dot/collaboration-development.md)与[C01–C10任务卡](docs/lody4dot/collaboration-tasks.md)。c3结合产品对话与实测：保留Lody主干，复用公子已试通的Dot资料中转，明确schema1与资料回存的边界；本轮仅迭代文档。官方已确认Dot是ChatGPT中的常驻Agent产品，拥有自己的云电脑，也可创建独立的Codex云任务或使用获授权的本地电脑；三种执行位置分别建模。插件连接可在已授予范围内跨产品共享，本地访问、CLI身份和模型凭证另行核对。来源见[宿主契约](docs/lody4dot/host-contracts.md)，实现与真实验收见[任务队列](.codex/agent-state/todo.md)。
+
+本次完整讨论沉淀为两种阅读入口：[产品协作参考（分享版）](docs/lody4dot/product-collaboration-reference.md)讲解概念、云环境、资料空间、MCP与图标；[云端任务交接版](docs/lody4dot/space-cloud-handoff.md)对照仓库实现，给出方案取舍、最小优化与验收边界。主方案仍为上面的c3，运行状态仍只在任务队列维护。
 
 ## 当前状态
 

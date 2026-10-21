@@ -1,6 +1,6 @@
 # lody4dot 多宿主协作任务卡
 
-本页定义C01–C10的静态开发任务，服从[c2多宿主协作开发方案](collaboration-development.md)。本页不保存实时状态；进度、执行证据和阻塞仅在[任务队列](../../.codex/agent-state/todo.md)维护。已有工具的实际用法见[插件说明](../../plugin/lody4dot/README.md)和[交接说明](handoff.md)；命令与验收条件不代表真实宿主或业务检查已经通过。
+本页定义C01–C10的静态开发任务，服从[c3多宿主协作开发方案](collaboration-development.md)。c3保留原任务依赖和插件验收；公子已试通的Dot资料中转不需要重复验证，但不代替C09/C10的插件加载、实际Lody调用与跨端证据。本轮没有新增正式任务或改变完成状态。本页不保存实时状态；进度、执行证据和阻塞仅在[任务队列](../../.codex/agent-state/todo.md)维护。已有工具的实际用法见[插件说明](../../plugin/lody4dot/README.md)和[交接说明](handoff.md)；命令与验收条件不代表真实宿主或业务检查已经通过。
 
 目标是让多个实际安装宿主通过Lody服务协作。Dot是官方确认的ChatGPT always-on agent产品，其自有云电脑、它创建的Codex云任务与授权本地电脑分别定位；Agent仍是主体类别，不把产品Dot作通用别名。控制端、执行端和混合角色分别验收，不将控制端接入收缩为全部目标，也不把安装成功升级为machine注册或worker可用。
 
