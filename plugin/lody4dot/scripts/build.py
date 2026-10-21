@@ -17,11 +17,11 @@ from urllib.parse import unquote, urlsplit
 
 RECEIPT = ".lody4dot-build.json"
 TOOL = "lody4dot-build"
-SCRIPT_NAMES = {"install.py", "doctor.py", "auth.py", "common.py", "build.py", "platform_support.py"}
+SCRIPT_NAMES = {"install.py", "doctor.py", "auth.py", "common.py", "build.py", "platform_support.py", "handoff.py"}
 RUNTIME_NAMES = {"package.json", "package-lock.json", "build-policy.json"}
 REQUIRED = (
     "README.md", ".codex-plugin/plugin.json", "scripts/install.py",
-    "scripts/doctor.py", "scripts/auth.py", "scripts/common.py", "scripts/platform_support.py", "runtime/package.json",
+    "scripts/doctor.py", "scripts/auth.py", "scripts/common.py", "scripts/platform_support.py", "scripts/handoff.py", "runtime/package.json",
     "runtime/package-lock.json", "runtime/build-policy.json",
 )
 SKILL_REQUIRED = (
