@@ -8,7 +8,7 @@
 | [environment-lifecycle.mmd](environment-lifecycle.mmd) | [SVG](environment-lifecycle.svg) | 配置应用与技能读取怎样分别取证 |
 | [environment-permissions.mmd](environment-permissions.mmd) | [SVG](environment-permissions.svg) | 授权范围内的请求怎样核实访问结果 |
 
-2026-10-21实际渲染运行库为Mermaid11.17.2，配合系统Chromium；临时工具集包含Mermaid CLI11.12.0，依赖未加入插件或仓库运行环境。配置见[mermaid-config.json](mermaid-config.json)。CLI的file页面加载受当前浏览器策略限制，本次使用本地HTTP页面调用同一Mermaid运行库生成SVG；未修改浏览器管理策略。
+2026-10-21实际渲染运行库为Mermaid11.17.2，配合系统Chromium及Puppeteer Core24.31.0；工具装在自有临时目录，依赖未加入插件或仓库运行环境。配置见[mermaid-config.json](mermaid-config.json)。CLI的file页面加载受浏览器策略限制，本次使用本地HTTP页面调用Mermaid API生成SVG；未修改浏览器管理策略。总览图已同步修正Dot与Agent的区分。
 
 支持Mermaid CLI正常加载页面的环境可按下列方式重新生成，源文件与配置是维护输入：
 

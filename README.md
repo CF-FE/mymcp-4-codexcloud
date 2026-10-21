@@ -16,6 +16,8 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 云任务、运行实例、本地环境、Dot、会话引用和协作空间权限的区别，见[环境与权限指引](docs/lody4dot-environment-model.md)：先读一分钟速查和执行链路，再按问题查表。跨环境协作的对象关系、记录模板与评审清单见[架构设计参考](docs/lody4dot-environment-design.md)。
 
+多处加载安装、经Lody协作及环境初始化/恢复的下一轮设计，见[多宿主协作开发方案](docs/lody4dot-collaboration-development.md)与[C01–C10任务卡](docs/lody4dot-collaboration-tasks.md)。Dot按用户所指的ChatGPT云服务作为独立宿主；其官方接入与存储事件仍待核实。新方案不代表这些能力已经实现。
+
 ## 当前状态
 
 已导入 [Gitee MCP 网关](mcp/gitee/README.md)：保留原源码、部署文档、验收资料和历史交付包，并记录来源与文件校验清单。文件导入与静态检查已验证；原服务的依赖安装、OAuth/Gitee 连接和实际运行尚未验证。另有 [lody4dot 技能](skill/lody4dot/SKILL.md) 和 [分发工具](plugin/lody4dot/README.md)。

@@ -1,13 +1,13 @@
 %% 2026-10-21：调用关系示意，不是物理部署图或模型托管位置说明。
-%% Dot 仅沿用本会话的 Agent 约定；Agent 决策与工具操作的位置分别识别。
+%% Dot 按用户说明指 ChatGPT 云服务，是宿主而非 Agent 别名；其接入另待核实。
 %% 实线表示本次已验证的调用链；虚线表示有条件接入，不代表本次已接入。
 %% Lody workspace 是目标资源范围，不是请求转发节点；连线不表示权限继承。
 flowchart TB
     accTitle: 本次命令在哪里执行
-    accDescr: 用户通过客户端向当前会话的 Agent 或 Dot 提出目标，Agent 调用云工具，在云执行实例运行 Lody CLI，经 Lody 服务向选定工作区中的已有远端 machine 和 Agent 派发。虚线所示本地和协作空间接入有条件，本次未由该链路接入；图不推断模型托管位置或权限继承。
-    user["用户使用客户端"] -->|提出目标| dot["会话中的 Agent / Dot"]
-    dot -->|调用云工具| runtime["云实例 / Lody CLI"]
+    accDescr: 用户通过客户端向当前会话的 Agent 提出目标，Agent 调用云工具，在云执行实例运行 Lody CLI，经 Lody 服务向选定工作区中的已有远端 machine 和 Agent 派发。Dot 是用户所指的 ChatGPT 云宿主，不是 Agent 别名，具体接入另待核实。虚线所示本地和协作空间本次未由该链路接入；图不推断模型托管位置或权限继承。
+    user["用户使用客户端"] -->|提出目标| agent["会话中的 Agent"]
+    agent -->|调用云工具| runtime["云实例 / Lody CLI"]
     runtime -->|账户认证与请求| service["Lody 服务"]
     service -->|按 workspace 选择目标| remote["已有远端机器上的 Agent"]
-    dot -.->|需另行接入工具| local["用户电脑的本地工具"]
-    dot -.->|需工具与对象权限| space["协作空间中的对象"]
+    agent -.->|需另行接入工具| local["用户电脑的本地工具"]
+    agent -.->|需工具与对象权限| space["协作空间中的对象"]
