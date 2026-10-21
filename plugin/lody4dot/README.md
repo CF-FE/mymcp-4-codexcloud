@@ -1,8 +1,8 @@
 # lody4dot
 
-为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码候选为`0.2.1`，正式云环境当前来源为`0.2.0`；`0.107.2`是已验证知识与默认可复现CLI安装基线，不是唯一允许运行的版本。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际CLI的其他运行要求另行核对。
+为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码候选为`0.2.2`，正式云环境当前来源为`0.2.1`；`0.107.2`是已验证知识与默认可复现CLI安装基线，不是唯一允许运行的版本。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际CLI的其他运行要求另行核对。
 
-能力源码在仓库的 `skill/lody4dot/`；本目录负责运行时锁定和分发，不新增 MCP 服务。Lody 已有 MCP 只有在宿主提供有效 session/workspace/machine 上下文时才使用，不能将其内部入口当作独立通用服务。
+核心能力源码在仓库的 `skill/lody4dot/`，薄setup入口在`skill/lody4dot-setup/`；本目录负责组合、运行时锁定和分发，不新增 MCP 服务。Lody 已有 MCP 只有在宿主提供有效 session/workspace/machine 上下文时才使用，不能将其内部入口当作独立通用服务。
 
 多宿主知识与工具基础已提供，具体宿主的加载、控制与执行能力仍分别验收。OpenAI官方确认Dot是ChatGPT中的always-on agent产品，有自己的云电脑；它也能向预先配置的Codex云环境创建任务，或使用另行授权连接的本地电脑。这些执行位置分别核对，Dot不作为任意Agent的通用别名。macOS、WSL2和原生Windows未因此进入本插件实际安装支持列表，安装成功也不自动注册machine或启用worker。
 
@@ -55,6 +55,14 @@ python3 plugin/lody4dot/scripts/doctor.py --prefix /workspace/.tools/lody4dot --
 这些提示本身不改变成功退出码：其他必要检查通过时仍退出0；版本不同也不构成“语义不兼容”的证据。真实命令、身份/权限、Node/OS、依赖或安装完整性失败仍保留原有错误码和分类，`control/task/worker`所需证据不会被版本warn替代。参数或输出确实不兼容时，按实际错误核对帮助与适配，不按版本号预先拦截。
 
 ## 环境准备与恢复检查
+
+### 安装后运行 setup
+
+0.2.2候选在兼容清单`.codex-plugin/plugin.json`中声明官方`extensions.com.openai.onboardingSkill`，从插件根指向`./skills/lody4dot-setup/SKILL.md`。它用于用户安装后主动运行setup时，引导Agent识别实际执行位置，选择已有工具或检查/准备本端依赖；通用知识仍由核心技能维护。包内入口可移位，源码入口为`skill/lody4dot-setup/SKILL.md`。
+
+官方说明setup会在新对话，或安装发生的现有对话中调用技能。两种平台原生调用均须实际验收，本仓库构建通过不代替UI安装或调用。它不是安装时自动执行，也不是环境准备、存储重置或每次任务启动hook。当前0.2.1正式环境已有bootstrap入口，无需为这个候选重复发布或重配token。依据见[官方打包指南](https://developers.openai.com/plugins/build/plugins)。
+
+### 依赖准备与启动检查
 
 `bootstrap.py`复用现有受管安装器和doctor，把准备阶段与启动检查分开。在仓库根目录运行；下面prefix示例用于当前Linux云实例，其他端必须使用自己的实际安装位置：
 
@@ -167,8 +175,10 @@ python3 scripts/check_repository.py
 
 已对本任务自有、无后代的空闲会话完成改名往返、归档和恢复；原标题及未归档状态已还原，6条可见历史、最新回合、空队列及空活动列表保持一致。该元数据验收不扩大为级联或执行进程恢复成功。
 
-`0.2.0`增加多宿主协作参考、诊断来源与范围、离线handoff校验和依赖bootstrap；CLI与锁定输入保持不变。正式云环境已发布到0.2.0，当前metadata也对应0.2.0；平台readiness未知、依赖inspect通过、身份与原会话只读对账分别解释，不扩大为新独立任务加载、真实重建或worker验收。具体证据统一在仓库任务队列维护。
+`0.2.0`增加多宿主协作参考、诊断来源与范围、离线handoff校验和依赖bootstrap；CLI与锁定输入保持不变。历史发布及验证记录在仓库任务队列维护，平台readiness、依赖、身份及原会话对账分别解释。
 
-`0.2.1`候选修正Dot官方身份、共享连接与运行位置知识，补充随包Dot接入指引，并将CLI实际版本作为非阻塞提示、增加显式更新查询。默认安装与知识基线仍为0.107.2。Linux以外安装、ChatGPT web导入、Dot工具接入、独立多端闭环和真实宿主重建各自保留验收前提，知识和工具测试不代替这些证据。本轮修改后仍需最终重建候选，旧候选大小/摘要不适用于新包；本次修订不需要重配token或重复保存相同云准备草稿，也不自动升级已发布环境。
+`0.2.1`已正式发布，修正Dot官方身份、共享连接与运行位置知识，补充随包Dot接入指引，并将CLI实际版本作为非阻塞提示、增加显式更新查询。默认安装与知识基线仍为0.107.2。
+
+`0.2.2`候选只增加官方用户setup入口及其分发/来源校验，复用现有bootstrap，保留受支持的兼容清单；尚未迁移为portable根`plugin.json`。Linux以外受管安装、ChatGPT web导入、原生setup调用、Dot工具接入及完整重建各自保留验收前提，知识和工具测试不代替这些证据。候选不自动升级正式环境，也不改变CLI锁定输入。
 
 官方依据：[Dot入门](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot)、[Dot权限FAQ](https://help.openai.com/en/articles/20001529-dots-privacy-security-and-safety-faqs)、[Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud)、[Plugins](https://help.openai.com/en/articles/20001256-plugins-in-chatgpt)、[GitHub marketplace导入](https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github)、[Skills](https://help.openai.com/en/articles/20001066-skills-in-chatgpt)（读取于2026-10-21）。

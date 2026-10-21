@@ -32,6 +32,7 @@ SKILL_REQUIRED = (
     "SKILL.md", "references/command-index.json", "references/sources.json",
     "references/help-snapshot.json",
 )
+ONBOARDING_SKILL = "./skills/lody4dot-setup/SKILL.md"
 MARKDOWN_LINK = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 MARKDOWN_DEFINITION = re.compile(r"(?m)^ {0,3}\[[^\]]+\]:\s*(<[^>\r\n]+>|\S+)")
 SENSITIVE_NAME = re.compile(
@@ -95,6 +96,8 @@ def check_source_tree(root: Path, kind: str) -> list[Path]:
             allowed = label == "SKILL.md" or (
                 relative.parts[0] == "references" and path.suffix in {".md", ".json"}
             )
+        elif kind == "setup skill":
+            allowed = label == "SKILL.md"
         else:
             allowed = (
                 label in {"README.md", ".codex-plugin/plugin.json"}
@@ -181,20 +184,26 @@ def build(repo: Path, output: Path) -> dict:
         raise BuildError("Output must not be a symlink")
     output = output.absolute()
     skill = repo / "skill/lody4dot"
+    setup_skill = repo / "skill/lody4dot-setup"
     plugin = repo / "plugin/lody4dot"
-    for source in (skill, plugin):
+    for source in (skill, setup_skill, plugin):
         resolved = output.resolve()
         if resolved == source.resolve() or resolved.is_relative_to(source.resolve()) or source.resolve().is_relative_to(resolved):
             raise BuildError("Output must be separate from the source trees")
     skill_files = check_source_tree(skill, "skill")
+    setup_files = check_source_tree(setup_skill, "setup skill")
     plugin_files = check_source_tree(plugin, "plugin")
-    for source, required in ((skill, SKILL_REQUIRED), (plugin, REQUIRED)):
+    for source, required in ((skill, SKILL_REQUIRED), (setup_skill, ("SKILL.md",)), (plugin, REQUIRED)):
         for relative in required:
             if not (source / relative).is_file():
                 raise BuildError(f"Missing required source: {relative}")
     manifest = read_json(plugin / ".codex-plugin/plugin.json")
     if not isinstance(manifest, dict) or manifest.get("name") != "lody4dot" or manifest.get("skills") != "./skills":
         raise BuildError("Plugin manifest must declare lody4dot with skills ./skills")
+    extensions = manifest.get("extensions")
+    openai = extensions.get("com.openai") if isinstance(extensions, dict) else None
+    if not isinstance(openai, dict) or openai.get("onboardingSkill") != ONBOARDING_SKILL:
+        raise BuildError("Plugin manifest must point onboardingSkill to the packaged lody4dot-setup skill")
     check_owned_output(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     staging = Path(tempfile.mkdtemp(prefix=".lody4dot-build-", dir=output.parent))
@@ -202,6 +211,7 @@ def build(repo: Path, output: Path) -> dict:
     try:
         for source, selected, prefix in (
             (skill, skill_files, Path("skills/lody4dot")),
+            (setup_skill, setup_files, Path("skills/lody4dot-setup")),
             (plugin, plugin_files, Path(".")),
         ):
             for path in selected:

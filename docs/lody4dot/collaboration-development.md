@@ -1,6 +1,6 @@
 # lody4dot 多宿主协作开发方案
 
-版次：c2，2026-10-21。用户已授权持续实施；本方案定义范围、接口与验收条件，实际进度仅在任务队列维护。0.2.0已提供共享知识、诊断、平台边界、bootstrap和handoff；0.2.1候选补充Dot官方契约及接入说明。已核实的产品路线可继续实施，Dot真实接入与多端闭环仍需各自回执，整体目标保持部分交付。
+版次：c2，2026-10-21。用户已授权持续实施；本方案定义范围、接口与验收条件，实际进度仅在任务队列维护。正式0.2.1已有共享知识、诊断、平台边界、bootstrap、handoff及Dot接入说明；0.2.2候选增加官方用户setup入口。已核实的产品路线可继续实施，Dot真实接入与多端闭环仍需各自回执，整体目标保持部分交付。
 
 ## 1. 目标、依据与完成定义
 
@@ -63,6 +63,7 @@
 | 模块及源码位置 | 负责 | 数据与副作用边界 |
 | --- | --- | --- |
 | 技能核心 `skill/lody4dot/` | 任务路由、命令事实、运行位置判断、协作和核验 | 知识唯一源码；不持有账号、全局任务状态或常驻进程 |
+| setup入口 `skill/lody4dot-setup/` | 用户运行插件setup后，按执行器选择已有工具、依赖检查或获授权的准备 | 薄技能只引用核心并复用bootstrap；不持有身份或业务状态，不监听存储事件 |
 | 分发 `plugin/lody4dot/scripts/build.py` | 收集核心与已核实的宿主接入材料、包完整性 | 仅生成自包含分发物及已有receipt；不得收集登录态、机器配置和日志 |
 | 宿主接入材料 `plugin/lody4dot/hosts/dot.md` | 描述Dot接入路线、共享连接、Codex委派、本地授权和恢复边界 | 随包自包含；每条路线按实际入口验证，不推测通用清单字段 |
 | 安装 `install.py`及`platform_support.py` | 锁定依赖、平台路径/锁/激活/检查、失败恢复 | 只写所属安装prefix，复用已有事务；不登录、不注册machine、不启动host |
@@ -76,6 +77,8 @@
 依赖方向：宿主材料和分发使用共享核心；安装/诊断/认证复用窄平台边界；bootstrap组合已有安装与诊断；交接记录引用原生业务结果；Agent通过已验证CLI或工具调用Lody。Lody业务实现不依赖本插件目录，技能不反向依赖某宿主的绝对路径。宿主专用材料按实际契约增加，不预建通用框架。
 
 安装身份、宿主会话、Lody会话和机器分别识别。首轮复用已有receipt，不强制新增安装ID，更不得用插件关联号替代Codex受保护的`installation_id`。
+
+局部边界记录（BOUNDARY_NOTE）：官方兼容清单增加`extensions.com.openai.onboardingSkill`，由原builder收集唯一的`skill/lody4dot-setup/`，打入`skills/lody4dot-setup/`；包内来源校验只增加该入口文件。保留：核心知识、安装prefix、身份和Lody业务状态的所有权及依赖方向；准备仍由bootstrap组合原工具，setup不增加自动登录或业务重发。验证：移位后的清单目标及核心引用可读，缺失/包外/错误目标、symlink及被修改产物均拒绝，新入口内容修改在receipt对账中可见。
 
 插件连接可按官方规则跨Dot、ChatGPT、Work与Codex复用，但skills安装/管理可能按产品分别进行。共享连接不证明任务已经读取知识，也不复制CLI登录目录、浏览器会话、模型凭证、本地文件访问或全部协作空间权限；实际业务仍受服务ACL和动作授权约束。
 
@@ -143,6 +146,8 @@ doctor以附加字段`observed_at`、`verified_scope`、`control_environment`与
 ## 6. 初始化、hooks与存储恢复
 
 ### 6.1 已知入口与更优选择
+
+官方打包指南现已核实`extensions.com.openai.onboardingSkill`（兼容清单同样支持）：用户安装后运行setup时调用包内技能，新对话和安装所在现有对话分别验收。0.2.2候选采用这个已知入口，复用既有bootstrap而不等待未知Dot存储hook。它不自动在安装、任务创建或电脑重置时执行。主包继续使用官方支持的兼容格式；新portable根清单可另行迁移，不为本次薄入口增加双份身份配置。官方资料及未知边界见[宿主契约](host-contracts.md)。
 
 既有云准备与启动指引是可复用入口。源码中的`bootstrap.py`将准备和运行检查统一为实际可调用的接口：默认inspect；`--prepare`调用锁定安装再inspect；`--repair-missing`只在诊断明确缺少所属受管运行时后调用安装并复检。它不登录、不启daemon、不恢复模型任务，不注册Dot存储事件。正式环境是否已绑定这些源码入口，须看配置及实例应用回执，不能由仓库文件推断。
 
@@ -231,9 +236,9 @@ python3 plugin/lody4dot/scripts/build.py --output /tmp/lody4dot-candidate
 
 ## 9. 迁移、发布与回滚
 
-本轮源码候选为0.2.1，包含知识、宿主说明和用户授权的V01版本提示修订；`0.107.2`保留为知识与默认可复现安装基线，实际Lody执行不设版本号门槛。正式已发布云环境与当前metadata来源为0.2.0。发布后的准备/启动配置无需为相同依赖再次保存草稿或重配token。新宿主包来自同一核心源码，分别记录格式、OS/架构、角色、源码与实际插件/CLI版本、锁和包摘要；CLI版本未知只告警并保留未知。源码候选、正式发布和实例实际版本分别取证；知识更新可复用同锁CLI，不能把知识版本和运行时目录强制一一绑定。
+本轮正式云环境为0.2.1，源码候选0.2.2增加用户setup入口；用户授权的V01策略继续适用。`0.107.2`保留为知识与默认可复现安装基线，实际Lody执行不设版本号门槛。发布后的准备/启动配置无需为相同依赖再次保存草稿或重配token。新宿主包来自同一核心源码，分别记录格式、OS/架构、角色、源码与实际插件/CLI版本、锁和包摘要；CLI版本未知只告警并保留未知。源码候选、正式发布和实例实际版本分别取证；知识更新可复用同锁CLI，不能把知识版本和运行时目录强制一一绑定。
 
-官方支持GitHub marketplace导入和日常同步，但导入只读取内容，不运行本仓库builder。三目录源码需构建后才能含完整技能；不新增catalog指向未构建的`plugin/lody4dot/`，也不提交生成分发物。首轮交付Codex0.163.0格式的自包含ZIP候选，构建结果、资源数量和哈希以交付回执为准；ChatGPT web上传/扫描/安装另验。完整[Plugin Management指南](https://learn.chatgpt.com/docs/enterprise/plugin-management)精确GET仍CONNECT403，未知ZIP包装层级和source细节不补猜。候选包不声明MCP或预设app ID，不以`.app.json`绕过Desktop only限制。
+官方支持GitHub marketplace导入和日常同步，但导入只读取内容，不运行本仓库builder。三目录源码需构建后才能含完整技能；不新增catalog指向未构建的`plugin/lody4dot/`，也不提交生成分发物。首轮交付官方支持兼容清单的自包含ZIP候选，构建结果、资源数量和哈希以交付回执为准；ChatGPT web上传/扫描/安装另验。本轮[Plugin Management指南](https://learn.chatgpt.com/docs/enterprise/plugin-management)及打包指南均HTTP200，已核实source和onboardingSkill；ZIP外层包装的UI接受规则仍未知。候选不声明MCP或预设app ID，不以`.app.json`绕过Desktop only限制。
 
 先构建、解包校验和无账户测试，再在单个自有目标验收，最后按真实宿主更新对应安装或配置。发布配置、实例应用、实际读取和业务结果分别取证。未经验证的宿主不进入“支持”列，不自动追latest，不为得到Viewer而换不匹配文件或放宽校验。
 
@@ -243,8 +248,8 @@ python3 plugin/lody4dot/scripts/build.py --output /tmp/lody4dot-candidate
 
 **这份方案可直接交接，基础工具与官方候选路线已明确；全范围自动交付仍需真实跨端证据。** 共享知识、诊断、平台边界、离线交接与依赖准备按各自范围使用；Dot所选路线的真实工具/加载、本地OS/架构、独立宿主及执行节点仍需集成回执，缺少哪项仅阻塞相应卡片。实际完成项和检查结果仅在唯一队列记录。
 
-本轮官方[Dot入门](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot)、[权限FAQ](https://help.openai.com/en/articles/20001529-dots-privacy-security-and-safety-faqs)、[Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud)与插件等9篇Help正文均已读到HTTP200，来源及范围见[宿主契约](host-contracts.md#官方证据与读取范围)。旧实例五条Lody规则及官方站CONNECT403只保留为历史。本轮已发布配置无草稿，运行网络readiness字段仍未知；实际HTTPS、依赖inspect、身份验证、原Lody会话只读对账与新任务加载各有独立证据范围，不能用平台汇总未知否定实测，也不能用局部通过推导全部ready。开发站及Plugin Management的受阻请求不重试绕过，不为本次文档修订要求重复发布。
+此前9篇Help及本轮四篇官方开发/管理/电脑资料均已读到HTTP200，来源及范围见[宿主契约](host-contracts.md#官方证据与读取范围)。旧实例五条Lody规则及官方站CONNECT403只保留为历史。本轮已发布配置无草稿，运行网络readiness字段仍未知；实际HTTPS、依赖inspect、身份验证、原Lody会话只读对账与新任务加载各有独立证据范围，不能用平台汇总未知否定实测，也不能用局部通过推导全部ready。不为本次文档或setup候选重复发布相同环境。
 
-当前平台工具没有新建Codex云任务或原生插件界面导入动作时，交付候选和上述运行单，保持相应验收未运行；不以同实例子Agent、子进程或另一目录冒充独立宿主。私密交接工件须通过实际合法渠道送达另一端，同名路径和相同环境发布不证明文件已传输。
+当前有正式Cloud CLI创建入口，但任务目录API返回401，尚无服务核实的ENV_ID，未提交新任务；原生插件UI导入也未提供可调用工具。交付候选和上述运行单，保持相应验收未运行；不以同实例子Agent、子进程或另一目录冒充独立宿主。私密交接工件须通过实际合法渠道送达另一端，同名路径和相同环境发布不证明文件已传输。
 
 后续执行者按队列衔接现有实现与未完成集成，使用任务卡验收，不从头重建工具或重做连接授权。Dot可选择官方已支持的共享连接、Codex委派或已授权本地技能路线；自有云电脑直接CLI和未知hook只限制对应分支。T09旧截图缺少的当时入口/版本、当前发布后恢复的只读证据、新独立任务自动送达并读取技能三项分别核实，互不代结论。Review上游资源与云ACP限制保留各自恢复条件，不使它们无条件阻塞远端控制链路。

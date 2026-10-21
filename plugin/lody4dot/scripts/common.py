@@ -169,7 +169,7 @@ def _bundle_member(name):
             or name in {"hosts/codex-cloud.md", "hosts/codex-cli.md", "hosts/dot.md"}
             or len(parts) == 2 and parts[0] == "scripts" and parts[1].endswith(".py")
             or name in {"runtime/package.json", "runtime/package-lock.json", "runtime/build-policy.json"}
-            or name == "skills/lody4dot/SKILL.md"
+            or name in {"skills/lody4dot/SKILL.md", "skills/lody4dot-setup/SKILL.md"}
             or len(parts) == 4 and parts[:3] == ("skills", "lody4dot", "references")
             and PurePosixPath(name).suffix in {".md", ".json"})
 

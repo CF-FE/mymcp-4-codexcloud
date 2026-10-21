@@ -161,6 +161,25 @@ class DiagnosticTests(unittest.TestCase):
             self.assertEqual(value["provenance"]["bundle"]["status"], "mismatch")
             self.assertEqual(value["provenance"]["runtime"]["status"], "mismatch")
 
+    def test_onboarding_skill_hash_is_checked_without_changing_legacy_scope(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            bundle = self.bundle_fixture(root)
+            name = "skills/lody4dot-setup/SKILL.md"
+            setup = bundle / name
+            setup.parent.mkdir(parents=True)
+            setup.write_text("# Setup fixture\n")
+            receipt_path = bundle / ".lody4dot-build.json"
+            receipt = json.loads(receipt_path.read_text())
+            receipt["files"][name] = hashlib.sha256(setup.read_bytes()).hexdigest()
+            receipt_path.write_text(json.dumps(receipt))
+            source = common.local_provenance(root / "missing", bundle)
+            self.assertEqual(source["bundle"]["status"], "consistent")
+            setup.write_text("# Changed setup fixture\n")
+            source = common.local_provenance(root / "missing", bundle)
+            self.assertEqual(source["bundle"]["status"], "mismatch")
+            self.assertEqual(source["assurance"], "local_file_consistency_only")
+
     def test_invalid_provenance_cannot_read_outside_bundle_or_echo_arbitrary_fields(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

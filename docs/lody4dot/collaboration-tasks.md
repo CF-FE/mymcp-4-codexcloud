@@ -7,7 +7,7 @@
 ## 共用约束与依赖
 
 - 权威：用户确认的多宿主目标、主方案、[环境指引](environment-model.md)、[设计参考](environment-design.md)。已有实现契约仍见[开发方案d1](development.md)；有冲突先记录具体范围，不用任务卡默改契约。
-- 本轮源码候选0.2.1；`0.107.2`仅为知识与默认可复现安装基线，不是Lody CLI执行版本门槛。正式已发布云环境及当前metadata来源为0.2.0，候选更新不自动升级实例。本次知识/宿主说明修订不重配token或重复保存相同云准备草稿。
+- 本轮正式环境为0.2.1，0.2.2候选增加官方用户setup入口；`0.107.2`仅为知识与默认可复现安装基线，不是Lody CLI执行版本门槛。候选更新不自动升级实例，不重配token或重复保存相同云准备草稿。
 - 2026-10-21用户授权V01版本提示修订：Lody版本差异、版本探测失败不阻塞业务；默认inspect/bootstrap离线，仅显式`doctor --check-updates`查询固定`https://registry.npmjs.org/lody/latest`，非最新版或查询失败只告警，不自动升级。真实CLI执行、身份、权限、Node/平台前提和安装输入完整性失败仍按实际结果报告；此修订优先于旧严格版本判定，其他既有契约不变，进度仍由队列维护。
 - T09旧截图的当时入口/版本、当前发布后原任务恢复、新独立任务实际送达并读取技能分别取证。T12既有缺口继续单独保留，C任务不自动关闭它们；平台readiness未知不抹掉已取得的局部实测，也不等于全部ready。
 - 验证命令在各目标宿主的仓库根目录执行；`python3`须指向Python3.10+。未提供shell或CLI的宿主使用实际可用的只读工具取证，不凭空填写命令或能力。
@@ -97,7 +97,7 @@ python3 -m unittest discover -s tests/lody4dot -p test_install.py -v
 
 - **权威/依赖**：C01的实际入口、C02资源与C04对应平台结果；只依赖本次选择支持的平台，候选OS未知不阻塞Linux基线分发。
 - **文件范围**：`plugin/lody4dot/scripts/build.py`、已核实的清单、`plugin/lody4dot/hosts/dot.md`、`plugin/lody4dot/README.md`、`.codex/cloud-install.sh`、`.codex/cloud-start.md`及`tests/lody4dot/test_build.py`。
-- **步骤**：用同一知识源码生成含Dot说明的自包含包，按Codex0.163.0格式准备目录/ZIP候选；保留隐藏清单和全部资源。GitHub marketplace已有官方导入路线，但不运行builder；不能新增catalog直接指向未构建的`plugin/lody4dot/`，不提交生成分发物。ChatGPT web的扫描、安装和读取分别取证；完整格式指南未知部分不猜。bootstrap与知识入口分开，安装prefix使用该端实际值。
+- **步骤**：用同一知识源码生成含Dot说明的自包含包，按官方支持的兼容清单准备目录/ZIP候选；0.2.2追加`extensions.com.openai.onboardingSkill`及薄setup技能，复用bootstrap。保留隐藏清单和全部资源。GitHub marketplace已有官方导入路线，但不运行builder；不能新增catalog直接指向未构建的`plugin/lody4dot/`，不提交生成分发物。ChatGPT web的扫描、安装、读取及用户run setup分别取证，新对话/安装所在对话各自测试；ZIP外层包装未知部分不猜。bootstrap与知识入口分开，安装prefix使用该端实际值。
 - **验收**：移位包可找到全部资源与Dot指引；缺资源、包外引用、修改过的旧输出及已有规则覆盖的敏感文件/凭证fixture均失败。allowlist和来源仍须复核，扫描器不承诺识别任意秘密。安装不登录、不注册机器、不启动host。构建、上传扫描、安装/启用、启动入口送达和实际读取各有证据；Codex格式候选不称ChatGPT已接受，托管接入不冒称原生注册。
 - **验证**：命令只构建自有输出；目录已被陌生内容占用时停止并选择新的自有输出，不删除原目录。
 

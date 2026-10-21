@@ -23,6 +23,7 @@ class BuildTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.repo = self.root / "repo"
         self.skill = self.repo / "skill/lody4dot"
+        self.setup_skill = self.repo / "skill/lody4dot-setup"
         self.plugin = self.repo / "plugin/lody4dot"
         self.output = self.root / "package"
         self.write(self.skill / "SKILL.md", "# Lody\n\n[Reference](references/cloud.md)\n")
@@ -30,9 +31,11 @@ class BuildTests(unittest.TestCase):
         self.write_json(self.skill / "references/command-index.json", {"commands": []})
         self.write_json(self.skill / "references/sources.json", {"resource": "help-snapshot.json"})
         self.write_json(self.skill / "references/help-snapshot.json", {"commands": []})
+        self.write(self.setup_skill / "SKILL.md", "# Setup\n[Core](../lody4dot/SKILL.md)\n")
         self.write(self.plugin / "README.md", "# Plugin\n[Skill](skills/lody4dot/SKILL.md)\n")
         self.write_json(self.plugin / ".codex-plugin/plugin.json", {
             "name": "lody4dot", "version": "0.1.0", "skills": "./skills",
+            "extensions": {"com.openai": {"onboardingSkill": "./skills/lody4dot-setup/SKILL.md"}},
         })
         for name in ("install.py", "doctor.py", "auth.py", "common.py",
                      "platform_support.py", "bootstrap.py", "handoff.py"):
@@ -69,6 +72,10 @@ class BuildTests(unittest.TestCase):
         self.assertTrue((relocated / "scripts/handoff.py").is_file())
         self.assertTrue((relocated / "hosts/codex-cloud.md").is_file())
         self.assertTrue((relocated / "hosts/dot.md").is_file())
+        manifest = json.loads((relocated / ".codex-plugin/plugin.json").read_text())
+        setup = relocated / manifest["extensions"]["com.openai"]["onboardingSkill"]
+        self.assertEqual(setup.read_text(), "# Setup\n[Core](../lody4dot/SKILL.md)\n")
+        self.assertIn("skills/lody4dot-setup/SKILL.md", receipt["files"])
         marketplace = json.loads((relocated / ".agents/plugins/marketplace.json").read_text())
         self.assertEqual(marketplace["plugins"][0]["source"], {"source": "local", "path": "."})
 
@@ -106,6 +113,53 @@ class BuildTests(unittest.TestCase):
         with self.assertRaisesRegex(build_module.BuildError, "Missing required"):
             build_module.build(self.repo, self.output)
         self.assertFalse(self.output.exists())
+
+    def test_missing_onboarding_skill_preserves_previous_build(self):
+        build_module.build(self.repo, self.output)
+        previous = build_module.inventory(self.output)
+        (self.setup_skill / "SKILL.md").unlink()
+        with self.assertRaisesRegex(build_module.BuildError, "Missing required source"):
+            build_module.build(self.repo, self.output)
+        self.assertEqual(previous, build_module.inventory(self.output))
+
+    def test_invalid_onboarding_targets_preserve_previous_build(self):
+        build_module.build(self.repo, self.output)
+        previous = build_module.inventory(self.output)
+        path = self.plugin / ".codex-plugin/plugin.json"
+        manifest = json.loads(path.read_text())
+        for extension in ({}, {"com.openai": None}, {"com.openai": []},
+                          *({"com.openai": {"onboardingSkill": value}} for value in (
+                              "../outside/SKILL.md", "./skills/missing/SKILL.md",
+                              "https://example.com/SKILL.md", "/absolute/SKILL.md", None))):
+            with self.subTest(extension=extension):
+                self.write_json(path, {**manifest, "extensions": extension})
+                with self.assertRaisesRegex(build_module.BuildError, "onboardingSkill"):
+                    build_module.build(self.repo, self.output)
+                self.assertEqual(previous, build_module.inventory(self.output))
+
+    def test_setup_extra_resources_are_rejected_without_replacing_output(self):
+        build_module.build(self.repo, self.output)
+        previous = build_module.inventory(self.output)
+        self.write(self.setup_skill / "references/extra.md", "# Unowned setup resource\n")
+        with self.assertRaisesRegex(build_module.BuildError, "Unexpected file in setup skill"):
+            build_module.build(self.repo, self.output)
+        self.assertEqual(previous, build_module.inventory(self.output))
+
+    def test_setup_references_are_checked_and_symlinks_rejected(self):
+        build_module.build(self.repo, self.output)
+        previous = build_module.inventory(self.output)
+        path = self.setup_skill / "SKILL.md"
+        for target in ("../lody4dot/missing.md", "../../../outside.md"):
+            with self.subTest(target=target):
+                self.write(path, f"[Broken]({target})\n")
+                with self.assertRaises(build_module.BuildError):
+                    build_module.build(self.repo, self.output)
+                self.assertEqual(previous, build_module.inventory(self.output))
+        path.unlink()
+        path.symlink_to(self.skill / "SKILL.md")
+        with self.assertRaisesRegex(build_module.BuildError, "Symlink"):
+            build_module.build(self.repo, self.output)
+        self.assertEqual(previous, build_module.inventory(self.output))
 
     def test_missing_shared_runtime_helper_is_rejected_without_replacing_output(self):
         build_module.build(self.repo, self.output)
