@@ -1,6 +1,6 @@
 ---
 name: lody4dot
-description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent 配置和角色，创建、跟进、观察、调度与交付会话任务；也用于多宿主协作、资料空间与Dot中转、结果存回、上下文交接，以及在受支持宿主安装、诊断或排查 Lody。覆盖公开命令发现、版本差异、运行位置和结果核验。
+description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent 配置和角色，创建、跟进、观察、调度与交付会话任务；也用于多宿主协作、Work Cloud与Codex Cloud分工、资料空间与Dot中转、结果存回、上下文交接，以及在受支持宿主安装、诊断或排查 Lody。覆盖公开命令发现、版本差异、运行位置和结果核验。
 ---
 
 # 使用 Lody 完成任务
@@ -14,6 +14,7 @@ description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent
 | 当前目标 | 阅读 |
 | --- | --- |
 | 资料空间与Dot中转、输入交接或结果存回 | [资料交接](references/material-handoff.md) |
+| Work/Work Cloud与Codex Cloud、任务创建或触发不明确 | [任务类型与创建入口](references/collaboration.md#work-cloud与任务创建) |
 | 多处安装、跨端协作、上下文交接或重建后继续 | [多宿主协作](references/collaboration.md) |
 | 安装、凭证、云环境准备 | [云端准备](references/setup-cloud.md) |
 | 找工作区、机器、项目或可用能力 | [资源发现](references/discovery.md) |

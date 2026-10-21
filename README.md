@@ -34,7 +34,7 @@ lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安�
 
 本项目独立Codex云任务由Dot创建，用户已确认Dot具备权限；云任务加载lody4dot后，通过Lody与其他节点协作并回传结果。云任务不派生Codex云任务，OpenAI任务目录API及其历史401不属于插件前置或项目阻塞；具体交接见[新任务验收](docs/lody4dot/fresh-task-acceptance.md)。
 
-当前源码候选0.2.3补充[资料交接知识](skill/lody4dot/references/material-handoff.md)，分别处理路线、输入表示、处理结果、保存和目的地回读；沿用0.2.2官方用户运行setup的[薄入口技能](skill/lody4dot-setup/SKILL.md)。两者均复用现有工具，不是安装自动执行或存储重置hook，平台原生调用尚未验收。正式0.2.1已有的CLI版本策略继续保留：版本不同、探测或显式latest查询失败只warn，默认离线，不自动升级。受管runtime仅支持Linux，真实命令、身份、权限和完整性错误分别处理。各候选的验证范围见[验证记录](docs/lody4dot/validation.md)、[支持矩阵](docs/lody4dot/support-matrix.md)及[Dot接入运行单](docs/lody4dot/dot-acceptance.md)。
+当前源码候选0.2.4补充[Work Cloud与任务入口知识](skill/lody4dot/references/collaboration.md#work-cloud与任务创建)，沿用0.2.3[资料交接规则](skill/lody4dot/references/material-handoff.md)和0.2.2官方用户运行setup的[薄入口技能](skill/lody4dot-setup/SKILL.md)。分别核对产品支持、当前工具、创建/触发、实际运行及处理/保存/回读；知识候选不代表Work Cloud或Dot原生接入已验收，也不是存储重置hook。正式0.2.1已有的CLI版本策略继续保留：版本不同、探测或显式latest查询失败只warn，默认离线，不自动升级。受管runtime仅支持Linux，真实命令、身份、权限和完整性错误分别处理。各候选的验证范围见[验证记录](docs/lody4dot/validation.md)、[支持矩阵](docs/lody4dot/support-matrix.md)及[Dot接入运行单](docs/lody4dot/dot-acceptance.md)。
 
 spec12恢复演练已验证不同内核上下文下依赖、身份及原会话/产物对账，该阶段0新模型回合；后续实验各自计数，见[验证记录](docs/lody4dot/validation.md)。它不证明具体VM身份、磁盘重建机制、Dot hook或独立新任务首次加载。Review上游Viewer、旧截图来源及Dot实际接入仍按各自缺口跟进。
 

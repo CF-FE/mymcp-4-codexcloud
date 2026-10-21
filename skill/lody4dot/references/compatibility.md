@@ -14,8 +14,9 @@ doctor默认inspect及启动bootstrap保持离线；显式`--check-updates`才�
 
 | 情况 | 正确判断 |
 | --- | --- |
-| cloud 构建 | 可使用已授权的 cloud 查询，仍需验证网络与登录 |
+| Lody cloud构建 | 指Lody发布构建的平台选择，与Work Cloud或Codex Cloud执行位置不同；仍需验证网络与登录 |
 | OSS/local platform | 不具有全部 cloud 查询；不能仅设置一个变量就把 cloud 发布包切换为 OSS |
+| Work或Work Cloud | 通用任务可本地或托管执行，不自动使用已发布Codex开发环境；任务类型和创建入口见[协作参考](collaboration.md#work-cloud与任务创建) |
 | Dot自有云电脑 | 受Dot和工作区实际云能力约束；不假定使用Codex准备脚本、相同目录或相同浏览器登录 |
 | Dot创建Codex云任务 | 使用已预先配置的Codex环境；该任务的加载、身份和执行证据与Dot自身分别记录 |
 | Dot连接本地电脑 | 本地访问默认关闭，需本机ChatGPT应用单独连接授权、在线；Codex连接或Work Sync不能代替 |
@@ -39,6 +40,10 @@ Dot与ChatGPT、ChatGPT Work、Codex共享插件连接和已授予权限；它�
 ## CLI 与已有 MCP
 
 CLI 的帮助是当前参数和位置参数的权威来源。原生 JSON/JSONL 直接保留；辅助工具不重写 session/schedule 业务 API。
+
+已读官方资料支持hosted Work经兼容插件使用连接器和远程MCP；本机STDIO或本地Codex配置不会自动迁入云端，Desktop only限制仍按具体插件核实。Codex Cloud当前指南未建立任意MCP/插件的通用原生注册流程；获授权的shell服务调用也不等于模型原生工具注册。这些产品支持范围不证明本插件在Work Cloud已加载。来源：[MCP支持面](https://learn.chatgpt.com/docs/extend/mcp)、[插件](https://learn.chatgpt.com/docs/plugins)、[Codex云环境](https://learn.chatgpt.com/docs/environments/cloud-environments)。
+
+MCP不是天然只读，写动作取决于实际工具、连接身份、对象权限、工作区控制及审批。业务MCP不自动提供资料空间权限或平台任务创建入口；创建/触发的选择见[协作参考](collaboration.md#work-cloud与任务创建)，不照搬其他会话的客户端工具名。来源：[动作控制](https://learn.chatgpt.com/docs/enterprise/apps-and-connectors#step-2-manage-capabilities)。
 
 Lody 内置 MCP 的资源发现、会话、operation、调度和角色工具需要真实宿主上下文。已显示的配置和 MCP 选择不等于工具加载成功；只有实际注入与可调用证据才能选择该路径。不能在缺少 session/workspace/machine 上下文时调用内部启动入口，也不能凭网上出现的工具名伪造当前工具存在。
 

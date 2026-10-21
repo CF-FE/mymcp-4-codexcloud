@@ -6,6 +6,8 @@ Dot是ChatGPT的常驻Agent产品，有自己的云电脑；它还可以创建�
 
 先区分资料交接与Lody任务控制。对当前任务已有用户确认的“资料空间→Dot→Codex Cloud→Dot→资料空间”路线，直接复用：Dot负责资料读写及结果收取，Cloud负责处理；不为统一形式额外创建Lody会话、注册machine或部署MCP。输入表示、保存和回读规则见包根`skills/lody4dot/references/material-handoff.md`，源码为`skill/lody4dot/references/material-handoff.md`。这不代替本插件的Dot加载或Lody工具验收。
 
+委派目标若是Work Cloud，先按包根`skills/lody4dot/references/collaboration.md`的“Work Cloud与任务创建”核对具体入口和实际返回类型；Dot云会话不一律视为Work Cloud，也不把Work的资料/插件能力套给Codex任务。下面的Codex准备路线仅适用于实际Codex环境。
+
 | 当前条件 | 使用方式 | 需要单独验证 |
 | --- | --- | --- |
 | 已有合法Lody app/MCP连接 | 在已授予权限内复用实际提供的工具 | 真实工具名、目标workspace与只读查询；不猜内部MCP入口 |

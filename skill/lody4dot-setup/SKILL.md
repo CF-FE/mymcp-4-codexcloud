@@ -11,7 +11,7 @@ description: 在用户运行 lody4dot 插件 setup 时，识别当前宿主与�
 
 ## 识别本次执行位置
 
-1. 记录实际宿主及工具执行器，区分 Dot 自有云电脑、它委托的 Codex 云任务和获授权的本地电脑；不要用对话所在产品推断 shell 所在机器。
+1. 记录实际宿主及工具执行器，区分 Work 的本地/托管执行、Dot 自有云电脑、Codex 云任务和获授权的本地电脑；不要用对话所在产品推断 shell 所在机器。Work Cloud 不自动采用 GitHub 编码环境、Codex 准备脚本或本地 STDIO 配置，先看[宿主与任务入口](../lody4dot/references/collaboration.md#work-cloud与任务创建)。
 2. 查看本端实际提供的 shell、OS、Python、Node/npm、Lody CLI 或宿主注入的 Lody MCP。CLI 不在 PATH 中不代表没有宿主工具；没有暴露的工具不补造。
 3. 定位本次插件文件。自包含包的工具在插件根 `scripts/`；仓库副本在仓库根 `plugin/lody4dot/scripts/`。核实实际文件及本端安装回执，再选择已存在的入口。只有技能资料时，保留知识接入，不执行不存在的脚本。
 4. 复用当前任务已有授权和明确目标。需要依赖准备时，选择本端可写且所属明确的 prefix；已有安装以其回执为准，新安装使用独立目录，不覆盖陌生非空目录。其他宿主不套用云端的 `/workspace` 路径，也不复制另一端身份。

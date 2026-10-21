@@ -17,6 +17,31 @@
 
 控制端可经公开CLI向已有、获授权的远端machine/config派发；执行端仍需运行进程、模型身份及可用配置。控制端无需为远端派发启动host，安装也不自动登记machine。缺shell的宿主只使用实际提供且合法注入上下文的工具；没有入口就保留工具缺口，不调用内部MCP启动入口冒充外部服务。
 
+## Work Cloud与任务创建
+
+Work是面向通用成果的任务模式，可在本地或平台托管的Work Cloud执行；Codex面向软件开发，Codex Cloud使用选定的开发环境。Work Cloud不要求先配置GitHub编码环境，也不自动取得用户发布的Codex仓库、工具、准备脚本或VM规则。先按实际任务类型、执行位置和所需操作选入口，不仅凭“Cloud”或产物扩展名判断。
+
+用户已指定Work Cloud、Codex Cloud或执行位置时，保留该约束；所需入口缺失就报告该分支缺口，不未经任务允许换用另一类型，也不拿另一类型的回执报告指定分支成功。
+
+平台托管Work不等于本插件的Linux执行节点。优先使用该任务实际提供的资料、文件制作和兼容插件工具；只有确需本执行器承担Lody操作，且实际有受支持的shell、依赖和身份入口时，才按本端条件准备CLI。没有CLI不妨碍使用已授权的资料工具，也不授权自动新建编码环境或部署MCP。
+
+创建任务、向原会话发起新一轮、按计划触发运行分别取证：
+
+| 实际入口 | 使用与记录边界 |
+| --- | --- |
+| 用户手动选择Work及云端执行 | 记录实际任务类型和返回引用，不从界面名称推定Codex环境。 |
+| 助手经首方客户端工具代建 | 仅在本端实际暴露创建工具、目标类型受支持且用户已要求时使用；另一会话的工具声明不证明本端可调用，也不是公共创建API。 |
+| 时间或支持的应用事件运行 | 核对已保存/启用的计划、支持的触发器及实际运行；保存配置不等于已触发，每次运行也不必新建独立会话。Work计划/运行引用仍属于原系统，不套用Lody schedule流程。 |
+| Dot创建云会话 | 保留实际入口及返回任务类型，不从“可创建云会话”推定任意Work Cloud类型；项目约定的独立Codex云任务仍由Dot发起，当前云任务不派生下游Codex任务。 |
+
+资料读写、MCP业务动作和平台任务创建是三项能力；具备前两者不推出第三者。没有创建工具时保留该分支缺口，不补造接口，也不以OpenAI任务目录查询作为Lody前置。创建或触发超时沿原引用先对账，不因未收到ACK就重复派发。
+
+沿用现有私密记录，分别保存真实Work/Codex任务类型、发起入口、执行位置与原生引用；实际有Lody部分时另关联原session/turn。资料和交付规则见[资料交接](material-handoff.md)，不要把Work任务或计划ID填入Lody schema1，也不另建记录卡或通用状态schema。
+
+以上依据2026-10-21已读官方产品资料；首方代建入口还取决于当次工具声明。这些支持范围不证明本账号已完成Work Cloud创建、lody4dot加载、资料闭环或C09/C10，不为文档例子新增业务请求。
+
+来源：[Work入门](https://learn.chatgpt.com/docs/get-started-with-work)、[云端或本地Work](https://learn.chatgpt.com/docs/use-chatgpt#choose-cloud-or-local-work)、[Work Cloud执行与访问边界](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security)、[计划与事件运行](https://learn.chatgpt.com/docs/automations)、[Dot委派](https://learn.chatgpt.com/docs/dots/tasks-and-memory#assigned-work)。
+
 ## Dot、云任务与本地电脑
 
 2026-10-21读取的OpenAI官方资料确认以下产品关系；它们说明平台能力，不代表lody4dot已在所有位置加载或完成业务验收。
