@@ -156,6 +156,15 @@
       "scope": "collectSessionArchiveTargets/readSessionOperationTargets、runSessionOperationWithSyncedMetadata、handleSessionArchived/releaseArchivedSessionRuntime、cancelSessionTurn及执行端cancelSession；归档递归范围、恢复直接子项、资源释放/worktree GC与陈旧取消ACK",
       "verification": "static_source_and_sanitized_maintenance_acceptance",
       "note": "archive按parentSessionId ?? openedBySessionId递归；restore仅根和直接parent子项，不能当对称回滚。自有无后代会话的改名往返/归档/恢复已实测，原标题和未归档状态恢复，6条可见历史和latestTurn不变、无activeTurns/队列。未测级联或进程恢复。执行端归档释放可能遇到终止失败；控制端按assistantTurnId预检取消，执行端陈旧请求可success:true但被忽略；Operation inbox暂停可影响同一执行的后继，必须核对持久化目标终态。"
+    },
+    {
+      "id": "agent-role-project-relationships",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz",
+      "retrieved_at": "2026-10-21",
+      "version_scope": "0.107.2",
+      "scope": "AgentRoleCreateProposalSchema/AgentRoleUpdateProposalSchema、applyAgentRoleProposal、agentRoleWriteCommand、ProjectRefSchema、projectAddCommand及resolveAgentRoleCreate；多Role复用、初始runConfig与可写字段、身份机器的session/call-tool路由、本地项目和会话组合",
+      "verification": "static_official_release_source_verified",
+      "note": "多个Role可复用machineId和agentConfigId；create提议保存后runConfig为空，update补丁只支持name/description/promptPrefix。cloud CLI提议调用auth.machineId的会话工具，参数machineId仅绑定Role目标；不能套用普通远端会话派发前提。project add登记本机目录，会话可组合Role与local project或repo，local project须属于最终目标机器。未核实Project持久拥有Role组，不据此否定其他版本/UI；未实测本轮角色提议/用户保存、项目写入或按Role执行。"
     }
   ],
   "known_differences": [

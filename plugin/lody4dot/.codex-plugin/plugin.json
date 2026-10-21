@@ -1,6 +1,6 @@
 {
   "name": "lody4dot",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Lody multi-host collaboration, material handoff and recoverable setup guidance",
   "skills": "./skills",
   "extensions": {

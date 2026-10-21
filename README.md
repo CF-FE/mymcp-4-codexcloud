@@ -36,7 +36,7 @@ lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安�
 
 上述是本项目的职责选择，不代表平台只允许Dot创建。Codex Cloud官方另有手动和CLI提交入口；与Work Cloud的手动、首方客户端代建及计划/事件入口分别对照，见[创建方式与证据边界](docs/lody4dot/product-collaboration-reference.md#codex-cloud-与-work-cloud-的创建方式对照)。本轮不接入新的创建路线，企业聊天工具委派延后。
 
-当前源码候选0.2.5在原[任务入口知识](skill/lody4dot/references/collaboration.md#work-cloud与任务创建)补Codex平台多入口与项目Dot分工的区别；保留0.2.4的Work分类、0.2.3[资料交接规则](skill/lody4dot/references/material-handoff.md)和0.2.2[薄setup入口](skill/lody4dot-setup/SKILL.md)。分别核对平台支持、当前访问、项目职责、实际运行及处理/保存/回读；知识候选不代表原生接入已验收，也不是存储重置hook。正式0.2.1已有的CLI版本策略继续保留：版本不同、探测或显式latest查询失败只warn，默认离线，不自动升级。受管runtime仅支持Linux，真实命令、身份、权限和完整性错误分别处理。各候选的验证范围见[验证记录](docs/lody4dot/validation.md)、[支持矩阵](docs/lody4dot/support-matrix.md)及[Dot接入运行单](docs/lody4dot/dot-acceptance.md)。
+当前源码候选0.2.6在原[配置与角色参考](skill/lody4dot/references/configuration.md)补多Role复用、Project上下文及提议路由条件；保留0.2.5[任务入口知识](skill/lody4dot/references/collaboration.md#work-cloud与任务创建)、0.2.4的Work分类、0.2.3[资料交接规则](skill/lody4dot/references/material-handoff.md)和0.2.2[薄setup入口](skill/lody4dot-setup/SKILL.md)。分别核对平台支持、当前访问、项目职责、实际运行及处理/保存/回读；知识候选不代表原生接入、角色保存或项目执行已验收，也不是存储重置hook。0.2.1起的CLI版本策略继续保留：版本不同、探测或显式latest查询失败只warn，默认离线，不自动升级。受管runtime仅支持Linux，真实命令、身份、权限和完整性错误分别处理。各候选的验证范围见[验证记录](docs/lody4dot/validation.md)、[支持矩阵](docs/lody4dot/support-matrix.md)及[Dot接入运行单](docs/lody4dot/dot-acceptance.md)。
 
 spec12恢复演练已验证不同内核上下文下依赖、身份及原会话/产物对账，该阶段0新模型回合；后续实验各自计数，见[验证记录](docs/lody4dot/validation.md)。它不证明具体VM身份、磁盘重建机制、Dot hook或独立新任务首次加载。Review上游Viewer、旧截图来源及Dot实际接入仍按各自缺口跟进。
 

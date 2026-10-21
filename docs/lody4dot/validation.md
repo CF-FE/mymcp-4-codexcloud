@@ -512,6 +512,24 @@ Agent配置、Role与Project的已有核实无需重做；原configuration参考
 
 最新元数据为spec/observed19且current=true、running/connected、failure=null，网络/变量state均unknown；正式来源仍0a044f1/0.2.5，无草稿与pending要求。spec17的ready保留历史，不推断凭证失效或重复配置。未做新的依赖/认证/模型/资料请求，未查OpenAI任务目录或重验Dot中转；正式环境无需为这些记录再次发布。当前状态仍见[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
 
+## Role与Project知识0.2.6候选
+
+2026-10-21，用户要求按建议推进Role/Project随包知识。干净a9852a2上ff-only拉取无更新；复用前述关系核实，对实际安装的官方0.107.2发布源码做两份独立只读复核，原位补`configuration.md`和`sources.json`，候选版本为0.2.6。多Role可复用machine/config，提议字段中的machineId不选择CLI调用机器；Project是会话上下文，尚未核实持久角色组，不扩大否定其他版本/UI。未新增角色组织服务、绑定契约或重复索引。
+
+| 验证 | 实际结果与边界 |
+| --- | --- |
+| 仓库回归 | 132项Linux测试、结构及差异检查通过；不把已有macOS失败记录改为通过，也不扩大runtime支持。 |
+| 自包含分发 | builder收集31内容文件加receipt，ZIP32文件、120396字节；CRC、每文件摘要、receipt及移位解包内容一致。移位离线bootstrap退出0且仅doctor，插件0.2.6、bundle/runtime consistent；install/authentication/daemon/task_recovery均not_run，未填写reused，子进程不转发LODY/GITEE变量。 |
+| 同配置双Role目标 | 新上下文自主读核心、配置/发现/会话与帮助快照，复用同一配置而不复制凭证；将角色提议的实际宿主/会话工具与普通远端派发分开，并保留用户保存、M端项目登记及分层结果核验。未把Project持久角色组当已确认能力。 |
+| 提议未保存目标 | 新上下文明确卡片成功不代表角色生效，0.107.2 create初始runConfig为空、update只支持三项文字字段；不编造model/mode写入参数或保证未知UI，先保存并查询，再按真实入口核验配置及执行条件。 |
+| 跨机项目目标 | 新上下文识别R绑定M而P属于K的冲突，不能用额外machine参数绕过Role覆盖；保留M时须在M准备并登记实际项目，不能把新项目冒称K上的原P；若更换目标需单独确认支持入口与目标变化。 |
+
+以上三项是同一执行环境中从显式最终包入口开始的知识选择演练，不是平台自动发现、独立新任务或Dot原生调用。包ZIP SHA-256为`1ecb92fea6ac54b559e4bace871eab07298efe325f961440368caf241adbfdab`，receipt为`2ad1f37ef0c9277b9dea343e30ad8eb950c240890285acabd303f762cff9fd37`。与0.2.5相比，仅清单版本、随包README、configuration及sources内容和receipt变化；31个内容文件的其余部分相同。0.2.5原ZIP（fc615264…）与0.2.4/0.2.3/0.2.2/0.2.1原摘要均保持，旧验证记录保留。
+
+Python工具、CLI/runtime锁、核心技能、setup、命令索引、帮助快照和云脚本均无变更。正式来源仍0a044f1/0.2.5，无草稿；运行元数据spec21/current=true、running/connected，网络/变量state均unknown。没有角色提议/保存、项目登记、真实Lody业务或模型回合，没有Dot资料重验、OpenAI目录查询、下游Cloud任务、环境变更或发布请求；不从本次知识实施推导配置写入授权。C05/C08剩余项/C09/C10、C04真实平台与旧T09/T12继续按实际证据验收。
+
+忽略目录保留`dist/lody4dot-0.2.6-{regression.log,package-summary.json,bootstrap.json,knowledge-scenarios.json,doc-checks.json}`及ZIP，公开只记录脱敏范围。当前状态仍由[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)维护，不再建立方案或进度副本。
+
 ## 复现命令
 
 在仓库根目录运行：
