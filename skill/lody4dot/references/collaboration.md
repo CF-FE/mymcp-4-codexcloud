@@ -27,6 +27,10 @@ Work是面向通用成果的任务模式，可在本地或平台托管的Work Cl
 
 创建任务、向原会话发起新一轮、按计划触发运行分别取证：
 
+Codex Cloud平台另有用户手动、Dot委派和CLI提交入口，见[手动创建](https://learn.chatgpt.com/docs/environments/cloud-environments#start-a-task-in-codex-cloud)与[CLI说明](https://learn.chatgpt.com/docs/developer-commands#codex-cloud)；环境准备/发布与创建任务分别核实。
+
+始终区分平台支持、当前工具/服务访问证据和项目职责：官方入口存在、本机CLI已登录或另一会话的工具声明，都不证明本端可调用、适用目标环境或任务已创建。若当前项目明确约定由Dot创建并停用Codex Cloud CLI/目录路线，遵守该约定，不因平台另有入口自行切换或重复索权；不把它推广为其他项目的固定限制。Lody原生session/turn派发与Codex平台任务创建分别判断。
+
 | 实际入口 | 使用与记录边界 |
 | --- | --- |
 | 用户手动选择Work及云端执行 | 记录实际任务类型和返回引用，不从界面名称推定Codex环境。 |
