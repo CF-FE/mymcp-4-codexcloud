@@ -14,7 +14,7 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 仓库组织方式不等于 Codex 的自动发现或安装配置。把文件放入上述目录，并不能证明 Codex 已加载它们。设计依据、取舍和迁移方法见 [架构说明](docs/architecture.md)。
 
-云任务、运行实例、本地环境、Dot、会话引用和协作空间权限的区别，见[环境与权限指引](docs/lody4dot-environment-model.md)。指引包含关系图、生命周期、权限表及后续架构设计检查项。
+云任务、运行实例、本地环境、Dot、会话引用和协作空间权限的区别，见[环境与权限指引](docs/lody4dot-environment-model.md)：先读一分钟速查和执行链路，再按问题查表。跨环境协作的对象关系、记录模板与评审清单见[架构设计参考](docs/lody4dot-environment-design.md)。
 
 ## 当前状态
 

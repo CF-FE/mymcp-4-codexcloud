@@ -1,6 +1,6 @@
 # 仓库结构与迁移约定
 
-本文说明目录与能力分发。Dot、云任务、运行实例、会话引用和协作空间权限的模型，见[环境与权限指引](lody4dot-environment-model.md)，可作为后续运行架构设计的术语与边界参考。
+本文说明目录与能力分发。Dot、云任务、运行实例、会话引用和协作空间权限，先读[使用指引](lody4dot-environment-model.md)；后续运行架构的关系、证据和取舍见[设计参考](lody4dot-environment-design.md)。
 
 ## 目标与证据
 
