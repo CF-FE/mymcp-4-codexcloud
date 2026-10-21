@@ -13,6 +13,7 @@ import shutil
 import sys
 import tempfile
 from urllib.parse import unquote, urlsplit
+import zipfile
 
 
 RECEIPT = ".lody4dot-build.json"
@@ -251,13 +252,83 @@ def build(repo: Path, output: Path) -> dict:
             shutil.rmtree(staging)
 
 
+def check_archive_target(repo: Path, output: Path, target: Path) -> None:
+    if target.is_symlink() or target.exists():
+        raise BuildError("ZIP output must be a new path; existing paths are preserved")
+    for parent in target.parents:
+        if parent.exists() and not parent.is_dir():
+            raise BuildError("ZIP parent must be a directory")
+    resolved = target.resolve()
+    roots = (output, repo / "skill/lody4dot", repo / "skill/lody4dot-setup",
+             repo / "plugin/lody4dot")
+    for root in roots:
+        root = root.resolve()
+        if resolved == root or resolved.is_relative_to(root) or root.is_relative_to(resolved):
+            raise BuildError("ZIP output must be separate from source and directory outputs")
+
+
+def create_archive(output: Path, target: Path) -> dict:
+    """Verify a temporary archive before publishing it without replacing any file."""
+    target = target.absolute()
+    if target.is_symlink() or target.exists():
+        raise BuildError("ZIP output must be a new path; existing paths are preserved")
+    check_owned_output(output)
+    files = inventory(output)
+    if RECEIPT not in files:
+        raise BuildError("ZIP input requires a complete build receipt")
+    if any("\\" in name or name.startswith("/") or ".." in name.split("/") for name in files):
+        raise BuildError("ZIP input contains an unsafe archive path")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    fd, filename = tempfile.mkstemp(prefix=".lody4dot-zip-", suffix=".zip", dir=target.parent)
+    os.close(fd)
+    temporary = Path(filename)
+    try:
+        with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED,
+                             strict_timestamps=False) as archive:
+            for name in files:
+                archive.write(output / name, name)
+        try:
+            with zipfile.ZipFile(temporary) as archive:
+                names = archive.namelist()
+                if len(names) != len(files) or set(names) != set(files) or archive.testzip() is not None:
+                    raise BuildError("ZIP file inventory or CRC verification failed")
+                receipt = json.loads(archive.read(RECEIPT))
+                if not isinstance(receipt, dict) or receipt.get("files") != {
+                    name: value for name, value in files.items() if name != RECEIPT
+                }:
+                    raise BuildError("ZIP build receipt does not match its input")
+                for name, expected in files.items():
+                    if hashlib.sha256(archive.read(name)).hexdigest() != expected:
+                        raise BuildError("ZIP file content does not match its build receipt")
+        except (zipfile.BadZipFile, ValueError) as exc:
+            raise BuildError("ZIP verification failed") from exc
+        result = {
+            "path": str(target), "file_count": len(files),
+            "size_bytes": temporary.stat().st_size, "sha256": digest(temporary),
+            "receipt_sha256": files[RECEIPT],
+            "verification": "crc_and_receipt_sha256",
+        }
+        # Both paths share a directory/filesystem. link fails if another writer wins.
+        os.link(temporary, target)
+        return result
+    finally:
+        temporary.unlink()
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=Path("dist/lody4dot"))
+    parser.add_argument("--zip", dest="zip_output", type=Path,
+                        help="Create and verify a ZIP at a new path; never replace an existing path")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
     try:
-        result = build(Path(__file__).resolve().parents[3], args.output)
+        repo = Path(__file__).resolve().parents[3]
+        if args.zip_output is not None:
+            check_archive_target(repo, args.output, args.zip_output)
+        result = build(repo, args.output)
+        if args.zip_output is not None:
+            result["archive"] = create_archive(Path(result["output"]), args.zip_output)
         code = 0
     except (BuildError, OSError) as exc:
         result = {"schema_version": 1, "status": "fail", "error_category": "build_input", "message": str(exc)}
@@ -268,6 +339,8 @@ def main(argv=None) -> int:
         print(result["message"], file=sys.stderr)
     else:
         print(f"Built {result['file_count']} files at {result['output']}")
+        if "archive" in result:
+            print(f"Verified ZIP at {result['archive']['path']} (SHA-256 {result['archive']['sha256']})")
     return code
 
 

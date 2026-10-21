@@ -530,6 +530,18 @@ Python工具、CLI/runtime锁、核心技能、setup、命令索引、帮助快�
 
 忽略目录保留`dist/lody4dot-0.2.6-{regression.log,package-summary.json,bootstrap.json,knowledge-scenarios.json,doc-checks.json}`及ZIP，公开只记录脱敏范围。当前状态仍由[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)维护，不再建立方案或进度副本。
 
+## 离线ZIP命令与0.2.7候选
+
+2026-10-21用户明确先固化离线ZIP、再修正测试夹具。P1在原builder增加可选`--zip PATH`，默认目录构建结果和退出码保留；CLI请求ZIP时才附加archive路径、文件数、字节数、ZIP/收据SHA及验证说明。目标一律新建，预检已存在路径/源码或输出重叠，暂存ZIP通过CRC、收据和逐文件摘要后以不覆盖方式发布。目录可在ZIP后续失败时保留，不承诺两输出共同原子提交；未建立新分发服务或发布动作。
+
+独立上下文先补失败用例；原15构建测试增加11项至26，覆盖默认兼容、完整根目录/隐藏清单、已有/修改ZIP及其他目标保护、父路径冲突、源码/输出重叠、发布竞争、校验/发布失败清理、坏源拒绝和epoch时间戳。CRC有效但内容或收据被改会拒绝；收据为合法JSON列表的异常先复现再修正。复审另复现epoch0抛ValueError，增加回归并用ZIP格式的时间范围规范化解决，不改变文件内容摘要。最终143项Linux全量、结构和差异检查通过，独立复审通过。
+
+真实源码CLI生成31内容加收据、32文件ZIP，初次产物120935字节，SHA-256为`3f657cad61ec55808791c46d02c70580301fc6a5f9ad102f1dab6758d020669b`；重复同路径请求实际退出3，ZIP未变。复审后最终CLI另生成`lody4dot-0.2.7-post-review.zip`，SHA为`86ef6f9a8559871d71250ec4adaf4b281e46f86c548ec922e516419a9bda3c1a`，所有entry内容与初次产物逐字节相同；ZIP头时间戳可随构建变化，不承诺两次整包字节确定性。收据SHA均为`71070cc6c85e6e1024b333f1977a90b8cf6f90e260a78abb89b7a1c134f13b2e`，CRC与逐文件摘要独立核对通过。
+
+移位解包后离线bootstrap退出0、仅doctor，插件0.2.7、bundle/runtime consistent；未转发LODY/GITEE变量，install/authentication/daemon/task_recovery均not_run。同锁CLI0.107.2，未升级或重装。0.2.6至0.2.1六份原ZIP摘要全部不变，源码builder继续不随包，随包Python工具、知识、schema1、依赖锁及云脚本未改；原生安装/加载、真实平台或Lody业务证据未新增。
+
+忽略目录保留`dist/lody4dot-0.2.7-{build-result.json,post-review-result.json,repeat-result.json,package-summary.json,p1-regression.log,bootstrap.json,prior-packages.json}`和两份ZIP；当前正式来源/状态仅见[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)。本项完成的是C05离线分发子范围，不关闭C05加载、C04真实平台、C08剩余恢复、C09/C10或旧T09/T12；P2夹具修正随后单独实施。
+
 ## 复现命令
 
 在仓库根目录运行：

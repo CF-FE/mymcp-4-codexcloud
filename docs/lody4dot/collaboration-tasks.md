@@ -103,6 +103,7 @@ python3 -m unittest discover -s tests/lody4dot -p test_install.py -v
 - **步骤**：用同一知识源码生成含Dot说明的自包含包，按官方支持的兼容清单准备目录/ZIP候选；0.2.2追加`extensions.com.openai.onboardingSkill`及薄setup技能，复用bootstrap。保留隐藏清单和全部资源。GitHub marketplace已有官方导入路线，但不运行builder；不能新增catalog直接指向未构建的`plugin/lody4dot/`，不提交生成分发物。ChatGPT web的扫描、安装、读取及用户run setup分别取证，新对话/安装所在对话各自测试；ZIP外层包装未知部分不猜。bootstrap与知识入口分开，安装prefix使用该端实际值。
 - **独立云任务入口**：由Dot实际发起并保存任务/环境关联，子任务核实首次发现及读取后回传。Dot权限已由用户确认，无需再次索取；当前云任务不改用Cloud CLI创建下游任务，不以OpenAI任务目录401作为缺口。已有原任务补证优先，不为补旧字段重复创建。
 - **验收**：移位包可找到全部资源与Dot指引；缺资源、包外引用、修改过的旧输出及已有规则覆盖的敏感文件/凭证fixture均失败。allowlist和来源仍须复核，扫描器不承诺识别任意秘密。安装不登录、不注册机器、不启动host。构建、上传扫描、安装/启用、启动入口送达和实际读取各有证据；Codex格式候选不称ChatGPT已接受，托管接入不冒称原生注册。
+- **离线ZIP增量**：源码builder显式`--zip PATH`生成完整根目录ZIP并验证CRC/收据/文件摘要，保留默认目录JSON；已有ZIP目标（包括目录/符号链接）、源或输出重叠均拒绝，发布竞争不得覆盖他人文件，校验/发布失败清理自有暂存。旧时间戳按ZIP可表示范围规范化，不改变内容摘要。该本地分发子范围可独立验收，不代替真实宿主加载或GitHub发布。
 - **验证**：命令只构建自有输出；目录已被陌生内容占用时停止并选择新的自有输出，不删除原目录。
 
 ```bash

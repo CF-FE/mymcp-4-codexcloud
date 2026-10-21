@@ -1,6 +1,6 @@
 # lody4dot
 
-为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码候选为`0.2.6`，正式云来源与运行观测统一见仓库[任务队列](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/.codex/agent-state/todo.md#当前环境与下一步)；`0.107.2`是已验证知识与默认可复现CLI安装基线，不是唯一允许运行的版本。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际CLI的其他运行要求另行核对。
+为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码候选为`0.2.7`，正式云来源与运行观测统一见仓库[任务队列](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/.codex/agent-state/todo.md#当前环境与下一步)；`0.107.2`是已验证知识与默认可复现CLI安装基线，不是唯一允许运行的版本。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际CLI的其他运行要求另行核对。
 
 核心能力源码在仓库的 `skill/lody4dot/`，薄setup入口在`skill/lody4dot-setup/`；本目录负责组合、运行时锁定和分发，不新增 MCP 服务。Lody 已有 MCP 只有在宿主提供有效 session/workspace/machine 上下文时才使用，不能将其内部入口当作独立通用服务。
 
@@ -148,6 +148,16 @@ python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot --json
 
 构建会收集技能、参考、工具和锁定输入，拒绝缺失资源、符号链接、包外引用、额外文件和可识别的凭证文件，生成 `.lody4dot-build.json` 哈希清单。产物不包含依赖安装目录或身份状态；自有且完整的旧产物可重新构建，陌生目录或被修改的产物不会被覆盖。
 
+需要同时生成离线ZIP时，显式指定新路径：
+
+```bash
+python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.2.7 --zip dist/lody4dot-0.2.7.zip --json
+```
+
+ZIP保留隐藏清单及所有资源，根直接是插件内容；生成后核对CRC、收据和逐文件SHA-256，再创建最终文件。成功JSON只在请求ZIP时附加`archive`，提供绝对`path`、含收据的`file_count`、`size_bytes`、ZIP的`sha256`、`receipt_sha256`和`verification`。这些摘要证明本地文件一致性，不提供签名或原生加载/业务验收。
+
+ZIP目标只允许新路径，已有文件、目录或符号链接一律保留并拒绝；重做请使用另一新路径。不在源码树或目录产物内部生成ZIP。已知目标/路径冲突会在目录构建前拒绝；后续ZIP失败可保留成功构建的目录，但不会覆盖旧ZIP，也不承诺两个输出共同原子提交。默认不带`--zip`的命令、JSON字段及退出码不变；构建/打包失败仍退出3。builder仅在仓库源码中提供，不随产物安装，也不自动发布或注册插件。
+
 将整个产物目录复制到其他位置后，以产物根为工作目录执行`python3 scripts/install.py`、`python3 scripts/doctor.py`、`python3 scripts/auth.py`、`python3 scripts/bootstrap.py`或`python3 scripts/handoff.py`及其相应参数。技能入口为`skills/lody4dot/SKILL.md`；随附参考均在包内。这里的包内路径与前面的仓库源码路径不同，不应直接互换。
 
 在允许写入配置的 Codex CLI 环境，可以使用已核实的原生入口：
@@ -196,5 +206,7 @@ python3 scripts/check_repository.py
 `0.2.5`仅在原协作参考补Codex平台手动/Dot/CLI入口与平台支持、当前访问证据、项目职责的区别；按所在项目已有分工执行，不增加创建工具或查询路线。0.2.4产物与原验证记录保留，其他知识、工具、schema1、依赖及支持范围沿用。
 
 `0.2.6`在原配置参考补Agent配置、Role与Project的关系：多Role可复用配置，项目是会话上下文；0.107.2的角色提议须有当前身份机器的合法会话工具，提议、用户保存、查询与实际执行分别验收。未核实Project持久拥有角色组，不按此假设新增绑定或控制服务。具体规则在包根`skills/lody4dot/references/configuration.md`，真实角色/项目写入未由知识修订验收；0.2.5原包与既有工具、CLI锁保持。
+
+`0.2.7`将离线ZIP生成、验包及摘要固化为源码builder的可选命令；默认目录构建和随包运行工具沿用。已有ZIP只保留不覆盖，不增加发布服务、依赖或环境初始化动作；旧版本产物继续按各自收据保留。
 
 官方依据：[Dot入门](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot)、[Dot权限FAQ](https://help.openai.com/en/articles/20001529-dots-privacy-security-and-safety-faqs)、[Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud)、[Plugins](https://help.openai.com/en/articles/20001256-plugins-in-chatgpt)、[GitHub marketplace导入](https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github)、[Skills](https://help.openai.com/en/articles/20001066-skills-in-chatgpt)（读取于2026-10-21）。

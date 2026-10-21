@@ -2,12 +2,16 @@
 
 import hashlib
 import importlib.util
+from contextlib import redirect_stderr, redirect_stdout
+import io
 import json
+import os
 from pathlib import Path
 import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
+import zipfile
 
 
 SCRIPT = Path(__file__).resolve().parents[2] / "plugin/lody4dot/scripts/build.py"
@@ -53,6 +57,193 @@ class BuildTests(unittest.TestCase):
 
     def write_json(self, path, value):
         self.write(path, json.dumps(value) + "\n")
+
+    def run_cli(self, *arguments, output=None):
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with patch.object(build_module, "__file__", str(self.plugin / "scripts/build.py")), \
+             redirect_stdout(stdout), redirect_stderr(stderr):
+            code = build_module.main([
+                "--output", str(output or self.output), "--json", *map(str, arguments),
+            ])
+        return code, json.loads(stdout.getvalue())
+
+    def test_default_cli_retains_directory_only_result(self):
+        code, result = self.run_cli()
+        self.assertEqual(code, 0)
+        self.assertEqual(set(result), {
+            "schema_version", "status", "output", "file_count", "manifest_sha256",
+        })
+        self.assertEqual(result["status"], "pass")
+        self.assertEqual(result["file_count"] + 1, len(build_module.inventory(self.output)))
+        self.assertEqual(result["manifest_sha256"],
+                         hashlib.sha256((self.output / build_module.RECEIPT).read_bytes()).hexdigest())
+
+    def test_zip_cli_contains_complete_root_bundle_and_verified_digest_summary(self):
+        target = self.root / "release/lody4dot.zip"
+        code, result = self.run_cli("--zip", target)
+        self.assertEqual(code, 0)
+        self.assertEqual(result["status"], "pass")
+        files = build_module.inventory(self.output)
+        with zipfile.ZipFile(target) as archive:
+            self.assertIsNone(archive.testzip())
+            self.assertEqual(len(archive.infolist()), len(files))
+            self.assertEqual(set(archive.namelist()), set(files))
+            self.assertIn(".agents/plugins/marketplace.json", archive.namelist())
+            self.assertIn(".codex-plugin/plugin.json", archive.namelist())
+            receipt = json.loads(archive.read(build_module.RECEIPT))
+            for name, expected in files.items():
+                self.assertEqual(hashlib.sha256(archive.read(name)).hexdigest(), expected, name)
+                if name != build_module.RECEIPT:
+                    self.assertEqual(receipt["files"][name], expected, name)
+        metadata = result["archive"]
+        self.assertEqual(metadata["path"], str(target))
+        self.assertEqual(metadata["file_count"], len(files))
+        self.assertEqual(metadata["size_bytes"], target.stat().st_size)
+        self.assertEqual(metadata["sha256"], hashlib.sha256(target.read_bytes()).hexdigest())
+        self.assertEqual(metadata["receipt_sha256"], files[build_module.RECEIPT])
+        self.assertTrue(metadata["verification"])
+
+    def test_existing_or_modified_zip_is_never_replaced_or_rebuilds_directory(self):
+        target = self.root / "release.zip"
+        code, _ = self.run_cli("--zip", target)
+        self.assertEqual(code, 0)
+        previous = build_module.inventory(self.output)
+        self.write(self.skill / "references/cloud.md", "# Updated source\n")
+        for modified in (False, True):
+            with self.subTest(modified=modified):
+                if modified:
+                    target.write_bytes(target.read_bytes() + b"user annotation")
+                before = target.read_bytes()
+                code, result = self.run_cli("--zip", target)
+                self.assertEqual(code, 3)
+                self.assertEqual(result["status"], "fail")
+                self.assertEqual(target.read_bytes(), before)
+                self.assertEqual(build_module.inventory(self.output), previous)
+
+    def test_zip_accepts_epoch_source_timestamp_without_changing_content(self):
+        skill = self.skill / "SKILL.md"
+        contents = skill.read_bytes()
+        os.utime(skill, (0, 0))
+        target = self.root / "epoch.zip"
+        code, result = self.run_cli("--zip", target)
+        self.assertEqual(code, 0)
+        with zipfile.ZipFile(target) as archive:
+            self.assertIsNone(archive.testzip())
+            name = "skills/lody4dot/SKILL.md"
+            self.assertEqual(archive.read(name), contents)
+            receipt = json.loads(archive.read(build_module.RECEIPT))
+            self.assertEqual(receipt["files"][name], hashlib.sha256(contents).hexdigest())
+        self.assertEqual(result["archive"]["sha256"], hashlib.sha256(target.read_bytes()).hexdigest())
+
+    def test_any_existing_archive_path_is_refused_before_build(self):
+        foreign = self.root / "foreign.txt"
+        self.write(foreign, "keep foreign data")
+        for kind in ("file", "directory", "symlink", "dangling_symlink"):
+            with self.subTest(kind=kind):
+                target = self.root / f"{kind}.zip"
+                if kind == "file":
+                    self.write(target, "not an owned zip")
+                elif kind == "directory":
+                    self.write(target / "user-file", "keep")
+                else:
+                    target.symlink_to(foreign if kind == "symlink" else self.root / "missing")
+                code, result = self.run_cli("--zip", target)
+                self.assertEqual(code, 3)
+                self.assertEqual(result["status"], "fail")
+                self.assertFalse(self.output.exists())
+                self.assertEqual(foreign.read_text(), "keep foreign data")
+                if kind == "directory":
+                    self.assertEqual((target / "user-file").read_text(), "keep")
+                    shutil.rmtree(target)
+                else:
+                    if kind == "file":
+                        self.assertEqual(target.read_text(), "not an owned zip")
+                    else:
+                        self.assertTrue(target.is_symlink())
+                    target.unlink()
+
+    def test_archive_path_cannot_overlap_source_or_output(self):
+        before = build_module.inventory(self.repo)
+        targets = [self.output, self.output / "nested.zip",
+                   self.plugin / "release.zip", self.skill / "release.zip"]
+        for target in targets:
+            with self.subTest(target=target):
+                code, result = self.run_cli("--zip", target)
+                self.assertEqual(code, 3)
+                self.assertEqual(result["status"], "fail")
+                self.assertFalse(target.exists())
+                self.assertFalse(self.output.exists())
+                self.assertEqual(build_module.inventory(self.repo), before)
+        target = self.root / "ancestor.zip"
+        code, _ = self.run_cli("--zip", target, output=target / "bundle")
+        self.assertEqual(code, 3)
+        self.assertFalse(target.exists())
+
+    def test_late_archive_path_competitor_is_preserved_and_temporary_file_removed(self):
+        target = self.root / "release.zip"
+        real_link = build_module.os.link
+
+        def competing_link(source, destination, *args, **kwargs):
+            Path(destination).write_bytes(b"another writer owns this path")
+            return real_link(source, destination, *args, **kwargs)
+
+        with patch.object(build_module.os, "link", side_effect=competing_link):
+            code, result = self.run_cli("--zip", target)
+        self.assertEqual(code, 3)
+        self.assertEqual(result["status"], "fail")
+        self.assertEqual(target.read_bytes(), b"another writer owns this path")
+        self.assertEqual([], list(self.root.glob(".lody4dot-*")))
+        build_module.check_owned_output(self.output)
+
+    def test_archive_publish_failure_leaves_no_partial_zip_or_temporary_file(self):
+        target = self.root / "release.zip"
+        with patch.object(build_module.os, "link", side_effect=OSError("publish unavailable")):
+            code, result = self.run_cli("--zip", target)
+        self.assertEqual(code, 3)
+        self.assertEqual(result["status"], "fail")
+        self.assertFalse(target.exists())
+        self.assertEqual([], list(self.root.glob(".lody4dot-*")))
+        build_module.check_owned_output(self.output)
+
+    def test_archive_content_change_with_valid_crc_fails_before_publication(self):
+        real_write = zipfile.ZipFile.write
+        changes = (("skills/lody4dot/SKILL.md", b"changed during archive creation"),
+                   (build_module.RECEIPT, b"[]"))
+        for index, (changed_name, payload) in enumerate(changes):
+            with self.subTest(changed_name=changed_name):
+                target = self.root / f"changed-{index}.zip"
+
+                def changed_write(archive, filename, arcname=None, *args, **kwargs):
+                    if str(arcname) == changed_name:
+                        return archive.writestr(arcname, payload)
+                    return real_write(archive, filename, arcname, *args, **kwargs)
+
+                with patch.object(zipfile.ZipFile, "write", new=changed_write):
+                    code, result = self.run_cli("--zip", target)
+                self.assertEqual(code, 3)
+                self.assertEqual(result["status"], "fail")
+                self.assertFalse(target.exists())
+                self.assertEqual([], list(self.root.glob(".lody4dot-*")))
+                build_module.check_owned_output(self.output)
+
+    def test_archive_parent_file_is_preserved_before_directory_build(self):
+        parent = self.root / "foreign-parent"
+        parent.write_bytes(b"existing parent file")
+        code, result = self.run_cli("--zip", parent / "release.zip")
+        self.assertEqual(code, 3)
+        self.assertEqual(result["status"], "fail")
+        self.assertEqual(parent.read_bytes(), b"existing parent file")
+        self.assertFalse(self.output.exists())
+        self.assertEqual([], list(self.root.glob(".lody4dot-*")))
+
+    def test_invalid_source_does_not_create_archive(self):
+        target = self.root / "release.zip"
+        (self.setup_skill / "SKILL.md").unlink()
+        code, result = self.run_cli("--zip", target)
+        self.assertEqual(code, 3)
+        self.assertEqual(result["status"], "fail")
+        self.assertFalse(target.exists())
+        self.assertFalse(self.output.exists())
 
     def test_build_relocates_all_resources_and_hashes_exact_content(self):
         result = build_module.build(self.repo, self.output)
