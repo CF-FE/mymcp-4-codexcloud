@@ -6,15 +6,15 @@
 
 ## 当前环境与下一步
 
-2026-10-21按用户要求实施Role/Project知识增量。来源修正已在spec17正式生效；本次最新观测为spec21，正式0.2.5、无草稿；0.2.6是独立知识候选。发布状态只在本节维护；历史spec17的ready及较早unknown均保留当时原义。
+2026-10-21按用户要求完成Role/Project知识及非Dot优先增量。来源修正已在spec17正式生效；本次最新观测为spec21，正式0.2.5、无草稿；0.2.7是沿用0.2.6知识的独立分发候选。发布状态只在本节维护；历史spec17的ready及较早unknown均保留当时原义。
 
 | 项目 | 本次实际结果 |
 | --- | --- |
 | 正式配置 | 固定`0a044f14622902b6d8d93418338df2251b7a38f8`/0.2.5，无草稿、无pending要求；0.2.5云环境来源升级已完成，不代表ChatGPT/Dot原生插件安装完成 |
-| 工作副本 | 本轮开始于干净c8679b6，ff-only拉取无更新；先实现源码builder的离线ZIP可选输出，再修改测试夹具。保留0.2.6及更早ZIP、CLI锁和云脚本 |
+| 工作副本 | 本轮从c8679b6完成并推送ZIP提交2bc188d，随后完成P2离线测试夹具修订；候选0.2.7产物、CLI锁、运行工具及云脚本保持，P2不另增插件版本 |
 | 运行观测 | 最新spec/observed21，observations_current=true，running/connected，failure=null；与已发布来源分别核对，不将spec变化推断为独立任务或VM/存储重建 |
 | 网络与变量 | 最新network及两变量state均unknown，不用spec17的ready补填；未推断凭证无效、重配绑定或扩大网络。元数据readiness与实际服务授权仍分别验收 |
-| 本轮依赖与回归 | 0.2.7的143项Linux回归（构建26项）、结构、ZIP真实命令/重复路径拒绝及移位离线bootstrap通过；移位仅doctor、bundle/runtime consistent，install/认证/daemon/任务恢复not_run。同锁CLI0.107.2，未升级 |
+| 本轮依赖与回归 | 0.2.7的143项Linux回归（构建26项）、结构、ZIP真实命令/重复路径拒绝及移位离线bootstrap通过；P2普通/别名TMPDIR各143项无跳过，模拟Darwin及组合条件各143项无失败、既有Linux专用跳过1项。移位仅doctor、bundle/runtime consistent，install/认证/daemon/任务恢复not_run。同锁CLI0.107.2，未升级 |
 | 来源升级 | spec16保存的源修正已在spec17发布生效；本轮配置仍为同一正式ref、无草稿，不重新保存相同配置 |
 | 独立Codex云任务入口 | 由Dot创建，用户已确认Dot具备权限；当前云任务不派生Codex云任务，不查询OpenAI任务目录。历史Cloud CLI/401尝试已撤下，不作插件前置或阻塞 |
 | 用户setup入口 | 0.2.7沿用已有setup及Work适用范围，本轮未改入口；官方0.163.0 parser亦支持字段。已核实的CLI无独立setup/validate/dry-run，原生实际调用未验 |
@@ -22,7 +22,7 @@
 | Work创建入口观测 | 本轮可调用目录仍未见create_thread/chatgptWorkCloud；没有创建尝试。这仅描述本端工具范围，不推导Dot无权限或全产品无入口 |
 | Role/Project验证范围 | 既有只读目录与Agent配置执行已测；先前帮助/源码确认多Role可复用配置、会话可组合Role与项目。多个Role创建/用户保存、项目登记及按Role运行未实测，见[关系核实](../../docs/lody4dot/validation.md#agent配置role与project关系核实) |
 | 历史运行中恢复实验 | 单次新chat，准确回合running时SIGTERM本地follow观察进程并清理A身份；新B身份前4次仍见同turn running，第5次persisted/synced/completed。新274字节/SHA/challenge匹配，原8条历史未变、总10条；两身份清理。不是控制主机重启 |
-| 下一步 | 非Dot增量按优先级执行：ZIP命令done，测试夹具修订planned，提交前者后继续后者；不改正式0.2.5或生成环境草稿。独立首次加载、实际Role/Project配置写入、真实跨平台和Dot路线仍按各自前提验收，不把本地工具/模拟结果补成真实宿主证据 |
+| 下一步 | 非Dot两项增量均done：ZIP命令已推送2bc188d，测试夹具修订见[验证记录](../../docs/lody4dot/validation.md#离线测试夹具的宿主依赖修订)。真实macOS/WSL安装与本地原生加载需要对应可用宿主；实际Role/Project配置写入、Dot路线及旧任务补证仍按各自前提验收。不改正式0.2.5或生成环境草稿，不把本地工具/模拟结果补成真实宿主证据 |
 
 ## 原有交付任务
 
@@ -140,7 +140,7 @@ T11按开发契约完成支持范围和场景覆盖：20根/70路径数量、来
 | C01 | 宿主与生命周期契约 | done（有界官方核实）；9篇Help、4篇完整指南及同版本源码已覆盖卡内宿主/入口/身份/路径与生命周期边界。原卡允许未知hook记unknown并停止该分支，不追加未公开hook或C09实际加载作为门槛；独立验收复核通过，见[宿主契约](../../docs/lody4dot/host-contracts.md) |
 | C02 | 共享技能与协作知识 | done；0.2.4/0.2.5交付保留。0.2.6已补原配置参考和版本化来源，三个新上下文按目标正确选择复用、待保存及跨机项目处理；见[本轮验证](../../docs/lody4dot/validation.md#role与project知识026候选)。只证明显式技能入口后的知识使用，不代表原生加载或真实配置写入 |
 | C03 | doctor上下文、范围与来源 | done；42项诊断测试及真实包内inspect/来源检查通过，setup内容变化可见为mismatch。schema1保留范围、来源和真实失败分类；版本只提示，来源仅证明本地文件一致性 |
-| C04 | 平台安装边界 | blocked；Linux与统一边界既有52项证据、Win32/Darwin模拟退出5保留。离线夹具宿主依赖已定向复现，修订planned；真实Darwin/arm64无Node/npm、WSL未提供，不宣布跨平台runtime支持 |
+| C04 | 平台安装边界 | blocked（离线夹具修订done）；Linux与统一边界既有52项证据、Win32/Darwin模拟退出5保留。143项全量在普通/别名临时路径和模拟Darwin组合条件通过，原断言及拒绝分支保留，见[夹具验证](../../docs/lody4dot/validation.md#离线测试夹具的宿主依赖修订)；真实Darwin/arm64无Node/npm、WSL未提供，不宣布跨平台runtime支持 |
 | C05 | 按宿主分发与加载 | blocked（本地ZIP增量done）；0.2.7默认兼容、目标保护及验包通过26构建测试/143全量和真实CLI，来源/移位通过。正式0.2.5不变；独立任务/首次读取、原生UI安装/setup实际调用仍缺，不恢复Cloud CLI/401或重复索权 |
 | C06 | 最小交接整理/校验 | done；27项离线行为测试及分发回归通过，输入不改写、无网络/登录/派发；仅结构/声明一致性，真实性/ACL/产物内容未核验 |
 | C07 | 两独立宿主协作 | done（有限范围）；Linux控制端与Darwin解包/显式读技能宿主完成原产物交接，Darwin随后通过自身内置MCP只读查询原session/history，准确引用、273字节、SHA及challenge均匹配。新增1个明确只读模型回合，最终persisted/synced/completed且无activeTurns；证据为Agent调用回执与控制端核验，无底层tool trace，见[内置MCP验收](../../docs/lody4dot/validation.md#远端内置mcp只读查询与c07有限双端验收)。不扩为macOS受管安装、原生注册或Dot |
@@ -289,3 +289,11 @@ AGENTS保留短指引，详细边界与交接步骤落在环境指引、设计�
 先由独立上下文补RED，随后实现并通过26构建用例、143整仓测试和真实CLI验包/拒绝重复路径。复审发现epoch时间戳异常，新增RED并通过`strict_timestamps=False`修正；最终复审通过。移位包仅doctor且bundle/runtime consistent，0安装/认证/daemon/业务恢复。原0.2.6及更早五份ZIP摘要不变。详见[ZIP验证](../../docs/lody4dot/validation.md#离线zip命令与027候选)。
 
 第二优先项仅完成定向定位：自有临时路径别名触发真实祖先/私密state检查，部分Linux语义测试在模拟Darwin下提前返回unsupported。下一提交只修测试夹具，不改生产平台支持，不把条件模拟当真实Darwin/WSL验收。正式0.2.5与云配置保持，未调用Cloud目录或创建下游任务。
+
+## 非Dot优先项二：离线测试夹具修订
+
+2026-10-21，在ZIP提交2bc188d之后单独修正四组测试。先复现临时目录别名和模拟Darwin导致的错误，再在Linux语义用例中显式声明平台、注册清理；只规范化TemporaryDirectory创建的自有基础根，不解析掉故意输入的符号链接。首次全量整合进一步定位生命周期组7个提前unsupported失败，补同类实例级平台声明后通过。
+
+最终普通Linux/别名TMPDIR各143项通过且无跳过；模拟Darwin和Darwin＋别名各143项无失败，既有Linux文件锁专用用例各跳过1项。独立AST复核确认四模块75个测试名称、所有原断言及skip装饰器未变，生产平台、用户state保护和显式符号链接拒绝均保留。结构、文档引用与差异检查通过，详见[验证记录](../../docs/lody4dot/validation.md#离线测试夹具的宿主依赖修订)。
+
+本项只交付可离线执行的夹具修订；未在真实Darwin/WSL运行，旧macOS失败记录保留。未改生产脚本、技能、依赖锁、插件版本或0.2.7 ZIP，也未认证、启动daemon、创建业务/平台任务或修改正式环境。C04真实平台及C05/C08/C09/C10剩余门槛仍按原范围保留。

@@ -17,9 +17,15 @@ import common
 
 
 class CliVersionPolicyTests(unittest.TestCase):
+    def setUp(self):
+        # These fixtures model Linux runtime behavior; OS refusal has separate tests.
+        linux_platform = patch.object(sys, "platform", "linux")
+        linux_platform.start()
+        self.addCleanup(linux_platform.stop)
+
     def test_other_and_unknown_versions_do_not_gate_managed_entrypoint(self):
         with tempfile.TemporaryDirectory() as temporary:
-            prefix = Path(temporary)
+            prefix = Path(temporary).resolve()
             lock = b'{"lockfileVersion":3}\n'
             digest = hashlib.sha256(lock).hexdigest()
             runtime = prefix / "versions" / digest
@@ -61,9 +67,10 @@ class CliVersionPolicyTests(unittest.TestCase):
                  patch.object(auth, "offline_version", return_value=version), \
                  patch.object(auth, "verify_account", return_value=2) as query, \
                  patch.object(auth, "run_native") as login:
+                state = Path(temporary).resolve()
                 output = io.StringIO()
                 with redirect_stdout(output):
-                    code = auth.main(["--verify-only", "--data-dir", temporary, "--json"])
+                    code = auth.main(["--verify-only", "--data-dir", str(state), "--json"])
                 value = json.loads(output.getvalue())
                 self.assertEqual(code, 0)
                 self.assertEqual(value["account"], "authenticated")
@@ -77,9 +84,10 @@ class CliVersionPolicyTests(unittest.TestCase):
              patch.object(auth, "installed_cli", return_value=Path("/fixture/cli")), \
              patch.object(auth, "offline_version", return_value="0.100.0"), \
              patch.object(auth, "verify_account", side_effect=common.ToolError(4, "permission", "Access denied.")):
+            state = Path(temporary).resolve()
             output = io.StringIO()
             with redirect_stdout(output):
-                code = auth.main(["--verify-only", "--data-dir", temporary, "--json"])
+                code = auth.main(["--verify-only", "--data-dir", str(state), "--json"])
             value = json.loads(output.getvalue())
             self.assertEqual(code, 4)
             self.assertEqual(value["error_category"], "permission")

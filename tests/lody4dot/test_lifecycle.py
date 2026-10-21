@@ -33,6 +33,10 @@ print(json.dumps({'schema_version':1,'status':'pass','authentication':'not_run',
 
 class LifecycleTests(unittest.TestCase):
     def setUp(self):
+        # These subprocess fixtures describe the supported Linux bootstrap flow.
+        linux_platform = patch.object(sys, "platform", "linux")
+        linux_platform.start()
+        self.addCleanup(linux_platform.stop)
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)

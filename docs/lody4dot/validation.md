@@ -542,6 +542,23 @@ Python工具、CLI/runtime锁、核心技能、setup、命令索引、帮助快�
 
 忽略目录保留`dist/lody4dot-0.2.7-{build-result.json,post-review-result.json,repeat-result.json,package-summary.json,p1-regression.log,bootstrap.json,prior-packages.json}`和两份ZIP；当前正式来源/状态仅见[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)。本项完成的是C05离线分发子范围，不关闭C05加载、C04真实平台、C08剩余恢复、C09/C10或旧T09/T12；P2夹具修正随后单独实施。
 
+## 离线测试夹具的宿主依赖修订
+
+2026-10-21，P2基于已推送2bc188d/0.2.7单独实施。生产Linux平台判断与安全路径检查符合现有契约，具体缺口在测试：自有临时根经符号链接别名进入祖先或私密state拒绝，部分Linux后端语义用例未声明模拟平台，在Darwin条件下提前返回unsupported。先保留失败记录，再仅修正install、diagnostics、CLI版本策略和lifecycle四组夹具：规范化自有临时基础根，实例级Linux平台补丁注册清理；故意传入的坏路径和生产guard不改。
+
+定向三组67项先通过；全量整合再复现生命周期组7个提前退出失败，增加同类平台声明后消除。最终在当前Linux机器的独立子进程中验证：
+
+| 条件 | 最终结果 | 证据范围 |
+| --- | --- | --- |
+| 普通Linux | 143项，无失败/错误/跳过 | 全量回归，含26项构建测试及原真实Linux文件锁用例 |
+| Linux＋符号链接TMPDIR | 143项，无失败/错误/跳过 | 别名临时根不再干扰正确输入；故意输入的符号链接仍拒绝 |
+| 模拟Darwin | 143项，无失败/错误，跳过1项 | 只修改测试进程的sys.platform；原Linux专用文件锁装饰器按既有规则跳过 |
+| 模拟Darwin＋符号链接TMPDIR | 143项，无失败/错误，跳过1项 | 两个已知夹具条件的组合；并非真实Darwin运行 |
+
+独立审查以AST对比四模块75个测试名称、所有原assert调用和skip装饰器，均未变；平台补丁在每个实例结束恢复。原独立Win32/Darwin不支持测试、权限拒绝、私密state及显式符号链接拒绝均保留，未用mock绕过生产检查。结构、引用及差异检查通过；生产脚本、平台支持测试、技能、云脚本、CLI锁和插件版本未改，0.2.7已有ZIP字节不变，因此不另生成候选包。
+
+本轮是Linux上的夹具条件模拟，不证明真实macOS、WSL或Windows受管runtime；此前真实macOS失败按原记录保留。没有认证、daemon、模型/业务调用、资料保存、平台任务创建或原生加载，C04真实安装及C05/C08/C09/C10未由本轮关闭。忽略目录保留`dist/lody4dot-p2-fixture-red.json`、`dist/lody4dot-0.2.7-p2-regression.log`、`dist/lody4dot-0.2.7-fixture-matrix.json`及对应条件日志；首次生命周期失败另存`*-before-lifecycle.*`，不覆盖成成功。当前状态只维护[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
+
 ## 复现命令
 
 在仓库根目录运行：

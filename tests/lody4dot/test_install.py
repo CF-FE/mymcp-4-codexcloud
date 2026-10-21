@@ -22,7 +22,7 @@ class InstallTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        self.root = Path(self.tmp.name)
+        self.root = Path(self.tmp.name).resolve()
         self.prefix = self.root / "tool"
         self.runtime = self.root / "runtime"
         self.runtime.mkdir()

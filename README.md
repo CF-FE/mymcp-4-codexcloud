@@ -58,6 +58,8 @@ python3 -m unittest discover -s tests -v
 
 [结构检查](scripts/check_repository.py) 验证必需文档、条目命名和入口，拒绝分类目录、条目和入口上的符号链接，并显示各类条目数量；[测试](tests/test_check_repository.py) 验证这些检查能拒绝无效目录。结构检查脚本也可从任意工作目录通过完整路径调用。
 
+Linux运行时语义的离线夹具显式选择模拟平台，自有临时基础路径先规范化；平台拒绝、符号链接与用户状态保护另有用例。条件模拟通过不代表macOS/WSL受管安装已支持，实际证据仍见[验证记录](docs/lody4dot/validation.md)和[支持矩阵](docs/lody4dot/support-matrix.md)。
+
 数量为零时允许骨架检查通过；这不代表存在可运行插件。各条目仍需声明并执行自己的功能测试，结构检查不能替代插件打包、服务请求或技能加载验证。
 
 ## 配置与凭证

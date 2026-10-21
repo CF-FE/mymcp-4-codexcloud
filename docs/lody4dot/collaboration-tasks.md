@@ -83,9 +83,10 @@ python3 -m unittest discover -s tests/lody4dot -p test_build.py -v
 ## C04 平台安装层与结构化不支持结果
 
 - **权威/依赖**：主方案的平台范围、C03报告语义；Linux已验证路径为基线。macOS/WSL仅为候选探测，Windows原生执行支持后置。
-- **文件范围**：`plugin/lody4dot/scripts/{install,common,doctor,auth,platform_support}.py`、`tests/lody4dot/test_platform_support.py`及既有安装测试。
+- **文件范围**：`plugin/lody4dot/scripts/{install,common,doctor,auth,platform_support}.py`、`tests/lody4dot/test_platform_support.py`及既有安装/诊断/版本策略/生命周期测试。离线夹具修订只改测试，生产平台边界不随之放宽。
 - **步骤**：把平台识别提前到POSIX专属导入与操作前；局部封装路径、锁、稳定入口、私密state检查和超时清理；保留Linux事务行为；在实际macOS/WSL逐项探测native依赖与权限，只有证据满足的组合才加入支持矩阵。
 - **验收**：Linux重复安装、失败切换恢复和旧state保护不回退；不支持平台返回脱敏JSON与退出码5，而非`fcntl/getuid/killpg`崩溃。只去掉Linux判断不算跨平台；WSL不算原生Windows，候选失败不触发自动登录、host或权限放宽。
+- **离线夹具**：Linux后端语义用例显式选择模拟平台；只规范化TemporaryDirectory创建的自有基础根，不解析掉故意输入的符号链接或mock掉生产拒绝检查。原平台拒绝、用户state保护和Linux文件锁用例保留；普通路径、别名临时路径与条件模拟分别验证，不能据此宣称真实macOS/WSL支持。
 - **验证**：下列测试均已提供。OS mock只证明分支行为，macOS/WSL支持须另附实际OS/架构的安装、native、重复安装和失败恢复记录。
 
 ```bash
