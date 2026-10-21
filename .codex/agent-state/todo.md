@@ -4,6 +4,24 @@
 
 当前授权：2026-10-20用户明确选择在本对话持续执行r2/d1；2026-10-21确认环境发布，并授权继续推进多宿主方案和任务卡、尽量自主完成。本轮据官方资料将方案修订为c2。未创建后台Goal。`planned`表示尚未满足全部执行前提；可独立进行的准备继续，真实验收不以模拟结果替代。
 
+## 当前环境与下一步
+
+2026-10-21本轮观测。发布状态只在本节维护；其他文档保留静态契约、历史验证及本节链接，不将旧readiness或测试轮次冒充当前状态。
+
+| 项目 | 本次实际结果 |
+| --- | --- |
+| 正式配置 | 固定`ed9096b837edd31a4446a8db1d49159b42262fd5`/0.2.1，无草稿；发布不自动更新固定ref |
+| 工作副本 | 本轮开始时main `1d4ee0c44024290e0eced8cf0347a2ef55a9803f`/0.2.2且干净；这是候选源码，不替代正式ref |
+| 运行观测 | spec/observed14，observations_current=true，running/connected |
+| 网络与变量 | network enforced；LODY_CLI_TOKEN及GITEE_ACCESS_TOKEN元数据ready；没有读取或输出值。它们不证明其他服务身份/动作已授权 |
+| 本轮依赖检查 | 0.2.2工作副本bootstrap仅doctor并pass；install、认证、daemon、业务恢复not_run，与独立业务验收分开 |
+| Cloud任务入口 | 正式cloud exec入口存在；本轮唯一一次cloud list退出1/HTTP401，无403，未提交任务或猜Cloud ENV_ID |
+| 用户setup入口 | 0.2.2本地候选已实现；官方0.163.0 parser亦支持字段。当前CLI无独立setup/validate/dry-run，UI未暴露，实际调用未验 |
+| 运行中恢复实验 | 单次新chat，准确回合running时SIGTERM本地follow观察进程并清理A身份；新B身份前4次仍见同turn running，第5次persisted/synced/completed。新274字节/SHA/challenge匹配，原8条历史未变、总10条；两身份清理。不是控制主机重启 |
+| 下一步 | C01有界官方契约核实完成；C08新增观察进程/身份丢失后的恢复子范围完成。Cloud API授权、Dot原生安装/setup及未验证恢复机制分别保留，不重复发布或认证替代这些证据 |
+
+## 原有交付任务
+
 | ID | 结果 | 依赖 | 状态 | 执行证据 |
 | --- | --- | --- | --- | --- |
 | [T01](../../docs/lody4dot/development.md#t01冻结加载方式和平台契约) | 加载与平台契约 | 无 | done | [平台契约](../../docs/lody4dot/platform-contract.md)：同版本官方清单与技能路径已核实；采用云环境接入并交付原生产物，T09另验加载 |
@@ -21,7 +39,7 @@
 
 既有r2/d1尚缺旧截图对应任务的来源和版本等记录，按[验收流程](../../docs/lody4dot/fresh-task-acceptance.md)核对后继续T12；不为补旧字段重新创建任务、登录或查询资源。自主检索后实际读取可以证明基本读取，首次入口来源仍须如实区分。T10远端闭环与T11支持矩阵已完成，不把T09旧补证设为c2独立工作的隐藏总前置。个人workspace及已有Agent测试授权保留；本机只读限制不阻塞获准远端控制。
 
-正式来源现为0.2.1的`ed9096b837edd31a4446a8db1d49159b42262fd5`，spec/observed12、observations_current=true，无草稿；网络/变量readiness仍unknown。源码随后开发0.2.2候选，增加官方用户setup薄入口，132项回归、31文件ZIP、移位bootstrap与来源对账通过；正式runtime未被候选替换。CLI0.107.2仍只是知识/默认安装基线，版本不同或不可查询仅warn。完整结果见文末spec12及[验证记录](../../docs/lody4dot/validation.md#spec12正式发布与022用户setup候选)。
+运行状态见上方唯一快照。0.2.2候选的132项回归、31文件ZIP、移位bootstrap与来源对账已有证据；CLI0.107.2仍只是知识/默认安装基线，版本不同或不可查询仅warn。候选构建来源与各轮结果见[验证记录](../../docs/lody4dot/validation.md#spec12正式发布与022用户setup候选)，不由发布版本补填旧任务事实。
 
 环境、任务、实例、Dot会话引用及协作空间/Lody权限分别识别，见[环境模型](../../docs/lody4dot/environment-model.md)。不承诺某客户端或网页必然能选到此环境；“本机ACP”指当前云执行实例，不是用户电脑。
 
@@ -29,7 +47,7 @@
 
 ## r2/d1历史执行记录（2026-10-20至2026-10-21较早轮次）
 
-以下历史段落的“当前”“本次”“仍”仅指各自轮次。较早正式版本、readiness、未运行项及草稿记录按当时事实保留；最新状态见开头概述、C任务表及文末spec12记录。
+以下历史段落的“当前”“本次”“仍”仅指各自轮次。较早正式版本、readiness、未运行项及草稿记录按当时事实保留；最新状态见开头唯一快照、C任务表及文末spec14记录。
 
 ### 本轮规划复核
 
@@ -115,14 +133,14 @@ T11按开发契约完成支持范围和场景覆盖：20根/70路径数量、来
 
 | 任务 | 内容 | 状态与输入 |
 | --- | --- | --- |
-| C01 | 宿主与生命周期契约 | blocked（部分完成）；原9篇Help及本轮4篇官方Plugin/Dot资料HTTP200，portable/兼容清单、marketplace source及用户onboardingSkill入口已核实。未知Dot重置hook仅限制该分支；实际产品集成分别验收，见[宿主契约](../../docs/lody4dot/host-contracts.md) |
+| C01 | 宿主与生命周期契约 | done（有界官方核实）；9篇Help、4篇完整指南及同版本源码已覆盖卡内宿主/入口/身份/路径与生命周期边界。原卡允许未知hook记unknown并停止该分支，不追加未公开hook或C09实际加载作为门槛；独立验收复核通过，见[宿主契约](../../docs/lody4dot/host-contracts.md) |
 | C02 | 共享技能与协作知识 | done；既有共享协作导航及全新上下文3目标场景通过，正式0.2.1已更正Dot分类与共享权限；0.2.2薄setup复用核心。知识实现不证明Dot实际UI加载或工具调用 |
 | C03 | doctor上下文、范围与来源 | done；42项诊断测试及真实包内inspect/来源检查通过，setup内容变化可见为mismatch。schema1保留范围、来源和真实失败分类；版本只提示，来源仅证明本地文件一致性 |
 | C04 | 平台安装边界 | blocked；Linux与统一边界通过52项相关测试，Win32/Darwin模拟退出5；真实Darwin/arm64报告无Node/npm，native安装前提缺失，WSL未提供，不宣布跨平台runtime支持 |
 | C05 | 按宿主分发与加载 | blocked（候选实现完成）；正式0.2.1已应用。0.2.2包含官方用户setup入口，132项回归及移位bootstrap/来源一致性通过。Cloud CLI入口存在，但cloud list返回401，虽本地ChatGPT登录也未证明API授权；尚无服务核实的ENV_ID，未提交任务。独立首次加载、UI导入和新/既有对话run setup调用仍未验 |
 | C06 | 最小交接整理/校验 | done；27项离线行为测试及分发回归通过，输入不改写、无网络/登录/派发；仅结构/声明一致性，真实性/ACL/产物内容未核验 |
 | C07 | 两独立宿主协作 | done（有限范围）；Linux控制端与Darwin解包/显式读技能宿主完成原产物交接，Darwin随后通过自身内置MCP只读查询原session/history，准确引用、273字节、SHA及challenge均匹配。新增1个明确只读模型回合，最终persisted/synced/completed且无activeTurns；证据为Agent调用回执与控制端核验，无底层tool trace，见[内置MCP验收](../../docs/lody4dot/validation.md#远端内置mcp只读查询与c07有限双端验收)。不扩为macOS受管安装、原生注册或Dot |
-| C08 | 初始化与恢复演练 | partial（Codex恢复子范围done）；本轮与spec11实测对比证明不同内核上下文，候选工作副本bootstrap仅doctor通过，新0700身份与原8条历史/273字节/SHA/challenge对账通过，0新模型回合且auth清理。准确VM/磁盘重建机制、Dot lifecycle与独立首次启动仍未证实，见[spec12记录](../../docs/lody4dot/validation.md#spec12正式发布与022用户setup候选) |
+| C08 | 初始化与恢复演练 | partial（受测Codex子范围done）；spec12的不同内核上下文/旧结果恢复保留。spec14另新增1个验收回合：真实follow在running时退出并清理身份，新身份沿同准确turn观察running→持久化completed，新274字节/SHA/challenge匹配、原8历史未变，两身份清理。整个协调脚本未退出；VM/磁盘机制、完全缺失结束通知及Dot lifecycle仍未证实，见[运行中恢复](../../docs/lody4dot/validation.md#运行中观察进程和身份清理后的恢复) |
 | C09 | Dot合法接入 | blocked；官方候选路线已知，[Dot接入说明](../../docs/lody4dot/dot-acceptance.md)已提供。native UI上传/扫描、实际安装读取及工具调用仍未通过；共享插件连接不自动赋予CLI身份、本地文件或模型权限 |
 | C10 | 含Dot闭环与交付 | blocked；C07有限双端范围已完成，仍依赖C08真实重建及C09 Dot实际参与证据；0.2.1工具/知识和既有跨端业务范围分别交付 |
 
@@ -185,3 +203,15 @@ C08有限恢复范围取得新证据：本次内核启动08:55:43Z，晚于spec1
 0.2.2候选增加官方用户run setup入口，唯一薄技能复用核心与bootstrap，清单目标、打包收集及receipt允许范围同步。132项全量回归和结构检查通过；15项构建、42项诊断覆盖新增入口资源/路径拒绝、旧输出保留及内容修改可见。独立审查指出的额外setup资源契约不一致已修复。最终ZIP31文件、110840字节，CRC/逐文件摘要通过，移位包bootstrap仅doctor与来源consistent；旧0.2.1包未改。完整摘要见[验证记录](../../docs/lody4dot/validation.md#spec12正式发布与022用户setup候选)。
 
 剩余可恢复条件：C05 Cloud CLI虽有创建入口，cloud list现HTTP401；本地ChatGPT登录不等于该API授权，具体原因未知，缺服务核实的Cloud ENV_ID，未提交任务。C05/C09原生UI安装及新/既有对话run setup无可调用界面，保持未验；不伪造hook/身份或重复派发。C10等待Dot真实参与及剩余恢复证据，T09/T12旧截图在原任务补来源。没有把未知hook作为所有路线的前置，也没有将同实例子Agent当新宿主。本轮文档继续按项目目录归档。
+
+## spec14状态与运行中恢复（本轮）
+
+本次发布已应用为spec/observed14、current=true，网络enforced、既有变量ready；正式仍固定ed9096b/0.2.1，无草稿。工作副本开始时1d4ee0c/0.2.2且干净，bootstrap仅doctor通过。唯一一次Cloud list仍HTTP401，无403，未提交云任务/猜ENV_ID，没有重复保存环境草稿或重配token。
+
+C01按原卡和独立复核收口done：官方9+4资料、同版本清单/加载源码及规定CLI已覆盖有界契约核实。未知Dot自有直接CLI/存储hook按原卡保留unknown并停止该实现分支；实际UI安装/加载/调用归C05/C09，未取得未公开hook不再作为C01永久阻塞。源码resolve_openai_onboarding_skill确认字段支持，但当前CLI无独立setup/validate/dry-run，未用plugin list或注册冒称实际setup调用。
+
+C08本轮新增一次受控chat：原session空闲/无activeTurns及8条历史核对后，私密落盘意图、保存ACK userTurnId。真实follow收到准确assistant的running快照/ready，再SIGTERM并等退出0，清理A身份；独立B身份恢复同准确turn，前4次仍running，第5次persisted/synced/completed、无activeTurns。原8历史完全不变，总10条；新274字节、SHA及challenge重算匹配，两个认证state已清理。没有自动重发、cancel或daemon。整个协调脚本未退出，不称主机重启；未显式查询queue数量，不补造queue=0。独立审查确认所有这些本地证据，详见[运行中恢复记录](../../docs/lody4dot/validation.md#运行中观察进程和身份清理后的恢复)。
+
+该实验只交付观察进程/本地身份丢失后的恢复子范围。准确VM/磁盘机制、完全缺失结束通知、Dot生命周期和独立首次加载仍未证实；各自保留，不重复模型实验替代UI/API授权。初始metadata/CLI只读探针的0新回合与这次新增1回合分开记录。私密证据在忽略的dist/lody4dot-environment-checks/spec14/，公开不存引用、nonce、产物原文或身份文件。
+
+同时使用既有唯一队列职责收拢环境ref/spec/readiness：当前只在本文件开头维护，README、指引、平台/宿主/接入/支持文档改为链接；旧轮次观测明确标为历史。0.2.2源码/包字节和CLI锁未改，运行记录按docs/lody4dot/归档。下一步条件见开头快照，当前Cloud API 401及原生UI缺口不能靠再发布同一配置消除。

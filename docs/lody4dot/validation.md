@@ -328,6 +328,28 @@ C08的“Codex发布后不同内核上下文恢复”子范围完成；准确VM/
 
 这些是本地分发与依赖检查证据。官方要求的安装后在新对话及安装所在对话分别运行setup、ChatGPT/Dot原生UI接受和真实Lody工具闭环，仍由C05/C09/C10分别验收；不因候选完成要求重复发布当前正式环境。
 
+## spec14观测与运行中恢复补测
+
+2026-10-21，本轮正式配置仍固定ed9096b/0.2.1且无草稿，发布不自动将固定ref升级到main；实际干净工作副本从1d4ee0c/0.2.2开始。本次spec/observed14、observations_current=true，网络元数据enforced，两个既有变量ready。这更新了spec12的unknown，历史值保留原义；实时快照统一见[当前环境与下一步](../../.codex/agent-state/todo.md#当前环境与下一步)，其他文档不重复维护。
+
+依赖bootstrap仅doctor退出0，认证/daemon/业务恢复均not_run。最小Cloud CLI查询只重试一次，退出1、HTTP401且无403，未提交任务或猜Cloud ENV_ID。没有修改云配置、保存草稿或重配凭证；环境发布不能替代Cloud API实际授权。初始只读探针摘要在忽略的`dist/lody4dot-environment-checks/spec14/summary.json`，其0新模型回合仅属于这个初始探针，不包括下面独立实验。
+
+有界调查检查5条插件帮助命令及官方0.163.0源码，确认`manifest.rs`的`resolve_openai_onboarding_skill`支持当前嵌套字段，但CLI没有独立setup/validate/dry-run入口。`plugin list`不输出onboarding_skill，且加载身份管理器，未执行它来冒称setup调用。C05/C09仍待合法产品界面分别验证新会话与当前安装会话的setup。C01原卡已满足有界资料核实条件：未知hook原本就允许记录unknown并停止相应分支；独立复核后收口done，不把UI接入或未公开hook加作隐藏门槛。
+
+### 运行中观察进程和身份清理后的恢复
+
+复用用户已授权的个人工作区、已有Darwin Agent及本任务自有验收会话，仅发送**一次新验收chat**，不重发旧业务。请求前保存私密意图、nonce、合成输入、预期结果和challenge；核对原准确session/machine、persisted/synced/completed、无activeTurns及8条可见历史。未显式查询队列数量，不额外宣称队列为零。新任务只在远端独占临时目录生成新产物，45秒前台有界等待供控制端观察；不改旧文件或配置，不创建后台进程。
+
+A使用新0700身份显式登录，唯一chat ACK保存userTurnId，再由观察快照获取匹配的assistantTurnId。真正启动`observe --jsonl --follow`子进程，其自身日志收到准确回合的`running`快照及ready；单次JSON旁证也匹配。确认子进程存活后发送SIGTERM，等待退出0，再删除A身份目录。退出仅停止该本地观察进程，没有发送cancel；整个协调脚本并未退出，不能写成控制主机重启。
+
+B使用另一新0700目录显式认证，没有复制A身份/缓存；从已保存原生引用恢复观察。前4次查询仍为同准确user/assistant的persisted/synced/running，第5次为persisted/synced/completed、无activeTurns。最终完整history为10条：原8条逐对象完全一致，只新增本次user/assistant两条。
+
+从准确新assistant历史中读取Agent的结构化产物回执，控制端与独立只读审查均重算通过：完整274字节、JSON、nonce、长度/SHA及随机challenge全部匹配；Agent报告等待约45.005秒。产物证据来自Agent回执及本地字节核验，公开history没有底层tool trace，不宣称直接读取远端FS或独立观测远端sleep起点。没有调用session/machine/config创建命令、启动daemon或发送取消请求；登录副作用与模型验收分别记录，不称零写入或由login推断机器登记结果。两临时身份在finally清理，注入变量绑定保留。
+
+本次新增模型回合为1，C08仅增加“观察进程退出与身份丢失后的同turn恢复”子范围。它不证明控制主机/VM重建、真实磁盘reset、结束通知完全未发生、Dot lifecycle或独立新云任务首次加载。脱敏结果在忽略的`dist/lody4dot-environment-checks/spec14/inflight-recovery-summary.json`；原生引用、提示、历史及产物仅存其私密子目录。独立审查确认follow自身快照、两身份清理、同turn持续运行与产物核验均成立，无需补跑。
+
+本轮没有改0.2.2源码/包字节或CLI锁，旧ZIP摘要保持一致；再次执行根目录结构检查、132项全量回归及差异检查均通过。本轮环境状态与证据整理仅修改项目文档和任务记录。
+
 ## 复现命令
 
 在仓库根目录运行：

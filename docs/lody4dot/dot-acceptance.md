@@ -1,6 +1,6 @@
 # lody4dot的Dot接入与独立控制端验收
 
-本页提供可操作的验收顺序，不表示已完成Dot界面导入或原生插件加载。产品事实见[宿主契约](host-contracts.md)，实际状态只在[任务队列](../../.codex/agent-state/todo.md)维护。
+本页提供可操作的验收顺序，不表示已完成Dot界面导入或原生插件加载。产品事实见[宿主契约](host-contracts.md)，当前发布来源、runtime、readiness及验收进度只在[任务队列](../../.codex/agent-state/todo.md#当前环境与下一步)维护。
 
 ## 先选接入层级
 
@@ -40,11 +40,11 @@ Dot自己的云电脑、其创建的Codex云任务、已连接的本地电脑是
 
 ## 复用已准备的云控制端
 
-本轮正式环境已发布`ed9096b`的0.2.1，spec/observed均为12且无草稿；网络与运行变量readiness仍`unknown`。0.2.0启动检查和原任务只读对账保留为历史验收，0.2.2用户运行setup仍是候选。CLI默认安装输入仍0.107.2，实际版本不同或探测失败不阻塞；可显式`doctor.py --check-updates`查询npm latest，旧版或查询失败也只warn。复用已有准备入口，不重配token或注册machine；正式来源、实际执行脚本与版本分别记录。
+复用[状态表](../../.codex/agent-state/todo.md#当前环境与下一步)所列的已发布环境，分别记录正式来源、执行脚本与实际版本。0.2.0启动检查和原任务只读对账保留为历史验收；spec12的unknown观测见[宿主历史记录](host-contracts.md#本轮结论)。CLI默认安装输入为0.107.2，实际版本不同或探测失败不阻塞；可显式`doctor.py --check-updates`查询npm latest，旧版或查询失败也只warn。复用已有准备入口，不重配token或注册machine。
 
 当选择Dot委托Codex任务时，使用已发布的目标环境。官方说明新任务有独立工作区，不恢复另一任务未提交的文件；保存VM状态默认最多7天可恢复是Codex Cloud规则，不是Dot存储reset hook。参见[Using Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud)。
 
-本会话的子Agent不构成独立云任务。Codex CLI有正式cloud exec入口；旧轮次cloud list曾遭代理拒绝，spec12本次已转为HTTP401。本地`codex login status`显示ChatGPT登录，但Cloud API本次未授权，不猜原因；尚无经服务核实的Cloud ENV_ID，不猜ID提交任务。当前没有插件导入界面工具；同实例子进程也不能替代独立任务。
+本会话的子Agent不构成独立云任务。Codex CLI有正式cloud exec入口；历史spec12中，cloud list已由代理拒绝转为HTTP401，本地ChatGPT登录未证明Cloud API授权。后续结果以状态表为准，不猜失败原因或Cloud ENV_ID提交任务。没有可用插件导入界面或setup执行入口时，保留未验；同实例子进程不能替代独立任务。
 
 已有远端Agent也可成为另一控制端：本轮Darwin端实际通过其会话内置Lody MCP查询原会话，补齐了有限双端复验，不再要求为C07另建平台云任务。该结果不证明独立新任务的首次技能加载，后者仍属于C05，也不证明Dot自身调用。
 

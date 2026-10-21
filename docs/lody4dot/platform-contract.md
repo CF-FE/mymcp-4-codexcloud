@@ -20,7 +20,7 @@ dist/lody4dot/
   runtime/
 ```
 
-主技能源码仍在 `skill/lody4dot/`、组合与脚本在 `plugin/lody4dot/`；0.2.2候选另从唯一的`skill/lody4dot-setup/`源码收集setup技能。源码清单不能指向 `../../skill/`；未经构建的源码目录不当作原生安装包。上图是正式0.2.1结构，候选新增技能不代表正式环境已更新。
+主技能源码仍在 `skill/lody4dot/`、组合与脚本在 `plugin/lody4dot/`；0.2.2候选另从唯一的`skill/lody4dot-setup/`源码收集setup技能。源码清单不能指向 `../../skill/`；未经构建的源码目录不当作原生安装包。上图是0.2.1结构，候选新增技能不代表正式环境已更新。
 
 自包含产物内的本地 marketplace 以产物根为基准，使用 `source: {"source": "local", "path": "."}` 定位同一插件。CLI 的正式入口是 `codex plugin marketplace add`、`codex plugin add` 和 `codex plugin list`，不是 `plugin install`。
 
@@ -45,19 +45,19 @@ dist/lody4dot/
 - 查询/观察和 create/chat/cancel 的运行进程前提分开，内置 MCP 需要实际注入的上下文。
 - 默认状态和缓存目录需在允许写入的位置；不改变继承的代理和 CA，不禁用验证。
 
-当前正式发布源码为0.2.1的`ed9096b`，spec/observed均为12且无草稿；0.2.2是增加用户运行setup入口的候选，不替代正式runtime。0.2.0的`d27f1a0`和旧截图0.1.3保留为历史。新任务加载仍按[独立任务验收](fresh-task-acceptance.md)取得回执，发布确认不能替代该证据，也不要求重复发布相同配置。
+当前正式来源、checkout版本、runtime与readiness统一见[当前环境与下一步](../../.codex/agent-state/todo.md#当前环境与下一步)。0.2.0的`d27f1a0`和旧截图0.1.3保留为历史。新任务加载仍按[独立任务验收](fresh-task-acceptance.md)取得回执，发布确认不能替代该证据，也不要求重复发布相同配置。
 
 ## C01补充：准备入口与hooks
 
-当前配置的`install_script`调用`bootstrap --prepare`，`start_skill`引导读取技能后调用`--repair-missing`，复用即可；保存字段与实际新任务执行分别取证。早期CONNECT403保留为历史，本次spec12下Plugin Management、插件包装指南及两篇Dot指南均HTTP200；网络与运行变量readiness仍`unknown`，不宣称已ready/enforced。`codex cloud list`现返回401；本地ChatGPT登录状态不等于Cloud API已授权，不猜原因或Cloud ENV_ID。
+`install_script`调用`bootstrap --prepare`，`start_skill`引导读取技能后调用`--repair-missing`，复用即可；保存字段与实际新任务执行分别取证。spec12的四篇HTTP200、当时readiness unknown和Cloud list 401保留在[历史观测](host-contracts.md#本轮结论)，不作为当前快照。本地ChatGPT登录状态不等于Cloud API授权，不能据此猜Cloud ENV_ID。
 
 官方0.163.0源码包含`hooks`及会话级`SessionStart/SessionEnd`。新包装指南仅支持手动安装于Codex desktop的lifecycle hooks，web安装不部署脚本；用户运行`onboardingSkill`又是另一入口。这些证据均不能合并成“Dot支持存储重置hook”。Codex Cloud新任务各有独立workspace，已发布setup用于新任务，默认VM恢复窗口最多7天；不推广为Dot规则。Dot电脑官方可在使用间隔保持状态，但永久保留、重置周期和初始化回调未给出；主动Reset是产品及上下文删除操作。
 
-Dot正式身份、共享插件连接和本地技能的产品能力已核实，lody4dot实际加载及Dot专属setup/maintenance、存储重建hooks仍待验证。共享连接不等于全空间访问，执行位置也不能凭当前工具存在推断。来源、权限边界及C01/C09剩余项见[宿主记录](host-contracts.md#初始化存储与会话事件)。
+Dot正式身份、共享插件连接和本地技能的产品能力已核实；C01按有界调查条件收口，未知Dot自有setup/maintenance与存储hook保持未知，对应分支不实施。实际加载与工具调用仍由C05/C09验收。共享连接不等于全空间访问，执行位置也不能凭当前工具存在推断；来源及边界见[宿主记录](host-contracts.md#初始化存储与会话事件)。
 
 ## 来源
 
-- [清单解析与 skills 字段](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/manifest.rs)：`RawPluginManifest`、`resolve_manifest_path`。
+- [清单解析与 skills 字段](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/manifest.rs)：`RawPluginManifest`、`resolve_manifest_path`、`resolve_openai_onboarding_skill`；字段解析不证明实际setup调用。
 - [默认技能路径](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/loader.rs)：`plugin_skill_roots`。
 - [marketplace 路径解析](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/marketplace.rs)：`resolve_local_plugin_source_path`。
 - [Plugin Management](https://learn.chatgpt.com/docs/enterprise/plugin-management)、[Package your plugin](https://developers.openai.com/plugins/build/plugins)：2026-10-21 HTTP200；portable/兼容格式、source/path、用户运行setup与hooks范围。
