@@ -15,10 +15,11 @@
 | 运行观测 | spec/observed14，observations_current=true，running/connected |
 | 网络与变量 | network enforced；LODY_CLI_TOKEN及GITEE_ACCESS_TOKEN元数据ready；没有读取或输出值。它们不证明其他服务身份/动作已授权 |
 | 本轮依赖检查 | 0.2.2工作副本bootstrap仅doctor并pass；install、认证、daemon、业务恢复not_run，与独立业务验收分开 |
-| Cloud任务入口 | 正式cloud exec入口存在；本轮唯一一次cloud list退出1/HTTP401，无403，未提交任务或猜Cloud ENV_ID |
+| 独立Codex云任务入口 | 由Dot创建，用户已确认Dot具备权限；当前云任务不派生Codex云任务，不查询OpenAI任务目录。历史Cloud CLI/401尝试已撤下，不作插件前置或阻塞 |
 | 用户setup入口 | 0.2.2本地候选已实现；官方0.163.0 parser亦支持字段。当前CLI无独立setup/validate/dry-run，UI未暴露，实际调用未验 |
+| Role/Project验证范围 | 历史只读目录与既有Agent配置执行已测；本轮帮助/源码确认多Role可复用配置、会话可组合Role与项目。多个Role创建/用户保存、项目登记及按Role运行未实测；未据用户提问执行配置写入，见[关系核实](../../docs/lody4dot/validation.md#agent配置role与project关系核实) |
 | 运行中恢复实验 | 单次新chat，准确回合running时SIGTERM本地follow观察进程并清理A身份；新B身份前4次仍见同turn running，第5次persisted/synced/completed。新274字节/SHA/challenge匹配，原8条历史未变、总10条；两身份清理。不是控制主机重启 |
-| 下一步 | C01有界官方契约核实完成；C08新增观察进程/身份丢失后的恢复子范围完成。Cloud API授权、Dot原生安装/setup及未验证恢复机制分别保留，不重复发布或认证替代这些证据 |
+| 下一步 | Dot以已有权限发起独立验收任务，保存Dot→任务→已发布环境关联，再取得首次读取和Lody工具回执；Dot原生安装/setup及未验证恢复机制分别验收，不再等待当前云任务的OpenAI API授权 |
 
 ## 原有交付任务
 
@@ -137,7 +138,7 @@ T11按开发契约完成支持范围和场景覆盖：20根/70路径数量、来
 | C02 | 共享技能与协作知识 | done；既有共享协作导航及全新上下文3目标场景通过，正式0.2.1已更正Dot分类与共享权限；0.2.2薄setup复用核心。知识实现不证明Dot实际UI加载或工具调用 |
 | C03 | doctor上下文、范围与来源 | done；42项诊断测试及真实包内inspect/来源检查通过，setup内容变化可见为mismatch。schema1保留范围、来源和真实失败分类；版本只提示，来源仅证明本地文件一致性 |
 | C04 | 平台安装边界 | blocked；Linux与统一边界通过52项相关测试，Win32/Darwin模拟退出5；真实Darwin/arm64报告无Node/npm，native安装前提缺失，WSL未提供，不宣布跨平台runtime支持 |
-| C05 | 按宿主分发与加载 | blocked（候选实现完成）；正式0.2.1已应用。0.2.2包含官方用户setup入口，132项回归及移位bootstrap/来源一致性通过。Cloud CLI入口存在，但cloud list返回401，虽本地ChatGPT登录也未证明API授权；尚无服务核实的ENV_ID，未提交任务。独立首次加载、UI导入和新/既有对话run setup调用仍未验 |
+| C05 | 按宿主分发与加载 | blocked（候选实现完成）；0.2.2含官方setup入口，132项回归及移位检查通过。独立云任务应由已具权限的Dot创建，待实际任务/环境关联及首次读取回执；UI导入和新/既有对话run setup仍未验。Cloud CLI/401已退出该路线，不是阻塞，不要求用户再次授权Dot |
 | C06 | 最小交接整理/校验 | done；27项离线行为测试及分发回归通过，输入不改写、无网络/登录/派发；仅结构/声明一致性，真实性/ACL/产物内容未核验 |
 | C07 | 两独立宿主协作 | done（有限范围）；Linux控制端与Darwin解包/显式读技能宿主完成原产物交接，Darwin随后通过自身内置MCP只读查询原session/history，准确引用、273字节、SHA及challenge均匹配。新增1个明确只读模型回合，最终persisted/synced/completed且无activeTurns；证据为Agent调用回执与控制端核验，无底层tool trace，见[内置MCP验收](../../docs/lody4dot/validation.md#远端内置mcp只读查询与c07有限双端验收)。不扩为macOS受管安装、原生注册或Dot |
 | C08 | 初始化与恢复演练 | partial（受测Codex子范围done）；spec12的不同内核上下文/旧结果恢复保留。spec14另新增1个验收回合：真实follow在running时退出并清理身份，新身份沿同准确turn观察running→持久化completed，新274字节/SHA/challenge匹配、原8历史未变，两身份清理。整个协调脚本未退出；VM/磁盘机制、完全缺失结束通知及Dot lifecycle仍未证实，见[运行中恢复](../../docs/lody4dot/validation.md#运行中观察进程和身份清理后的恢复) |
@@ -215,3 +216,11 @@ C08本轮新增一次受控chat：原session空闲/无activeTurns及8条历史�
 该实验只交付观察进程/本地身份丢失后的恢复子范围。准确VM/磁盘机制、完全缺失结束通知、Dot生命周期和独立首次加载仍未证实；各自保留，不重复模型实验替代UI/API授权。初始metadata/CLI只读探针的0新回合与这次新增1回合分开记录。私密证据在忽略的dist/lody4dot-environment-checks/spec14/，公开不存引用、nonce、产物原文或身份文件。
 
 同时使用既有唯一队列职责收拢环境ref/spec/readiness：当前只在本文件开头维护，README、指引、平台/宿主/接入/支持文档改为链接；旧轮次观测明确标为历史。0.2.2源码/包字节和CLI锁未改，运行记录按docs/lody4dot/归档。下一步条件见开头快照，当前Cloud API 401及原生UI缺口不能靠再发布同一配置消除。
+
+## 用户确认Dot任务创建权限与路由修正
+
+2026-10-21，用户明确当前云任务不能创建另一个独立Codex云任务，需由Dot发起，并补充Dot具备该权限。此确认优先于此前从CLI命令存在推导出的备选验收路径：当前云任务停止查询OpenAI任务目录，不尝试cloud exec，不把HTTP401、缺Cloud ENV_ID或等待OpenAI API授权列为插件前置/项目阻塞。原请求结果保留为历史，不改成成功，也不借此推断Dot无权限。
+
+任务路由统一为Dot→已发布环境与仓库→独立云任务加载lody4dot→经Lody协作已有节点→必要引用与成果回Dot。需要补的是Dot实际发起、任务与环境关联及首次读取回执；Dot创建权限已确认，不再重复索取授权。获授权的Lody session/turn派发仍属于Lody服务动作，与Codex平台任务创建分开。当前工具未暴露Dot任务创建入口，仅记录本端工具范围，不声称Dot缺权限。
+
+AGENTS保留短指引，详细边界与交接步骤落在环境指引、设计参考、主方案、C05/C09及新任务验收中。没有新建任务、调用Cloud/OpenAI目录、修改环境、凭证或候选包字节。

@@ -49,6 +49,8 @@ Operation 的空结果只针对当前控制端的私密本机 store 与本任务
 
 以下是按版本与轮次保留的验收证据，实时发布与运行状态仅在上方任务队列维护：
 
+用户已确认本项目由有创建权限的Dot发起独立Codex云任务，选择已发布环境与仓库，再由新任务加载lody4dot并经Lody协作已有节点、回传引用和结果。当前云任务负责Lody控制与执行，不查询OpenAI任务目录或创建下游云任务；完整流程见[Dot验收](dot-acceptance.md#复用已准备的云控制端)。
+
 | 对象 | 已核实状态 | 不可据此推导 |
 | --- | --- | --- |
 | spec12发布历史 | 当时已发布0.2.1、来源`ed9096b`，无草稿 | 0.2.2候选已发布、独立新任务已加载或原生插件已注册 |
@@ -57,7 +59,7 @@ Operation 的空结果只针对当前控制端的私密本机 store 与本任务
 | 运行中观察进程/身份恢复 | follow自身收到准确回合running快照后被SIGTERM，旧身份清理；新身份观察同turn继续running再持久化completed，274字节/SHA/challenge匹配，原8历史未变；[记录](validation.md#运行中观察进程和身份清理后的恢复) | 新增1个验收模型回合、两身份已清理；协调脚本未退出，不证明控制主机重启、结束通知完全未发生、远端FS直接读取或Dot生命周期 |
 | 0.2.1已有构建验证 | 补充Dot知识、接入材料及非阻塞版本策略；127项回归、自包含构建、ZIP逐文件校验、包内安装复用与启动检查通过，安装输入基线仍0.107.2 | ChatGPT界面扫描/安装、Dot实际调用或独立新任务加载；不将旧版测试数套用于0.2.2 |
 | 0.2.2候选范围 | 保留兼容清单，已增加setup技能及`extensions.com.openai.onboardingSkill`；132项测试、31文件ZIP校验、移位bootstrap/来源检查通过 | UI安装与新/既有安装对话中的用户运行setup仍需回执；不是Dot存储reset hook |
-| spec12官方资料和Cloud CLI | 4篇完整指南HTTP200；`codex cloud list`由旧代理拒绝转为401，本地登录状态显示ChatGPT登录 | 公共文档可读不等于Cloud API已授权；不猜401原因、Cloud ENV_ID或宣布独立任务已创建 |
+| spec12官方资料和Cloud CLI历史 | 4篇完整指南HTTP200；`codex cloud list`由旧代理拒绝转为401，本地登录状态显示ChatGPT登录 | Cloud CLI验收尝试已撤下，不再调用list/exec；401不作为项目阻塞，命令存在不证明当前云任务能创建下游任务 |
 
 较早0.1.3正式来源`a2e6796`、完整云准备脚本56项测试、同锁复用与离线inspect，保留为历史验收。0.1.4的56项回归、自包含包及包内安装/inspect也有独立记录；这些结果不能补齐旧截图任务当时缺少的版本和入口来源，也不能替代本次发布后的验证。
 
@@ -87,7 +89,7 @@ Operation 的空结果只针对当前控制端的私密本机 store 与本任务
 | skills-only插件分发 | 新包推荐根级portable `plugin.json`和`skills/`；现有`.codex-plugin/plugin.json`兼容fallback继续支持。候选提供[Dot宿主说明](../../plugin/lody4dot/hosts/dot.md)与[验收流程](dot-acceptance.md) | 本轮保留兼容清单；正文未规定ZIP外层包装接受规则，UI扫描、安装和实际加载未运行 |
 | 用户运行setup | 官方`extensions.com.openai.onboardingSkill`指向包内技能，用户运行setup时在新会话或当前安装会话调用；0.2.2候选已采用 | 尚无该候选UI安装/调用回执；不承诺自动安装运行、Cloud环境prepare或Dot存储reset触发 |
 | GitHub导入 | Source为仓库URL、Path为含清单目录；条目支持native/Claude/Agent Plugins 1.0/受支持技能包，本地条目相对所选marketplace根 | 导入不运行builder或授予连接权限，当前未构建的`plugin/lody4dot/`不是完整source；未执行导入/同步 |
-| Dot委托Codex云任务 | 官方支持预先准备的Codex环境，可复用状态表所列已发布控制端路线 | Dot实际发起、位置、入口与工具回执未取得；本地登录不代替Cloud API授权，最新查询结果见任务队列 |
+| Dot委托Codex云任务 | 官方支持预先准备的Codex环境；用户已确认Dot有创建权限，本项目由Dot选择已发布环境和仓库发起 | 当前云任务未暴露Dot创建工具不等于Dot无权限；实际发起、任务绑定、首次读取与Lody协作回传仍待运行证据，不需补OpenAI token |
 | Dot连接本地电脑 | 官方要求在目标电脑的ChatGPT桌面App连接并Allow access；连接Codex或Work Sync不能替代 | lody4dot在Dot连接的本地端安装/读取未验；Lody现有Darwin Agent的内置MCP查询不证明该电脑已连接Dot |
 | 准备、存储与恢复 | 官方Dot电脑可在使用间隔保持状态；主动Reset是产品/上下文删除；Codex Cloud最多7天VM恢复另有范围 | Dot永久保留、prepare/maintenance、周期磁盘重置及重建hooks仍未知；onboardingSkill、会话hook、发布或原任务对账不替代C08重建 |
 

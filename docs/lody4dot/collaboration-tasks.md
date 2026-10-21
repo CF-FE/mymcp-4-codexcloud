@@ -15,6 +15,7 @@
 - 实现交付由集成执行者统一运行`python3 scripts/check_repository.py`、`python3 -m unittest discover -s tests -v`和`git diff --check`；并行文档工作只做对应链接、示例与一致性检查，避免重复干扰。卡内命令用于受影响范围；已有测试不替代真实宿主、身份或业务证据。
 - 默认不登录、不注册machine、不启动host；业务请求、模型执行和部署按既有授权及明确目标进行。凭证不进入包、日志或公开回执，各宿主身份状态分别保存。
 - Dot、ChatGPT、Work与Codex可复用已有合法插件连接及已授予权限，不因换产品重复连接；skills安装/管理、工具暴露和服务动作仍分别核对。共享连接不提供本地访问、浏览器登录、任意空间或模型凭证。
+- 用户确认本项目的独立Codex云任务由Dot创建，Dot具备权限；当前云任务不派生Codex云任务，也不查询OpenAI任务目录。401只保留历史，不作为C05/C09或插件前置。获授权的Lody session/turn派发不受这条平台任务边界替代。
 - 公开证据只记录脱敏结论、版本和必要摘要；真实业务引用及原始回执放各自受保护的私密记录，不建共享凭证库或全局调度数据库。
 
 | 可独立验收的结果 | 前置任务与所需证据 |
@@ -98,6 +99,7 @@ python3 -m unittest discover -s tests/lody4dot -p test_install.py -v
 - **权威/依赖**：C01的实际入口、C02资源与C04对应平台结果；只依赖本次选择支持的平台，候选OS未知不阻塞Linux基线分发。
 - **文件范围**：`plugin/lody4dot/scripts/build.py`、已核实的清单、`plugin/lody4dot/hosts/dot.md`、`plugin/lody4dot/README.md`、`.codex/cloud-install.sh`、`.codex/cloud-start.md`及`tests/lody4dot/test_build.py`。
 - **步骤**：用同一知识源码生成含Dot说明的自包含包，按官方支持的兼容清单准备目录/ZIP候选；0.2.2追加`extensions.com.openai.onboardingSkill`及薄setup技能，复用bootstrap。保留隐藏清单和全部资源。GitHub marketplace已有官方导入路线，但不运行builder；不能新增catalog直接指向未构建的`plugin/lody4dot/`，不提交生成分发物。ChatGPT web的扫描、安装、读取及用户run setup分别取证，新对话/安装所在对话各自测试；ZIP外层包装未知部分不猜。bootstrap与知识入口分开，安装prefix使用该端实际值。
+- **独立云任务入口**：由Dot实际发起并保存任务/环境关联，子任务核实首次发现及读取后回传。Dot权限已由用户确认，无需再次索取；当前云任务不改用Cloud CLI创建下游任务，不以OpenAI任务目录401作为缺口。已有原任务补证优先，不为补旧字段重复创建。
 - **验收**：移位包可找到全部资源与Dot指引；缺资源、包外引用、修改过的旧输出及已有规则覆盖的敏感文件/凭证fixture均失败。allowlist和来源仍须复核，扫描器不承诺识别任意秘密。安装不登录、不注册机器、不启动host。构建、上传扫描、安装/启用、启动入口送达和实际读取各有证据；Codex格式候选不称ChatGPT已接受，托管接入不冒称原生注册。
 - **验证**：命令只构建自有输出；目录已被陌生内容占用时停止并选择新的自有输出，不删除原目录。
 
