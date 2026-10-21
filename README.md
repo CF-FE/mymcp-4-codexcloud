@@ -26,7 +26,9 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安装、只读诊断、显式认证和自包含打包。当前 Linux 云机已验证安装、真实授权和完整目录；通过已有远端 Codex Agent 完成了创建、执行、继续验证和持久化观察，并校验 Agent 二次读回的产物字节。控制端无需本机 daemon。已收到用户的安装、认证、目录和手动读取截图，仍需补齐入口来源与版本等回执；本机 Codex 执行的只读状态限制单独保留。见 [产品方案](docs/lody4dot-plan.md)、[开发契约](docs/lody4dot-development.md)、[验证记录](docs/lody4dot-validation.md) 和 [任务队列](.codex/agent-state/todo.md)。
 
-当前源码版本为0.2.0：新增多宿主协作参考、带范围和来源的诊断、离线交接校验，以及幂等依赖准备/缺失修复；Linux以外平台明确返回不支持。108项回归测试通过，CLI及依赖锁仍为0.107.2。正式云来源的已核实基线仍为0.1.3，源码版本不等于环境已升级。具体实测、条件支持和未运行项见[支持矩阵](docs/lody4dot-support-matrix.md)。Review仍受上游匹配Viewer缺失限制；[接入验收](docs/lody4dot-fresh-task-acceptance.md)先在已有截图对应任务补充记录，不重复建任务或登录。
+当前源码版本为0.2.0：新增多宿主协作参考、带范围和来源的诊断、离线交接校验，以及幂等依赖准备/缺失修复；受管runtime工具对Linux以外平台返回明确不支持。108项回归测试通过，CLI及依赖锁仍为0.107.2。已保存0.2.0升级草稿，正式云来源的已核实基线仍为0.1.3。具体实测、条件支持和未运行项见[支持矩阵](docs/lody4dot-support-matrix.md)。Review仍受上游匹配Viewer缺失限制；[接入验收](docs/lody4dot-fresh-task-acceptance.md)先在已有截图对应任务补充记录，不重复建任务或登录。
+
+本轮通过Lody原生附件将包交给Darwin/arm64已有Agent，技能/包摘要匹配，273字节产物二次读回及随机challenge验证通过。远端缺Node/npm/LodyCLI，独立控制查询与macOS受管安装仍待条件；真实云主机重建及Dot接入也尚未验证。
 
 ## 开发与验证
 

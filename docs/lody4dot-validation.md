@@ -214,7 +214,37 @@ chat、运行中观察、cancel及取消后观察的原始退出码均为0。取
 
 doctor保持schema1旧字段/退出码，新增时间、真实通过的检查范围及本地来源一致性；账户目录和任务能力分开。Win32/Darwin模拟可返回结构化退出5，但没有据此宣布macOS/WSL/Windows安装支持。handoff的27项测试无网络、登录、派发或输入改写，明确8项not_verified；fixture通过不等于任务成功。bootstrap的7项行为测试不代替真实宿主重建或Dot存储reset hook。
 
-用户确认环境发布后，正式配置无草稿且含三个OpenAI域名，当前实例仍revision5及旧5条Lody网络规则，官方三站CONNECT403；官方GitHub源码可读。当前注入凭证ready，本轮显式私密state认证及个人工作区完整目录通过，唯一已授权在线Codex配置可用；尚未将这些查询升级为新的双端任务证据。正式源码/启动来源仍按0.1.3基线记录，0.2.0配置更新另见任务队列。
+用户确认环境发布后，复查时正式配置无草稿且含三个OpenAI域名，当前实例仍revision5及旧5条Lody网络规则，官方三站CONNECT403；官方GitHub源码可读。当前注入凭证ready，本轮显式私密state认证及个人工作区完整目录通过，唯一已授权在线Codex配置可用。随后真实双端子范围及0.2.0升级草稿见下文；原截图对应的T09/T12仍另行保留。
+
+## 0.2.0 Linux云端与Darwin Agent的实际交接
+
+2026-10-21，复用用户此前授权的个人工作区与唯一可用Codex配置，新建一个无repo/project/parent的自有验收会话。代码来源固定为`2cc74de62952763e2cb0559e268b055e19f55b53`；没有新增机器、Agent配置或Role，没有启动控制端daemon。当前云端负责协调与复验，远端Agent单独写临时产物。
+
+| 位置 | 实际能力与证据 | 本轮范围 |
+| --- | --- | --- |
+| Linux/x86_64云端 | 0.2.0工具与0.107.2CLI；真实Lody身份、目录、派发、持久化观察与history | 控制及Agent回传字节复验；本机ACP执行仍未通过 |
+| Darwin/arm64远端 | Agent报告Python3.11.3；控制端发送96,208字节ZIP，远端解包后回传匹配的receipt/技能摘要 | 此次明确指示下的技能读取、临时产物生成和只读读回；没有原生插件注册证据 |
+| 远端独立Lody客户端 | PATH未发现Node、npm或LodyCLI；宿主内置Agent和独立CLI分别识别 | 未运行本端Lody查询，未安装macOS受管runtime，不宣布该平台安装支持 |
+
+首回合报告`DOWNLOAD_FAILED`，没有源码或结果；原生回合虽为completed，业务验收未通过。以该真实回执填写的无产物handoff在result阶段返回blocked/3、`result_artifact_required`。确认该范围后，在原会话发起一个明确的新附件交付回合，通过公开`session chat --attach ... --prompt-file ... --json`传递自包含ZIP；没有重复create或将ACK当成收件成功。
+
+远端按附件任务报告解包并读取SKILL与collaboration参考，回传的build receipt及两份技能摘要与控制端逐项相符。回执未单独包含原始ZIP长度/摘要，因此收件证据限于解包后的内容回执，未独立证明远端原始ZIP逐字节一致。此次入口记为`task_directed_read`，不能称平台自动注入。原生附件可能在会话工作目录写`.lody/attachments`并更新该目录所属Git的`info/exclude`，不承诺全部附件处理只写临时目录。
+
+产物回合生成273字节确定性JSON。第三回合仅重新打开原input/result，不重写；返回完整字节、长度、SHA-256、`SHA256(challenge_utf8 || result_bytes)`及文件stat未变声明。控制端验证两次结果字节、输入字节、随机challenge、来源摘要和原session/user/assistant引用全部匹配。结果SHA-256及脱敏摘要保留在忽略的`dist/lody4dot-0.2.0-evidence/`。证据来自Agent读回；公开history无底层工具日志，未据此宣称控制端直接访问远端文件系统。
+
+两个有效回合均曾观察为persisted/synced/completed；最终第三回合与准确user/assistant引用匹配，无activeTurns。真实handoff记录在本地离线校验为pass/0，仍保留8项not_verified；实际字节检验由上述独立步骤完成。该链路证明云控制、远端显式技能读取和产物交接子范围，C07要求的第二独立控制端自身Lody查询仍缺入口，含Dot闭环尚未成立。
+
+## 0.2.0 依赖和控制身份恢复子范围
+
+在新的自有临时prefix实跑包内`bootstrap --repair-missing`：首次doctor/missing_runtime→install→doctor成功；第二次仅doctor成功，runtime一致性通过，认证/daemon/任务恢复均not_run。清理了这一自有prefix，仅保留脱敏结果；未删除当前受管安装或用户状态。完整新版cloud-install脚本亦退出0，108项检查及同锁准备/inspect通过。
+
+另建全新0700控制端state，以已注入材料显式认证，没有复制旧登录态；新CLI进程沿原生引用只读定位上述同一会话、终态及history，并完成字节复验。这证明控制客户端和私密state重建后的原任务对账子范围；没有实际重建云主机、测试新宿主首次启动或验证Dot存储hook。两个测试登录目录均已删除，保留全局变量绑定；私密业务引用和无认证文件的交接记录仅在忽略目录中保存。
+
+## 0.2.0 云配置升级草稿
+
+在完整遍历实际workspace并核对唯一Git根、完整HEAD和远程身份后，保存0.2.0升级草稿，返回saved/requires_publish=true。首次读取回执revision15、源码为代码/包验收基线`2cc74de`，mount仍为`mymcp-4-codexcloud`；install_script和start_skill与仓库新文件逐字一致，8条自定义网络规则沿用。交接时草稿来源同步到含最终任务结果的完整HEAD，具体固定SHA由配置读取回执确定；后续仅文档更新，已验收代码与包字节保持不变。
+
+新准备入口调用`bootstrap --prepare`；启动入口要求读取技能后调用`--repair-missing`。工具只保存草稿，未发布、重启或切换当前实例；正式云来源仍按0.1.3基线记录。发布后的实际读取、安装快照及对应任务版本仍须另取回执。Dot官方产品/工具/存储事件契约和第二独立控制端条件继续保持明确缺口，不注册猜测的reset hook。
 
 ## 复现命令
 
