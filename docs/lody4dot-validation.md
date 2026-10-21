@@ -1,6 +1,6 @@
 # lody4dot 实现与验证记录
 
-日期：2026-10-20。任务状态权威为 [队列](../.codex/agent-state/todo.md)，接口依据为 [开发契约](lody4dot-development.md)。以下分别记录离线行为和后续真实账户结果；账户成功不代替目录、宿主加载或任务验收。
+记录起始：2026-10-20；本轮更新：2026-10-21（北京时间）。任务状态权威为 [队列](../.codex/agent-state/todo.md)，接口依据为 [开发契约](lody4dot-development.md)。以下按轮次记录离线行为和真实账户结果；历史“当前”只描述该节当时的观测。账户成功不代替目录、宿主加载或任务验收。
 
 ## 环境与固定输入（T02）
 
@@ -245,6 +245,34 @@ doctor保持schema1旧字段/退出码，新增时间、真实通过的检查范
 在完整遍历实际workspace并核对唯一Git根、完整HEAD和远程身份后，保存0.2.0升级草稿，返回saved/requires_publish=true。首次读取回执revision15、源码为代码/包验收基线`2cc74de`，mount仍为`mymcp-4-codexcloud`；install_script和start_skill与仓库新文件逐字一致，8条自定义网络规则沿用。交接时草稿来源同步到含最终任务结果的完整HEAD，具体固定SHA由配置读取回执确定；后续仅文档更新，已验收代码与包字节保持不变。
 
 新准备入口调用`bootstrap --prepare`；启动入口要求读取技能后调用`--repair-missing`。工具只保存草稿，未发布、重启或切换当前实例；正式云来源仍按0.1.3基线记录。发布后的实际读取、安装快照及对应任务版本仍须另取回执。Dot官方产品/工具/存储事件契约和第二独立控制端条件继续保持明确缺口，不注册猜测的reset hook。
+
+## 0.2.0 发布后的当前实例与原任务恢复
+
+2026-10-21，用户确认再次发布后，正式配置无草稿，来源固定为`d27f1a0e6ec2890cd60e301118fc925d32872d46`，对应插件0.2.0；本轮开始时checkout相符。运行观测`spec_revision/observed_spec_revision=9`、`observations_current=true`，实例运行且连接。网络和运行变量的readiness字段仍为`unknown`，不能替换为ready或enforced；以下实测结果独立记录。
+
+读取当前技能、协作参考和云启动说明后，实际执行`bootstrap --repair-missing`，只运行doctor且退出0；插件0.2.0、受管CLI0.107.2及来源收据一致，`verified_scope`仅node/runtime。没有重装依赖；bootstrap的认证、daemon与任务恢复均not_run。该手动读取不证明平台首次送达，也没有旧boot/实例基线可证明整机重建。
+
+随后在本任务新建的0700身份目录，显式复用已注入材料完成真实认证；它是独立步骤，不把上述bootstrap的not_run改成已认证。只读沿此前0.2.0验收的准确workspace/session/user/assistant引用读取observe和history：来源persisted、freshness synced、目标读回回合completed、activeTurns为空；原读回回执完全匹配，恢复出的本地产物摘要与原记录一致。没有create/chat或任何新模型回合，没有复制旧登录态。仅删除本次新建身份目录，既有全局变量绑定与远端会话保留。
+
+脱敏摘要保存在忽略目录`dist/lody4dot-published-spec9-evidence/summary.json`；它明确保留`infrastructure_host_rebuild_proven=false`、`startup_instructions_received=unknown`和`metadata_readiness=unknown`。这补齐了发布后控制端身份重建及原任务对账子范围，不代替C07第二独立控制端查询、C08真实主机重建或T09旧截图任务的入口来源。
+
+## Dot官方契约、指引与0.2.1候选
+
+本轮以正常HTTPS读取9篇OpenAI官方Help正文，均HTTP200，确认Dot是ChatGPT的常驻Agent产品；其自有云电脑、所创建的Codex云任务、获授权的本地电脑分别识别。官方共享插件连接限定在已授予范围；浏览器登录、Dot本地访问、CLI私密state、模型身份和环境变量不会因此自动迁移。官方来源、读取范围和完整安装路线见[宿主契约](lody4dot-host-contracts.md)。
+
+网络策略快照现含三个OpenAI域名，帮助站及官网索引实际可读；开发站与精确Plugin Management地址仍CONNECT403，已停止相关请求，未修改代理、CA、TLS或云配置。已读正文及有界检索尚未给出Dot自有电脑的prepare/maintenance/周期存储重置hook；Dot主动Reset不等于磁盘事件，Codex Cloud默认最多7天的VM恢复规则也不能套到Dot电脑。
+
+据此修正环境指引、两张图、共享技能、c2方案和任务卡，新增随包`hosts/dot.md`及[Dot/独立控制端验收运行单](lody4dot-dot-acceptance.md)。本地HTTP渲染同步SVG，图源解析、目视和独立语义审查通过；临时渲染依赖与浏览器profile均不进入插件。另备妥无认证材料的私密`readonly-acceptance.json`，用于合法独立任务沿原引用复验；它不是handoff.py协议，当前没有用子Agent冒充第二独立云任务。
+
+用户随后要求CLI版本不要严格验证，已将安装、诊断和认证中的实际CLI版本差异/探测失败改为warn，继续按真实命令结果执行。0.107.2是知识及默认安装输入基线，收据分别记录实际观测与基线；不再用收据中的CLI版本拒绝执行。安装锁/目录完整性和help/native真实失败仍分别处理，复用安装的收据采用原子更新，写失败保留旧记录。
+
+新增显式`doctor.py --check-updates`，只对固定npm latest地址做一次查询，整体最多5秒、响应限64KiB，保留代理/CA、拒绝重定向，不传认证头或自动升级。旧版、不可比较或查询失败均warn，默认inspect和bootstrap不查更新。真实查询本轮实际CLI与npm latest同为0.107.2，退出0且账户未查询；旧版、探测超时、无效输出、网络失败等非阻塞路径另用fixture验证，不能把当前latest值当作长期不变事实。
+
+最终0.2.1代码来源为`6493a58098ba436ccb3067350c699f8122d2f36f`，候选包保持原依赖锁。仓库结构和127项回归通过：诊断41、版本策略4、安装21、生命周期8、知识3、平台4、构建11、交接27及原仓库8项。实际builder输出29个内容文件，Dot说明纳入receipt和允许清单。从最终包执行安装器`reused=true`、实际CLI0.107.2；再执行`bootstrap --repair-missing`只运行doctor且通过，插件0.2.1、bundle/runtime收据一致。未登录、重装依赖、启daemon或发起业务；bootstrap文本也会展示版本warn。
+
+最终候选ZIP为30个文件（含receipt）、107,453字节，`.codex-plugin/plugin.json`直接位于ZIP根，无外层目录。ZIP CRC、完整文件集合和逐文件receipt摘要均匹配。ZIP SHA-256为`26917b7897b0c059737c62098efe2a3904968b44201395eedeff30775843407d`；receipt SHA-256为`e86b7880a1fa209396e3acbe1db502bced850095c4fa52160384f3a0104ce34d`。旧0.2.0包及追加版本策略前的内部候选分别保留，生成物仍在忽略目录；哈希只用于完整性比对，不是身份签名。
+
+此包采用已核实的Codex0.163.0格式；ChatGPT上传扫描、ZIP包装接受、安装与Dot实际读取尚未运行。GitHub marketplace导入是官方支持的路线，但不会运行本仓库builder，因此未添加指向缺失skills的源码catalog。正式云来源仍是0.2.0，本轮未新建升级草稿；0.2.1的新提示策略仅适用于执行新版脚本的端，未来任务若要使用新版须选用对应源码，不能把本工作副本完成当作正式环境自动升级。当前任务可以继续验证，无需重配token。当前工具没有插件UI导入或建立独立平台任务入口，相关真实验收及未知Dot生命周期契约继续在队列保留。
 
 ## 复现命令
 

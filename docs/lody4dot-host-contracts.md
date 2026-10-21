@@ -1,86 +1,99 @@
 # lody4dot 宿主接入与生命周期核实记录
 
-核实日期：2026-10-21（北京时间）。对应[C01任务卡](lody4dot-collaboration-tasks.md#c01-核实宿主契约与生命周期)。本文记录已读取的接口、源码和本实例观测；不替代[任务队列](../.codex/agent-state/todo.md)的进度，不宣称所有宿主已接入。
+核实日期：2026-10-21（北京时间）。对应[C01任务卡](lody4dot-collaboration-tasks.md#c01-核实宿主契约与生命周期)。本文记录已读取的官方契约和本实例观测；进度见[任务队列](../.codex/agent-state/todo.md)。资料可读、入口存在、实际安装和真实加载分别取证。
 
-Dot按用户明确指定的ChatGPT云服务作为独立宿主。已取得的OpenAI来源使用Codex CLI、Codex Web等名称，尚不足以确定Dot的官方产品标识或将其等同于Codex云端。未取得Dot的安装、工具连接、凭证与存储生命周期契约时，不能生成Dot专用清单、MCP入口或重置事件名。
+## 本轮结论
 
-## 本轮复核结论
+Dot的官方身份已核实：[Getting started with your dot](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot)将其称为“an always-on agent in ChatGPT”，并明确拥有自己的cloud computer。本文把Dot作为具体产品与宿主建模；Agent仍是参与任务的主体类别。Dot、Dot自己的云电脑，以及它创建的Codex云任务是不同对象。
 
-- 用户确认环境发布后，配置读取已无草稿，正式自定义网络规则包含三个OpenAI官方站点；现有安装和启动字段仍分别包含Lody安装/inspect、读取技能/inspect。
-- 同轮运行状态为`observations_current=true`、网络`enforced`，但当前实例的`allowed_hosts`仍只有原有五条Lody规则，启动策略文件也没有三个OpenAI域名。配置发布记录与当前实例的实际应用分别取证。
-- 经继承代理分别请求开发站、帮助站和官网一次，仍为`CONNECT 403 Forbidden`，页面正文未取得。这是当前访问路径的拒绝，不能据此推断Dot不存在、用户未发布或用户没有产品权限；本轮未重复保存草稿或要求再次发布相同配置。
-- 允许访问的OpenAI官方GitHub源码已取得HTTP 200；当前`codex-cli 0.163.0`的版本、plugin及marketplace帮助均退出0。帮助读取伴随无法写PATH别名的只读警告；没有修改受保护配置、注册插件、登录或启动模型任务。
+本轮读到Dot、Codex Cloud、插件和技能的官方帮助页，足以确定共享连接、任务隔离和部分安装路线。**仍未取得Dot自身云电脑的准备脚本、maintenance、定期磁盘重置或重建hook契约**；没有文档依据时不生成事件名，也不把Codex会话事件当作Dot存储事件。
+
+环境发布与访问证据如下，旧实例结果不再作为当前状态：
+
+| 轮次/时间 | 配置、访问与范围 |
+| --- | --- |
+| 较早发布轮次 | 正式规则已有三个OpenAI域名、无草稿，但该次运行状态及策略快照仍只有五条Lody规则；三个官网请求均在继承代理处CONNECT403。它是当时实例的历史观测 |
+| 新运行配置，本轮14:46起 | spec/observed为9，正式无草稿；`observations_current=true`，运行状态的网络策略为`unknown`，`/etc`网络快照已有三个OpenAI域名。配置存在不等于所有目的地已enforced/ready |
+| 本轮实际HTTPS | `help.openai.com`搜索和下列9篇正文均HTTP200；`openai.com/sitemap.xml`为200；`developers.openai.com/codex/cloud/environments/`仍CONNECT403，未取得开发站正文，随后停止请求该域名 |
+
+本节资料查证保留继承代理、CA与TLS校验，没有修改云配置、重复保存草稿、认证、读取凭证值或安装新插件；发布后原Lody任务的独立只读复验见验证记录。当前工具目录没有网页检索或官方文档搜索工具，采用官方帮助站搜索及页面实际链接做有限查证。
 
 ## 宿主、加载与工具能力
 
-“资料已读”“CLI入口可运行”“控制端可用”“执行节点可用”分别记录。操作系统支持也与宿主插件支持分开；官方Codex可安装在某OS，不能证明lody4dot安装器已兼容它。
+操作系统支持与插件加载支持分开；官方Codex能安装在某OS，不证明lody4dot安装器兼容该OS。
 
-| 宿主/目标 | 加载与工具入口 | 身份及路径边界 | 准备、启动与恢复 | 本轮可支持的结论 |
+| 宿主/目标 | 加载与工具入口 | 身份及路径边界 | 准备、启动与恢复 | 当前结论 |
 | --- | --- | --- | --- | --- |
-| 当前Linux托管Codex环境 | 已保存`start_skill`引导读取`skill/lody4dot/SKILL.md`；当前Codex有plugin/marketplace帮助，但受保护配置不能据此写入 | Lody身份通过既有安全变量和私密state使用；仓库和受管CLI路径由本实例记录定位 | `install_script`已有安装与inspect，`start_skill`已有读取与inspect；恢复和实际执行须另验 | 准备/启动入口存在且帮助可读；不证明新任务已读技能、原生注册成功或本实例可充当worker |
-| 用户本地Codex CLI | 0.163.0源码定义原生清单、skills及marketplace路径；实际机器上的CLI版本、注册和新会话读取另验 | 使用该端有权访问的配置与安装prefix；用户电脑文件不因云端工具存在而可读 | 使用该端真实配置入口；如采用会话hook，还需核实版本、事件、管理策略及实际触发 | 可按已核实格式准备分发；不能从本云实例帮助通过推导用户电脑加载成功 |
-| 其他Linux云机/本地Agent宿主 | 可复用知识源码和Linux安装路线作为候选；加载格式依目标宿主决定 | 自有可写prefix与独立私密state；不搬用另一实例的同名目录或登录态 | 核对目标平台实际准备/启动机制，分别验证依赖恢复、认证与任务对账 | 尚需目标OS/架构和真实宿主安装、读取及连接记录 |
-| macOS宿主 | 官方README提供Codex安装入口；当前lody4dot安装器仍有Linux限制 | 本地可写路径、原生依赖与私密状态需在目标机器核实 | POSIX适配只能作为候选，不能以删除平台判断代替真实验收 | Codex官方安装说明不等于lody4dot已支持macOS |
-| Windows/WSL2宿主 | 官方README提供Windows Codex入口；lody4dot原生Windows支持尚未建立，WSL2为独立Linux候选 | 需区分Windows与WSL文件系统、身份、权限和启动器 | 分别验证目标环境，不假定任意symlink、uid/0700或killpg行为适用于Windows | 不宣布lody4dot原生Windows或WSL2已通过 |
-| Dot | 共享技能与交接语义可作为设计输入，实际技能/插件入口、shell或合法远程工具仍待官方契约确认 | 宿主用户、Lody账号和模型执行凭证分别授权；会话链接不转移全空间权限 | 准备脚本、会话事件、实例/存储重置规则均待核实；不套用另一产品的hook | 用户目标明确，官方接入调查仍有缺口；知识文件存在或人工交接不能写成完整工具接入 |
+| 当前Linux托管Codex环境 | 已保存`start_skill`引导读取`skill/lody4dot/SKILL.md`；当前CLI有plugin/marketplace帮助 | 使用本实例允许的仓库、prefix和私密state；受保护配置不因此变成可写 | `install_script`已有安装/inspect，`start_skill`已有读取/inspect | 已有配置和CLI入口；新任务读取、原生注册、worker执行仍各需回执 |
+| Codex Cloud任务 | 官方要求先准备并发布环境；Dot可在已有Codex环境创建云任务 | 每任务独立workspace和工作文件；共享环境不自动共享他人的任务、编辑权或GitHub仓库权限 | 已发布setup用于新任务；已有任务保留自身状态；VM恢复窗口见下表 | 可复用已核实环境接入路线；不能把一个任务的工具证明成Dot自身云电脑工具 |
+| 用户本地Codex CLI | 0.163.0源码定义原生清单、skills和marketplace；目标端版本与注册另验 | 使用该端授权配置、安装prefix和私密状态 | 采用目标端实际加载入口；会话hook还受版本和管理策略限制 | 可准备匹配格式的分发，不声称用户电脑已加载 |
+| Dot自身云电脑 | 官方确认独立cloud computer，可使用共享的插件连接；企业设置分别控制云浏览器、code/shell联网和桌面使用 | Dot拥有者、工作区角色、连接服务账号、动作权限分别约束；不自动继承本地VPN、浏览器登录或设备策略 | 未取得自身setup/maintenance、磁盘保留和重建hook契约；现有通用诊断/恢复只能作为待验方案 | 产品与部分工具能力已确认；lody4dot在该电脑的CLI安装、技能读取及执行位置尚未实测 |
+| Dot连接的本地电脑 | 通过该电脑的ChatGPT桌面App连接并Allow access后，可创建Work/Codex任务、使用local skills | 连接Codex或开启Work Sync不等于授权Dot；本地访问默认关闭 | 电脑需在线且App打开；本地工作在单独任务；切换选择不会搬迁已有任务 | 官方支持本地技能路径的产品能力；lody4dot加载格式和目标机实际读取仍待回执 |
+| 其他Linux、macOS、Windows/WSL2宿主 | 知识与协议可复用，加载格式依宿主；当前受管安装器有Linux边界 | 每端独立prefix、私密state与凭证；Windows和WSL文件系统分开核实 | 分别验证依赖、路径、权限和进程行为 | 不从Codex各OS安装说明推导lody4dot跨平台安装通过 |
 
-当前托管路径是该实例的定位事实，不是跨宿主统一路径。安装并不自动把该宿主注册为Lody machine；控制端发往已有远端节点的任务不要求控制端同时成为worker。
+控制端不必同时成为Lody worker。安装CLI不自动注册Lody machine；能发送任务给远端节点，不代表当前宿主具备执行模型任务的凭证和进程条件。当前CLI/工具存在本身也不能确定运行于Dot自身电脑还是Dot创建的Codex任务。
 
-## 原生插件与技能契约
+## 插件、技能与连接：可用路线及限制
 
-本轮重新读取OpenAI官方`rust-v0.163.0`源码：
-
-| 项目 | 已确认内容 | 仍须单独验证 |
+| 路线 | 已读官方契约 | lody4dot适用边界 |
 | --- | --- | --- |
-| 原生清单 | `.codex-plugin/plugin.json`；`skills`接受字符串或数组 | 目标宿主允许注册、插件实际启用与新会话读取 |
-| 资源路径 | 清单路径以`./`开头，相对插件根；禁止`..`、绝对/越界路径；未声明技能路径时使用存在的`skills/`目录 | 构建产物内容、移位后的资源完整性与实际读取 |
-| marketplace | 本地source的`.`或`./`指marketplace根；非根相对路径须合法 | 对应目标机器的marketplace注册与加载，不通过受保护目录覆盖绕过限制 |
-| hooks字段 | `RawPluginManifest`定义`hooks`字段 | 字段存在不等于目标事件已启用、宿主允许注册或会自动执行；本轮未新增hook配置 |
+| Codex原生插件 | `.codex-plugin/plugin.json`；skills为字符串或数组，以`./`相对插件根，禁止`..`、绝对/越界路径；默认使用存在的`skills/`。本地marketplace的`.`/`./`指其根 | 与0.163.0匹配的格式已核实；目标端注册、启用和新会话读取另验 |
+| ChatGPT插件/技能 | 插件可含skills、apps或两者；技能可上传/创建/分享，受套餐、工作区和产品界面限制；ChatGPT与Codex的技能安装/同步和管理可以不同 | 可以准备共享内容；不能把Codex已加载推导成Dot或ChatGPT技能已安装 |
+| 插件ZIP上传 | 官方帮助给出管理员/有上传权限者在web的Plugins → Add → Upload plugin入口；更新现有手动上传插件也受权限限制 | 已有0.163.0原生自包含包是格式候选；Help正文未列ZIP根级结构的完整契约，上传扫描、UI安装与实际加载尚未验证 |
+| GitHub marketplace导入 | 管理员可从GitHub导入并每日同步；支持`.agents/plugins/marketplace.json`、Claude兼容marketplace及独立清单，Source用仓库URL，Path指定目录，可固定branch/tag/commit | 是正式内容分发候选；导入不连接用户账号、不授予app数据权限。当前三目录源码需构建才含技能，不将未构建的`plugin/lody4dot/`直接作为完整插件source |
+| 声明MCP的导入插件 | 官方说明`mcp.json`/`.mcp.json`等MCP声明可能令插件标为Desktop only，即使服务器是remote HTTPS；添加`.app.json`引用不自动去掉此标签 | 不能把Codex/桌面MCP清单直接视作Dot/web通用包；已有app引用也不绕过限制 |
+| ChatGPT custom MCP app | 官方入口Plugins → + → Add custom MCP server；公共HTTPS或支持的Secure MCP Tunnel；需认证、扫描/检查工具及相应角色权限。本地stdio不能直接供web使用 | 为无shell宿主提供候选控制面。full MCP限Business/Enterprise/Edu；Pro自定义MCP限read/fetch；不能据此承诺Pro可提交Lody任务 |
+| ChatGPT Sites承载MCP | 可在Site承载MCP并生成插件；需要Sites及插件权限，Site拥有者发布；安装、连接、Site访问分别处理 | 是另一正式托管候选，仍需服务接口、身份映射、部署所有权和端到端验收；本轮未部署 |
 
-官方仓库`docs/skills.md`仅指向开发站技能页面；该目标网页仍未取得，不能将链接存在描述成已经读过完整技能文档。`docs/config.md`另记载管理员可在`requirements.toml`设置`allow_managed_hooks_only=true`，忽略用户、项目与会话hook配置而保留托管层hooks；本轮没有据此推断当前环境启用了该策略，也没有尝试覆盖它。
+Dot官方FAQ明确：**“Plugin permissions are shared across dots, ChatGPT, ChatGPT Work, and Codex.”** 已有连接可供Dot在授予范围内使用。因此，不能笼统写成跨产品连接和权限始终完全隔离；也不能反向理解为任意产品可访问全部任务、文件或工作区。插件可用性、skills管理、实际工具暴露、服务端ACL、读写动作和审批、Lody账号及模型执行凭证仍需分别核实。
 
-## 初始化、会话hooks与存储事件
+原生清单的`hooks`字段已经官方源码确认，但字段存在不证明对应事件已启用或当前宿主允许注册。`docs/skills.md`只链接开发站，本轮未取得该站完整Codex技能文档。`docs/config.md`还说明管理员可设置`allow_managed_hooks_only=true`，忽略用户、项目和会话hooks而保留托管层；未据此推断当前环境启用了该设置。
 
-| 层次 | 已取得的证据 | 对lody4dot的约束 |
+## 初始化、存储与会话事件
+
+| 对象/事件 | 已取得的契约 | lody4dot约束 |
 | --- | --- | --- |
-| 当前环境准备 | 配置字段和仓库`.codex/cloud-install.sh`均有锁定安装与离线inspect | 复用已有入口；准备依赖时不登录、不注册machine、不启动daemon。字段保存不是事件已触发的证明 |
-| 当前Agent启动指引 | 配置`start_skill`与仓库`.codex/cloud-start.md`含技能读取和inspect步骤 | 它是Agent指引，不是操作系统事件回调；送达、读取及命令执行分别取证 |
-| 官方Codex会话事件 | 固定提交的事件表列14类，包括`SessionStart`、`SessionEnd`、工具、压缩、模型请求、子Agent及中断等 | 只代表该源码提交定义的事件；不自动推广到当前托管服务、用户本地版本或Lody管理的Codex0.160.1 |
-| `SessionStart`来源 | `startup / resume / clear / compact / fork` | `clear`是这里的会话启动来源标签，不是磁盘清理或实例重置通知 |
-| `SessionEnd` | teardown事件，默认超时1秒、最大3秒 | 不作为长时间安装、完整备份或突发实例丢失前必达通知 |
-| Dot存储重置、setup/maintenance与回收绑定 | 本轮尚未取得对应官方页面或产品契约 | 不确认重置周期、保留目录、重置前后事件或maintenance触发时机；不创建虚构hook |
+| 当前环境准备和Agent引导 | 现有`install_script`与`.codex/cloud-install.sh`锁定安装/inspect；`start_skill`与`.codex/cloud-start.md`引导读取/inspect | 复用已有入口，准备依赖时不登录、不注册machine、不启动daemon；保存字段与实际触发分别取证 |
+| Codex Cloud新旧任务 | 官方帮助明确新任务独立workspace；发布setup更新用于新任务，原任务继续保留自己的状态 | 环境发布、新任务创建、原任务恢复分开处理；新任务不能找回另一任务未提交修改 |
+| Codex Cloud VM状态 | 官方默认自最近turn启动或任务resume起，保存的VM状态最多可恢复7天；这不是会话历史保留期 | 只适用于该文档中的Codex Cloud，不当作Dot自身磁盘重置周期、永久保留承诺或退出通知 |
+| Codex会话hooks | 固定提交定义14类事件；`SessionStart`来源为`startup/resume/clear/compact/fork`，`SessionEnd`默认1秒、最多3秒 | `clear`不是磁盘清理；结束hook不适合完整备份或长安装，也不保证突发实例丢失前到达；不能推广为Dot存储事件 |
+| Dot主动Reset | 官方说明用户Reset删除Dot及其会话、保存记忆和定时任务；另页说明Dot创建在其他位置的文件、Codex threads和ChatGPT conversations单独存储 | 产品删除操作与云电脑文件系统周期重置分开；不同位置按各自保留规则处理，不能把全部产物视作随Dot一起删除 |
+| Dot自身电脑的准备、maintenance、周期存储重置和重建hooks | 已读9篇帮助正文及有限官方搜索，未取得对应正式契约 | 保持未知，不确认周期、保留路径、重置前后回调；没有证据不宣布不存在，也不虚构事件 |
 
-准备、运行身份、业务恢复和worker启动须分别处理。建议的依赖准备与恢复流程仍按[开发方案](lody4dot-collaboration-development.md#6-初始化hooks与存储恢复)：准备阶段幂等安装，运行入口先检查、缺失时按所属prefix修复，任务过程中保存必要关联和成果，恢复后按原session/turn查询对账。即使没有退出通知，也不能自动重发未知是否已受理的任务。
+建议流程仍按[开发方案](lody4dot-collaboration-development.md#6-初始化hooks与存储恢复)：幂等准备依赖；运行入口检查，缺失时只修复所属prefix；持续保存任务关联及成果；恢复后按原session/turn查询对账。未知是否已受理的任务不自动重发。未来若取得适用hook，将其作为同一恢复入口的额外触发源；业务身份、模型执行与worker启动仍单独授权和验证。
 
-若后续取得适用的正式hook，复用同一初始化动作作为触发目标；不要把Lody登录、主机注册或恢复模型执行塞进所有会话启动。当前受保护配置没有因此变成可写，也不因文件里出现hook字段就声称已挂钩。
+## 官方证据与读取范围
 
-## 证据来源与读取范围
+下列9篇帮助正文均通过继承代理正常HTTPS读到，HTTP200，时间为2026-10-21 14:47–14:54北京时间。帮助页会更新，引用只证明读取时内容；未执行页面中的安装、连接、分享或发布操作。
 
-以下源码均于2026-10-21重新读取，HTTP 200。固定提交为`c7234c1174b27d9c55199fba0d546dc27d1b0415`；插件格式另以与本机CLI匹配的官方标签`rust-v0.163.0`核对。源码描述契约，真实加载/任务仍需运行回执。
-
-| 来源 | 直接支持的结论 |
+| 官方URL | 支持的事实 |
 | --- | --- |
-| [官方README](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/README.md) | 使用Codex CLI、Codex Web等名称；提供Codex各平台安装说明。没有据此确立Dot的官方身份 |
-| [技能索引](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/docs/skills.md) | 指向开发站技能文档；本页不是完整安装契约 |
-| [配置索引与管理策略](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/docs/config.md) | 开发站配置文档入口与managed-hooks-only规则 |
-| [插件清单解析](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/manifest.rs) | skills、hooks字段及清单资源路径检查 |
-| [技能根加载](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/loader.rs) | `plugin_skill_roots`、默认skills目录 |
-| [marketplace本地路径](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/marketplace.rs) | 本地source路径解析规则 |
-| [会话事件表](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/codex-rs/hooks/src/lib.rs#L23) | 固定提交中14类事件，不能作为Dot平台回收事件清单 |
-| [SessionStart](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/codex-rs/hooks/src/events/session_start.rs#L23)、[SessionEnd](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/codex-rs/hooks/src/events/session_end.rs#L20) | 会话启动来源及结束时限 |
+| [Getting started with your dot](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot) | Dot身份、自身cloud computer、连接本地电脑/local skills、创建Codex云任务、任务原位置与主动Reset |
+| [Manage dots in ChatGPT workspaces](https://help.openai.com/en/articles/20001554-manage-dots-in-chatgpt-workspaces) | Enterprise访问、cloud code/shell联网/浏览器/桌面权限、本地电脑授权与连接限制 |
+| [Dots privacy, security, and safety FAQs](https://help.openai.com/en/articles/20001529-dots-privacy-security-and-safety-faqs) | 跨产品共享插件权限/连接；Dot上下文与外部产物保留边界；委托也受动作规则约束 |
+| [Using Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud) | 独立任务workspace、已发布setup对新任务的作用、默认7天VM恢复窗口、共享环境与GitHub权限 |
+| [Plugins in ChatGPT](https://help.openai.com/en/articles/20001256-plugins-in-chatgpt) | 插件组成、安装/授权分开、skills与apps、workspace和产品界面限制 |
+| [Importing and syncing plugin marketplaces from GitHub](https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github) | marketplace路径/来源/同步、现有app引用、MCP声明与Desktop only限制 |
+| [Skills in ChatGPT](https://help.openai.com/en/articles/20001066-skills-in-chatgpt) | 技能创建/上传/分享入口、角色权限、ChatGPT与Codex可分别管理 |
+| [Connecting custom MCP servers in ChatGPT](https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt) | HTTPS/Tunnel入口、套餐和角色范围、认证与工具更新审核、本地服务限制 |
+| [Hosting a plugin with ChatGPT Sites](https://help.openai.com/en/articles/20001547-hosting-a-plugin-with-chatgpt-sites) | Site承载MCP、拥有者发布、安装/连接/分享条件 |
 
-发布后单次访问记录：
+marketplace正文所链完整格式指南是[Plugin Management](https://learn.chatgpt.com/docs/enterprise/plugin-management)，不是Help页；本轮14:58:23（北京时间）按继承代理/CA对精确URL请求一次，仍CONNECT403，未取得正文，不从标题补猜GitHub source目录schema或ZIP根格式。优先交付自包含ZIP候选与正式上传指引，UI回执单独验收。
 
-| 请求 | 结果与范围 |
+实际官方搜索包括`Dot`、`dot cloud computer storage reset`、`dot hooks setup maintenance`、`dot cloud computer files retention`、`dot environment setup hook`及`skills in ChatGPT`；读取了搜索结果中的上述正文。检索未命中不作为“没有hook”的证明。Codex Cloud正文把完整设置流程指向[开发站环境指南](https://developers.openai.com/codex/environments/cloud-environments)；该域名本轮已被代理明确拒绝，不重复尝试其他路径或绕过网络。
+
+官方Codex源码均于同日取得HTTP200。固定提交为`c7234c1174b27d9c55199fba0d546dc27d1b0415`；插件格式另按本机CLI匹配标签`rust-v0.163.0`核对：
+
+| 来源 | 支持的事实 |
 | --- | --- |
-| `https://developers.openai.com/codex/cloud/environments/` | 继承代理的CONNECT403，未读到页面，不能声明已经核实setup/maintenance的具体契约 |
-| `https://help.openai.com/en/?q=Dot` | 同上，未完成官方帮助站Dot检索 |
-| `https://openai.com/sitemap.xml` | 同上，未读取官网索引 |
+| [官方README](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/README.md)、[技能索引](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/docs/skills.md)、[配置与管理策略](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/docs/config.md) | Codex命名、安装入口、开发站链接及managed-hooks-only规则；Dot身份改用上方官方帮助核实 |
+| [插件清单](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/manifest.rs)、[加载](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/loader.rs)、[marketplace](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/marketplace.rs) | 原生skills/hooks字段、资源路径及本地source解析 |
+| [事件表](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/codex-rs/hooks/src/lib.rs#L23)、[SessionStart](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/codex-rs/hooks/src/events/session_start.rs#L23)、[SessionEnd](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/codex-rs/hooks/src/events/session_end.rs#L20) | 会话事件、来源及时间限制；不是Dot存储事件清单 |
 
-没有绕过代理、修改CA/TLS、重新保存网络草稿或读取凭证值。公开文档不保存真实宿主实例、Lody资源标识或业务数据。
+本机`codex-cli 0.163.0`版本、plugin及marketplace帮助退出0，伴随无法写PATH别名的只读警告；只作为该实例的命令旁证。本轮公开资料临时正文保存在`/tmp/lody4dot-official-new-runtime-9ns1poig/`，该路径不是交付依赖或持久存储承诺，正文与环境数据未提交。
 
-## C01剩余输入与下一动作
+## C01/C09可交付范围与剩余核实
 
-当前可交给实现使用的部分是：已有托管准备/启动字段、0.163.0原生分发格式、当前CLI帮助入口，以及会话hook与存储事件的严格区分。它们可以支持C02/C03和已知宿主的分发准备。
+C01已补齐Dot正式身份、独立电脑与Codex委托关系、共享连接权限、Codex Cloud恢复边界，以及插件/技能/远程MCP的正式候选路线。C09可以据此分别验收：Dot使用已授权插件连接、Dot委托已有Codex环境、连接本地电脑后的本地技能。每条路线都需记录实际产品界面、执行位置、版本/来源、技能读取和只读工具回执，不能互相替代。
 
-Dot实际产品/接口、官方setup/maintenance与实例恢复契约、首批用户本地OS/架构及真实加载回执仍有缺口。后续在当前实例收到正式网络规则或获得相应官方资料后再复查相关页面；无需重复发布同一配置。取得宿主契约后执行最小读取/只读工具核验，再决定C05/C09路线。若需要新增MCP服务，按任务卡先明确身份映射、副作用与运维所有权，调查阶段不部署。
+未完成部分集中在：Dot自身电脑能否按公开入口安装该CLI/技能；其存储生命周期及初始化/重建hook；所选账号/角色是否具备候选连接能力；lody4dot真实端到端验收。完整Codex Cloud setup/maintenance的下一官方核实点是上方已被正文引用的开发站指南；Dot专属hook仍需正式产品契约，当前不再反复要求用户找链接或发布同一配置。C01保留部分完成，C09不声明Dot完整接入。
