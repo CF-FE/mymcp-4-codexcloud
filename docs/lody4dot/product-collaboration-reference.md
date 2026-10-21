@@ -87,6 +87,8 @@ Work Cloud 不只支持用户手动点击创建。应分别识别“创建任务
 
 本次没有建立“任意外部程序可调用统一 Work Cloud API”的结论。能调用某个业务 MCP，只说明有该服务的相应动作；若要让它创建 Work Cloud，还需要实际任务创建入口、身份与授权，不能从 MCP 连接成功直接推导。
 
+与 Codex Cloud 的入口对照及本项目的创建分工，见[云任务创建方式对照](#codex-cloud-与-work-cloud-的创建方式对照)。
+
 ## 2. 云电脑、云任务、云环境分别是什么
 
 | 对象 | 含义 | 文件与配置的理解方式 |
@@ -132,9 +134,37 @@ Codex 平台任务不会自动同步成 Lody 会话。两边的可见对象分�
 
 ## 3. GitHub 配置的 Codex Cloud 环境给谁用
 
-环境准备可包括 GitHub 仓库、依赖与工具、安装和启动安排、网络、环境变量及受支持的网络密钥等。它主要用于**选择该环境的新 Codex Cloud 任务**，包括用户直接创建，以及 Dot 委派过去的编码任务。
+环境准备可包括 GitHub 仓库、依赖与工具、安装和启动安排、网络、环境变量及受支持的网络密钥等。它主要用于**选择该环境的新 Codex Cloud 任务**；任务的创建入口与环境准备是两回事，入口对照见下表。
 
 它不会自动应用到普通 Chat、其他 Work Cloud 任务、Dot 自己的云电脑或本地 Codex。共享仓库表示可以取得同一代码来源，不等于共享未提交修改、整个开发目录和全部配置。[Cloud environments](https://learn.chatgpt.com/docs/environments/cloud-environments)
+
+### Codex Cloud 与 Work Cloud 的创建方式对照
+
+Codex Cloud 不只有手动创建。当前核实的入口包括**用户手动、Dot 委派、CLI 提交**。先准备并发布 Codex 环境，再向它发起任务；一次环境准备可供多个新任务使用。准备环境、创建独立任务、向已有任务发起新一轮，以及定时启动运行，分别记录。
+
+| 入口 | Codex Cloud | Work Cloud | 证据与使用边界 |
+| --- | --- | --- | --- |
+| 用户手动创建 | 网页/桌面选择 **Work in → Cloud**、已发布环境后发送任务；移动端从 Codex 选择已发布环境 | 从支持的 Work 入口选择云端执行，不要求先发布 GitHub 编码环境 | 官方产品入口；以账号、工作区及当前可用界面为准。 |
+| Dot 委派 | 官方明确可在已准备的 Codex 云环境创建独立编码任务 | 官方明确 Dot 可启动独立云会话；具体入口是否为 Work Cloud，仍看实际创建工具及返回类型 | 有独立会话与上下文，不自动继承全部 Dot 对话或电脑状态。 |
+| Codex CLI 提交 | 官方 `codex cloud exec` 可直接提交任务；`codex cloud` 默认打开交互选择器，`codex cloud list` 查看近期聊天 | 本次没有建立通过 `codex cloud exec` 创建 Work Cloud 的支持依据 | CLI 是平台提供的另一入口；需实际客户端支持、服务访问和适用环境。本轮未执行 CLI 提交，也未验证所选已发布环境的兼容性。 |
+| 首方客户端助手代建 | 本次本地 `create_thread` 工具声明没有 Codex Cloud 目标，不据此推导存在该入口 | 本次声明有 `chatgptWorkCloud` 目标，用户明确要求后可代建；本轮未调用 | 属于当前会话工具快照，不是公共 HTTP API，也不代表所有宿主相同。 |
+| 计划或支持的应用事件 | 本次没有建立这些 Work 触发器会创建 Codex Cloud 任务的结论 | 网页 Work 支持计划/合资格事件运行；按设置可继续原会话或产生独立运行/新会话 | 保存计划、实际触发、是否新建会话、执行和交付分开取证。 |
+
+来源：[Codex Cloud 手动入口](https://learn.chatgpt.com/docs/environments/cloud-environments#start-a-task-in-codex-cloud)、[环境准备与发布](https://learn.chatgpt.com/docs/environments/cloud-environments#create-and-publish-an-environment)、[Dot 委派](https://learn.chatgpt.com/docs/dots/tasks-and-memory#assigned-work)、[Codex CLI Cloud 命令](https://learn.chatgpt.com/docs/developer-commands#codex-cloud)、[Work 执行位置](https://learn.chatgpt.com/docs/use-chatgpt#choose-cloud-or-local-work)、[计划与事件运行](https://learn.chatgpt.com/docs/automations)。首方工具一行的依据为本次工具声明。
+
+### 平台能力、当前入口与项目分工分开看
+
+| 层次 | 本次结论 | 对方案的影响 |
+| --- | --- | --- |
+| 平台支持 | Codex Cloud 有手动、Dot、CLI 提交路径；Work Cloud 的已核实入口见上表 | 文档描述可选路径，不把项目选择写成平台唯一入口。 |
+| 当前工具与访问 | 本地首方声明提供 Work Cloud 代建；旧 Cloud CLI 查询曾返回 401，本轮没有重试或提交任务 | 工具存在、CLI 登录、API 授权与创建成功分别判断；历史失败不证明其他账号/入口不可用。 |
+| 本项目职责 | **独立 Codex Cloud 任务由 Dot 创建；当前云任务不再派生下游 Codex Cloud 任务。** | 沿用现有授权和分工；CLI 平台入口的补充不要求接入新调度器、重试旧 API 或索取新凭证。 |
+
+CLI 官方说明沿用主 CLI 凭证、提交失败返回非零；登录成功仍不能代替目标 Cloud 服务实际授权。本文不补造通用创建 REST API、环境 ID 或未核实的命令参数。企业聊天工具委派按公子要求延后，不纳入本轮方案与实施优先级。
+
+例如，公子自己从 Cloud 入口开一个修复任务，属于平台手动创建；让 Dot 在指定环境开同类任务，属于平台委派入口，也是本项目采用的分工；从终端用 `codex cloud exec` 提交同类工作，属于另一平台入口，本项目当前不接入。任务开始后读取 lody4dot、经 Lody 派发到已有节点，属于 Lody 的 session/turn 操作，不等于又创建了一个 Codex Cloud 任务。
+
+### 保存环境与创建任务分别核实
 
 | 操作 | 应怎样理解 |
 | --- | --- |

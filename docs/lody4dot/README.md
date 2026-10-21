@@ -9,6 +9,7 @@ lody4dot的设计、接入、验收和配套图表集中在本目录；实际任
 | Dot、云任务、本地环境、会话引用和权限有什么区别 | [环境与权限指引](environment-model.md) |
 | 对外分享Chat、Work、Dot、云电脑、Codex Cloud、资料空间与侧栏图标的完整概念 | [产品协作参考（分享版）](product-collaboration-reference.md) |
 | Work Cloud怎样创建、能做什么，以及实际场景怎样选择入口 | [创建与触发方式](product-collaboration-reference.md#work-cloud-可以怎样创建或触发)、[能力表](product-collaboration-reference.md#work-cloud-能做什么)、[14个场景例子](product-collaboration-reference.md#常见场景怎么选)及[资料读写](product-collaboration-reference.md#work-cloud-能直接读写资料空间吗) |
+| Codex Cloud有哪些创建方式，与Work Cloud和本项目分工怎样区分 | [创建方式对照](product-collaboration-reference.md#codex-cloud-与-work-cloud-的创建方式对照)及[平台能力、当前入口与项目分工](product-collaboration-reference.md#平台能力当前入口与项目分工分开看) |
 | 把本次对话结论交给继续开发的云端任务 | [资料空间与Cloud协作交接](space-cloud-handoff.md) |
 | 当前哪些能力已测、哪些有条件或未运行 | [支持矩阵](support-matrix.md) |
 | 如何安装、诊断和使用工具 | [插件说明](../../plugin/lody4dot/README.md)与[技能入口](../../skill/lody4dot/SKILL.md) |

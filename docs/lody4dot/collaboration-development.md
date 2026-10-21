@@ -62,6 +62,12 @@ Work Cloud是通用任务的托管执行方式，与Codex Cloud共享部分执�
 
 局部边界（BOUNDARY_NOTE）：0.2.4仅为知识及分发候选，工具、身份、任务状态所有权和schema1保持不变；不增加Work/Codex实际调用、授权或runtime支持。实施验证采用现有回归、打包/移位与新上下文知识选择，结果在唯一队列及验证记录维护。Work产品入口与本插件实际加载分别验收；C09/C10不因知识可读关闭。
 
+### Codex Cloud创建入口：平台选择与项目职责
+
+官方提供用户手动创建、Dot在已准备环境委派，以及`codex cloud exec`提交任务；它们是平台入口，不是三种新的执行环境。与Work Cloud的手动、当前首方工具代建及计划/事件入口逐项对照，见[创建方式对照](product-collaboration-reference.md#codex-cloud-与-work-cloud-的创建方式对照)。本地工具声明和历史CLI访问结果另属会话证据，不能把官方支持写成本账号创建成功。
+
+**本项目继续由Dot创建独立Codex Cloud任务，当前云任务不派生下游任务。** 补充CLI说明不改职责、权限或实现优先级，不恢复Cloud API/401验收，不因平台有多入口就新增统一创建服务；企业聊天工具委派按公子要求延后。保留`aea6798`已完成的0.2.4知识候选；后续先对照最新实现，在原授权内完善必要知识及相关实施、验证与提交，不把本轮说明误读为撤回已有实施授权。
+
 ### 资料交接与既有schema1保持边界
 
 当前`plugin/lody4dot/scripts/handoff.py`根字段有白名单；`dispatched`/`result`要求Lody workspace、session、user_turn，`result`再要求assistant_turn及匹配的持久化终态；工件要求executor_ref、SHA-256及字节数。对应说明与行为测试见[交接契约](handoff.md)和[测试](../../tests/lody4dot/test_handoff.py)。

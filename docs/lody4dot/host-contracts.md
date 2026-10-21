@@ -21,9 +21,21 @@ Dot的官方身份已核实：[Getting started with your dot](https://help.opena
 | spec12 Cloud CLI（已撤下的验收尝试） | `codex cloud list`从旧轮次代理拒绝变为HTTP401；本地`codex login status`显示ChatGPT登录，但该API请求未授权。该尝试不证明当前云任务可创建下游任务，也不作为项目阻塞 |
 | spec14发布复查 | 当轮spec/observed均为14、`observations_current=true`，网络`enforced`、LODY/GITEE变量`ready`；Cloud list仍401、未见403，bootstrap只读doctor通过。后续实时值与进行中验收见[唯一状态表](../../.codex/agent-state/todo.md#当前环境与下一步) |
 
-上表Cloud CLI结果保留为历史；该验收路径已撤下，不再调查或调用`cloud list/exec`，不以OpenAI API授权作为Lody协作前置，也不要求补token或重复发布环境。
+上表Cloud CLI结果保留为历史；该验收路径已撤下，不再调查或调用`cloud list/exec`，不以OpenAI API授权作为Lody协作前置，也不要求补token或重复发布环境。官方CLI入口的存在与这项项目选择分开，见下节。
 
 本节资料查证保留继承代理、CA与TLS校验，没有修改云配置、重复保存草稿、认证、读取凭证值或安装新插件；发布后原Lody任务的独立只读复验见验证记录。当前工具目录没有网页检索或官方文档搜索工具，采用官方帮助站搜索及页面实际链接做有限查证。
+
+## Codex Cloud创建入口与项目分工
+
+2026-10-21补充读取官方创建及CLI说明，只核对文档，没有执行Cloud CLI查询或提交任务。完整的[Codex Cloud与Work Cloud对照](product-collaboration-reference.md#codex-cloud-与-work-cloud-的创建方式对照)在分享版维护；本节保留产品事实与本项目边界的来源。
+
+| 入口 | 官方支持与来源 | 当前证据边界 |
+| --- | --- | --- |
+| 用户手动 | [Cloud任务入口](https://learn.chatgpt.com/docs/environments/cloud-environments#start-a-task-in-codex-cloud)：网页/桌面选择Work in → Cloud和已发布环境；移动端从Codex选择环境 | [准备并发布环境](https://learn.chatgpt.com/docs/environments/cloud-environments#create-and-publish-an-environment)先于任务创建；不把保存设置当发布或任务运行。 |
+| Dot委派 | [Assigned work](https://learn.chatgpt.com/docs/dots/tasks-and-memory#assigned-work)：Dot可在已经设置的Codex云环境创建独立编码任务 | 本项目采用该分工，Dot权限已由公子确认；插件加载、绑定和后续业务另按实际回执验收。 |
+| CLI提交 | [开发命令](https://learn.chatgpt.com/docs/developer-commands#codex-cloud)：`codex cloud`默认打开交互选择器，`codex cloud exec`直接提交，`codex cloud list`列近期聊天 | 官方沿用主CLI凭证、提交失败返回非零；本账号没有因这次查证而新增创建成功、适用环境或服务授权证据。 |
+
+平台支持多入口，不改变本项目“Dot创建、当前云任务不派生下游任务”的职责。当前本地`create_thread`声明仅有Work Cloud云目标，不能当作Codex Cloud创建工具；Work资料、MCP和计划入口也不推出Codex任务创建权限。历史401只描述原次请求，不能当作平台禁止CLI的依据。本轮不增加创建服务、凭证代理或新验收；企业聊天工具委派按公子要求延后。
 
 ## 宿主、加载与工具能力
 

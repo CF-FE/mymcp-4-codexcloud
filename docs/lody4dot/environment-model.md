@@ -17,6 +17,7 @@ Chat/Work/Codex的定位、Cloud硬件与配置、100GB资料存储、侧栏图�
 | Dot和Agent是什么关系？ | Dot是ChatGPT的常驻Agent产品。通用Agent角色与产品名称可以同时描述它；实际命令仍要定位到Dot云电脑、Codex任务环境或获授权的本地电脑。 |
 | 云任务就是一台云主机吗？ | 任务是工作单元，实例是运行环境，主机是底层承载。它们的实际绑定要查记录。 |
 | 本项目由谁新建独立云任务？ | 用户已确认Dot有创建权限，由Dot选择已发布Codex环境和仓库发起；当前云任务接入Lody并协作执行，不再创建下游云任务。 |
+| 平台只允许Dot创建Codex Cloud吗？ | 还提供用户手动和CLI提交；这是平台支持面，不自动改变上一行的项目分工。Work Cloud入口与两者区别见[创建方式对照](product-collaboration-reference.md#codex-cloud-与-work-cloud-的创建方式对照)。 |
 | “空间里的文件”都在 `/workspace` 吗？ | 先辨认是产品协作空间、执行器目录，还是Lody工作区，三者入口不同。 |
 | 引用另一会话，会继承它的文件、环境和权限吗？ | 引用用于定位对象；实际能读多少由当前工具和服务端访问检查决定。 |
 | Dot和Codex的插件要各自重新连接吗？ | 官方说明既有插件连接和权限可跨Dot、ChatGPT、Work、Codex共享，限已授予范围；本地电脑访问、浏览器登录和CLI状态另外确认。 |
@@ -25,6 +26,8 @@ Chat/Work/Codex的定位、Cloud硬件与配置、100GB资料存储、侧栏图�
 首次阅读看[执行链路](#1-概念与总览)和[三个空间](#三个空间分别是什么)；排查问题看[版本与生命周期](#3-版本与生命周期)、[权限](#4-权限与访问判定)和[场景速查](#6-交接与验收)。架构设计者另读[设计参考](environment-design.md)。
 
 Work Cloud的[创建方式](product-collaboration-reference.md#work-cloud-可以怎样创建或触发)、[场景选择](product-collaboration-reference.md#常见场景怎么选)、[插件与MCP区别](product-collaboration-reference.md#work-cloud-与-codex-cloud-的插件和-mcp-有何区别)统一在分享版维护。不要把首方资料工具、外部MCP及任务创建入口合成一个权限。
+
+Codex Cloud的手动、Dot与CLI入口，以及[平台能力、当前入口与项目分工](product-collaboration-reference.md#平台能力当前入口与项目分工分开看)也在分享版统一维护。CLI曾有401是历史服务访问结果，不是平台只支持Dot的证据，也不重开本项目已撤下的API验收；企业聊天工具委派本轮延后。
 
 ## 1. 概念与总览
 
