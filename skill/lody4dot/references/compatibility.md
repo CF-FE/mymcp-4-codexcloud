@@ -2,6 +2,8 @@
 
 本知识基线为 `lody@0.107.2`。命令帮助在实际安装版本中核对；资料记载某项能力，不代表当前账户、机器、provider 和宿主都支持它。已采集资料与帮助证据见 [来源记录](sources.json)。
 
+宿主、OS/架构与运行角色分别识别。Dot按本项目用户称呼指ChatGPT云服务宿主，Agent是处理目标并调用工具的主体；Dot的官方产品标识、加载入口和工具契约未核实前，不等同于Codex或已有执行节点。多端目标与交接见[协作参考](collaboration.md)。
+
 ## 平台和运行位置
 
 | 情况 | 正确判断 |
@@ -15,7 +17,13 @@
 
 公开的 `lody` npm 构建选择 cloud 平台；不要假定 `LODY_PLATFORM` 是支持的切换入口。`LODY_DATA_DIR` 的目录选择也不证明私密隔离、跨任务恢复或共享快照安全。
 
-`0.107.2` 的会话 CLI 可以在无本机 host 时创建工作区 client。本机目标才由 `ensureTargetMachineOnline` 要求本机运行进程；远端目标通过机器 RPC 检查、创建和继续，活动回合的取消也按目标路由。无活动回合时 `cancel` 可返回 `alreadyStopped`。因此控制端 daemon 缺失不能作为拒绝远端派发的依据，`agent-config refresh-capabilities` 的本机要求则不变。本次已有远端 Codex 配置的 create/chat 与两个回合的持久化完成已通过，Agent 二次读回的文件字节及随机 challenge 经控制端校验匹配；不推导取消、其他配置或全部平台已通过，也不称控制端直接读取远端文件系统。
+`0.107.2` 的会话 CLI 可以在无本机 host 时创建工作区 client。本机目标才由 `ensureTargetMachineOnline` 要求本机运行进程；远端目标通过机器 RPC 检查、创建和继续，活动回合的取消也按目标路由。无活动回合时 `cancel` 可返回 `alreadyStopped`。因此控制端 daemon 缺失不能作为拒绝远端派发的依据，`agent-config refresh-capabilities` 的本机要求则不变。
+
+项目既有验收已通过远端Codex配置的create/chat与两个回合的持久化完成，Agent二次读回的文件字节及随机challenge经控制端校验匹配。另一个自有普通运行回合按assistantTurnId精确取消后，同一回合为persisted/synced/canceled。只承认这些配置与操作的证据，不推广到Operation协作链、其他配置/平台或工具进程即时终止，也不称控制端直接读取远端文件系统。
+
+## 命令索引的运行前提
+
+索引中的 `requires.local_runtime` 以运行命令的本端为参照，不能单独表示所有目标端的要求。`session create/chat/cancel` 的false表示存在不需要控制端host的远端路径；选择本机目标时仍需本机运行进程，远端执行端也仍需运行进程和Agent凭证。结合具体命令的 `runtime_note`、实际目标与[会话参考](sessions.md)判断。`agent-config refresh-capabilities` 为true，保留正确本机执行限制，不转成跨机刷新能力。当前说明不改变索引schema，也不将help_verified或documented升级为业务实测。
 
 ## CLI 与已有 MCP
 
@@ -31,7 +39,7 @@ Lody 内置 MCP 的资源发现、会话、operation、调度和角色工具需�
 
 直接启动 bundled adapter 时，`CODEX_PATH` 是该入口明确要求的参数；这种单独预检与 builtin 默认运行链路分别记录。ACP `initialize` 不发送模型任务，但可能启动原生 app-server 并尝试写运行状态；`session/new` 会建立 thread 并查询模型，不能作为零持久化探测。
 
-本次托管云机已校验并运行 managed `0.160.1 --version`，但 bundled ACP `initialize` 返回 RPC1001；单独指定私密 `CODEX_SQLITE_HOME` 后仍返回 read-only 错误。同版本官方启动代码还无条件以可写方式打开 `$CODEX_HOME/installation_id`，当前该文件系统只读；sqlite_home、log_dir 和 cwd 不改变此路径。遵守宿主要求，不改变 HOME/CODEX_HOME 或复制认证来绕过限制。该结果限制当前云机作为执行端，不否定它作为控制端向已授权远端派发，也不泛化其他平台；远端执行结果仍单独验收。
+项目在2026-10-20至21的托管Linux实例验收中已校验并运行managed `0.160.1 --version`，但bundled ACP `initialize` 返回RPC1001；单独指定私密 `CODEX_SQLITE_HOME` 后仍返回read-only错误。同版本官方启动代码还无条件以可写方式打开 `$CODEX_HOME/installation_id`，该测试实例的文件系统只读；sqlite_home、log_dir和cwd不改变此路径。遵守宿主要求，不改变HOME/CODEX_HOME或复制认证来绕过限制。这是该实例与版本的记录，不能作为全部云环境的固定结论；它不否定控制端向已授权远端派发，其他执行端仍各自验收。
 
 API-key 路径的 `LodyFleet` 为账户返回的全部工作区建立 runtime 并登记本机/默认配置；任务的 `--workspace` 或 `LODY_WORKSPACE_ID` 不过滤 host 的工作区订阅。用户限定单个工作区时，先核实凭证或宿主是否有受支持的范围限制，不因任务目标已指定就假称 host 只影响该工作区。
 

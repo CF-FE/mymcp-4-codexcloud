@@ -17,11 +17,15 @@ from urllib.parse import unquote, urlsplit
 
 RECEIPT = ".lody4dot-build.json"
 TOOL = "lody4dot-build"
-SCRIPT_NAMES = {"install.py", "doctor.py", "auth.py", "common.py", "build.py", "platform_support.py", "handoff.py"}
+SCRIPT_NAMES = {"install.py", "doctor.py", "auth.py", "common.py", "build.py",
+                "platform_support.py", "bootstrap.py", "handoff.py"}
+HOST_NAMES = {"codex-cloud.md", "codex-cli.md"}
 RUNTIME_NAMES = {"package.json", "package-lock.json", "build-policy.json"}
 REQUIRED = (
     "README.md", ".codex-plugin/plugin.json", "scripts/install.py",
-    "scripts/doctor.py", "scripts/auth.py", "scripts/common.py", "scripts/platform_support.py", "scripts/handoff.py", "runtime/package.json",
+    "scripts/doctor.py", "scripts/auth.py", "scripts/common.py",
+    "scripts/platform_support.py", "scripts/bootstrap.py", "scripts/handoff.py",
+    "hosts/codex-cloud.md", "hosts/codex-cli.md", "runtime/package.json",
     "runtime/package-lock.json", "runtime/build-policy.json",
 )
 SKILL_REQUIRED = (
@@ -98,6 +102,8 @@ def check_source_tree(root: Path, kind: str) -> list[Path]:
                 and path.name in SCRIPT_NAMES
                 or len(relative.parts) == 2 and relative.parts[0] == "runtime"
                 and path.name in RUNTIME_NAMES
+                or len(relative.parts) == 2 and relative.parts[0] == "hosts"
+                and path.name in HOST_NAMES
             )
         if not allowed:
             raise BuildError(f"Unexpected file in {kind}: {label}")

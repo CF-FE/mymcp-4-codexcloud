@@ -1,6 +1,6 @@
 {
   "name": "lody4dot",
-  "version": "0.1.4",
-  "description": "Lody operations and Codex cloud setup guidance",
+  "version": "0.2.0",
+  "description": "Lody multi-host collaboration and recoverable setup guidance",
   "skills": "./skills"
 }

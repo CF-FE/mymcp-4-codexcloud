@@ -4,6 +4,8 @@
 
 先明确用户允许访问的 workspace，再查询该工作区的机器、项目和 Agent 配置。不要静默选首个匹配；名称冲突或 workspace 不明确时使用显式 ID。缓存中的可用性不是资源预留，也不是派发许可。
 
+产品协作空间、某执行器的 `/workspace` 目录与Lody workspace是三种对象，按已有上下文和对应工具定位；目录搜索不能替代空间对象访问。会话链接与上传文件也各有来源系统和读取范围，不能把ChatGPT会话引用当Lody sessionId。跨端定位规则见[多宿主协作](collaboration.md)。
+
 ```bash
 lody workspace list --json
 lody machine list --workspace WORKSPACE_ID --all-pages --json

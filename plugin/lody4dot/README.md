@@ -1,8 +1,10 @@
 # lody4dot
 
-为 Codex agent 提供 Lody 的任务指引、版本化命令资料，以及独立的安装、只读诊断和显式认证工具。首个安装目标是 Linux Codex 云环境，工具需要 Python 3.10+、npm 和 Lody 支持的 Node：`>=22.14.0 <23` 或 `>=23.6.0`。
+为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前插件版本为`0.2.0`，CLI仍固定`0.107.2`。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm和Lody支持的Node：`>=22.14.0 <23`或`>=23.6.0`。
 
 能力源码在仓库的 `skill/lody4dot/`；本目录负责运行时锁定和分发，不新增 MCP 服务。Lody 已有 MCP 只有在宿主提供有效 session/workspace/machine 上下文时才使用，不能将其内部入口当作独立通用服务。
+
+多宿主知识与工具基础已提供，具体宿主的加载、控制与执行能力仍分别验收。Dot指用户所说的ChatGPT云服务，独立于Agent；其官方标识和接入接口待核实。macOS、WSL2和原生Windows未因此进入实际支持列表，安装成功也不自动注册machine或启用worker。
 
 ## 从仓库安装 CLI
 
@@ -17,6 +19,40 @@ python3 plugin/lody4dot/scripts/doctor.py --prefix /workspace/.tools/lody4dot --
 安装器使用固定依赖与锁文件，在自有暂存目录安装并验证，成功后切换稳定入口。它不登录、不注册机器、不启动 daemon。失败时保留旧版本与用户状态；不应将工具目录、npm 缓存或登录态提交到仓库。不要将一个已有非空目录直接指定为工具目录。
 
 CLI 固定版本为 `0.107.2`；锁定输入、依赖修订及实际验证以 `runtime/` 和仓库任务队列为准。安装成功与 inspect 通过只证明本地工具前提，不代表账户、长连接或 Agent 任务已经验证。
+
+## 环境准备与恢复检查
+
+`bootstrap.py`复用现有受管安装器和doctor，把准备阶段与启动检查分开。在仓库根目录运行；下面prefix示例用于当前Linux云实例，其他端必须使用自己的实际安装位置：
+
+```bash
+python3 plugin/lody4dot/scripts/bootstrap.py --prefix /workspace/.tools/lody4dot --prepare --json
+python3 plugin/lody4dot/scripts/bootstrap.py --prefix /workspace/.tools/lody4dot --json
+python3 plugin/lody4dot/scripts/bootstrap.py --prefix /workspace/.tools/lody4dot --repair-missing --json
+```
+
+| 入口 | 行为 |
+| --- | --- |
+| `--prepare` | 执行受管安装，再离线inspect；安装器可复用通过校验的同锁运行时。 |
+| 不传动作参数 | 只做inspect；缺运行时也不自动安装。 |
+| `--repair-missing` | 先inspect，仅在退出3且类别为`missing_runtime`时尝试受管安装，再复检；目录所有权和来源检查仍由安装器执行。 |
+
+`--prepare`和`--repair-missing`不能同时使用。版本不支持等其他错误不触发自动修复；陌生或被修改的安装目录也不会被当作可覆盖目录。报告的`verification_scope`为`owned_dependency_readiness`，`authentication`、`daemon`和`task_recovery`均为`not_run`：此工具不登录、不启daemon、不恢复或重发模型任务，调用方既有身份state保持独立。
+
+已有环境准备入口可调用`--prepare`，运行入口可选择只检查或明确允许的`--repair-missing`。这不表示Dot支持存储重置hook。初始化后仍需核对本端身份与原Lody session/turn，再决定如何处理业务；详见包内`skills/lody4dot/references/collaboration.md`（源码为`skill/lody4dot/references/collaboration.md`）。
+
+## 离线交接校验
+
+先将本任务的必要目标、授权声明、原生引用、版本与观察整理到私密JSON文件，再检查相应阶段：
+
+```bash
+python3 plugin/lody4dot/scripts/handoff.py --input /path/to/private-handoff.json --stage intent --json
+python3 plugin/lody4dot/scripts/handoff.py --input /path/to/private-handoff.json --stage dispatched --json
+python3 plugin/lody4dot/scripts/handoff.py --input /path/to/private-handoff.json --stage result --json
+```
+
+阶段是字段检查级别，不会创建或改变任务。工具只读取指定的普通JSON文件，不跟随输入文件的符号链接，不打开记录内引用、不访问网络、不调用Lody、不改写输入。`status: pass`仅表示`structure_and_declared_consistency`通过；报告始终保留`not_verified`，不能证明实时权限、来源真实性、实际产物或业务完成。已完成/失败/取消的声明都可能在结构完整时通过，不能把退出0当任务成功。
+
+输入/结构不合法退出2，缺少阶段所需证据退出3，结构及声明一致性通过退出0，内部错误退出10。未知根字段、重复JSON键、不有限数字和可识别的秘密输入会被拒绝，扫描范围仍仅是已知模式。随附技能参考包含协作规则；工具的`--help`列出实际阶段与参数。完整记录须由调用方根据实际原生回执准备，工具不会生成或补造业务证据。
 
 ## 认证与云端运行
 
@@ -42,6 +78,8 @@ python3 plugin/lody4dot/scripts/doctor.py --profile control --connect --workspac
 
 当前部署还会返回 Loro Streams 网关与分片后缀 `streams-api-x.loro.dev`。实测 `api`、`control-b`、`control-c`、`presence` 子域在只放行四个 Lody 域时被 CONNECT 403 拦截。源码的控制/数据/写入/presence 分片会使用同一后缀；云网络需包含 `*.streams-api-x.loro.dev`，不以只读账户查询成功替代该链路验证。该后缀属于本次实际返回值，部署变化时应重新核实。
 
+doctor会保留失败前已完成的检查，并通过`observed_at`、`verified_scope`、`control_environment`和`provenance`报告本次范围与可得来源。包清单、构建收据、安装收据及实际CLI版本分别记录；缺收据不补造，摘要一致不等于签名、正式发布或模型任务验证。账户查询通过但目录未运行时，报告范围仅覆盖已做查询。
+
 `0.107.2` 的部分目录命令会在 JSON 前后输出同工作区的 `Remote Streams transport attached/detached` 诊断行。工具仅识别这两种精确消息及唯一完整 JSON，仍拒绝未知输出、混合工作区和多个 JSON；安全提示写 stderr，不回显日志或身份。账户与完整目录在本次云机已实测通过。
 
 状态通过 Lody 支持的 `LODY_DATA_DIR` 分离；身份不进入插件包和共享环境快照。不修改 `HOME` 或 `CODEX_HOME` 绕过受保护的宿主配置。云端启动说明应显式读取技能入口并运行 doctor；保存说明后仍需要新任务提供实际加载回执。
@@ -58,7 +96,7 @@ python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot --json
 
 构建会收集技能、参考、工具和锁定输入，拒绝缺失资源、符号链接、包外引用、额外文件和可识别的凭证文件，生成 `.lody4dot-build.json` 哈希清单。产物不包含依赖安装目录或身份状态；自有且完整的旧产物可重新构建，陌生目录或被修改的产物不会被覆盖。
 
-将整个产物目录复制到其他位置后，以产物根为工作目录执行 `python3 scripts/install.py`、`python3 scripts/doctor.py` 和 `python3 scripts/auth.py`。技能入口为 `skills/lody4dot/SKILL.md`；随附参考均在包内。
+将整个产物目录复制到其他位置后，以产物根为工作目录执行`python3 scripts/install.py`、`python3 scripts/doctor.py`、`python3 scripts/auth.py`、`python3 scripts/bootstrap.py`或`python3 scripts/handoff.py`及其相应参数。技能入口为`skills/lody4dot/SKILL.md`；随附参考均在包内。这里的包内路径与前面的仓库源码路径不同，不应直接互换。
 
 在允许写入配置的 Codex CLI 环境，可以使用已核实的原生入口：
 
@@ -88,3 +126,5 @@ python3 scripts/check_repository.py
 `0.1.4` 补齐运行中取消的真实证据与准确参数：`--turn-id` 使用 assistantTurnId，ACK和alreadyStopped均不能代替对应回合的持久化终态。修正归档/恢复的知识边界：归档递归覆盖关联后代并触发资源释放，恢复只覆盖根和直接parent子项，不承诺进程恢复或完整回滚。CLI与依赖锁未变，旧0.1.3发布物保留；源码/新包版本不等于已发布云环境自动升级。
 
 已对本任务自有、无后代的空闲会话完成改名往返、归档和恢复；原标题及未归档状态已还原，6条可见历史、最新回合、空队列及空活动列表保持一致。该元数据验收不扩大为级联或执行进程恢复成功。
+
+`0.2.0`增加多宿主协作参考、诊断来源与范围、离线handoff校验和依赖bootstrap；CLI与锁定输入保持不变。Linux以外平台的实际安装、Dot工具接入、独立多端闭环和真实宿主重建各自保留验收前提，工具与fixture测试不代替这些证据。正式云来源当前仍按0.1.3记录，源码0.2.0不代表环境自动升级；实际版本和发布状态以任务队列回执为准。

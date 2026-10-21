@@ -34,8 +34,11 @@ class BuildTests(unittest.TestCase):
         self.write_json(self.plugin / ".codex-plugin/plugin.json", {
             "name": "lody4dot", "version": "0.1.0", "skills": "./skills",
         })
-        for name in ("install.py", "doctor.py", "auth.py", "common.py", "platform_support.py", "handoff.py"):
+        for name in ("install.py", "doctor.py", "auth.py", "common.py",
+                     "platform_support.py", "bootstrap.py", "handoff.py"):
             self.write(self.plugin / "scripts" / name, "print('fixture')\n")
+        for name in ("codex-cloud.md", "codex-cli.md"):
+            self.write(self.plugin / "hosts" / name, "# Host\n[Prepare](../scripts/bootstrap.py)\n")
         self.write(self.plugin / "scripts/build.py", "# source-only builder\n")
         for name in ("package.json", "package-lock.json", "build-policy.json"):
             self.write_json(self.plugin / "runtime" / name, {})
@@ -61,6 +64,10 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(result["file_count"], len(actual))
         self.assertEqual(actual["scripts/install.py"], hashlib.sha256(b"print('fixture')\n").hexdigest())
         self.assertFalse((relocated / "scripts/build.py").exists())
+        self.assertTrue((relocated / "scripts/platform_support.py").is_file())
+        self.assertTrue((relocated / "scripts/bootstrap.py").is_file())
+        self.assertTrue((relocated / "scripts/handoff.py").is_file())
+        self.assertTrue((relocated / "hosts/codex-cloud.md").is_file())
         marketplace = json.loads((relocated / ".agents/plugins/marketplace.json").read_text())
         self.assertEqual(marketplace["plugins"][0]["source"], {"source": "local", "path": "."})
 
@@ -98,6 +105,14 @@ class BuildTests(unittest.TestCase):
         with self.assertRaisesRegex(build_module.BuildError, "Missing required"):
             build_module.build(self.repo, self.output)
         self.assertFalse(self.output.exists())
+
+    def test_missing_shared_runtime_helper_is_rejected_without_replacing_output(self):
+        build_module.build(self.repo, self.output)
+        previous = build_module.inventory(self.output)
+        (self.plugin / "scripts/platform_support.py").unlink()
+        with self.assertRaisesRegex(build_module.BuildError, "Missing required"):
+            build_module.build(self.repo, self.output)
+        self.assertEqual(build_module.inventory(self.output), previous)
 
     def test_missing_common_dependency_is_rejected(self):
         (self.plugin / "scripts/common.py").unlink()
