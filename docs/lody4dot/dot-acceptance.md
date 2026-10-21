@@ -1,6 +1,6 @@
 # lody4dot的Dot接入与独立控制端验收
 
-本页提供可操作的验收顺序，不表示已完成Dot界面导入或原生插件加载。产品事实见[宿主契约](lody4dot-host-contracts.md)，实际状态只在[任务队列](../.codex/agent-state/todo.md)维护。
+本页提供可操作的验收顺序，不表示已完成Dot界面导入或原生插件加载。产品事实见[宿主契约](host-contracts.md)，实际状态只在[任务队列](../../.codex/agent-state/todo.md)维护。
 
 ## 先选接入层级
 
@@ -47,7 +47,7 @@ Dot自己的云电脑、其创建的Codex云任务、已连接的本地电脑是
 
 本轮实际查询工具为`mcp__lody__lody_session_status_many`与`mcp__lody__lody_session_history`。前者仅传`{"sessionIds":["准确session ID"]}`；后者传`{"sessionId":"准确lody原生URI","limit":50}`，必要时用同一会话的`nextCursor`读取旧页。历史若被截断不能做完整字节验收。工具未暴露或拒绝时保留缺口，不自行提取身份或构造内部socket请求。
 
-status的execution/observation与CLI observe字段不同；自查所在会话时，本次验证回合可为busy/running，而旧产物回合已完成。旧结果按准确assistant ID从history取回，不能用当前状态替换。实际MCP调用、字段与字节复验范围见[验证记录](lody4dot-validation.md#远端内置mcp只读查询与c07有限双端验收)。
+status的execution/observation与CLI observe字段不同；自查所在会话时，本次验证回合可为busy/running，而旧产物回合已完成。旧结果按准确assistant ID从history取回，不能用当前状态替换。实际MCP调用、字段与字节复验范围见[验证记录](validation.md#远端内置mcp只读查询与c07有限双端验收)。
 
 ## 无凭证交接与只读复验
 
@@ -61,7 +61,7 @@ status的execution/observation与CLI observe字段不同；自查所在会话时
 
 对于已有结果，目标回合可能不是session最新回合：产物回合与后续只读读回回合要按各自user/assistant ID查询，不能把latestTurn直接替代目标回合。metadata、idle或CLI退出0不代替持久化终态；Agent回传字节也不等于直接访问远端文件系统。
 
-该流程可复现C07或供C09所选端继续验收；既有Darwin内置MCP证据已覆盖C07有限双端范围，不为此重复建任务。旧截图对应任务的T09来源补证仍按[原任务验收说明](lody4dot-fresh-task-acceptance.md)处理，不要求为补旧截图字段重复建任务。
+该流程可复现C07或供C09所选端继续验收；既有Darwin内置MCP证据已覆盖C07有限双端范围，不为此重复建任务。旧截图对应任务的T09来源补证仍按[原任务验收说明](fresh-task-acceptance.md)处理，不要求为补旧截图字段重复建任务。
 
 ## 结论如何分层
 

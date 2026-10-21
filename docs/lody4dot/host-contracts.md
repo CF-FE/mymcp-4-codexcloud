@@ -1,6 +1,6 @@
 # lody4dot 宿主接入与生命周期核实记录
 
-核实日期：2026-10-21（北京时间）。对应[C01任务卡](lody4dot-collaboration-tasks.md#c01-核实宿主契约与生命周期)。本文记录已读取的官方契约和本实例观测；进度见[任务队列](../.codex/agent-state/todo.md)。资料可读、入口存在、实际安装和真实加载分别取证。
+核实日期：2026-10-21（北京时间）。对应[C01任务卡](collaboration-tasks.md#c01-核实宿主契约与生命周期)。本文记录已读取的官方契约和本实例观测；进度见[任务队列](../../.codex/agent-state/todo.md)。资料可读、入口存在、实际安装和真实加载分别取证。
 
 ## 本轮结论
 
@@ -60,7 +60,7 @@ Dot官方FAQ明确：**“Plugin permissions are shared across dots, ChatGPT, Ch
 | Dot主动Reset | 官方说明用户Reset删除Dot及其会话、保存记忆和定时任务；另页说明Dot创建在其他位置的文件、Codex threads和ChatGPT conversations单独存储 | 产品删除操作与云电脑文件系统周期重置分开；不同位置按各自保留规则处理，不能把全部产物视作随Dot一起删除 |
 | Dot自身电脑的准备、maintenance、周期存储重置和重建hooks | 已读9篇帮助正文及有限官方搜索，未取得对应正式契约 | 保持未知，不确认周期、保留路径、重置前后回调；没有证据不宣布不存在，也不虚构事件 |
 
-建议流程仍按[开发方案](lody4dot-collaboration-development.md#6-初始化hooks与存储恢复)：幂等准备依赖；运行入口检查，缺失时只修复所属prefix；持续保存任务关联及成果；恢复后按原session/turn查询对账。未知是否已受理的任务不自动重发。未来若取得适用hook，将其作为同一恢复入口的额外触发源；业务身份、模型执行与worker启动仍单独授权和验证。
+建议流程仍按[开发方案](collaboration-development.md#6-初始化hooks与存储恢复)：幂等准备依赖；运行入口检查，缺失时只修复所属prefix；持续保存任务关联及成果；恢复后按原session/turn查询对账。未知是否已受理的任务不自动重发。未来若取得适用hook，将其作为同一恢复入口的额外触发源；业务身份、模型执行与worker启动仍单独授权和验证。
 
 ## 官方证据与读取范围
 

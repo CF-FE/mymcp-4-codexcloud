@@ -1,6 +1,6 @@
 # 指引图表维护
 
-这三张图服务于[环境、Dot、会话引用与权限指引](../lody4dot-environment-model.md)。它们是概念图，不声明物理部署或一对一绑定；连线不扩大授权。官方已确认的共享插件连接，在权限图中限定为已授予的权限范围。
+这三张图服务于[环境、Dot、会话引用与权限指引](../environment-model.md)。它们是概念图，不声明物理部署或一对一绑定；连线不扩大授权。官方已确认的共享插件连接，在权限图中限定为已授予的权限范围。
 
 | 图源 | 生成图 | 主要问题 |
 | --- | --- | --- |
@@ -15,9 +15,9 @@ Dot关系和权限修订依据本日实际读取的OpenAI官方[Dot入门](https
 支持Mermaid CLI正常加载页面的环境可按下列方式重新生成，源文件与配置是维护输入：
 
 ```bash
-mmdc -i docs/diagrams/environment-context.mmd -o docs/diagrams/environment-context.svg -c docs/diagrams/mermaid-config.json -b white
-mmdc -i docs/diagrams/environment-lifecycle.mmd -o docs/diagrams/environment-lifecycle.svg -c docs/diagrams/mermaid-config.json -b white
-mmdc -i docs/diagrams/environment-permissions.mmd -o docs/diagrams/environment-permissions.svg -c docs/diagrams/mermaid-config.json -b white
+mmdc -i docs/lody4dot/diagrams/environment-context.mmd -o docs/lody4dot/diagrams/environment-context.svg -c docs/lody4dot/diagrams/mermaid-config.json -b white
+mmdc -i docs/lody4dot/diagrams/environment-lifecycle.mmd -o docs/lody4dot/diagrams/environment-lifecycle.svg -c docs/lody4dot/diagrams/mermaid-config.json -b white
+mmdc -i docs/lody4dot/diagrams/environment-permissions.mmd -o docs/lody4dot/diagrams/environment-permissions.svg -c docs/lody4dot/diagrams/mermaid-config.json -b white
 ```
 
 CLI示例适用于其受支持的运行环境，不代表本云机的file页面路径已通过。本实例可用[本地HTTP导出脚本](render.mjs)重现同一路线：
@@ -29,7 +29,7 @@ env -u LODY_CLI_TOKEN -u GITEE_ACCESS_TOKEN npm install \
   --prefix "$diagram_tools" --cache "$diagram_tools/cache" \
   --ignore-scripts --no-audit --no-fund \
   mermaid@11.17.2 puppeteer-core@24.31.0
-env -u LODY_CLI_TOKEN -u GITEE_ACCESS_TOKEN node docs/diagrams/render.mjs \
+env -u LODY_CLI_TOKEN -u GITEE_ACCESS_TOKEN node docs/lody4dot/diagrams/render.mjs \
   "$diagram_tools" environment-context environment-permissions
 ```
 

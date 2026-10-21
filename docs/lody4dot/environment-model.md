@@ -16,7 +16,7 @@
 | Dot和Codex的插件要各自重新连接吗？ | 官方说明既有插件连接和权限可跨Dot、ChatGPT、Work、Codex共享，限已授予范围；本地电脑访问、浏览器登录和CLI状态另外确认。 |
 | 发布环境后就都更新了吗？ | 分别核对发布配置、目标实例、安装版本和Agent读取记录。发布回执只证明发布这一步。 |
 
-首次阅读看[执行链路](#1-概念与总览)和[三个空间](#三个空间分别是什么)；排查问题看[版本与生命周期](#3-版本与生命周期)、[权限](#4-权限与访问判定)和[场景速查](#6-交接与验收)。架构设计者另读[设计参考](lody4dot-environment-design.md)。
+首次阅读看[执行链路](#1-概念与总览)和[三个空间](#三个空间分别是什么)；排查问题看[版本与生命周期](#3-版本与生命周期)、[权限](#4-权限与访问判定)和[场景速查](#6-交接与验收)。架构设计者另读[设计参考](environment-design.md)。
 
 ## 1. 概念与总览
 
@@ -70,7 +70,7 @@
 
 例如，用户说“协作空间里的插件集合”，应定位产品中的目标对象；列出云实例的 `/workspace` 不能证明已经搜索协作空间。当前没有枚举整个协作空间的工具，**这说明工具入口缺失，不说明用户没有空间或权限**。
 
-Lody内部还要区分：**machine**是可在本地或云上的执行节点；**agent config / Role**是执行配置或角色绑定，Role可能覆盖手工参数；**session**是业务会话；**user turn / assistant turn**是请求和对应执行回合。online状态、Lody登录和底层模型可执行分别验证，具体操作见[技能入口](../skill/lody4dot/SKILL.md)。
+Lody内部还要区分：**machine**是可在本地或云上的执行节点；**agent config / Role**是执行配置或角色绑定，Role可能覆盖手工参数；**session**是业务会话；**user turn / assistant turn**是请求和对应执行回合。online状态、Lody登录和底层模型可执行分别验证，具体操作见[技能入口](../../skill/lody4dot/SKILL.md)。
 
 ## 2. 标识与引用
 
@@ -132,7 +132,7 @@ Git仓库保存能力源码，实例中的工作副本是实际文件；同一�
 | Dot实例/存储重置前后事件 | 当前未取得可引用的支持说明，工具也未提供该事件订阅入口。 | 保留待核实，不把恢复正确性建立在重置前一定能收到通知上。 |
 | Dot产品的主动Reset | 删除Dot自身及其会话、记忆、计划；不等于删除所有另存文件或Codex线程。 | 不用作依赖修复或环境初始化动作。 |
 
-建议采用“准备阶段幂等安装 → 运行入口轻量检查、缺失时修复 → 任务过程中持续保存必要关联与成果”。重建后先检查现有Lody会话及具体回合，再恢复观察；未经对账不重复派发、不自动启动worker，不跨宿主复制登录态。详细恢复契约和演练见[多端协作开发方案](lody4dot-collaboration-development.md)。
+建议采用“准备阶段幂等安装 → 运行入口轻量检查、缺失时修复 → 任务过程中持续保存必要关联与成果”。重建后先检查现有Lody会话及具体回合，再恢复观察；未经对账不重复派发、不自动启动worker，不跨宿主复制登录态。详细恢复契约和演练见[多端协作开发方案](collaboration-development.md)。
 
 ## 4. 权限与访问判定
 
@@ -178,13 +178,13 @@ Git仓库保存能力源码，实例中的工作副本是实际文件；同一�
 | 本轮发布应用了吗？ | 正式配置无草稿，来源为d27f1a0；发布基线是lody4dot0.2.0/CLI0.107.2，当前运行配置为revision9。 | 发布后bootstrap通过且仅运行doctor。网络/变量readiness仍为unknown，不把文件可用当成账户已认证或整机已重建。 |
 | 发布后身份与原任务恢复了吗？ | 新私密state真实认证后，沿原Lody引用只读取得synced/completed终态，原回执及产物摘要匹配，本轮0新模型回合。 | 临时身份已清理；这不是第二独立控制端查询或整机重建。源码0.2.1包的后续构建/检查另记。 |
 | 现在是什么执行器？ | 已确认当前是所选托管云执行器，仓库路径如上。 | 尚无证据将其进一步标成Dot自身云电脑或Dot创建的独立Codex任务环境；没有旧boot标识可证明主机重建。 |
-| 哪条执行链路通过？ | 已有远端Agent的受控执行、产物核对、精确取消及会话维护通过；Darwin端后续用内置MCP查询原会话并复验字节。 | 云端CLI与远端会话MCP各自使用合法身份；该有限双端验收不证明Dot接入、macOS受管安装或原生注册，见[验证记录](lody4dot-validation.md)。 |
+| 哪条执行链路通过？ | 已有远端Agent的受控执行、产物核对、精确取消及会话维护通过；Darwin端后续用内置MCP查询原会话并复验字节。 | 云端CLI与远端会话MCP各自使用合法身份；该有限双端验收不证明Dot接入、macOS受管安装或原生注册，见[验证记录](validation.md)。 |
 | 还有哪些限制？ | 当前云实例的Codex ACP遇到只读写入；Review缺上游匹配Viewer。 | 已定位；前者不是用户电脑执行失败。 |
 | 用户截图证明了什么？ | 报告安装、认证、完整目录及手动读取通过。 | 属用户结果摘要；首次入口来源、任务绑定、插件版本等记录仍待补。 |
 | Dot能发起Codex云任务吗？ | 官方支持：先在Codex创建环境，再要求Dot使用。 | 当前是否有对应创建工具、某个任务是否用了本次环境，须有实际调用/绑定记录。 |
 | Dot对应什么？ | 官方已确认是ChatGPT的常驻Agent产品，有自己的云电脑。 | 产品身份已收敛；存储回收规则及reset hooks仍未取得证据。 |
 
-已有截图在**原验收任务补记录**，不要求重建任务、重复登录或再发布相同配置；详见[补充流程](lody4dot-fresh-task-acceptance.md#已有截图回执的补充)。文档优化不改变T09/T12的证据缺口。
+已有截图在**原验收任务补记录**，不要求重建任务、重复登录或再发布相同配置；详见[补充流程](fresh-task-acceptance.md#已有截图回执的补充)。文档优化不改变T09/T12的证据缺口。
 
 ## 6. 交接与验收
 
@@ -208,13 +208,13 @@ Git仓库保存能力源码，实例中的工作副本是实际文件；同一�
 清理了哪些自有临时状态：
 ```
 
-模板是项目建议，不是平台API；私密标识和公开结果分开保存。完整加载验收按[接入验收](lody4dot-fresh-task-acceptance.md)执行。
+模板是项目建议，不是平台API；私密标识和公开结果分开保存。完整加载验收按[接入验收](fresh-task-acceptance.md)执行。
 
 ## 7. 架构设计参考
 
 设计时把四组关系分别记录：**Agent与工具连接、会话与任务、配置与运行实例、资源引用与访问结果**。给每次操作关联目标与证据，就能解释“同一Agent操作多个环境”“同一仓库存在不同版本”等情况。
 
-实体关联、设计取舍、最小记录示例和评审清单集中在[环境架构设计参考](lody4dot-environment-design.md)。它是建议模型，不声明平台已经实现相应字段、绑定关系或API。
+实体关联、设计取舍、最小记录示例和评审清单集中在[环境架构设计参考](environment-design.md)。它是建议模型，不声明平台已经实现相应字段、绑定关系或API。
 
 ## 8. 官方来源与适用范围
 
@@ -224,8 +224,8 @@ Git仓库保存能力源码，实例中的工作副本是实际文件；同一�
 | [Getting started with your dot](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot) | 2026-10-21已实际读取：Dot是ChatGPT常驻Agent、有自己的云电脑，可使用预配置的Codex云环境；本地访问须另外允许，主动Reset删除Dot自身。 |
 | [Manage dots in ChatGPT workspaces](https://help.openai.com/en/articles/20001554-manage-dots-in-chatgpt-workspaces) | 工作区可控制Dot接入、本地访问及云浏览器/网络/电脑能力；Dot云电脑不自动继承用户电脑的VPN、登录或设备策略。 |
 | [Dots privacy, security, and safety FAQs](https://help.openai.com/en/articles/20001529-dots-privacy-security-and-safety-faqs) | 插件连接/权限跨Dot、ChatGPT、Work、Codex共享，但限已授予范围；Memory共享与另存文件的保留规则分别处理。没有据此确认周期磁盘回收或reset hook。 |
-| [产品方案](lody4dot-plan.md)、[开发契约](lody4dot-development.md)、[平台契约](lody4dot-platform-contract.md) | 验收目标与接入路线，区分原生产物和启动指引。 |
-| [支持矩阵](lody4dot-support-matrix.md)、[验证记录](lody4dot-validation.md)、[接入验收](lody4dot-fresh-task-acceptance.md) | 已测范围、用户回执、未运行项和补记录方法。 |
+| [产品方案](plan.md)、[开发契约](development.md)、[平台契约](platform-contract.md) | 验收目标与接入路线，区分原生产物和启动指引。 |
+| [支持矩阵](support-matrix.md)、[验证记录](validation.md)、[接入验收](fresh-task-acceptance.md) | 已测范围、用户回执、未运行项和补记录方法。 |
 | [OpenAI官方Codex README](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/README.md)、[会话事件源码](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/codex-rs/hooks/src/lib.rs#L23) | 固定源码中的Codex CLI/Web名称及会话事件；Dot能力由上述Dot帮助文档确认，不能把Codex会话事件推广为Dot存储重置事件。 |
 | [SessionStart来源](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/codex-rs/hooks/src/events/session_start.rs#L23)、[SessionEnd时限](https://github.com/openai/codex/blob/c7234c1174b27d9c55199fba0d546dc27d1b0415/codex-rs/hooks/src/events/session_end.rs#L20) | 固定源码提交的契约，不能直接套用到当前托管runtime或Lody管理的Codex0.160.1。 |
 

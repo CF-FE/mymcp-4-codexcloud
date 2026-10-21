@@ -6,7 +6,7 @@
 
 目标：**同一份lody4dot能力可以在Dot、Codex云端及本地Agent宿主加载或安装，通过Lody服务发现目标、派发任务、交接上下文、观察结果并协作交付。** OpenAI官方确认Dot是ChatGPT中的always-on agent产品，有自己的cloud computer；它也能创建预先配置的Codex云任务，或使用另行授权连接的本地电脑。Dot是具体产品，Agent是参与任务的主体类别，两者不互斥；各执行位置分别建模。
 
-依据按职责区分：[r2产品方案](lody4dot-plan.md)与[d1开发契约](lody4dot-development.md)继续解释原有实现及T01–T12；[环境指引](lody4dot-environment-model.md)、[设计参考](lody4dot-environment-design.md)与[本轮宿主契约](lody4dot-host-contracts.md)提供术语、9篇官方Help来源及证据边界；本方案定义多宿主范围和C01–C10任务卡，实际状态仅由[任务队列](../.codex/agent-state/todo.md)维护。扩展方案不提前关闭T09/T12，也不自动升级正式环境。
+依据按职责区分：[r2产品方案](plan.md)与[d1开发契约](development.md)继续解释原有实现及T01–T12；[环境指引](environment-model.md)、[设计参考](environment-design.md)与[本轮宿主契约](host-contracts.md)提供术语、9篇官方Help来源及证据边界；本方案定义多宿主范围和C01–C10任务卡，实际状态仅由[任务队列](../../.codex/agent-state/todo.md)维护。扩展方案不提前关闭T09/T12，也不自动升级正式环境。
 
 三层交付分别确认，最终目标包含第三层：
 
@@ -41,7 +41,7 @@
 
 ## 3. 可行性与支持矩阵
 
-以下执行证据沿用既有[支持矩阵](lody4dot-support-matrix.md)中的受控任务；发布后身份恢复阶段未新增模型回合，后续另有一个明确的远端内置MCP只读验收回合，见队列。
+以下执行证据沿用既有[支持矩阵](support-matrix.md)中的受控任务；发布后身份恢复阶段未新增模型回合，后续另有一个明确的远端内置MCP只读验收回合，见队列。
 
 | 目标 | 当前证据 | 最小技术路线 | 进入支持列表的条件 |
 | --- | --- | --- | --- |
@@ -95,7 +95,7 @@ doctor以附加字段`observed_at`、`verified_scope`、`control_environment`与
 
 ### 5.2 最小交接记录
 
-`scripts/handoff.py`已实现schema1项目交接格式，不是Lody或Dot现有API。调用方按实际可观察值准备记录，再使用`--input PATH --stage intent|dispatched|result --json`校验。下面是字段骨架，目标和授权范围仍为null，因此不能直接作为有效intent；可运行的虚构示例、各阶段要求和报告边界见[交接说明](lody4dot-handoff.md)。本地生成的关联号仅关联记录，不提供原生幂等性。
+`scripts/handoff.py`已实现schema1项目交接格式，不是Lody或Dot现有API。调用方按实际可观察值准备记录，再使用`--input PATH --stage intent|dispatched|result --json`校验。下面是字段骨架，目标和授权范围仍为null，因此不能直接作为有效intent；可运行的虚构示例、各阶段要求和报告边界见[交接说明](handoff.md)。本地生成的关联号仅关联记录，不提供原生幂等性。
 
 ```json
 {
@@ -187,7 +187,7 @@ python3 plugin/lody4dot/scripts/bootstrap.py --prefix "$LODY4DOT_PREFIX" --repai
 
 ## 7. 多端协作纵向场景
 
-首个有价值的闭环为“一个宿主协调 → Lody派发 → 已有授权节点单写 → 另一个独立宿主只读复验”。Dot按已选官方路线取得实际读取和工具证据后加入同一场景，逐步取得含Dot的交付证据。可直接使用[Dot接入与独立控制端运行单](lody4dot-dot-acceptance.md)中的知识目标和只读复验目标；既有任务已具备完整关联时不为补证重复派发。
+首个有价值的闭环为“一个宿主协调 → Lody派发 → 已有授权节点单写 → 另一个独立宿主只读复验”。Dot按已选官方路线取得实际读取和工具证据后加入同一场景，逐步取得含Dot的交付证据。可直接使用[Dot接入与独立控制端运行单](dot-acceptance.md)中的知识目标和只读复验目标；既有任务已具备完整关联时不为补证重复派发。
 
 | 步骤 | 行为与必要证据 |
 | --- | --- |
@@ -205,7 +205,7 @@ python3 plugin/lody4dot/scripts/bootstrap.py --prefix "$LODY4DOT_PREFIX" --repai
 
 ## 8. 顺序、任务与验证
 
-完整静态任务卡及精确依赖表见[C01–C10](lody4dot-collaboration-tasks.md#共用约束与依赖)，状态及实际证据仍在唯一队列。C01产出的官方路线可支撑C05/C09，不把未知Dot hook当共同前置。C05/C06汇合后进行C07。C08本地依赖准备可独立验证，真实宿主重建及业务对账另依赖C01/C05/C07；C09可与双端验证并行，实际接入依赖所选路线的分发、身份与交接证据。最后C07/C08/C09汇合到C10。
+完整静态任务卡及精确依赖表见[C01–C10](collaboration-tasks.md#共用约束与依赖)，状态及实际证据仍在唯一队列。C01产出的官方路线可支撑C05/C09，不把未知Dot hook当共同前置。C05/C06汇合后进行C07。C08本地依赖准备可独立验证，真实宿主重建及业务对账另依赖C01/C05/C07；C09可与双端验证并行，实际接入依赖所选路线的分发、身份与交接证据。最后C07/C08/C09汇合到C10。
 
 C04的实际开放平台、C05的每种清单与C09的工具路线按C01证据决定。各任务的完整前置以卡片为准；C06新增交接工具时完成其对应分发回归，不将它倒置为已完成C05的前置。正式环境更新、实际联网验收和同一任务的副作用操作串行，避免并行写同一prefix或会话。
 
@@ -225,7 +225,7 @@ git diff --check
 python3 plugin/lody4dot/scripts/build.py --output /tmp/lody4dot-candidate
 ```
 
-构建输出需选本次新建或已确认自有目录；已有输出不直接覆盖。`handoff.py`、`bootstrap.py`、`platform_support.py`及对应handoff、lifecycle、platform_support测试已在源码中提供，可按[任务卡](lody4dot-collaboration-tasks.md)运行定向检查；命令存在不代表已取得真实宿主或业务证据。真实接入前先做无账户测试；运行类验证只操作已授权的隔离目标，不在CI自动使用真实Lody账号。
+构建输出需选本次新建或已确认自有目录；已有输出不直接覆盖。`handoff.py`、`bootstrap.py`、`platform_support.py`及对应handoff、lifecycle、platform_support测试已在源码中提供，可按[任务卡](collaboration-tasks.md)运行定向检查；命令存在不代表已取得真实宿主或业务证据。真实接入前先做无账户测试；运行类验证只操作已授权的隔离目标，不在CI自动使用真实Lody账号。
 
 关键验收包括：重名/分页、Role覆盖、无shell入口、错误命名空间、非共享文件路径、节点offline、模型身份缺失、创建超时与跨端重复请求、过期回合、取消竞态、重建无退出通知、凭证脱敏。断言实际目标、调用序列和产物，不比对Agent固定措辞，不以关键词检查代替协作行为。
 
@@ -243,7 +243,7 @@ python3 plugin/lody4dot/scripts/build.py --output /tmp/lody4dot-candidate
 
 **这份方案可直接交接，基础工具与官方候选路线已明确；全范围自动交付仍需真实跨端证据。** 共享知识、诊断、平台边界、离线交接与依赖准备按各自范围使用；Dot所选路线的真实工具/加载、本地OS/架构、独立宿主及执行节点仍需集成回执，缺少哪项仅阻塞相应卡片。实际完成项和检查结果仅在唯一队列记录。
 
-本轮官方[Dot入门](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot)、[权限FAQ](https://help.openai.com/en/articles/20001529-dots-privacy-security-and-safety-faqs)、[Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud)与插件等9篇Help正文均已读到HTTP200，来源及范围见[宿主契约](lody4dot-host-contracts.md#官方证据与读取范围)。旧实例五条Lody规则及官方站CONNECT403只保留为历史。本轮已发布配置无草稿，运行网络readiness字段仍未知；实际HTTPS、依赖inspect、身份验证、原Lody会话只读对账与新任务加载各有独立证据范围，不能用平台汇总未知否定实测，也不能用局部通过推导全部ready。开发站及Plugin Management的受阻请求不重试绕过，不为本次文档修订要求重复发布。
+本轮官方[Dot入门](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot)、[权限FAQ](https://help.openai.com/en/articles/20001529-dots-privacy-security-and-safety-faqs)、[Codex Cloud](https://help.openai.com/en/articles/20001545-using-codex-cloud)与插件等9篇Help正文均已读到HTTP200，来源及范围见[宿主契约](host-contracts.md#官方证据与读取范围)。旧实例五条Lody规则及官方站CONNECT403只保留为历史。本轮已发布配置无草稿，运行网络readiness字段仍未知；实际HTTPS、依赖inspect、身份验证、原Lody会话只读对账与新任务加载各有独立证据范围，不能用平台汇总未知否定实测，也不能用局部通过推导全部ready。开发站及Plugin Management的受阻请求不重试绕过，不为本次文档修订要求重复发布。
 
 当前平台工具没有新建Codex云任务或原生插件界面导入动作时，交付候选和上述运行单，保持相应验收未运行；不以同实例子Agent、子进程或另一目录冒充独立宿主。私密交接工件须通过实际合法渠道送达另一端，同名路径和相同环境发布不证明文件已传输。
 

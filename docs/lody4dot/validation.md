@@ -1,11 +1,11 @@
 # lody4dot 实现与验证记录
 
-记录起始：2026-10-20；本轮更新：2026-10-21（北京时间）。任务状态权威为 [队列](../.codex/agent-state/todo.md)，接口依据为 [开发契约](lody4dot-development.md)。以下按轮次记录离线行为和真实账户结果；历史“当前”只描述该节当时的观测。账户成功不代替目录、宿主加载或任务验收。
+记录起始：2026-10-20；本轮更新：2026-10-21（北京时间）。任务状态权威为 [队列](../../.codex/agent-state/todo.md)，接口依据为 [开发契约](development.md)。以下按轮次记录离线行为和真实账户结果；历史“当前”只描述该节当时的观测。账户成功不代替目录、宿主加载或任务验收。
 
 ## 环境与固定输入（T02）
 
 - Linux，Node `v24.19.0`，npm `11.9.0`，Python `3.12.14`，Codex CLI `0.163.0`。
-- Lody 固定为 `0.107.2`，使用提交的 [manifest](../plugin/lody4dot/runtime/package.json)、[锁文件](../plugin/lody4dot/runtime/package-lock.json) 和 [构建策略](../plugin/lody4dot/runtime/build-policy.json)。
+- Lody 固定为 `0.107.2`，使用提交的 [manifest](../../plugin/lody4dot/runtime/package.json)、[锁文件](../../plugin/lody4dot/runtime/package-lock.json) 和 [构建策略](../../plugin/lody4dot/runtime/build-policy.json)。
 - 锁文件 SHA-256：`b1baf3ab20593c88f40e4ab7077b737296480d6ca3a0428b7d55499eee9bcced`，40 个锁项。
 - 全部安装脚本禁用，锁中无 `hasInstallScript` 项。必要 native 模块无需另行运行构建脚本。
 - 原始 CLI 无凭证采集的 70 页公开帮助均退出 0；排除内部命令。发布包的 Lody 版本未更改。
@@ -16,14 +16,14 @@
 
 - Tinypool 1.1.1 与 2.1.2 分别加载未修改的 Lody diff 和 file-index-scan worker。
 - 并发 diff、Unicode、文件匹配/不匹配、递归/浅扫描、完整索引、异常传播与池恢复的规范化结果一致。
-- 最终冻结安装再执行 [可复现 worker 检查](../tests/lody4dot/verify_workers.mjs)，7 组检查通过；使用空环境加 PATH，无账户凭证。
+- 最终冻结安装再执行 [可复现 worker 检查](../../tests/lody4dot/verify_workers.mjs)，7 组检查通过；使用空环境加 PATH，无账户凭证。
 - 对最终冻结安装运行 `npm audit --omit=dev --json`，退出 0，各等级及 total 均为 0。这仅代表当时 registry 已知公告结果。
 
 实测限于 Node 24.19/Linux；Node 22、Bun 和其他系统未实跑。官方 engines 范围与实际验证范围分别说明。
 
 ## 知识检查（T03）
 
-[技能入口](../skill/lody4dot/SKILL.md) 配有 8 个主题参考、命令索引、来源记录和帮助快照。20 类、70 个公开路径逐条匹配；帮助 SHA-256、版本、命令树和索引字段一致。
+[技能入口](../../skill/lody4dot/SKILL.md) 配有 8 个主题参考、命令索引、来源记录和帮助快照。20 类、70 个公开路径逐条匹配；帮助 SHA-256、版本、命令树和索引字段一致。
 
 25 个 fenced CLI 示例已对实际命令/参数检查；版本冲突保留在来源记录中，例如 `session create --env` 已 deprecated。帮助证据没有被标为业务功能实测。
 
@@ -64,8 +64,8 @@ python3 plugin/lody4dot/scripts/install.py --prefix /workspace/.tools/lody4dot -
 
 云配置草稿已由后端确认 `status=saved`、`requires_publish=true`：
 
-- 安装脚本：[cloud-install.sh](../.codex/cloud-install.sh)，只装依赖及运行离线检查。
-- 启动指引：[cloud-start.md](../.codex/cloud-start.md)，按需读取技能，在任务内使用私密状态。
+- 安装脚本：[cloud-install.sh](../../.codex/cloud-install.sh)，只装依赖及运行离线检查。
+- 启动指引：[cloud-start.md](../../.codex/cloud-start.md)，按需读取技能，在任务内使用私密状态。
 - 保留 package_managers preset 与 `lody.ai`，新增 `convex.lody.ai`、`backend.lody.ai`、`api.lody.ai`。
 - 只声明直接进程变量 `LODY_CLI_TOKEN` 的名称，没有提供值或另造代理 secret。
 
@@ -116,7 +116,7 @@ doctor 0.1.1 增加显式 `--workspace` 目录探测，执行原生 machine list
 
 当时目录、观察和受控任务需待该服务规则生效后继续。新增规则不是重复添加原来的 token 或四个域名；用户已选工作区无需重新询问。以下记录本次规则生效后的结果。
 
-后续继续验证的发布传播、Codex 运行时与 host 范围见 [运行前提补充](lody4dot-runtime-findings.md)。该次独立准备没有真实模型任务结果。
+后续继续验证的发布传播、Codex 运行时与 host 范围见 [运行前提补充](runtime-findings.md)。该次独立准备没有真实模型任务结果。
 
 ## 分片规则生效与真实目录（0.1.2）
 
@@ -132,7 +132,7 @@ doctor 0.1.1 增加显式 `--workspace` 目录探测，执行原生 machine list
 
 这证明当前技能导航和真实发现/观察可用；all 的 metadata 不能冒充 persisted，已有会话的 persisted 读取也不能证明本次创建、模型执行或产物成功。agent 被提供了入口，不能证明新云任务自动加载。本机 daemon status 退出 1 且明确未运行；未启动 host 或建立测试会话。
 
-当前剩余验收是新云任务的技能读取回执、私密状态跨任务边界，以及真实受控执行。已按官方大小/哈希下载并运行 managed Codex 0.160.1 的版本检查，但 bundled ACP 初始化仍失败；具体结果与 host 作用于全部可见工作区的限制见 [运行前提](lody4dot-runtime-findings.md)。不再要求重新配置 token 或重复发布已生效的分片规则。
+当前剩余验收是新云任务的技能读取回执、私密状态跨任务边界，以及真实受控执行。已按官方大小/哈希下载并运行 managed Codex 0.160.1 的版本检查，但 bundled ACP 初始化仍失败；具体结果与 host 作用于全部可见工作区的限制见 [运行前提](runtime-findings.md)。不再要求重新配置 token 或重复发布已生效的分片规则。
 
 完整 `.codex/cloud-install.sh` 退出 0，56 项测试、同锁复用安装和离线 inspect 通过；脚本不登录或启动服务。0.1.2 自包含产物构建通过，直接从产物运行真实 control+完整目录检查也退出 0。`dist/lody4dot-0.1.2.zip` 共 23 文件、69,005 字节，解压完整性通过；SHA-256 为 `bf8d2d1fe0b27486d0789939aad494b8051f1614523d4ecda0e7358857934626`，receipt SHA-256 为 `e61149fc1653782fcff61d2cd6a1943bccb26f1a092eb285931070c20f03a95e`。产物保留在忽略目录，不提交为源码。结束后已删除本轮自有私密认证 state；全局安全注入变量保留，没有新建环境草稿或把登录态放入快照。
 
@@ -164,9 +164,9 @@ Schedule stdout同样含两条精确Streams消息，但其JSON没有workspaceId�
 
 Review做了无账户真实渲染尝试：依据原生review prompt编写覆盖a2e6796及其parent间15个变更文件的报告，使用--no-open，子进程移除LODY_CLI_TOKEN。报告/Git阶段无diagnostics，但Viewer下载失败，原始退出1，未生成HTML。CLI要求`lody-code-review-viewer@0.107.2`及SHA-256 `d1ba5702aa0bd441b40492bd916d6412f8b970e92683f7073878a36efbdb0649`；官方registry版本端点和jsDelivr文件均404。官方latest 0.81.1的包SRI通过，但模板哈希不匹配，未用于渲染，未改期望哈希或关闭TLS。
 
-这是上游匹配产物缺失，不能通过重复发布环境或只增加fallback域名修复。只能等待官方匹配文件，或由公开LODY_REVIEW_VIEWER指定与CLI固定哈希完全相同的文件后重试；不使用其他模板冒称成功。报告和脱敏摘要留在忽略的cache；临时state已清理。全部高级能力与条件见[支持矩阵](lody4dot-support-matrix.md)。
+这是上游匹配产物缺失，不能通过重复发布环境或只增加fallback域名修复。只能等待官方匹配文件，或由公开LODY_REVIEW_VIEWER指定与CLI固定哈希完全相同的文件后重试；不使用其他模板冒称成功。报告和脱敏摘要留在忽略的cache；临时state已清理。全部高级能力与条件见[支持矩阵](support-matrix.md)。
 
-当前工具无法创建/附着独立云任务，因此发布确认和本次当前实例复验仍不等同新任务自动接入。剩余外部步骤见[新任务验收](lody4dot-fresh-task-acceptance.md)；既定路线是start_skill云接入，原生插件注册单独保留未验，不作为该路线的额外必选门槛。
+当前工具无法创建/附着独立云任务，因此发布确认和本次当前实例复验仍不等同新任务自动接入。剩余外部步骤见[新任务验收](fresh-task-acceptance.md)；既定路线是start_skill云接入，原生插件注册单独保留未验，不作为该路线的额外必选门槛。
 
 ## 运行回合的精确取消验收
 
@@ -258,11 +258,11 @@ doctor保持schema1旧字段/退出码，新增时间、真实通过的检查范
 
 ## Dot官方契约、指引与0.2.1候选
 
-本轮以正常HTTPS读取9篇OpenAI官方Help正文，均HTTP200，确认Dot是ChatGPT的常驻Agent产品；其自有云电脑、所创建的Codex云任务、获授权的本地电脑分别识别。官方共享插件连接限定在已授予范围；浏览器登录、Dot本地访问、CLI私密state、模型身份和环境变量不会因此自动迁移。官方来源、读取范围和完整安装路线见[宿主契约](lody4dot-host-contracts.md)。
+本轮以正常HTTPS读取9篇OpenAI官方Help正文，均HTTP200，确认Dot是ChatGPT的常驻Agent产品；其自有云电脑、所创建的Codex云任务、获授权的本地电脑分别识别。官方共享插件连接限定在已授予范围；浏览器登录、Dot本地访问、CLI私密state、模型身份和环境变量不会因此自动迁移。官方来源、读取范围和完整安装路线见[宿主契约](host-contracts.md)。
 
 网络策略快照现含三个OpenAI域名，帮助站及官网索引实际可读；开发站与精确Plugin Management地址仍CONNECT403，已停止相关请求，未修改代理、CA、TLS或云配置。已读正文及有界检索尚未给出Dot自有电脑的prepare/maintenance/周期存储重置hook；Dot主动Reset不等于磁盘事件，Codex Cloud默认最多7天的VM恢复规则也不能套到Dot电脑。
 
-据此修正环境指引、两张图、共享技能、c2方案和任务卡，新增随包`hosts/dot.md`及[Dot/独立控制端验收运行单](lody4dot-dot-acceptance.md)。本地HTTP渲染同步SVG，图源解析、目视和独立语义审查通过；临时渲染依赖与浏览器profile均不进入插件。另备妥无认证材料的私密`readonly-acceptance.json`，用于合法独立任务沿原引用复验；它不是handoff.py协议，当前没有用子Agent冒充第二独立云任务。
+据此修正环境指引、两张图、共享技能、c2方案和任务卡，新增随包`hosts/dot.md`及[Dot/独立控制端验收运行单](dot-acceptance.md)。本地HTTP渲染同步SVG，图源解析、目视和独立语义审查通过；临时渲染依赖与浏览器profile均不进入插件。另备妥无认证材料的私密`readonly-acceptance.json`，用于合法独立任务沿原引用复验；它不是handoff.py协议，当前没有用子Agent冒充第二独立云任务。
 
 用户随后要求CLI版本不要严格验证，已将安装、诊断和认证中的实际CLI版本差异/探测失败改为warn，继续按真实命令结果执行。0.107.2是知识及默认安装输入基线，收据分别记录实际观测与基线；不再用收据中的CLI版本拒绝执行。安装锁/目录完整性和help/native真实失败仍分别处理，复用安装的收据采用原子更新，写失败保留旧记录。
 

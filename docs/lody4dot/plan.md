@@ -1,10 +1,10 @@
 # lody4dot：Lody 使用与 Codex 云端安装方案
 
-版次：r2，2026-10-20。详细实现契约见 [开发方案 d1](lody4dot-development.md)，进度与证据见 [任务队列](../.codex/agent-state/todo.md)。
+版次：r2，2026-10-20。详细实现契约见 [开发方案 d1](development.md)，进度与证据见 [任务队列](../../.codex/agent-state/todo.md)。
 
 状态：已授权按 r2/d1 实施，实际进度与验证结果以任务队列为准。
 
-2026-10-21新增的多宿主协作目标、Dot术语修正及初始化/重建策略，见[多宿主协作开发方案c2](lody4dot-collaboration-development.md)。该提案与本页既有实施、版本及验收证据分别维护。
+2026-10-21新增的多宿主协作目标、Dot术语修正及初始化/重建策略，见[多宿主协作开发方案c2](collaboration-development.md)。该提案与本页既有实施、版本及验收证据分别维护。
 
 2026-10-21执行修订：按用户最新要求，`0.107.2`保留为知识与默认可复现安装基线，不作为Lody CLI业务准入版本。实际版本不同或版本探测失败只告警，继续按实际命令能力执行；真正的CLI执行、身份、权限和安装输入完整性失败仍按对应失败处理。默认inspect/bootstrap离线；仅显式`doctor --check-updates`查询固定npm latest，非最新版或查询失败只告警，不自动升级。本次修订不改变r2版次或扩大业务授权。
 
@@ -163,4 +163,4 @@ skill 是操作知识的唯一维护位置，plugin 负责交付与安装。构�
 - [lody 0.107.2 发布包](https://registry.npmjs.org/lody/-/lody-0.107.2.tgz)：已校验 SRI；读取 `package.json`、`README.md`、`dist/index.js` 和 `dist/chunks/cloudflared-native-2AOPFkF0.js`。
 - 发布包中的稳定检索符号：`getCliPlatformKind`、`buildBuiltinMcpServers`、`buildSessionToolServer`、`getSessionContext`、`performLoginWithAuthCredential`，以及公开 `program.addCommand(...)` 注册和 `LODY_DATA_DIR`。
 
-返回 [仓库首页](../README.md)。
+返回 [仓库首页](../../README.md)。

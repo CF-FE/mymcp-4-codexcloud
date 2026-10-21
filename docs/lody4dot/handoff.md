@@ -1,6 +1,6 @@
 # lody4dot交接记录与离线校验
 
-适用于lody4dot`0.2.0`。`handoff.py`检查调用方提供记录的结构与声明一致性，不读取远端对象，不创建、继续或取消任务，不证明实时授权或业务完成。协作与恢复的设计依据见[开发方案](lody4dot-collaboration-development.md)；真实结果仍需使用合法连接核对。
+适用于lody4dot`0.2.0`。`handoff.py`检查调用方提供记录的结构与声明一致性，不读取远端对象，不创建、继续或取消任务，不证明实时授权或业务完成。协作与恢复的设计依据见[开发方案](collaboration-development.md)；真实结果仍需使用合法连接核对。
 
 ## 运行入口与检查阶段
 
@@ -91,4 +91,4 @@ python3 plugin/lody4dot/scripts/handoff.py --input /path/to/private-handoff.json
 - `not_verified`仍包括identity、service_acl、authorization、provenance、business_outcome、artifact_contents、current_freshness和executor_identity_mapping。跨系统执行器引用没有冲突，不代表实际身份映射已验证。
 - `credential_scan:known_patterns_only`不是没有秘密的保证；`timestamp_check:format_and_declared_order_only`只比较声明时间，不证明观察现在仍新鲜。
 
-交付前仍须由获授权的Agent核对原生session/turn、实际服务返回和产物内容。需要恢复控制端时先对账原请求，不因一份结构通过的记录自动重发任务；完整流程见[技能协作参考](../skill/lody4dot/references/collaboration.md)。
+交付前仍须由获授权的Agent核对原生session/turn、实际服务返回和产物内容。需要恢复控制端时先对账原请求，不因一份结构通过的记录自动重发任务；完整流程见[技能协作参考](../../skill/lody4dot/references/collaboration.md)。

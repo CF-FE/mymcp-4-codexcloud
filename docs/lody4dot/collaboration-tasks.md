@@ -1,12 +1,12 @@
 # lody4dot 多宿主协作任务卡
 
-本页定义C01–C10的静态开发任务，服从[c2多宿主协作开发方案](lody4dot-collaboration-development.md)。本页不保存实时状态；进度、执行证据和阻塞仅在[任务队列](../.codex/agent-state/todo.md)维护。已有工具的实际用法见[插件说明](../plugin/lody4dot/README.md)和[交接说明](lody4dot-handoff.md)；命令与验收条件不代表真实宿主或业务检查已经通过。
+本页定义C01–C10的静态开发任务，服从[c2多宿主协作开发方案](collaboration-development.md)。本页不保存实时状态；进度、执行证据和阻塞仅在[任务队列](../../.codex/agent-state/todo.md)维护。已有工具的实际用法见[插件说明](../../plugin/lody4dot/README.md)和[交接说明](handoff.md)；命令与验收条件不代表真实宿主或业务检查已经通过。
 
 目标是让多个实际安装宿主通过Lody服务协作。Dot是官方确认的ChatGPT always-on agent产品，其自有云电脑、它创建的Codex云任务与授权本地电脑分别定位；Agent仍是主体类别，不把产品Dot作通用别名。控制端、执行端和混合角色分别验收，不将控制端接入收缩为全部目标，也不把安装成功升级为machine注册或worker可用。
 
 ## 共用约束与依赖
 
-- 权威：用户确认的多宿主目标、主方案、[环境指引](lody4dot-environment-model.md)、[设计参考](lody4dot-environment-design.md)。已有实现契约仍见[开发方案d1](lody4dot-development.md)；有冲突先记录具体范围，不用任务卡默改契约。
+- 权威：用户确认的多宿主目标、主方案、[环境指引](environment-model.md)、[设计参考](environment-design.md)。已有实现契约仍见[开发方案d1](development.md)；有冲突先记录具体范围，不用任务卡默改契约。
 - 本轮源码候选0.2.1；`0.107.2`仅为知识与默认可复现安装基线，不是Lody CLI执行版本门槛。正式已发布云环境及当前metadata来源为0.2.0，候选更新不自动升级实例。本次知识/宿主说明修订不重配token或重复保存相同云准备草稿。
 - 2026-10-21用户授权V01版本提示修订：Lody版本差异、版本探测失败不阻塞业务；默认inspect/bootstrap离线，仅显式`doctor --check-updates`查询固定`https://registry.npmjs.org/lody/latest`，非最新版或查询失败只告警，不自动升级。真实CLI执行、身份、权限、Node/平台前提和安装输入完整性失败仍按实际结果报告；此修订优先于旧严格版本判定，其他既有契约不变，进度仍由队列维护。
 - T09旧截图的当时入口/版本、当前发布后原任务恢复、新独立任务实际送达并读取技能分别取证。T12既有缺口继续单独保留，C任务不自动关闭它们；平台readiness未知不抹掉已取得的局部实测，也不等于全部ready。
@@ -30,8 +30,8 @@
 
 ## C01 核实宿主契约与生命周期
 
-- **权威/依赖**：主方案的宿主与角色边界、环境指引及[本轮9篇官方Help记录](lody4dot-host-contracts.md)；无前置任务。复用Dot身份、共享连接、Codex委派、local skills及Codex0.163.0的已核实契约，不将资料等同真实加载。
-- **文件范围**：`docs/lody4dot-platform-contract.md`、`docs/lody4dot-host-contracts.md`及引用来源；本卡不改安装器、登录态或正式环境。
+- **权威/依赖**：主方案的宿主与角色边界、环境指引及[本轮9篇官方Help记录](host-contracts.md)；无前置任务。复用Dot身份、共享连接、Codex委派、local skills及Codex0.163.0的已核实契约，不将资料等同真实加载。
+- **文件范围**：`docs/lody4dot/platform-contract.md`、`docs/lody4dot/host-contracts.md`及引用来源；本卡不改安装器、登录态或正式环境。
 - **步骤**：按所选路线列Dot云电脑、Dot创建的Codex任务、本地电脑的加载入口、工具、路径与身份；有界核对生命周期。已读来源未给Dot prepare/reset hook时记录未知，明确唯一下一官方来源，不反复检索同一否定结果。用实际工具最小只读核验，保留资料版本、工具范围与未知项。
 - **验收**：每个宿主能区分知识可读、CLI可运行、控制可用和执行能力；Codex默认7天VM恢复窗口、新setup用于新任务和Dot主动Reset分别解释，不混为周期磁盘事件。可选择官方已支持路线继续C09；未知hook既不补造，也不降格为“官方没有”。缺少本任务入口不写成用户无权限。
 - **验证**：下面命令仅用于已提供Codex CLI的目标；Dot使用实际暴露的元数据/工具及官方资料，未提供则记录缺口，不新增虚构探针。
@@ -112,7 +112,7 @@ python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-collaboration --
 ## C06 最小handoff整理与校验
 
 - **权威/依赖**：C02引用规则、C03证据语义和主方案的交接边界；新增工具纳入C05的allowlist与分发回归，不形成循环前置。
-- **文件范围**：`plugin/lody4dot/scripts/handoff.py`、`tests/lody4dot/test_handoff.py`及[公开虚构示例](lody4dot-handoff.md)；同步`plugin/lody4dot/scripts/build.py`所需allowlist，不新增业务SDK。
+- **文件范围**：`plugin/lody4dot/scripts/handoff.py`、`tests/lody4dot/test_handoff.py`及[公开虚构示例](handoff.md)；同步`plugin/lody4dot/scripts/build.py`所需allowlist，不新增业务SDK。
 - **步骤**：调用方准备目标/授权、控制与执行位置、版本、原生资源引用、实际观察、结果证据与未知项，再以`--input PATH --stage intent|dispatched|result --json`校验；工具不从Lody取回或生成记录。资源引用带系统与类型，操作意图、服务端观察及产物结果分开。
 - **验收**：格式正确不等于实时授权或业务完成；未知值按阶段允许null，未知字段被拒绝，缺关键关联指出具体缺口。检查可识别的引用类型错误、来源缺失/声明矛盾、已知模式凭证内容和声明范围冲突；未核验的来源不能升级为“已验证”。`not_verified`保留身份、ACL、授权、来源、业务结果、工件内容、实时新鲜度和执行器身份映射。离线工具不能识别任意伪造，不发网络请求、不重发任务、不保存全局业务数据库。
 - **验证**：现有测试覆盖有效记录、缺失引用、错误类型、声明过期观察、敏感输入拒绝及无网络/登录副作用；时间检查只验证格式与声明顺序，不验证当前新鲜度。最后一条用调用方私密记录；可先按公开虚构示例演练，fixture通过不证明真实业务。
@@ -130,7 +130,7 @@ python3 plugin/lody4dot/scripts/handoff.py --input /path/to/private-handoff.json
 
 - **权威/依赖**：C05两个已可用端、C06记录、明确的工作区/目标及操作授权。先使用已具备入口的端，不等待Dot未知能力，也不把该结果当含Dot整体完成。
 - **文件范围**：新增或扩展受控验收说明及脱敏验证记录；本任务主要交付实际证据，不新造通用远端执行器。
-- **步骤**：证明至少两个实际安装宿主独立；分别读取技能、核对版本及本端合法身份；控制端A经Lody派发自有小任务，端B用同一原生引用只读观察/复验。端B可使用实际暴露的宿主内置Lody MCP，不强制安装独立CLI或复制登录态。可衔接已有完整派发/执行证据，不重发原产物业务；确需模型调用工具时，将其作为独立、明确的只读验收回合记录。执行节点可属于其中一端或既有第三端，按实际记录；核对持久化终态和产物，不把两个控制端称为两个worker。具体只读目标见[独立控制端运行单](lody4dot-dot-acceptance.md#无凭证交接与只读复验)。
+- **步骤**：证明至少两个实际安装宿主独立；分别读取技能、核对版本及本端合法身份；控制端A经Lody派发自有小任务，端B用同一原生引用只读观察/复验。端B可使用实际暴露的宿主内置Lody MCP，不强制安装独立CLI或复制登录态。可衔接已有完整派发/执行证据，不重发原产物业务；确需模型调用工具时，将其作为独立、明确的只读验收回合记录。执行节点可属于其中一端或既有第三端，按实际记录；核对持久化终态和产物，不把两个控制端称为两个worker。具体只读目标见[独立控制端运行单](dot-acceptance.md#无凭证交接与只读复验)。
 - **验收**：不能用同实例子Agent冒充独立宿主；查询或ACK不足以证明完成。B可核对同一session/turn与结果，端间不依赖同名目录或共享登录态。失联、错误目标和结果不完整只保留失败/未知，不新建或重复发送替代任务。
 - **验证**：现有命令检查控制端前提；A派发/B观察使用C01核实版本的原生命令，具体目标参数在私密运行单确定，不在公开卡中提供可误执行的写命令。
 
@@ -163,7 +163,7 @@ python3 plugin/lody4dot/scripts/bootstrap.py --prefix "$LODY4DOT_PREFIX" --repai
 ## C09 Dot独立宿主接入
 
 - **权威/依赖**：C01已核实的所选官方路线、C02知识、C03报告、C05适用分发与C06交接；C07可并行。Dot是具体always-on agent产品；它发起的Codex任务可作为委派路线，不能冒充Dot自有云电脑直接CLI。
-- **文件范围**：`plugin/lody4dot/hosts/dot.md`、[Dot接入与独立控制端运行单](lody4dot-dot-acceptance.md)、支持矩阵及经确认必要的最小宿主适配；无缺口证据前不建立代理服务、Sites或伪插件清单。
+- **文件范围**：`plugin/lody4dot/hosts/dot.md`、[Dot接入与独立控制端运行单](dot-acceptance.md)、支持矩阵及经确认必要的最小宿主适配；无缺口证据前不建立代理服务、Sites或伪插件清单。
 - **步骤**：先确认Dot实际读取共享知识，按最小路线选已有合法app/MCP连接或预配置Codex云任务CLI；如选Dot自有电脑直接CLI，先核实当前执行器工具/OS/身份；如选local skills，先核实Dot本地电脑授权与在线。复用既有连接，用最小只读Lody请求确认目标访问并形成C06交接，不先派发模型任务。
 - **验收**：各路线单独记录产品界面、执行器、技能读取、工具、版本/来源与目标；MCP须有真实服务入口和合法上下文。Dot委派任务须有Dot实际发起及任务关联证据，当前独立Codex工具或同实例子Agent不能代替。会话引用不等于空间枚举或Lody授权，知识加载不等于工具接入。共享权限不扩大服务/本地/模型访问；local skills不能只用Codex连接或Work Sync作为授权证据。
 - **验证**：先按运行单检查候选导入、知识目标与真实入口。只有确认所选Dot执行器或其委派Codex任务具备CLI时才在该执行器运行下面命令，并明确实际位置；MCP路线用实际公布工具做等价只读检查并保存脱敏回执。平台无新任务创建或导入工具时保留未运行，不用子Agent冒充独立任务，不编写虚构命令。
