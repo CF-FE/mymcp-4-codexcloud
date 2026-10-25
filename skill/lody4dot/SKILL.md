@@ -7,6 +7,8 @@ description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent
 
 先识别目标和环境，再执行。不要把安装 CLI、出现进程、变量存在或命令退出成功当作真实任务已经完成。
 
+本页事实范围为2026-10-25的Lody`0.108.1`帮助、源码及有界官方CLI实测。Lody是独立迭代的产品；版本变化时重核当时实际帮助和目标结果，不把本轮前提固定成未来永久规则。
+
 宿主、操作系统和运行角色分别识别。OpenAI的Dot是ChatGPT中的always-on agent产品，有自己的云电脑；它也可向预先配置的Codex云环境创建任务，或使用另行授权连接的本地电脑。这些执行位置分别核实，Dot不作为任意Agent的通用别名；实际插件加载、Lody工具与执行能力仍需分项验证，见[多宿主协作](references/collaboration.md)。
 
 ## 按需阅读
@@ -25,7 +27,7 @@ description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent
 | cloud/OSS、CLI/MCP 或运行位置不明确 | [兼容性与状态](references/compatibility.md) |
 | 报错、超时、未登录、版本或连接异常 | [故障处理](references/troubleshooting.md) |
 
-完整导航见[命令索引](references/command-index.json)，逐项参数、身份/workspace、副作用和分层验证见[全量审查矩阵](references/command-audit.json)，来源见[来源记录](references/sources.json)。矩阵由0.108.1实际根帮助重新递归发现70业务/分组路径及12个内置help入口，不代表82项业务已实跑。不要一次加载全部参考。
+完整导航见[命令索引](references/command-index.json)，逐项参数、身份/workspace、副作用和分层验证见[全量审查矩阵](references/command-audit.json)，来源见[来源记录](references/sources.json)。矩阵由0.108.1实际根帮助重新递归发现70业务/分组路径及12个内置help入口，其中只有login与workspace/project/agent-config list/get五个路径完成有界临时认证和必要元数据复验；其余77项仍仅帮助/源码核对，未执行Agent任务或配置变更。不要一次加载全部参考。
 
 ## 执行流程
 
@@ -36,7 +38,7 @@ description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent
 3. **选择明确目标。** 用官方CLI的只读入口或已注入且获授权的工具，先确认允许访问的工作区，再发现其机器、项目catalog、Agent config/Role和当前能力。工作区不明时仅报告最小缺项，不从本机`/workspace`、GitHub仓库或历史验收资源推导映射。重名时使用 ID；多页结果不能只读第一页。分清控制端与执行端，核对目标机器权限、可达性和 Agent 配置，不能仅凭 online 就宣称派发或执行成功。
 4. **选择可用路径。** 优先使用当前实际可用的官方CLI与原生JSON/JSONL，不为发现或派发另写业务SDK。已注入的 Lody MCP 只有在具备有效宿主上下文且已获授权时才复用；不能手工调用 `__internal` 入口冒充通用外部 MCP。没有 MCP 时不捏造工具名，也不把直接HTTP探针当成CLI目录调用成功。
 5. **执行并保留结果标识。** 协作时明确唯一协调写入者及每项产物的写入者，复验端保持只读。优先使用命令实际支持的 JSON/JSONL，stdout 与 stderr 分开。保留实际 session/user turn/assistant turn 或 operation/request 标识；超时先对账，无法唯一定位时停止自动重发。
-6. **核验持久化结果。** 区分提议、等待用户保存、已接受、进行中、完成、失败和取消。用受支持的观察/历史及可检查产物核对；元数据 idle、presence 消失或 CLI 退出码 0 均不能独自证明任务完成。
+6. **核验持久化结果。** 目录查询退出0仍要核对`sync.state`、资料新鲜度及完整分页；`syncing`不能当作空目录成功。只需Agent必要元数据时按发现参考的字段白名单投影，不回传env、prompt或完整runConfig。区分提议、等待用户保存、已接受、进行中、完成、失败和取消。用受支持的观察/历史及可检查产物核对；元数据 idle、presence 消失或 CLI 退出码 0 均不能独自证明任务完成。
 7. **清楚报告与交接。** 说明目标、控制/执行位置、实际操作、版本、证据来源和未运行项；跨端路径注明所属执行器，身份状态各自保存。只清理或停止本任务明确拥有的临时资源，不影响用户已有 daemon、身份或会话。
 
 ## 始终保留的边界

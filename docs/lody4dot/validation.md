@@ -594,6 +594,25 @@ Python工具、CLI/runtime锁、核心技能、setup、命令索引、帮助快�
 
 本轮完整记录在任务外部`upgrade/template-save/`回执目录；源码仅提交工具、技能、审查输入和测试，不提交依赖缓存、ZIP或身份。新环境实际采用、模板正式版本、生效实例、认证与目录结果继续分项取证；保存准备完成不提前标记这些项成功。
 
+## 2026-10-25远程main重载与官方CLI读取验收
+
+用户已将保存分支合入main，实际远程main为`a86a63f67f023796023c488b80803acfe78649c2`。工作树干净时fetch远程main，安全切换既有main并ff-only，关键AGENTS、install/start、Node准备、技能与runtime锁文件与该commit逐字节一致，且包含已验证工作分支`59d038e`。main仅做快进，没有自行创建新合并提交、丢弃用户改动或推送main；旧分支的安装已经结束，随后在main串行重新初始化。
+
+| 验证 | 真实结果与范围 |
+| --- | --- |
+| main安装 | 2026-10-25 09:21:55–09:21:59 UTC，`.codex/cloud-install.sh`原入口exit0；179项回归、结构、受管Node与latest CLI准备/离线检查通过。受管Node24.22.1、npm11.19.1、Lody0.108.1，精确锁摘要9831f975…保留。 |
+| main启动 | 09:21:59–09:22:00 UTC，`bootstrap --repair-missing`原入口exit0、status=pass，步骤仅doctor；认证和目录另外验收，没有把此检查当登录或业务成功。 |
+| 原生登录 | 09:24–09:25 UTC，仅确认现有材料会走0.108.1原生API-key分支后，用`auth.py --login`调用官方login与工作区验证，exit0、实际HTTP200。既有token仅在内存/已授权私密临时身份中使用，不记录或展示材料，不走pairing/device或创建key流程。 |
+| 官方目录 | 同一私密state的workspace list、project list --catalog --kind local --all-pages、agent-config list --all-pages、agent-config get均exit0。两个获准workspace的本地项目目录和Agent目录完整分页，分别执行get核对对应目录ID；只投影必要id/name/type/machine等元数据，不读env/prompt或完整runConfig。具体资源选择保留在任务私密回执。 |
+| 证据计数 | 8次受控验证调用覆盖5个CLI命令路径；登录适配器内含原生登录和额外workspace校验。Node标准diagnostics_channel旁观原CLI请求，82条HTTP响应均200、未见401/403，42条request ID及82条cf-ray仅作脱敏关联；不记录path/query、授权头、请求/响应body或原stdout/stderr，也没有修改请求/dispatcher。旁观器的3条合成事件检查无网络请求且私密getter/材料不落日志。 |
+| 范围与清理 | 自有0700临时目录中的credentials、machine-id和目录SQLite缓存已finally删除；未执行创建远端key、机器配对/登记、Agent启动、会话或配置写入命令。目录查询仍伴随短期Streams授权/同步/presence，不能泛化成服务器零底层写。 |
+
+用户要求忽略旧探针；它不纳入当前验收、待办或阻塞，不继续推断历史因果。本轮以2026-10-25 Lody0.108.1官方CLI已实测通过为准，不能推广为后续版本或全产品保证，也不增加全产品测试。角色/调度/变更命令继续保留帮助与源码证据，没有执行Agent任务。
+
+本轮必要skill/矩阵收尾后，结构检查、180项全仓测试与差异检查全部通过；实际自包含构建32内容文件加收据、33文件ZIP，CRC/收据校验通过，ZIP SHA256为`544262386b9e75204beb2e564cab76ba1456d20b26b5528057fa95407c2d62a1`。新增回归只保护线上证据分层和授权模式，不增加全产品在线测试，也没有重跑已成功的账户/目录请求。
+
+本轮是同一任务从远程main重新获取源码并运行安装/启动，不是保存模板ref更新、容器重建或独立新任务。模板配置和网络安全/凭据绑定未改。必要技能与矩阵修订在既有工作分支保存，main不由本任务推送；具体新提交见交付回执。main来源、安装、启动和当前官方CLI验证回执在任务外部`remote-reload-20261025/`目录，身份和原响应不入Git。
+
 ## 复现命令
 
 在仓库根目录运行：

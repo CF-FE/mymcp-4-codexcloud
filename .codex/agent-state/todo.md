@@ -6,18 +6,19 @@
 
 ## 当前环境与下一步
 
-2026-10-25，用户授权当前环境升级、Lody CLI跟随`latest`、全量命令复核及差异固化，并要求保存更新现有环境模板。模板更新后已允许用已有API key在本任务临时私密目录复验原CLI登录与目录403，验证后清理；不创建新key或注册机器、不启动Agent。以下是本任务观测；本端未暴露模板配置读写接口，正式spec/ref未重新读取或修改，不能用仓库保存替代模板回执。
+2026-10-25，用户将工作分支合入main后明确要求重新拉取main并初始化；已按顺序在同一任务完成远程来源核验、main快进、安装/启动及官方CLI临时身份和目录只读验收。用户要求忽略旧探针，以当次Lody版本与日期的实测为准；它不再是待办或阻塞。Lody是独立且快速迭代的产品，以下结果只覆盖本轮版本和目标，后续先核实际版本、帮助与响应。
 
 | 项目 | 当前任务实际结果 |
 | --- | --- |
-| 仓库与保存目标 | 基于用户指定`0a044f14622902b6d8d93418338df2251b7a38f8`，保存分支`chore/lody-latest-cloud-20261025`；合入远程`main`截至`7b25a7e94f9c0cbd27a3244fa49f0c2c5e7780c9`的5项提交，保留Role/Project、ZIP与夹具修复。精确交付SHA和远程核验另有最终回执，不改main或强推 |
-| Node/npm | 官方Linux x64 Node `24.22.1`/npm `11.19.1`；仓库Node准备脚本在本任务空临时前缀真实下载、SHA256校验、解压/probe通过并清理，现有前缀复用通过。平台`/opt`未改，新环境未创建 |
-| CLI安装策略 | 声明`lody: latest`；prepare在隔离stage定向刷新Lody锁并验证，再按精确锁安装或复用；其它依赖和`tinypool 2.1.2`约束保留。Node是兼容基线，未来engines提高时需更新Node，不降级CLI |
-| 本次解析/安装 | 官方npm latest `0.108.1`；源码锁与实际锁摘要`9831f9751c1ccff581837026e1e1fc45c20ebe3d97ff933427d065d7f13d4e18`；prepare与离线inspect通过，receipt记录实际Node路径 |
-| 帮助与技能 | 实际根帮助重新递归发现20类70业务/分组命令及12自动help，共82项正确帮助通过；[完整审查](../../docs/lody4dot/cli-command-audit.md)逐项区分help/source/online，修正14条前提。完整cloud-install含179项回归及latest准备/inspect通过；启动与32内容文件自包含ZIP构建通过 |
-| 本轮身份及业务 | 帮助的私密空state曾生成本地machine-id，已清理；未写登录凭据或创建远端key/机器，未login、启Agent或重试目录403。不得把旧GitHub关联仓库列表当本地project catalog或Agent配置 |
-| 保存阻点 | Git代码保存与模板配置分别取证。本端没有目标Codex保存环境的读取/更新接口，Sites接口不适用；模板修改未尝试、未被拒绝、无不确定写入。网络、安全、现有凭据绑定不变 |
-| 最小接续 | 用父级受支持接口或现有环境设置，将同一仓库ref固定到最终已推送SHA，安装入口执行该提交`.codex/cloud-install.sh`并同步`.codex/cloud-start.md`，保存后回读；不为验证另建任务。取得模板回执后，按已有临时身份授权做有界原CLI登录/目录复验，不重索许可 |
+| 远程main与初始化来源 | `a86a63f67f023796023c488b80803acfe78649c2`，用户合并的PR包含此前已推送`59d038e`；已fetch、切换现有main并ff-only，关键入口与该提交逐字节匹配，未覆盖未提交用户文件、未推送main |
+| 初始化 | 按该main的`.codex/cloud-install.sh`执行，exit0，结构`mcp=1 skill=2 plugin=1`及179项测试通过；启动`bootstrap --repair-missing`为exit0、仅doctor、status=pass。旧工作分支检查保留历史，没有冒充main初始化 |
+| Node/npm与CLI | 受管官方Linux x64 Node `24.22.1`、npm `11.19.1`、Lody `0.108.1`；平台`/opt`未改。manifest声明`lody: latest`，每次prepare解析官方latest再用精确锁安装/复用，其余约束保留；安装收据记录实际Node与锁摘要 |
+| 官方身份与目录读取 | 2026-10-25 09:24–09:25 UTC，原CLI既有API-key登录、workspace list、project list --catalog --kind local、agent-config list/get全部通过；8次受控调用、5个命令路径，两个已授权workspace完整分页且详情匹配。只保留必要元数据，真实名称/ID不写共享源码 |
+| 传输证据 | 当前观察到的82个HTTP响应均200，未出现401/403；这与82项帮助审查是不同计数。未将帮助或源码核对冒充线上结果，不扩展为全产品或Agent任务执行验收 |
+| 临时身份与权限 | 在自有0700临时state复用既有绑定token；临时credentials、machine-id、SQLite目录缓存均已清理。未执行创建key、机器配对/登记、启动Agent或配置/会话业务变更；正常目录读取伴随短期授权、同步及presence连接，不声称远端绝对零底层写 |
+| 技能与审查 | 20类70个业务/分组路径及12个内置help的既有全量审查保留；本轮仅将5个有官方CLI回执的路径标记实际已验，其余保持help/source或未执行。收尾结构、180项全仓测试、自包含ZIP及差异检查通过；必要边界见[逐项命令审查](../../docs/lody4dot/cli-command-audit.md) |
+| 保存与重载边界 | 本轮main源码重载和初始化已完成；保存模板配置未改，没有新建容器或替代任务，也未改网络、安全或凭据绑定。后续验收记录/skill修订保存在既有`chore/lody-latest-cloud-20261025`分支，不擅自合并/推送main |
+| 后续范围 | 当前初始化与已授权资源读取已就绪，无旧探针追查项；Agent执行仍需具体工作区、项目、Agent及任务，并按当时实际版本/能力核对。保存模板、原生插件注册和新环境采用分别取证，不由本轮结果自动推出 |
 
 ### 历史发布观测（2026-10-21）
 
