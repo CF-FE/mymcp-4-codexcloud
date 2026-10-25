@@ -50,7 +50,7 @@ python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --ve
 
 用户通过环境变量 `LODY_CLI_TOKEN` 提供材料；不要求在聊天中重复提供。只观察变量是否非空，不打印值、前缀、长度，不运行环境转储。这个名称是 `lody4dot` 约定，不是已证明会由 CLI 自动读取的变量。
 
-认证适配器区分只读验证已有登录和显式登录。0.108.1发布源码审查显示：API-key路径验证已有token并保存本机machine-id/credentials，没有该分支显式创建远端key或注册machine；配对路径会exchange，设备授权会创建远端CLI API key，两者不能混入只允许临时本地身份的授权。以上是静态`source_verified`，本轮未执行新版登录或远端注册验收。只有当前任务允许相应认证副作用时才使用显式入口；不得在命令文本、日志、异常或包里展开token，不通过拼接shell启动。
+认证适配器区分只读验证已有登录和显式登录。0.108.1发布源码审查显示：API-key路径验证已有token并保存本机machine-id/credentials，没有该分支显式创建远端key或注册machine；配对路径会exchange，设备授权会创建远端CLI API key，两者不能混入只允许临时本地身份的授权。该分支分析属于2026-10-25/0.108.1的静态`source_verified`；随后已用官方APIkey路线完成获准的临时本机身份及必要目录复验，finally清理。未执行device/pairing、key创建、machine配对登记或Agent启动业务动作，不能由此扩展这些范围。只有当前任务允许相应认证副作用时才使用显式入口；不得在命令文本、日志、异常或包里展开token，不通过拼接shell启动。
 
 0.108.1没有新增直接读取`LODY_CLI_TOKEN`完成认证的官方入口，也没有已核实的无状态目录查询flag；CLI目录路线仍依赖已有credentials及本地SQLite。不要为了省去登录而拼接内部HTTP协议、自造token存储或伪装stateless目录SDK。缺合法身份或写入许可时报告具体缺项；不要把token存在、无凭证健康检查或单个HTTP探针当CLI查询成功。准确来源见[来源记录](sources.json)。
 
@@ -81,6 +81,8 @@ python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --ve
 平台准备脚本、Agent启动指引、会话hook和存储重置事件各自核实。官方Dot文档的Reset是用户主动删除Dot的产品操作，未说明定期磁盘重置，也未给出可注入初始化的存储事件hook。Codex云准备脚本可以为该Codex环境准备依赖，不能据此声称已挂到Dot云电脑启动或重置；不猜事件名、不自动注册服务。跨端身份、文件和失败处理见[协作参考](collaboration.md)。
 
 ## 成功证据与退出
+
+2026-10-25本任务按用户新顺序从远程main重载源码、重新安装/启动检查后，Lody0.108.1的有界官方CLI认证及必要目录复验通过。此路线不是保存环境模板或重建容器，模板API不再是本轮复验前置；当日结果不保证后续Lody版本或未指定Agent任务可用。当前准据及五条实测路径见[审查矩阵](command-audit.json)，旧探针不再作为待办或阻塞。
 
 分别记录插件实际加载、CLI实际版本或查询未知、帮助/命令结果、账户资源查询和任务闭环。inspect可带版本warn通过，账户/任务仍可能未执行，不能把它们一起标为成功。安装失败保留旧版本与用户状态；真实命令、身份和权限失败保留原有退出码与分类，继续已有授权内不依赖该失败的工作，不改配置范围或自行创建workspace。
 

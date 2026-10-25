@@ -2,7 +2,7 @@
   "schema_version": 1,
   "lody_version": "0.108.1",
   "audited_at": "2026-10-25T07:06:33.519414+00:00",
-  "scope": "offline_public_cli_help_and_static_source_only",
+  "scope": "public_cli_help_static_source_and_bounded_official_cli_online_followup",
   "discovery": {
     "method": "BFS of Commands sections from actual root --help; existing index was compared only after discovery",
     "root_count": 20,
@@ -23,17 +23,36 @@
     "source_review_scope": "公开handler路由、前提与副作用分类；未核实字段保留conditional/unknown，不代表每条业务已验证。"
   },
   "privacy": {
-    "auth_environment": "Allowlist excludes credential/token/key/password environment names; no values retained.",
+    "auth_environment": "初始help/source审查不含认证材料；后续仅已有APIkey在原生子进程内使用，未记录值。",
     "private_state": "fresh tmp directory mode0700; all owned directories cleaned",
     "observed_help_initialization": "machine-id file created in private temporary state; no claim of zero local writes",
-    "business_requests_sent": false
+    "business_requests_sent": true,
+    "agent_task_requests_sent": false,
+    "raw_business_output_persisted": false
   },
   "online_validation": {
-    "status": "pending_template_update",
-    "authorization": "已有允许枚举当前身份可见两个workspace及project/agent必要元数据的授权；模板更新后仍以原生CLI回执取证。",
-    "blocker": "保存环境模板与固定源码ref尚未更新；当前工具未暴露模板保存API。当前任务Node脚本实现、官方下载校验及复用验证已完成，新环境采用尚未实测。",
-    "business_target": "未指定单一业务执行目标，不创建/继续/取消Agent任务。",
-    "historical_403": "未在本轮重试；不能泛化为产品通用限制。"
+    "status": "bounded_followup_pass",
+    "followup_id": "official-cli-bounded-followup-20261025T092432Z",
+    "method": "official_cli",
+    "verified_command_paths": [
+      "agent-config get",
+      "agent-config list",
+      "login",
+      "project list",
+      "workspace list"
+    ],
+    "source": {
+      "branch": "main",
+      "commit": "a86a63f67f023796023c488b80803acfe78649c2",
+      "cli_version": "0.108.1",
+      "node_version": "24.22.1"
+    },
+    "authorization": "已有授权内的临时APIkey身份与两个可见workspace必要元数据，均实际原CLI验证；不授权Agent任务或配置变更。",
+    "prior_template_gate": "历史pending_template_update保留audit_history；用户调整为先提交/push、同任务远程main重载与初始化后复验，不再把模板API作为本轮前置。",
+    "template_updated": false,
+    "new_container_created": false,
+    "historical_probe_policy": "2026-10-25用户要求忽略旧探针；当前准据仅为0.108.1官方CLI实测，不继续根因诊断，不列为待办或阻塞。",
+    "version_scope": "2026-10-25/0.108.1；Lody独立快速迭代，未来版本需以当时实际帮助和目标结果重核。"
   },
   "bootstrap_checks": {
     "root_help_exit": 0,
@@ -371,12 +390,15 @@
       "side_effects": {
         "category": "read",
         "detail": "只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。",
-        "business_operation_executed": false
+        "business_operation_executed": true,
+        "observed_execution_scope": "read_only_metadata",
+        "output_projection_note": "目录摘要省略env/credentials/prompt，但runConfig可含options值；仅白名单必要名称/ID/类型，本轮不回传完整runConfig。"
       },
       "validation": {
         "performed": [
           "actual_cli_help",
-          "current_release_source_review"
+          "current_release_source_review",
+          "bounded_official_cli_online"
         ],
         "help_invocation": [
           "lody",
@@ -392,16 +414,75 @@
           "248324",
           "248637-248881"
         ],
-        "recommended_business_evidence": "读取安全配置/能力摘要，或后续查询确认保存变化；默认不得输出环境值。"
+        "recommended_business_evidence": "读取安全配置/能力摘要，或后续查询确认保存变化；默认不得输出环境值。",
+        "online_receipt": {
+          "followup_id": "official-cli-bounded-followup-20261025T092432Z",
+          "command_path": "agent-config get",
+          "method": "official_cli",
+          "date": "2026-10-25",
+          "source": {
+            "branch": "main",
+            "commit": "a86a63f67f023796023c488b80803acfe78649c2",
+            "cli_version": "0.108.1",
+            "node_version": "24.22.1"
+          },
+          "scope": {
+            "category": "read_only_metadata",
+            "agent_tasks_started": false,
+            "user_configuration_mutated": false,
+            "remote_key_creation_command_invoked": false,
+            "machine_registration_command_invoked": false
+          },
+          "calls": [
+            {
+              "command_path": "agent-config get",
+              "started_at": "2026-10-25T09:25:07.230916+00:00",
+              "completed_at": "2026-10-25T09:25:14.215760+00:00",
+              "raw_exit_code": 0,
+              "timed_out": false,
+              "status": "pass",
+              "observed_http_statuses": [
+                200
+              ],
+              "raw_output_retained": false
+            },
+            {
+              "command_path": "agent-config get",
+              "started_at": "2026-10-25T09:25:36.410312+00:00",
+              "completed_at": "2026-10-25T09:25:42.086730+00:00",
+              "raw_exit_code": 0,
+              "timed_out": false,
+              "status": "pass",
+              "observed_http_statuses": [
+                200
+              ],
+              "raw_output_retained": false
+            }
+          ],
+          "status": "pass",
+          "temporary_identity_and_cache_cleaned": true,
+          "invocation_options": [
+            "<discovered-agent-config-id>",
+            "--workspace <authorized-workspace>",
+            "--json"
+          ],
+          "output_projection": [
+            "id",
+            "name",
+            "cliType",
+            "agentType",
+            "machineId"
+          ]
+        }
       },
       "result": {
         "help_exit_code": 0,
         "help_stderr_nonempty": false,
         "source_review": "source_verified",
-        "business_status": "not_run",
-        "business_reason": "pending_template_update",
-        "online_status": "not_run",
-        "online_success": false
+        "business_status": "pass",
+        "business_reason": "bounded_official_cli_online_followup",
+        "online_status": "verified_bounded",
+        "online_success": true
       }
     },
     {
@@ -483,12 +564,15 @@
       "side_effects": {
         "category": "read",
         "detail": "只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。",
-        "business_operation_executed": false
+        "business_operation_executed": true,
+        "observed_execution_scope": "read_only_metadata",
+        "output_projection_note": "目录摘要省略env/credentials/prompt，但runConfig可含options值；仅白名单必要名称/ID/类型，本轮不回传完整runConfig。"
       },
       "validation": {
         "performed": [
           "actual_cli_help",
-          "current_release_source_review"
+          "current_release_source_review",
+          "bounded_official_cli_online"
         ],
         "help_invocation": [
           "lody",
@@ -504,16 +588,74 @@
           "248324",
           "248637-248881"
         ],
-        "recommended_business_evidence": "读取安全配置/能力摘要，或后续查询确认保存变化；默认不得输出环境值。"
+        "recommended_business_evidence": "读取安全配置/能力摘要，或后续查询确认保存变化；默认不得输出环境值。",
+        "online_receipt": {
+          "followup_id": "official-cli-bounded-followup-20261025T092432Z",
+          "command_path": "agent-config list",
+          "method": "official_cli",
+          "date": "2026-10-25",
+          "source": {
+            "branch": "main",
+            "commit": "a86a63f67f023796023c488b80803acfe78649c2",
+            "cli_version": "0.108.1",
+            "node_version": "24.22.1"
+          },
+          "scope": {
+            "category": "read_only_metadata",
+            "agent_tasks_started": false,
+            "user_configuration_mutated": false,
+            "remote_key_creation_command_invoked": false,
+            "machine_registration_command_invoked": false
+          },
+          "calls": [
+            {
+              "command_path": "agent-config list",
+              "started_at": "2026-10-25T09:24:58.487113+00:00",
+              "completed_at": "2026-10-25T09:25:07.230360+00:00",
+              "raw_exit_code": 0,
+              "timed_out": false,
+              "status": "pass",
+              "observed_http_statuses": [
+                200
+              ],
+              "raw_output_retained": false,
+              "result_count": 5,
+              "all_pages_complete": true,
+              "freshness": "fresh_no_syncing_marker"
+            },
+            {
+              "command_path": "agent-config list",
+              "started_at": "2026-10-25T09:25:29.299840+00:00",
+              "completed_at": "2026-10-25T09:25:36.409947+00:00",
+              "raw_exit_code": 0,
+              "timed_out": false,
+              "status": "pass",
+              "observed_http_statuses": [
+                200
+              ],
+              "raw_output_retained": false,
+              "result_count": 4,
+              "all_pages_complete": true,
+              "freshness": "fresh_no_syncing_marker"
+            }
+          ],
+          "status": "pass",
+          "temporary_identity_and_cache_cleaned": true,
+          "invocation_options": [
+            "--workspace <authorized-workspace>",
+            "--all-pages",
+            "--json"
+          ]
+        }
       },
       "result": {
         "help_exit_code": 0,
         "help_stderr_nonempty": false,
         "source_review": "source_verified",
-        "business_status": "not_run",
-        "business_reason": "pending_template_update",
-        "online_status": "not_run",
-        "online_success": false
+        "business_status": "pass",
+        "business_reason": "bounded_official_cli_online_followup",
+        "online_status": "verified_bounded",
+        "online_success": true
       }
     },
     {
@@ -688,7 +830,7 @@
         "help_stderr_nonempty": false,
         "source_review": "source_verified",
         "business_status": "not_run",
-        "business_reason": "pending_template_update",
+        "business_reason": "not_in_bounded_online_followup",
         "online_status": "not_run",
         "online_success": false
       }
@@ -1085,7 +1227,7 @@
         "help_stderr_nonempty": false,
         "source_review": "source_verified",
         "business_status": "not_run",
-        "business_reason": "pending_template_update",
+        "business_reason": "not_in_bounded_online_followup",
         "online_status": "not_run",
         "online_success": false
       }
@@ -1197,7 +1339,7 @@
         "help_stderr_nonempty": false,
         "source_review": "source_verified",
         "business_status": "not_run",
-        "business_reason": "pending_template_update",
+        "business_reason": "not_in_bounded_online_followup",
         "online_status": "not_run",
         "online_success": false
       }
@@ -2197,7 +2339,7 @@
         "help_stderr_nonempty": false,
         "source_review": "source_verified",
         "business_status": "not_run",
-        "business_reason": "pending_template_update",
+        "business_reason": "not_in_bounded_online_followup",
         "online_status": "not_run",
         "online_success": false
       }
@@ -2251,12 +2393,15 @@
       "side_effects": {
         "category": "authenticate",
         "detail": "API-key路径校验已有key并保存本机machine-id/credentials；device流程会创建远端CLI key，pairing会exchange，不能混入临时本地身份许可。",
-        "business_operation_executed": false
+        "business_operation_executed": true,
+        "observed_execution_scope": "temporary_authentication_existing_api_key",
+        "observed_effect": "仅已有APIkey的临时本机身份/cache及原生授权验证，finally清理；未运行device/pairing/远端密钥创建或machine注册命令。"
       },
       "validation": {
         "performed": [
           "actual_cli_help",
-          "current_release_source_review"
+          "current_release_source_review",
+          "bounded_official_cli_online"
         ],
         "help_invocation": [
           "lody",
@@ -2270,16 +2415,57 @@
           "78665-78730",
           "308567"
         ],
-        "recommended_business_evidence": "通过已有身份和授权资源的独立查询确认登录；登录响应本身不证明任务可执行。"
+        "recommended_business_evidence": "通过已有身份和授权资源的独立查询确认登录；登录响应本身不证明任务可执行。",
+        "online_receipt": {
+          "followup_id": "official-cli-bounded-followup-20261025T092432Z",
+          "command_path": "login",
+          "method": "official_cli",
+          "date": "2026-10-25",
+          "source": {
+            "branch": "main",
+            "commit": "a86a63f67f023796023c488b80803acfe78649c2",
+            "cli_version": "0.108.1",
+            "node_version": "24.22.1"
+          },
+          "scope": {
+            "category": "temporary_authentication_existing_api_key",
+            "agent_tasks_started": false,
+            "user_configuration_mutated": false,
+            "remote_key_creation_command_invoked": false,
+            "machine_registration_command_invoked": false,
+            "credential_kind": "existing_api_key",
+            "native_api_key_branch_selected": true,
+            "device_authorization_invoked": false,
+            "pairing_invoked": false,
+            "identity_storage": "private_temporary_local_state"
+          },
+          "calls": [
+            {
+              "command_path": "login",
+              "started_at": "2026-10-25T09:24:32.595884+00:00",
+              "completed_at": "2026-10-25T09:24:38.948787+00:00",
+              "raw_exit_code": 0,
+              "timed_out": false,
+              "status": "pass",
+              "observed_http_statuses": [
+                200
+              ],
+              "raw_output_retained": false
+            }
+          ],
+          "status": "pass",
+          "temporary_identity_and_cache_cleaned": true,
+          "adapter": "auth.py --login invokes official login and workspace verification; no secret argv retained"
+        }
       },
       "result": {
         "help_exit_code": 0,
         "help_stderr_nonempty": false,
         "source_review": "source_verified",
-        "business_status": "not_run",
-        "business_reason": "offline_audit_only_no_business_execution",
-        "online_status": "not_run",
-        "online_success": false
+        "business_status": "pass",
+        "business_reason": "bounded_official_cli_online_followup",
+        "online_status": "verified_bounded",
+        "online_success": true
       }
     },
     {
@@ -2530,7 +2716,7 @@
         "help_stderr_nonempty": false,
         "source_review": "source_verified",
         "business_status": "not_run",
-        "business_reason": "pending_template_update",
+        "business_reason": "not_in_bounded_online_followup",
         "online_status": "not_run",
         "online_success": false
       }
@@ -3633,12 +3819,14 @@
       "side_effects": {
         "category": "read",
         "detail": "只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。",
-        "business_operation_executed": false
+        "business_operation_executed": true,
+        "observed_execution_scope": "read_only_metadata"
       },
       "validation": {
         "performed": [
           "actual_cli_help",
-          "current_release_source_review"
+          "current_release_source_review",
+          "bounded_official_cli_online"
         ],
         "help_invocation": [
           "lody",
@@ -3653,16 +3841,76 @@
           "248255",
           "308894"
         ],
-        "recommended_business_evidence": "区分本机项目注册和cloud catalog，并确认准确项目范围，不把目录注册当项目代码迁移。"
+        "recommended_business_evidence": "区分本机项目注册和cloud catalog，并确认准确项目范围，不把目录注册当项目代码迁移。",
+        "online_receipt": {
+          "followup_id": "official-cli-bounded-followup-20261025T092432Z",
+          "command_path": "project list",
+          "method": "official_cli",
+          "date": "2026-10-25",
+          "source": {
+            "branch": "main",
+            "commit": "a86a63f67f023796023c488b80803acfe78649c2",
+            "cli_version": "0.108.1",
+            "node_version": "24.22.1"
+          },
+          "scope": {
+            "category": "read_only_metadata",
+            "agent_tasks_started": false,
+            "user_configuration_mutated": false,
+            "remote_key_creation_command_invoked": false,
+            "machine_registration_command_invoked": false
+          },
+          "calls": [
+            {
+              "command_path": "project list",
+              "started_at": "2026-10-25T09:24:40.786576+00:00",
+              "completed_at": "2026-10-25T09:24:58.486734+00:00",
+              "raw_exit_code": 0,
+              "timed_out": false,
+              "status": "pass",
+              "observed_http_statuses": [
+                200
+              ],
+              "raw_output_retained": false,
+              "result_count": 3,
+              "all_pages_complete": true,
+              "freshness": "fresh_no_syncing_marker"
+            },
+            {
+              "command_path": "project list",
+              "started_at": "2026-10-25T09:25:14.215972+00:00",
+              "completed_at": "2026-10-25T09:25:29.299568+00:00",
+              "raw_exit_code": 0,
+              "timed_out": false,
+              "status": "pass",
+              "observed_http_statuses": [
+                200
+              ],
+              "raw_output_retained": false,
+              "result_count": 2,
+              "all_pages_complete": true,
+              "freshness": "fresh_no_syncing_marker"
+            }
+          ],
+          "status": "pass",
+          "temporary_identity_and_cache_cleaned": true,
+          "invocation_options": [
+            "--workspace <authorized-workspace>",
+            "--catalog",
+            "--kind local",
+            "--all-pages",
+            "--json"
+          ]
+        }
       },
       "result": {
         "help_exit_code": 0,
         "help_stderr_nonempty": false,
         "source_review": "source_verified",
-        "business_status": "not_run",
-        "business_reason": "pending_template_update",
-        "online_status": "not_run",
-        "online_success": false
+        "business_status": "pass",
+        "business_reason": "bounded_official_cli_online_followup",
+        "online_status": "verified_bounded",
+        "online_success": true
       }
     },
     {
@@ -6273,12 +6521,14 @@
       "side_effects": {
         "category": "read",
         "detail": "只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。",
-        "business_operation_executed": false
+        "business_operation_executed": true,
+        "observed_execution_scope": "read_only_metadata"
       },
       "validation": {
         "performed": [
           "actual_cli_help",
-          "current_release_source_review"
+          "current_release_source_review",
+          "bounded_official_cli_online"
         ],
         "help_invocation": [
           "lody",
@@ -6292,16 +6542,55 @@
         "source_lines": [
           "309606-309638"
         ],
-        "recommended_business_evidence": "核对明确授权身份/工作区及分页结果；未知可用性不能报告为离线或派发成功。"
+        "recommended_business_evidence": "核对明确授权身份/工作区及分页结果；未知可用性不能报告为离线或派发成功。",
+        "online_receipt": {
+          "followup_id": "official-cli-bounded-followup-20261025T092432Z",
+          "command_path": "workspace list",
+          "method": "official_cli",
+          "date": "2026-10-25",
+          "source": {
+            "branch": "main",
+            "commit": "a86a63f67f023796023c488b80803acfe78649c2",
+            "cli_version": "0.108.1",
+            "node_version": "24.22.1"
+          },
+          "scope": {
+            "category": "read_only_metadata",
+            "agent_tasks_started": false,
+            "user_configuration_mutated": false,
+            "remote_key_creation_command_invoked": false,
+            "machine_registration_command_invoked": false
+          },
+          "calls": [
+            {
+              "command_path": "workspace list",
+              "started_at": "2026-10-25T09:24:38.948931+00:00",
+              "completed_at": "2026-10-25T09:24:40.786284+00:00",
+              "raw_exit_code": 0,
+              "timed_out": false,
+              "status": "pass",
+              "observed_http_statuses": [
+                200
+              ],
+              "raw_output_retained": false,
+              "result_count": 2
+            }
+          ],
+          "status": "pass",
+          "temporary_identity_and_cache_cleaned": true,
+          "invocation_options": [
+            "--json"
+          ]
+        }
       },
       "result": {
         "help_exit_code": 0,
         "help_stderr_nonempty": false,
         "source_review": "source_verified",
-        "business_status": "not_run",
-        "business_reason": "pending_template_update",
-        "online_status": "not_run",
-        "online_success": false
+        "business_status": "pass",
+        "business_reason": "bounded_official_cli_online_followup",
+        "online_status": "verified_bounded",
+        "online_success": true
       }
     },
     {
@@ -6962,6 +7251,246 @@
         "online_status": "not_applicable",
         "online_success": false
       }
+    }
+  ],
+  "audit_history": [
+    {
+      "record_id": "initial_offline_audit",
+      "audited_at": "2026-10-25T07:06:33.519414+00:00",
+      "scope": "offline_public_cli_help_and_static_source_only",
+      "privacy": {
+        "auth_environment": "Allowlist excludes credential/token/key/password environment names; no values retained.",
+        "private_state": "fresh tmp directory mode0700; all owned directories cleaned",
+        "observed_help_initialization": "machine-id file created in private temporary state; no claim of zero local writes",
+        "business_requests_sent": false
+      },
+      "online_validation": {
+        "status": "pending_template_update",
+        "authorization": "已有允许枚举当前身份可见两个workspace及project/agent必要元数据的授权；模板更新后仍以原生CLI回执取证。",
+        "blocker": "保存环境模板与固定源码ref尚未更新；当前工具未暴露模板保存API。当前任务Node脚本实现、官方下载校验及复用验证已完成，新环境采用尚未实测。",
+        "business_target": "未指定单一业务执行目标，不创建/继续/取消Agent任务。",
+        "historical_403": "未在本轮重试；不能泛化为产品通用限制。"
+      },
+      "entry_results": [
+        {
+          "command": "agent-config get",
+          "business_operation_executed": false,
+          "result": {
+            "help_exit_code": 0,
+            "help_stderr_nonempty": false,
+            "source_review": "source_verified",
+            "business_status": "not_run",
+            "business_reason": "pending_template_update",
+            "online_status": "not_run",
+            "online_success": false
+          }
+        },
+        {
+          "command": "agent-config list",
+          "business_operation_executed": false,
+          "result": {
+            "help_exit_code": 0,
+            "help_stderr_nonempty": false,
+            "source_review": "source_verified",
+            "business_status": "not_run",
+            "business_reason": "pending_template_update",
+            "online_status": "not_run",
+            "online_success": false
+          }
+        },
+        {
+          "command": "agent-config show",
+          "business_operation_executed": false,
+          "result": {
+            "help_exit_code": 0,
+            "help_stderr_nonempty": false,
+            "source_review": "source_verified",
+            "business_status": "not_run",
+            "business_reason": "pending_template_update",
+            "online_status": "not_run",
+            "online_success": false
+          }
+        },
+        {
+          "command": "agent-role get",
+          "business_operation_executed": false,
+          "result": {
+            "help_exit_code": 0,
+            "help_stderr_nonempty": false,
+            "source_review": "source_verified",
+            "business_status": "not_run",
+            "business_reason": "pending_template_update",
+            "online_status": "not_run",
+            "online_success": false
+          }
+        },
+        {
+          "command": "agent-role list",
+          "business_operation_executed": false,
+          "result": {
+            "help_exit_code": 0,
+            "help_stderr_nonempty": false,
+            "source_review": "source_verified",
+            "business_status": "not_run",
+            "business_reason": "pending_template_update",
+            "online_status": "not_run",
+            "online_success": false
+          }
+        },
+        {
+          "command": "github list",
+          "business_operation_executed": false,
+          "result": {
+            "help_exit_code": 0,
+            "help_stderr_nonempty": false,
+            "source_review": "source_verified",
+            "business_status": "not_run",
+            "business_reason": "pending_template_update",
+            "online_status": "not_run",
+            "online_success": false
+          }
+        },
+        {
+          "command": "login",
+          "business_operation_executed": false,
+          "result": {
+            "help_exit_code": 0,
+            "help_stderr_nonempty": false,
+            "source_review": "source_verified",
+            "business_status": "not_run",
+            "business_reason": "offline_audit_only_no_business_execution",
+            "online_status": "not_run",
+            "online_success": false
+          }
+        },
+        {
+          "command": "machine list",
+          "business_operation_executed": false,
+          "result": {
+            "help_exit_code": 0,
+            "help_stderr_nonempty": false,
+            "source_review": "source_verified",
+            "business_status": "not_run",
+            "business_reason": "pending_template_update",
+            "online_status": "not_run",
+            "online_success": false
+          }
+        },
+        {
+          "command": "project list",
+          "business_operation_executed": false,
+          "result": {
+            "help_exit_code": 0,
+            "help_stderr_nonempty": false,
+            "source_review": "source_verified",
+            "business_status": "not_run",
+            "business_reason": "pending_template_update",
+            "online_status": "not_run",
+            "online_success": false
+          }
+        },
+        {
+          "command": "workspace list",
+          "business_operation_executed": false,
+          "result": {
+            "help_exit_code": 0,
+            "help_stderr_nonempty": false,
+            "source_review": "source_verified",
+            "business_status": "not_run",
+            "business_reason": "pending_template_update",
+            "online_status": "not_run",
+            "online_success": false
+          }
+        }
+      ],
+      "unchanged_entry_history_note": "其余项在初始阶段均未执行；当前矩阵仍保留未运行/不适用状态，无需重复其全部结果。初始完整审查亦保留在当时源码历史。"
+    }
+  ],
+  "updated_at": "2026-10-25T09:34:29.939358+00:00",
+  "online_followups": [
+    {
+      "id": "official-cli-bounded-followup-20261025T092432Z",
+      "method": "official_cli",
+      "date": "2026-10-25",
+      "started_at": "2026-10-25T09:24:32.592152+00:00",
+      "completed_at": "2026-10-25T09:25:42.087016+00:00",
+      "source": {
+        "branch": "main",
+        "commit": "a86a63f67f023796023c488b80803acfe78649c2",
+        "cli_version": "0.108.1",
+        "node_version": "24.22.1"
+      },
+      "route": "same_existing_task_remote_main_reload_then_install_and_startup_checks",
+      "controlled_validation_invocation_count": 8,
+      "verified_command_paths": [
+        "agent-config get",
+        "agent-config list",
+        "login",
+        "project list",
+        "workspace list"
+      ],
+      "result": "pass",
+      "authorization_scope": {
+        "metadata_reads": "当前身份可见两个workspace及project/agent-config必要元数据",
+        "authentication": "已有APIkey，仅临时私密本机身份/cache；非device、非pairing",
+        "agent_task_or_configuration_change": "not_run"
+      },
+      "observations": {
+        "workspace_count": 2,
+        "project_counts": [
+          3,
+          2
+        ],
+        "agent_config_counts": [
+          5,
+          4
+        ],
+        "get_result_count": 2,
+        "all_catalog_pages_complete": true,
+        "catalog_freshness": "fresh_no_syncing_marker",
+        "http_response_status_counts": {
+          "200": 82
+        },
+        "observed_401_or_403": false
+      },
+      "diagnostic_observer": {
+        "mechanism": "Node standard diagnostics_channel passive subscription",
+        "requests_modified": false,
+        "fields_only": [
+          "time",
+          "method",
+          "hostname",
+          "http_status",
+          "request_id",
+          "cf_ray",
+          "allowed_error_code_if_present"
+        ],
+        "not_retained": [
+          "body",
+          "query",
+          "raw_request_headers",
+          "raw_response_headers",
+          "raw_stdout",
+          "raw_stderr",
+          "secret_values",
+          "workspace_names_or_ids",
+          "project_names_or_ids",
+          "agent_names_or_ids"
+        ]
+      },
+      "cleanup": {
+        "temporary_identity_and_cache_cleaned": true,
+        "scope": "only this verification private state; not global logout"
+      },
+      "environment_boundary": {
+        "template_updated": false,
+        "new_container_created": false,
+        "same_task_remote_source_reloaded": true
+      },
+      "limits": [
+        "仅覆盖2026-10-25/0.108.1的实际catalog分支及必要元数据，不证明其他flags、workspace、Agent执行或未来版本。",
+        "初始离线状态保留历史；旧探针按用户最新指示忽略，不作为当前验收、待办或阻塞。"
+      ]
     }
   ]
 }

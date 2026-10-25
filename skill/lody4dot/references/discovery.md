@@ -26,6 +26,10 @@ lody mcp list --workspace WORKSPACE_ID --json
 
 支持 `--json` 的查询优先读取结构化结果；保留 stderr 的错误类别，不能把空 stdout 当空目录。各目录的机器、项目等专属数组别名不是新的独立查询。对于 `operation` 等目录不要假定它们也支持 `--all-pages`，查具体帮助。
 
+对0.108.1的`source_verified`核对显示，目录返回`sync.state: syncing`时可能仍退出0；应保留同步状态并等待获准的后续查询，不能把尚未同步的空`items`报告为资源不存在。只有所需范围新鲜、cursor/hasMore已结束且全部页校验通过，才报告完整目录。2026-10-25本次实际project/agent-config列表为fresh且无syncing标记、全部页完成；这不保证其他时间或版本总是如此。
+
+`agent-config list/get`在该版本返回目录摘要，省略env、credentials和prompt；但runConfig中的选项值不能整段回传。只需选择Agent时，优先保留`id/name/machineId/cliType/agentType`及必要的`availability/capabilityStatus`，必要时再取models/modes的`id/name`。`show`默认虽隐藏env值，仍可包含prompt和titleGeneration配置值，并非更小的安全摘要；不为枚举改用`--show-secrets`或完整show输出。
+
 ## 0.107.2 的目录 JSON 兼容
 
 部分目录命令虽退出 0，仍会在完整 JSON 前后向 stdout 输出 `[WORKSPACE_ID] Remote Streams transport attached/detached`。这是已核实的版本行为；会话命令另有 stderr 路由，不能假定所有命令相同。
@@ -47,6 +51,10 @@ lody mcp list --workspace WORKSPACE_ID --json
 - `agent-config get` 和会话创建选项可暴露目标 mode/config option 的 ID、类型和选择。用实际能力值，不从模型名称推导权限模式。
 - Role 不可用时仍可能出现在列表，需读取原因，不能自动换机或换配置。
 - MCP 列表隐藏连接值；已选择或有配置不证明当前 Turn 成功加载。
+
+## 2026-10-25有界官方CLI实测
+
+在main `a86a63f67f023796023c488b80803acfe78649c2`同任务远程重载和初始化后，Node24.22.1/Lody0.108.1的显式已有APIkey临时认证、workspace list、local project catalog list、agent-config list/get通过；仅必要元数据白名单，临时credentials/cache已finally清理。其余命令与参数分支不由此算作通过，具体边界见[逐项矩阵](command-audit.json)。同任务源码重载不是环境模板更新或新容器；旧探针按用户要求忽略，当前以当日官方CLI结果为准。
 
 ## 核验与失败处理
 

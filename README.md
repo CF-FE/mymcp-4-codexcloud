@@ -30,6 +30,8 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 lody4dot 已实现20类70个公开命令导航、受管安装、只读诊断、显式认证和自包含打包。当前帮助快照已按实际CLI更新至`0.108.1`；准备阶段按用户授权解析官方npm latest，源码lock记录精确结果。此前`0.107.2`的Linux真实授权、完整目录与远端Codex Agent创建/继续/持久化结果仍归历史验收，本轮未将其当作新版业务已测。控制端与执行端分别核对，原截图来源及本机Codex只读状态限制继续保留。见[产品方案](docs/lody4dot/plan.md)、[开发契约](docs/lody4dot/development.md)、[验证记录](docs/lody4dot/validation.md)和[任务队列](.codex/agent-state/todo.md)。
 
+2026-10-25已从用户合并后的远程main重新初始化，并用Lody `0.108.1`官方CLI完成临时既有身份验证、workspace及本地项目catalog、Agent配置list/get只读验收；临时身份/缓存已清理，未启动Agent。此结论限定当次版本和日期，后续以实际CLI帮助与响应复核。结果及边界见[当前状态](.codex/agent-state/todo.md#当前环境与下一步)和[逐项审查](docs/lody4dot/cli-command-audit.md)。
+
 正式ref、工作副本、运行观测、readiness及下一步统一维护在[当前环境与下一步](.codex/agent-state/todo.md#当前环境与下一步)，本页不复制发布快照。保存配置、正式发布、实例应用和目标API授权分别取证；发布不会自动把固定commit切到GitHub最新代码。
 
 本项目独立Codex云任务由Dot创建，用户已确认Dot具备权限；云任务加载lody4dot后，通过Lody与其他节点协作并回传结果。云任务不派生Codex云任务，OpenAI任务目录API及其历史401不属于插件前置或项目阻塞；具体交接见[新任务验收](docs/lody4dot/fresh-task-acceptance.md)。

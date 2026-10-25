@@ -2,7 +2,7 @@
   "schema_version": 1,
   "lody_version": "0.108.1",
   "captured_at": "2026-10-25T06:56:46.898431+00:00",
-  "verification_note": "当前help-snapshot为0.108.1实际帮助，help_executed仅表示版本/帮助退出0，不表示登录、目录、任务或发布成功。2026-10-20至21的官网、0.107.2源码和业务记录保留当时版本范围；不能用本轮帮助覆盖其历史含义。",
+  "verification_note": "当前help-snapshot为0.108.1实际帮助，help_executed仅表示版本/帮助退出0，不表示登录、目录、任务或发布成功。2026-10-20至21的官网、0.107.2源码和业务记录保留当时版本范围；不能用本轮帮助覆盖其历史含义。 2026-10-25的有界官方CLI复验另记native-cli-online-followup-20261025，仅5个实际路径，不从帮助或源码升级其余能力。",
   "sources": [
     {
       "id": "cli",
@@ -184,7 +184,7 @@
         "sqlite_store": "99194",
         "token_mask_list": "281326"
       },
-      "note": "静态发布源码审查；API-key分支没有显式远端key/machine创建，不等于已验证服务端全部副作用。本轮未login/配对/设备授权，无新版账户或目录成功证据；无已核实的官方环境token直读或无状态目录入口。"
+      "note": "首次静态审查阶段未执行login；原生APIkey分支副作用结论仍来自source_verified。随后main a86a63f上的有界复验通过显式已有APIkey临时本机身份与目录验证，finally清理；另见native-cli-online-followup-20261025。未验device/pairing、新key或machine注册。"
     },
     {
       "id": "streams-auth-diagnostics-0.108.1",
@@ -207,7 +207,7 @@
         "response_error_body": "45121",
         "undici_diagnostics": "74683/74802"
       },
-      "note": "默认刷新的是短期Streams token，不是新建CLI API key或重新登录；未见CLI覆盖refreshOn403/refreshOnForbidden开关。request ID/cf-ray仅语法过滤，投影可含workspace/room、原始异常可含响应正文，不能自动视为脱敏。本轮未重试线上403，历史拒绝原因仍unknown。"
+      "note": "本条刷新/脱敏结论只属于2026-10-25对0.108.1发布源码的source_verified记录。随后官方CLI有界复验82个HTTP响应均200，未出现401/403；不由静态源码或当前成功推断升级/权限因果。旧探针按用户新指示忽略，不再作为当前待办或阻塞。"
     },
     {
       "id": "public-command-audit-0.108.1",
@@ -215,10 +215,10 @@
       "retrieved_at": "2026-10-25",
       "version_scope": "0.108.1",
       "resource": "command-audit.json",
-      "scope": "70公开业务/分组命令与12个自动help入口的参数、用途、身份/workspace、效果、验证和真实未运行状态；不执行mutation或线上目录。",
+      "scope": "初始离线阶段：70公开业务/分组命令与12个自动help入口的参数、用途、身份/workspace、效果和分层验证；后续五路径有界官方CLI实测另记native-cli-online-followup-20261025。",
       "verification": "help_executed_and_source_verified",
       "source_artifact_sha256": "9c8a160f6c77de765c263558e60d7b94c7293952e2c4d235ed2560f616fa8881",
-      "note": "完整公开树由实际根递归发现后再与旧索引比较，不能由旧70清单证明覆盖。command-audit明确online未运行与模板时序阻点；帮助有临时machine-id写入并已清理。"
+      "note": "本条记录初始离线阶段：实际根递归70业务/分组+12help，临时machine-id已清理。历史pending保留command-audit.audit_history；后续仅5路径有界原CLI通过，其他77项不升级为业务成功。"
     },
     {
       "id": "agent-role-project-relationships",
@@ -244,6 +244,34 @@
         "project_context_selection": "251548-251679"
       },
       "note": "保留0.107.2历史记录。0.108.1同样允许多Role复用machine/config，create保存runConfig为空，update仅name/description/promptPrefix；提议使用auth.machineId本地control host的所属会话而不是字段machineId，不能套用普通远端session派发前提。已保存Role支持多target解析，不扩大CLI create schema；local project须属于Role解析后的最终机器。未核实Project持久Role组，未运行提议/用户保存、项目登记或Role任务。"
+    },
+    {
+      "id": "native-cli-online-followup-20261025",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
+      "retrieved_at": "2026-10-25",
+      "version_scope": "CLI0.108.1/Node24.22.1；main a86a63f67f023796023c488b80803acfe78649c2",
+      "resource": "command-audit.json",
+      "verification": "bounded_official_cli_online_verified",
+      "scope": "09:24:32–09:25:42 UTC；8次受控调用覆盖已有APIkey临时login、workspace list、local project catalog list、agent-config list/get五路径，全部exit0；完整页、必要元数据白名单、临时身份cache清理。",
+      "evidence_scope": {
+        "method": "official_cli",
+        "source_commit": "a86a63f67f023796023c488b80803acfe78649c2",
+        "controlled_validation_invocations": 8,
+        "verified_command_paths": [
+          "agent-config get",
+          "agent-config list",
+          "login",
+          "project list",
+          "workspace list"
+        ],
+        "http_response_status_counts": {
+          "200": 82
+        },
+        "temporary_identity_and_cache_cleaned": true,
+        "template_updated": false,
+        "new_container_created": false
+      },
+      "note": "同任务从远程main重载并初始化，不是环境模板更新或容器重建。未执行key创建、machine配对登记、Agent启动/发送或用户配置变更；不保存具体资源名称/ID和原始输出。2026-10-25当前CLI实测未出现401/403，旧探针不参与当前验收；本条不保证未来版本或未执行命令。"
     }
   ],
   "known_differences": [

@@ -1,6 +1,6 @@
-# Lody CLI逐项离线审查
+# Lody CLI逐项审查与有界线上复验
 
-日期：2026-10-25；实际CLI：`0.108.1`，Node`24.22.1`。本轮只运行版本/帮助，在不含认证材料的私密空状态中重新从根帮助递归发现公开树，再独立对照索引和固定发布源码。
+日期：2026-10-25；实际CLI：`0.108.1`，Node`24.22.1`。初始离线阶段只运行版本/帮助，在不含认证材料的私密空状态中重新从根帮助递归发现公开树，再独立对照索引和固定发布源码。
 
 发现20个一级入口、70个业务/分组命令路径，另验证12个自动生成的帮助入口，共82项。根帮助中的`__internal`与`daemon-runner`明确标为internal，不执行也不纳入公开业务覆盖。默认参数可依执行目录变化，帮助文本哈希不同不自动代表功能变化。
 
@@ -8,7 +8,15 @@
 
 所有82项正确帮助形式均退出0；70个业务/分组项还完成handler路由/前提/效果静态审查。`help_verified`与`source_verified`都不是线上验证。CLI初始化在私密state创建过`machine-id`文件，所有自有临时状态已删除；不宣称帮助零本地写入。
 
-本轮原CLI线上目录复验仍待保存环境模板与固定源码ref更新，当前工具未暴露模板保存API。当前任务Node脚本已实现并验证，新环境采用尚未实测。现有授权已允许枚举身份可见的两个workspace与项目/Agent必要元数据，不再把这一点写成缺许可；尚未指定业务执行目标，不启动任何Agent或项目任务。历史HTTP403未重试，不能泛化为产品限制。
+初始离线审查曾记录pending_template_update，原状态保留在矩阵audit_history。随后用户明确改为提交/push后从远程main重载并初始化，已在同一任务完成下述官方CLI复验；模板API不再是本轮前置。源码重载不代表模板更新或新容器，未指定业务执行目标，也未执行Agent任务。旧探针按用户最新要求忽略，不作当前准据、待办或阻塞。
+
+## 2026-10-25官方CLI有界复验
+
+09:24:32–09:25:42 UTC，来源为main `a86a63f67f023796023c488b80803acfe78649c2`，Node`24.22.1`、CLI`0.108.1`。8次受控验证调用覆盖5个命令路径：`auth.py --login`调用原生login并验证workspace；另一次`workspace list`，以及两个已授权可见workspace各一次local project catalog list、agent-config list和get。全部退出0，观测到82个HTTP响应且状态均200，没有401/403。
+
+项目目录计数分别3/2，Agent配置5/4；两个目录均fresh、无syncing标记、全部页完成，各安全get一次。名称、ID及原始输出仅在外部私密回执，不进入公开Git、技能或测试。这里的“已执行”区分临时本机身份认证和只读元数据；未执行key创建、machine配对登记、Agent发送/启动或用户配置变更，临时credentials/cache已finally清理。
+
+诊断仅使用Node标准diagnostics_channel旁观原CLI连接，不改请求；保留必要time/method/hostname/status/request ID/cf-ray，不保存body、query、原始header或stdout/stderr。5个路径具有明确official_cli回执，其余77项仍仅help/source。Lody独立且快速迭代，本表只说明2026-10-25/0.108.1实际参数与目标范围，不是未来永久规则。
 
 ## 发现的差异与固化
 
@@ -23,22 +31,22 @@
 
 ## 70个公开业务及分组命令
 
-表中“待模板”表示已授权必要元数据查询仍未执行；“未执行”表示本轮仅help/source，变更、发送、身份、启动停止及业务对象操作均不实跑。控制端运行进程条件完整保存在JSON矩阵；不是把执行端前提省略。
+表中“有界通过”仅对应上述官方CLI回执；临时身份认证与只读元数据分开记录。“未执行”表示该项仍仅help/source，不能从其它路径成功推断变更、发送、启动停止或业务目标已可用。控制端运行进程条件完整保存在JSON矩阵；不是把执行端前提省略。
 
 | 命令及参数名 | 用途 | 身份 / workspace | 副作用或前提 | 验证与结果 |
 | --- | --- | --- | --- | --- |
 | `agent-config`<br>`--help` | Manage agent configs | 按路径 / 按路径 | 显示分组帮助，子命令各自审查。 | 帮助0；源码核对；分组 |
 | `agent-config create`<br>`--agent-type` `--workspace` `--machine` `--name` `--description` `--env` `--env-file` `--prompt` `--prompt-file` `--title-config-option` `--json` `--debug` `--help` | Create a new agent config | 需要 / 需要 | 修改目标配置/状态；须另有明确资源与变更授权。 | 帮助0；源码核对；业务未执行 |
 | `agent-config delete`<br>`--workspace` `--json` `--debug` `--help` | Delete an agent config | 需要 / 需要 | 修改目标配置/状态；须另有明确资源与变更授权。 | 帮助0；源码核对；业务未执行 |
-| `agent-config get`<br>`--workspace` `--json` `--offline` `--help` | Read one agent_config by stable id | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；待模板/线上未运行 |
-| `agent-config list`<br>`--workspace` `--offline` `--json` `--debug` `--query` `--limit` `--cursor` `--all-pages` `--machine` `--help` | List readable agent_config resources | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；待模板/线上未运行 |
+| `agent-config get`<br>`--workspace` `--json` `--offline` `--help` | Read one agent_config by stable id | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；有界只读通过 |
+| `agent-config list`<br>`--workspace` `--offline` `--json` `--debug` `--query` `--limit` `--cursor` `--all-pages` `--machine` `--help` | List readable agent_config resources | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；有界只读通过 |
 | `agent-config refresh-capabilities`<br>`--workspace` `--machine` `--json` `--jsonl` `--debug` `--help` | Refresh ACP capabilities for an agent config on the current machine | 需要 / 需要 | 修改目标配置/状态；须另有明确资源与变更授权。 | 帮助0；源码核对；业务未执行 |
-| `agent-config show`<br>`--show-secrets` `--workspace` `--json` `--debug` `--help` | Show an agent config; environment values are hidden by default | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；待模板/线上未运行 |
+| `agent-config show`<br>`--show-secrets` `--workspace` `--json` `--debug` `--help` | Show an agent config; environment values are hidden by default | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；本次未复验 |
 | `agent-config update`<br>`--workspace` `--name` `--description` `--env` `--env-file` `--unset-env` `--prompt` `--prompt-file` `--title-config-option` `--clear-title-generation` `--json` `--debug` `--help` | Update an existing agent config | 需要 / 需要 | 修改目标配置/状态；须另有明确资源与变更授权。 | 帮助0；源码核对；业务未执行 |
 | `agent-role`<br>`--help` | Inspect Agent Roles and propose creations or updates | 按路径 / 按路径 | 显示分组帮助，子命令各自审查。 | 帮助0；源码核对；分组 |
 | `agent-role create`<br>`--file` `--name` `--description` `--prompt-prefix` `--session` `--workspace` `--request-id` `--json` `--debug` `--machine-id` `--agent-config-id` `--help` | Propose an Agent Role create; save the review card in Lody to apply it | 需要 / 需要 | 提议经当前身份机器本地control socket调用所属会话，需有效本机host/Desktop或daemon；目标machineId不是提议执行机。只生成确认卡片，用户保存才生效。 | 帮助0；源码核对；业务未执行 |
-| `agent-role get`<br>`--workspace` `--json` `--offline` `--help` | Read one agent_role by stable id | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；待模板/线上未运行 |
-| `agent-role list`<br>`--workspace` `--offline` `--json` `--debug` `--query` `--limit` `--cursor` `--all-pages` `--machine` `--help` | List readable agent_role resources | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；待模板/线上未运行 |
+| `agent-role get`<br>`--workspace` `--json` `--offline` `--help` | Read one agent_role by stable id | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；本次未复验 |
+| `agent-role list`<br>`--workspace` `--offline` `--json` `--debug` `--query` `--limit` `--cursor` `--all-pages` `--machine` `--help` | List readable agent_role resources | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；本次未复验 |
 | `agent-role update`<br>`--file` `--name` `--description` `--prompt-prefix` `--session` `--workspace` `--request-id` `--json` `--debug` `--help` | Propose an Agent Role update; save the review card in Lody to apply it | 需要 / 需要 | 提议经当前身份机器本地control socket调用所属会话，需有效本机host/Desktop或daemon；不是普通远端session派发路线。 | 帮助0；源码核对；业务未执行 |
 | `app`<br>`--workspace` `--json` `--debug` `--help` | Open the Lody desktop app on a new chat with a local directory selected (registers it if needed) | 需要 / 需要 | 根命令有真实action：登录后尝试登记本机项目并打开桌面/链接；不是只有分组帮助。 | 帮助0；源码核对；业务未执行 |
 | `app reset-cache`<br>`--hard` `--cancel` `--json` `--debug` `--help` | Clear the desktop app's local cache on its next launch (use when its window is frozen) | 不需要 / 不需要 | 写下次启动清理请求；--hard清除本地数据/登录，--cancel仅撤未应用请求，不是立即清理完成。 | 帮助0；源码核对；业务未执行 |
@@ -51,11 +59,11 @@
 | `export`<br>`--workspace` `--all-workspace` `--no-images` `--offline` `--debug` `--help` | Export user-facing workspace session data | 需要 / 需要 | 即使--offline仍需身份和workspace；只跳过前置Loro同步，默认图片下载与usage查询仍可能联网。会写导出文件，无需已有本机daemon。 | 帮助0；源码核对；业务未执行 |
 | `feedback`<br>`--stdin` `--json` `--debug` `--help` | Send product feedback with account identity and basic CLI/OS information | 需要 / 不需要 | 发送反馈正文、账号身份及基本CLI/OS信息，是外部发送动作。 | 帮助0；源码核对；业务未执行 |
 | `github`<br>`--help` | Manage GitHub repositories linked to a workspace | 按路径 / 按路径 | 显示分组帮助，子命令各自审查。 | 帮助0；源码核对；分组 |
-| `github list`<br>`--workspace` `--json` `--debug` `--help` | List GitHub repositories linked to a workspace | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；待模板/线上未运行 |
-| `login`<br>`--debug` `--machine-name` `--auth` `--help` | Login to Lody using device authorization flow or an API key | 不需要 / 不需要 | API-key路径校验已有key并保存本机machine-id/credentials；device流程会创建远端CLI key，pairing会exchange，不能混入临时本地身份许可。 | 帮助0；源码核对；业务未执行 |
+| `github list`<br>`--workspace` `--json` `--debug` `--help` | List GitHub repositories linked to a workspace | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；本次未复验 |
+| `login`<br>`--debug` `--machine-name` `--auth` `--help` | Login to Lody using device authorization flow or an API key | 不需要 / 不需要 | API-key路径校验已有key并保存本机machine-id/credentials；device流程会创建远端CLI key，pairing会exchange，不能混入临时本地身份许可。 | 帮助0；源码核对；有界临时认证通过 |
 | `logout`<br>`--debug` `--help` | Logout from Lody and clear saved authentication | 按路径 / 不需要 | 仅清除本机保存身份；该路径未撤销服务端key，不可报告远端凭据已作废。 | 帮助0；源码核对；业务未执行 |
 | `machine`<br>`--help` | Inspect registered machines | 按路径 / 按路径 | 显示分组帮助，子命令各自审查。 | 帮助0；源码核对；分组 |
-| `machine list`<br>`--query` `--limit` `--cursor` `--all-pages` `--workspace` `--online-only` `--online-status` `--json` `--include-acp-capabilities` `--include-agents` `--debug` `--help` | List machines in a workspace | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；待模板/线上未运行 |
+| `machine list`<br>`--query` `--limit` `--cursor` `--all-pages` `--workspace` `--online-only` `--online-status` `--json` `--include-acp-capabilities` `--include-agents` `--debug` `--help` | List machines in a workspace | 需要 / 需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；本次未复验 |
 | `mcp`<br>`--help` | Manage workspace MCP servers | 按路径 / 按路径 | 显示分组帮助，子命令各自审查。 | 帮助0；源码核对；分组 |
 | `mcp add`<br>`--workspace` `--json` `--debug` `--offline` `--command` `--arg` `--env` `--env-passthrough` `--url` `--bearer-token` `--header` `--description` `--default` `--no-default` `--help` | Add a workspace MCP server | 需要 / 需要 | 写workspace MCP配置；JSON回执可能包含connection中的bearer/header/env原值，不保证脱敏。独立manager无需现有本机daemon。 | 帮助0；源码核对；业务未执行 |
 | `mcp list`<br>`--workspace` `--offline` `--json` `--debug` `--query` `--limit` `--cursor` `--all-pages` `--help` | List readable mcp resources | 需要 / 需要 | 业务只读目录路线使用独立workspace manager，不要求已有本机daemon；仍可能写本地cache并经历正常Streams连接/短期token刷新。 | 帮助0；源码核对；业务未执行 |
@@ -67,7 +75,7 @@
 | `project`<br>`--help` | Manage local projects | 按路径 / 按路径 | 显示分组帮助，子命令各自审查。 | 帮助0；源码核对；分组 |
 | `project add`<br>`--workspace` `--all-workspaces` `--json` `--debug` `--help` | Add a local project directory | 需要 / 按路径 | 只登记当前机器目录，必须本机daemon/control host可达；不迁移代码或登记远端目录。 | 帮助0；源码核对；业务未执行 |
 | `project delete`<br>`--json` `--debug` `--help` | Delete local projects | 需要 / 按路径 | 必须本机daemon/control host可达且有交互TTY；删除项目登记，影响对象先确认。 | 帮助0；源码核对；业务未执行 |
-| `project list`<br>`--query` `--limit` `--cursor` `--all-pages` `--workspace` `--machine` `--kind` `--catalog` `--json` `--debug` `--help` | List local projects | 需要 / 按路径 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；待模板/线上未运行 |
+| `project list`<br>`--query` `--limit` `--cursor` `--all-pages` `--workspace` `--machine` `--kind` `--catalog` `--json` `--debug` `--help` | List local projects | 需要 / 按路径 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；有界只读通过 |
 | `review`<br>`--repo` `--output` `--no-open` `--help` | Render a .review.md into a self-contained HTML review and open it | 不需要 / 不需要 | 无file时给指南；有file时读取Git/审查输入、可下载Viewer、写HTML并默认打开浏览器；不需Lody账号。 | 帮助0；源码核对；业务未执行 |
 | `review prompt`<br>`--help` | Print the Code Review prompt that teaches an agent to write a .review.md | 不需要 / 不需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；业务未执行 |
 | `schedule`<br>`--help` | Manage scheduled tasks. The target machine daemon owns execution. | 按路径 / 按路径 | 显示分组帮助，子命令各自审查。 | 帮助0；源码核对；分组 |
@@ -96,7 +104,7 @@
 | `start`<br>`--machine-name` `--cli-types` `--debug` `--heartbeat-log` `--auth` `--help` | Start agent service in native mode | 按路径 / 按路径 | 启动前台host；cloud缺身份时可能进入device授权，不能当只读健康检查或仅查询版本。 | 帮助0；源码核对；业务未执行 |
 | `sync`<br>`--workspace` `--all-workspace` `--concurrency` `--json` `--jsonl` `--debug` `--help` | Sync workspace Loro data to the local cache | 需要 / 需要 | 写本地工作区cache，并进行网络同步；独立manager无需已有本机daemon。 | 帮助0；源码核对；业务未执行 |
 | `workspace`<br>`--help` | Manage workspaces | 按路径 / 按路径 | 显示分组帮助，子命令各自审查。 | 帮助0；源码核对；分组 |
-| `workspace list`<br>`--json` `--debug` `--help` | List accessible workspaces | 需要 / 不需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；待模板/线上未运行 |
+| `workspace list`<br>`--json` `--debug` `--help` | List accessible workspaces | 需要 / 不需要 | 只读业务意图；正常认证/连接可刷新短期token，workspace manager可能写本地cache/SQLite，不承诺零底层写入。 | 帮助0；源码核对；有界只读通过 |
 
 ## 12个内置帮助入口
 
@@ -119,6 +127,6 @@
 
 ## 后续验证边界
 
-模板保存并核实采用本轮初始化脚本后，只在已有授权范围用原CLI复验workspace与必要项目/Agent元数据；保留实际退出码及脱敏HTTP状态/error/request ID/time/domain，未提供字段记not_available。不会为填满表格自动跑创建/修改/删除、发消息、调度、启停服务或密钥管理。没有明确会话/业务目标的读取也不擅自进行。
+当前只承认上述日期、版本、参数和授权范围内的官方CLI回执；后续Lody迭代或新目标按当时实际帮助与结果核对。保留实际退出码及必要脱敏HTTP元数据，未提供字段记not_available；不会为填满表格自动跑创建/修改/删除、发消息、调度、启停服务或密钥管理。没有明确会话/业务目标的读取也不擅自进行。
 
-HTTP探针与原CLI目录是不同证据；缺模板API、服务拒绝和未知原因分别记录，不造资源、不换身份、不绕过代理/TLS，也不将旧403写成产品通用结论。当前表格不宣称online_success。
+当前以2026-10-25的0.108.1官方CLI实测为准；旧探针忽略，不继续诊断或列为阻塞。矩阵仅五条有明确有界回执的路径标记online_success，其它77项保持未执行；不造资源、不换身份、不绕过代理/TLS。
