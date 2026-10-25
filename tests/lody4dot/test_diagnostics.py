@@ -22,6 +22,12 @@ import auth
 
 
 class DiagnosticTests(unittest.TestCase):
+    def setUp(self):
+        # These fixtures model Linux runtime behavior; OS refusal has separate tests.
+        linux_platform = patch.object(sys, "platform", "linux")
+        linux_platform.start()
+        self.addCleanup(linux_platform.stop)
+
     def capture(self, module, args):
         output, errors = io.StringIO(), io.StringIO()
         with redirect_stdout(output), redirect_stderr(errors):
@@ -115,7 +121,7 @@ class DiagnosticTests(unittest.TestCase):
 
     def test_receipts_report_plugin_and_runtime_versions_independently(self):
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             prefix, version, digest = self.managed_fixture(root)
             bundle = self.bundle_fixture(root)
             with patch.object(doctor, "__file__", str(bundle / "scripts/doctor.py")), \
@@ -133,7 +139,7 @@ class DiagnosticTests(unittest.TestCase):
 
     def test_source_checkout_without_build_receipt_is_not_an_installation_failure(self):
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             prefix, _, _ = self.managed_fixture(root)
             bundle = self.bundle_fixture(root, receipt=False)
             with patch.object(doctor, "__file__", str(bundle / "scripts/doctor.py")), \
@@ -147,7 +153,7 @@ class DiagnosticTests(unittest.TestCase):
 
     def test_source_hash_mismatch_is_reported_without_changing_legacy_cli_scope(self):
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             prefix, version, _ = self.managed_fixture(root)
             bundle = self.bundle_fixture(root)
             (version / "package-lock.json").write_text('{"changed":true}')
@@ -163,7 +169,7 @@ class DiagnosticTests(unittest.TestCase):
 
     def test_onboarding_skill_hash_is_checked_without_changing_legacy_scope(self):
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             bundle = self.bundle_fixture(root)
             name = "skills/lody4dot-setup/SKILL.md"
             setup = bundle / name
@@ -182,7 +188,7 @@ class DiagnosticTests(unittest.TestCase):
 
     def test_invalid_provenance_cannot_read_outside_bundle_or_echo_arbitrary_fields(self):
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             prefix, _, _ = self.managed_fixture(root)
             bundle = self.bundle_fixture(root)
             (root / "private.json").write_text("fixture-private-material")
@@ -210,7 +216,7 @@ class DiagnosticTests(unittest.TestCase):
 
     def test_deep_optional_receipt_does_not_replace_primary_failure_or_drop_json(self):
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             bundle = self.bundle_fixture(root)
             (bundle / ".lody4dot-build.json").write_text("[" * 10000 + "0" + "]" * 10000)
             with patch.object(doctor, "__file__", str(bundle / "scripts/doctor.py")), \
@@ -223,7 +229,7 @@ class DiagnosticTests(unittest.TestCase):
 
     def test_fifo_managed_metadata_is_rejected_without_reading_it(self):
         with tempfile.TemporaryDirectory() as temporary:
-            prefix = Path(temporary)
+            prefix = Path(temporary).resolve()
             marker = prefix / ".lody4dot-managed.json"
             os.mkfifo(marker)
             # A regular-file guard must reject the FIFO before any blocking open.
@@ -241,7 +247,7 @@ class DiagnosticTests(unittest.TestCase):
 
     def test_deep_managed_receipt_is_a_missing_runtime_not_an_uncaught_error(self):
         with tempfile.TemporaryDirectory() as temporary:
-            prefix, version, _ = self.managed_fixture(Path(temporary))
+            prefix, version, _ = self.managed_fixture(Path(temporary).resolve())
             (version / "receipt.json").write_text("[" * 10000 + "0" + "]" * 10000)
             with self.assertRaises(common.ToolError) as caught:
                 common.installed_cli(prefix)
@@ -249,7 +255,7 @@ class DiagnosticTests(unittest.TestCase):
 
     def test_source_receipt_rejects_sensitive_named_members_before_reading(self):
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             bundle = self.bundle_fixture(root)
             sensitive = bundle / "skills/lody4dot/references/credentials.json"
             sensitive.parent.mkdir(parents=True)
@@ -632,7 +638,7 @@ class DiagnosticTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as base, patch.dict(os.environ, {}, clear=True):
             with self.assertRaises(common.ToolError):
                 common.state_directory(None)
-            path = Path(base) / "state"
+            path = Path(base).resolve() / "state"
             self.assertEqual(common.state_directory(str(path), create=True), path)
             self.assertEqual(path.stat().st_mode & 0o777, 0o700)
             path.chmod(0o755)
@@ -642,7 +648,7 @@ class DiagnosticTests(unittest.TestCase):
 
     def test_managed_cli_rejects_external_pointer(self):
         with tempfile.TemporaryDirectory() as directory:
-            prefix = Path(directory)
+            prefix = Path(directory).resolve()
             (prefix / ".lody4dot-managed.json").write_text('{"schema_version":1,"owner":"lody4dot"}')
             (prefix / "current").symlink_to("/tmp")
             with self.assertRaises(common.ToolError) as caught:

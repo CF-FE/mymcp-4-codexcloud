@@ -494,9 +494,74 @@ ZIP SHA-256为`e87dd9aaafb2b8459c6b024cf5bac4cdb1aa875b9b1ec1a8a8de24a91c6674fa`
 
 脱敏结果及日志在忽略的`dist/lody4dot-publish-current-*`、`dist/lody4dot-publish-preflight.json`和`dist/lody4dot-publish-source-correction.json`。正式来源、草稿与后续动作统一见[当前环境与下一步](../../.codex/agent-state/todo.md#当前环境与下一步)，源修正发布后仍需按实际新任务/宿主分别验收。
 
+## spec17来源升级生效与启动复查
+
+2026-10-21，用户再次发布后，实际spec/observed17、observations_current=true、running/connected且failure=null；正式ref为0a044f14622902b6d8d93418338df2251b7a38f8/0.2.5，无草稿和pending要求。network enforced、LODY_CLI_TOKEN及GITEE_ACCESS_TOKEN ready，进程LODY变量存在性为true；未输出值。正式install/start与该提交文件逐字一致。本轮起始checkout同ref且干净，ff-only拉取无更新。
+
+已实际读取`.codex/cloud-start.md`、`skill/lody4dot/SKILL.md`及`references/setup-cloud.md`，入口来自已有会话上下文与仓库检索，不证明平台首次送达。运行保存入口的`bootstrap.py --repair-missing --json`退出0，步骤仅doctor、status=pass；插件清单观测0.2.5，CLI0.107.2，runtime锁b1baf3ab…来源consistent。bundle收据在源码checkout中not_provided，不称包已复验；install未运行、reused未填写，authentication/daemon/task_recovery均not_run。132回归和完整prepare沿用上一轮对相同软件源码的实际结果，本轮只做启动及文档检查。
+
+据此关闭“0.2.5正式来源升级待发布”子门槛；原生ZIP安装/setup仍是未验候选，独立新任务首次读取和Dot实际调用未取得。当前工具目录无create_thread/chatgptWorkCloud，不创建下游Codex任务或查询OpenAI任务目录，不做新的Lody认证/模型回合、资料读写或Dot中转验证。内核boot摘要较spec16不同，只记内核上下文变化，不推断VM身份或磁盘重建。
+
+本轮仅同步唯一队列和本记录，不改变源码/锁或环境配置，不为记录提交再次固定ref、保存草稿或要求发布。静态方案、任务卡和现有验收流程已足够复用；C05/C08剩余项/C09/C10及旧T09/T12的证据门槛保持。脱敏启动结果在忽略的`dist/lody4dot-spec17-startup.json`，来源与状态摘要在`dist/lody4dot-spec17-summary.json`；当前状态统一见[任务队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
+
+## 剩余工作与执行前提复核
+
+2026-10-21，从干净37c6910拉取无更新。两份独立只读复核对照C任务、安装器/21项安装测试和Role/Project已核实源码：已有真实首装/同锁复用，失败保护另有fixture；runtime锁仅f566f6c起的一套b1baf3ab…，当前versions也只有该目录。若验收C10跨runtime升级失败/回退分支，尚缺第二套已复核输入，不由插件知识版本或伪造锁变化替代；任务卡原位明确条件，保留主方案已有安装入口/宿主接入材料回退，不给所有路线追加CLI版本门槛。未执行新安装或升级。
+
+Agent配置、Role与Project的已有核实无需重做；原configuration参考尚未完整携带多Role复用、Project非已证实持久角色分组及当前身份机器提议路由三点，可作为下一步C02最小知识增量。本轮仅定位，未修改随包技能、发新版本或写远端配置；真实提议/用户保存、项目登记和执行仍分别验收。任务卡旧“本轮正式0.2.1”副本已改为唯一状态链接，C05/C08/C09/C10状态未因这次复核关闭。
+
+最新元数据为spec/observed19且current=true、running/connected、failure=null，网络/变量state均unknown；正式来源仍0a044f1/0.2.5，无草稿与pending要求。spec17的ready保留历史，不推断凭证失效或重复配置。未做新的依赖/认证/模型/资料请求，未查OpenAI任务目录或重验Dot中转；正式环境无需为这些记录再次发布。当前状态仍见[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
+
+## Role与Project知识0.2.6候选
+
+2026-10-21，用户要求按建议推进Role/Project随包知识。干净a9852a2上ff-only拉取无更新；复用前述关系核实，对实际安装的官方0.107.2发布源码做两份独立只读复核，原位补`configuration.md`和`sources.json`，候选版本为0.2.6。多Role可复用machine/config，提议字段中的machineId不选择CLI调用机器；Project是会话上下文，尚未核实持久角色组，不扩大否定其他版本/UI。未新增角色组织服务、绑定契约或重复索引。
+
+| 验证 | 实际结果与边界 |
+| --- | --- |
+| 仓库回归 | 132项Linux测试、结构及差异检查通过；不把已有macOS失败记录改为通过，也不扩大runtime支持。 |
+| 自包含分发 | builder收集31内容文件加receipt，ZIP32文件、120396字节；CRC、每文件摘要、receipt及移位解包内容一致。移位离线bootstrap退出0且仅doctor，插件0.2.6、bundle/runtime consistent；install/authentication/daemon/task_recovery均not_run，未填写reused，子进程不转发LODY/GITEE变量。 |
+| 同配置双Role目标 | 新上下文自主读核心、配置/发现/会话与帮助快照，复用同一配置而不复制凭证；将角色提议的实际宿主/会话工具与普通远端派发分开，并保留用户保存、M端项目登记及分层结果核验。未把Project持久角色组当已确认能力。 |
+| 提议未保存目标 | 新上下文明确卡片成功不代表角色生效，0.107.2 create初始runConfig为空、update只支持三项文字字段；不编造model/mode写入参数或保证未知UI，先保存并查询，再按真实入口核验配置及执行条件。 |
+| 跨机项目目标 | 新上下文识别R绑定M而P属于K的冲突，不能用额外machine参数绕过Role覆盖；保留M时须在M准备并登记实际项目，不能把新项目冒称K上的原P；若更换目标需单独确认支持入口与目标变化。 |
+
+以上三项是同一执行环境中从显式最终包入口开始的知识选择演练，不是平台自动发现、独立新任务或Dot原生调用。包ZIP SHA-256为`1ecb92fea6ac54b559e4bace871eab07298efe325f961440368caf241adbfdab`，receipt为`2ad1f37ef0c9277b9dea343e30ad8eb950c240890285acabd303f762cff9fd37`。与0.2.5相比，仅清单版本、随包README、configuration及sources内容和receipt变化；31个内容文件的其余部分相同。0.2.5原ZIP（fc615264…）与0.2.4/0.2.3/0.2.2/0.2.1原摘要均保持，旧验证记录保留。
+
+Python工具、CLI/runtime锁、核心技能、setup、命令索引、帮助快照和云脚本均无变更。正式来源仍0a044f1/0.2.5，无草稿；运行元数据spec21/current=true、running/connected，网络/变量state均unknown。没有角色提议/保存、项目登记、真实Lody业务或模型回合，没有Dot资料重验、OpenAI目录查询、下游Cloud任务、环境变更或发布请求；不从本次知识实施推导配置写入授权。C05/C08剩余项/C09/C10、C04真实平台与旧T09/T12继续按实际证据验收。
+
+忽略目录保留`dist/lody4dot-0.2.6-{regression.log,package-summary.json,bootstrap.json,knowledge-scenarios.json,doc-checks.json}`及ZIP，公开只记录脱敏范围。当前状态仍由[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)维护，不再建立方案或进度副本。
+
+## 离线ZIP命令与0.2.7候选
+
+2026-10-21用户明确先固化离线ZIP、再修正测试夹具。P1在原builder增加可选`--zip PATH`，默认目录构建结果和退出码保留；CLI请求ZIP时才附加archive路径、文件数、字节数、ZIP/收据SHA及验证说明。目标一律新建，预检已存在路径/源码或输出重叠，暂存ZIP通过CRC、收据和逐文件摘要后以不覆盖方式发布。目录可在ZIP后续失败时保留，不承诺两输出共同原子提交；未建立新分发服务或发布动作。
+
+独立上下文先补失败用例；原15构建测试增加11项至26，覆盖默认兼容、完整根目录/隐藏清单、已有/修改ZIP及其他目标保护、父路径冲突、源码/输出重叠、发布竞争、校验/发布失败清理、坏源拒绝和epoch时间戳。CRC有效但内容或收据被改会拒绝；收据为合法JSON列表的异常先复现再修正。复审另复现epoch0抛ValueError，增加回归并用ZIP格式的时间范围规范化解决，不改变文件内容摘要。最终143项Linux全量、结构和差异检查通过，独立复审通过。
+
+真实源码CLI生成31内容加收据、32文件ZIP，初次产物120935字节，SHA-256为`3f657cad61ec55808791c46d02c70580301fc6a5f9ad102f1dab6758d020669b`；重复同路径请求实际退出3，ZIP未变。复审后最终CLI另生成`lody4dot-0.2.7-post-review.zip`，SHA为`86ef6f9a8559871d71250ec4adaf4b281e46f86c548ec922e516419a9bda3c1a`，所有entry内容与初次产物逐字节相同；ZIP头时间戳可随构建变化，不承诺两次整包字节确定性。收据SHA均为`71070cc6c85e6e1024b333f1977a90b8cf6f90e260a78abb89b7a1c134f13b2e`，CRC与逐文件摘要独立核对通过。
+
+移位解包后离线bootstrap退出0、仅doctor，插件0.2.7、bundle/runtime consistent；未转发LODY/GITEE变量，install/authentication/daemon/task_recovery均not_run。同锁CLI0.107.2，未升级或重装。0.2.6至0.2.1六份原ZIP摘要全部不变，源码builder继续不随包，随包Python工具、知识、schema1、依赖锁及云脚本未改；原生安装/加载、真实平台或Lody业务证据未新增。
+
+忽略目录保留`dist/lody4dot-0.2.7-{build-result.json,post-review-result.json,repeat-result.json,package-summary.json,p1-regression.log,bootstrap.json,prior-packages.json}`和两份ZIP；当前正式来源/状态仅见[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)。本项完成的是C05离线分发子范围，不关闭C05加载、C04真实平台、C08剩余恢复、C09/C10或旧T09/T12；P2夹具修正随后单独实施。
+
+## 离线测试夹具的宿主依赖修订
+
+2026-10-21，P2基于已推送2bc188d/0.2.7单独实施。生产Linux平台判断与安全路径检查符合现有契约，具体缺口在测试：自有临时根经符号链接别名进入祖先或私密state拒绝，部分Linux后端语义用例未声明模拟平台，在Darwin条件下提前返回unsupported。先保留失败记录，再仅修正install、diagnostics、CLI版本策略和lifecycle四组夹具：规范化自有临时基础根，实例级Linux平台补丁注册清理；故意传入的坏路径和生产guard不改。
+
+定向三组67项先通过；全量整合再复现生命周期组7个提前退出失败，增加同类平台声明后消除。最终在当前Linux机器的独立子进程中验证：
+
+| 条件 | 最终结果 | 证据范围 |
+| --- | --- | --- |
+| 普通Linux | 143项，无失败/错误/跳过 | 全量回归，含26项构建测试及原真实Linux文件锁用例 |
+| Linux＋符号链接TMPDIR | 143项，无失败/错误/跳过 | 别名临时根不再干扰正确输入；故意输入的符号链接仍拒绝 |
+| 模拟Darwin | 143项，无失败/错误，跳过1项 | 只修改测试进程的sys.platform；原Linux专用文件锁装饰器按既有规则跳过 |
+| 模拟Darwin＋符号链接TMPDIR | 143项，无失败/错误，跳过1项 | 两个已知夹具条件的组合；并非真实Darwin运行 |
+
+独立审查以AST对比四模块75个测试名称、所有原assert调用和skip装饰器，均未变；平台补丁在每个实例结束恢复。原独立Win32/Darwin不支持测试、权限拒绝、私密state及显式符号链接拒绝均保留，未用mock绕过生产检查。结构、引用及差异检查通过；生产脚本、平台支持测试、技能、云脚本、CLI锁和插件版本未改，0.2.7已有ZIP字节不变，因此不另生成候选包。
+
+本轮是Linux上的夹具条件模拟，不证明真实macOS、WSL或Windows受管runtime；此前真实macOS失败按原记录保留。没有认证、daemon、模型/业务调用、资料保存、平台任务创建或原生加载，C04真实安装及C05/C08/C09/C10未由本轮关闭。忽略目录保留`dist/lody4dot-p2-fixture-red.json`、`dist/lody4dot-0.2.7-p2-regression.log`、`dist/lody4dot-0.2.7-fixture-matrix.json`及对应条件日志；首次生命周期失败另存`*-before-lifecycle.*`，不覆盖成成功。当前状态只维护[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
+
 ## 2026-10-25当前任务升级与latest准备策略
 
-本次在Dot已创建的现有任务继续，初始checkout为用户指定的`0a044f14622902b6d8d93418338df2251b7a38f8`。最初仓库结构、132项测试、已有0.107.2受管运行时的prepare与启动检查通过，工作区当时干净；随后用户明确授权当前环境Node/CLI升级、仓库latest准备策略及按新CLI完善技能。以下升级结果不改写此前正式发布、spec16或旧0.107.2任务验收。
+本次在Dot已创建的现有任务继续，初始checkout为用户指定的`0a044f14622902b6d8d93418338df2251b7a38f8`。最初仓库结构、132项测试、已有0.107.2受管运行时的prepare与启动检查通过，工作区当时干净；随后用户明确授权当前环境Node/CLI升级、仓库latest准备策略及按新CLI完善技能。下表记录首次升级完成、尚未取得模板保存授权时的观测，不改写此前正式发布或旧0.107.2任务验收；后续命令审查与保存步骤另见下节。
 
 | 检查 | 本轮实际结果与范围 |
 | --- | --- |
@@ -509,7 +574,25 @@ ZIP SHA-256为`e87dd9aaafb2b8459c6b024cf5bac4cdb1aa875b9b1ec1a8a8de24a91c6674fa`
 | 最终回归 | 完整`.codex/cloud-install.sh`退出0：结构`mcp=1 skill=2 plugin=1`、150项测试、latest准备及离线inspect全部通过。启动`--repair-missing`仅doctor退出0；真实自包含构建31内容文件加receipt通过。认证、daemon、目录与业务恢复均not_run。 |
 | 发布边界 | 变更只在本任务工作副本与自有工具目录，保存环境模板/固定ref未更新或发布；没有部署、原生插件注册、远端身份创建、Cloud下游任务或代码提交。 |
 
-当前帮助快照SHA-256为`f759b8673818607597b8d3870bf7454164dd89e185e611df921742604cf42494`。0.107.2历史源码、完整目录、远端session/turn与产物证据仍按各自版本记录；当前帮助和本地依赖通过不证明新版身份、目录、执行能力或新任务会采用本轮源码。本任务脱敏回执位于`/workspace/mymcp-initialization-20261025-236tp3x1/upgrade/`，依赖、缓存、登录态和运行生成物不入源码包。
+首次升级采集的帮助快照（任务回执）SHA-256为`f759b8673818607597b8d3870bf7454164dd89e185e611df921742604cf42494`；后续递归帮助修订以随包快照与全量矩阵为准。0.107.2历史源码、完整目录、远端session/turn与产物证据仍按各自版本记录；当前帮助和本地依赖通过不证明新版身份、目录、执行能力或新任务会采用本轮源码。本任务脱敏回执位于`/workspace/mymcp-initialization-20261025-236tp3x1/upgrade/`，依赖、缓存、登录态和运行生成物不入源码包。
+
+## 2026-10-25全量命令审查与模板保存准备
+
+用户随后授权保存更新现有模板，并要求新版CLI全部命令逐项复核、有差异固化到技能；模板更新后允许既有API key的临时私密身份及必要目录缓存，复验后清理。当前任务未提供Codex保存环境配置读写接口，线上复验的阻点是模板保存时序，不是缺身份写入许可或已发生登录失败。
+
+保存源码以原指定ref为基点，合入远程`main`截至`7b25a7e94f9c0cbd27a3244fa49f0c2c5e7780c9`的5项提交；保留0.2.6 Role/Project知识、0.2.7 ZIP与夹具修复，没有用旧基点覆盖main。保存分支为`chore/lody-latest-cloud-20261025`，最终提交/远程核验由交付回执记录；Git分支保存不等于模板ref已修改。
+
+| 检查 | 实际结果与边界 |
+| --- | --- |
+| 全量CLI发现 | 从当前0.108.1根帮助独立递归取得20类、70业务/分组路径，再核对12个自动help入口，共82项正确帮助退出0；根帮助与版本也通过。内部入口未执行。逐项参数、身份、workspace、效果、方法与结果见[审查矩阵](cli-command-audit.md)。 |
+| 形式与副作用差异 | `lody help --help`退出1的失败证据保留；正确help入口通过。帮助会在隔离state创建machine-id，目录已清理；没有写登录凭据或注册远端机器。14条索引前提及对应参考已修正，help/source不冒称线上通过。 |
+| 可复现Node准备 | 新增仓库`scripts/prepare_cloud_node.py`，固定官方Node24.22.1 Linux x64归档与已核实SHA256，兼容旧受管回执，精简探测环境并隔离npm配置，失败保留旧入口。16项离线回归通过，含checksum/probe/解压硬链接路径/清理/激活失败；真实空临时前缀下载、校验、安装及Node/npm探测通过并清理，当前受管前缀真实复用通过。仅本任务测试，未创建新环境。 |
+| 合并后完整初始化 | 实际`.codex/cloud-install.sh`退出0：受管Node复用、结构`mcp=1 skill=2 plugin=1`、179项测试、CLI latest准备与离线inspect通过；实际Node24.22.1、npm11.19.1、Lody0.108.1。 |
+| 夹具保留 | 合并后安装/回滚32项与ManagedNode5项在普通Linux、别名临时路径、模拟Darwin及组合条件各37项全通过；模拟条件不是真实macOS支持。 |
+| 启动及分发 | `bootstrap --repair-missing`退出0且仅doctor；真实自包含构建32内容文件加receipt，33文件ZIP的CRC与收据摘要通过，ZIP SHA256为`b522c55d21af896c03103daace2ce70ee3f222c276018ad6bb073736cd18177a`。包内离线bootstrap退出0且仅doctor，来源一致；未安装注册原生插件。 |
+| 模板及线上状态 | 目标模板读取/更新未尝试，原因是本端无对应受支持接口，非拒绝或不确定写入。用父级管理接口或同一环境设置保存最终已推送ref及install/start入口后须回读；不修改凭据、网络安全，不另建任务验证。原CLI登录/目录403及业务命令本轮线上实测为0，状态pending_template_update；旧403原因仍unknown。 |
+
+本轮完整记录在任务外部`upgrade/template-save/`回执目录；源码仅提交工具、技能、审查输入和测试，不提交依赖缓存、ZIP或身份。新环境实际采用、模板正式版本、生效实例、认证与目录结果继续分项取证；保存准备完成不提前标记这些项成功。
 
 ## 复现命令
 

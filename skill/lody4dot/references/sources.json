@@ -219,6 +219,31 @@
       "verification": "help_executed_and_source_verified",
       "source_artifact_sha256": "9c8a160f6c77de765c263558e60d7b94c7293952e2c4d235ed2560f616fa8881",
       "note": "完整公开树由实际根递归发现后再与旧索引比较，不能由旧70清单证明覆盖。command-audit明确online未运行与模板时序阻点；帮助有临时machine-id写入并已清理。"
+    },
+    {
+      "id": "agent-role-project-relationships",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz",
+      "retrieved_at": "2026-10-21",
+      "version_scope": "0.107.2",
+      "scope": "AgentRoleCreateProposalSchema/AgentRoleUpdateProposalSchema、applyAgentRoleProposal、agentRoleWriteCommand、ProjectRefSchema、projectAddCommand及resolveAgentRoleCreate；多Role复用、初始runConfig与可写字段、身份机器的session/call-tool路由、本地项目和会话组合",
+      "verification": "static_official_release_source_verified",
+      "note": "多个Role可复用machineId和agentConfigId；create提议保存后runConfig为空，update补丁只支持name/description/promptPrefix。cloud CLI提议调用auth.machineId的会话工具，参数machineId仅绑定Role目标；不能套用普通远端会话派发前提。project add登记本机目录，会话可组合Role与local project或repo，local project须属于最终目标机器。未核实Project持久拥有Role组，不据此否定其他版本/UI；未实测本轮角色提议/用户保存、项目写入或按Role执行。"
+    },
+    {
+      "id": "agent-role-project-relationships-0.108.1",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
+      "retrieved_at": "2026-10-25",
+      "version_scope": "0.108.1",
+      "resource_in_package": "dist/index.js",
+      "sha256": "9c8a160f6c77de765c263558e60d7b94c7293952e2c4d235ed2560f616fa8881",
+      "scope": "复核main的0.2.6 Role/Project知识：proposal schemas、applyAgentRoleProposal、agentRoleWriteCommand、resolveCreateContext、multi-target Role解析与local project机器归属",
+      "verification": "source_verified",
+      "source_locations": {
+        "proposal_schema_and_apply": "4727-4795",
+        "role_target_and_proposal_route": "247600-247903",
+        "project_context_selection": "251548-251679"
+      },
+      "note": "保留0.107.2历史记录。0.108.1同样允许多Role复用machine/config，create保存runConfig为空，update仅name/description/promptPrefix；提议使用auth.machineId本地control host的所属会话而不是字段machineId，不能套用普通远端session派发前提。已保存Role支持多target解析，不扩大CLI create schema；local project须属于Role解析后的最终机器。未核实Project持久Role组，未运行提议/用户保存、项目登记或Role任务。"
     }
   ],
   "known_differences": [

@@ -36,7 +36,7 @@ lody4dot 已实现20类70个公开命令导航、受管安装、只读诊断、�
 
 上述是本项目的职责选择，不代表平台只允许Dot创建。Codex Cloud官方另有手动和CLI提交入口；与Work Cloud的手动、首方客户端代建及计划/事件入口分别对照，见[创建方式与证据边界](docs/lody4dot/product-collaboration-reference.md#codex-cloud-与-work-cloud-的创建方式对照)。本轮不接入新的创建路线，企业聊天工具委派延后。
 
-当前源码候选0.2.5在原[任务入口知识](skill/lody4dot/references/collaboration.md#work-cloud与任务创建)补Codex平台多入口与项目Dot分工的区别；保留0.2.4的Work分类、0.2.3[资料交接规则](skill/lody4dot/references/material-handoff.md)和0.2.2[薄setup入口](skill/lody4dot-setup/SKILL.md)。分别核对平台支持、当前访问、项目职责、实际运行及处理/保存/回读；知识候选不代表原生接入已验收，也不是存储重置hook。正式0.2.1已有的CLI版本策略继续保留：版本不同、探测或显式latest查询失败只warn，检查阶段默认离线，不因warn自动升级。受管runtime仅支持Linux，真实命令、身份、权限和完整性错误分别处理。各候选的验证范围见[验证记录](docs/lody4dot/validation.md)、[支持矩阵](docs/lody4dot/support-matrix.md)及[Dot接入运行单](docs/lody4dot/dot-acceptance.md)。
+当前源码候选0.2.7在[源码builder](plugin/lody4dot/README.md#自包含插件包)提供显式离线ZIP生成、验包及摘要，已有产物保留；0.2.6的[配置与角色知识](skill/lody4dot/references/configuration.md)、0.2.5[任务入口知识](skill/lody4dot/references/collaboration.md#work-cloud与任务创建)、0.2.4的Work分类、0.2.3[资料交接规则](skill/lody4dot/references/material-handoff.md)和0.2.2[薄setup入口](skill/lody4dot-setup/SKILL.md)沿用。分别核对平台支持、当前访问、项目职责、实际运行及处理/保存/回读；知识与分发候选不代表原生接入、角色保存或项目执行已验收，也不是存储重置hook。0.2.1起的CLI版本策略继续保留：版本不同、探测或显式latest查询失败只warn，检查默认离线，不因告警自动升级；安装准备按下述latest政策执行。受管runtime仅支持Linux，真实命令、身份、权限和完整性错误分别处理。各候选的验证范围见[验证记录](docs/lody4dot/validation.md)、[支持矩阵](docs/lody4dot/support-matrix.md)及[Dot接入运行单](docs/lody4dot/dot-acceptance.md)。
 
 2026-10-25按新授权更新当前任务Node/CLI和仓库安装策略：云准备脚本先用[受管Node准备工具](scripts/prepare_cloud_node.py)校验官方归档并安装或复用Linux x64 Node`24.22.1`；`install`/`bootstrap --prepare`再在暂存目录定向更新lody锁以解析latest，遵守engine-strict、禁用生命周期脚本及保留的依赖约束，验证后才切换入口。inspect和已有runtime的启动检查仍离线，版本warn不触发升级；缺失修复才进入CLI安装。Node是已验证兼容基线，未来latest的engines若提高需更新Node基线，不能忽略引擎要求或降级CLI。本轮实际npm`11.19.1`、Lody`0.108.1`；平台内建Node未改，保存环境模板与固定ref状态见任务队列。先按实际CLI帮助及[资源发现](skill/lody4dot/references/discovery.md)选择获准工作区、项目与Agent；本轮验证与线上范围见[验证记录](docs/lody4dot/validation.md#2026-10-25当前任务升级与latest准备策略)。
 
@@ -59,6 +59,8 @@ python3 -m unittest discover -s tests -v
 ```
 
 [结构检查](scripts/check_repository.py) 验证必需文档、条目命名和入口，拒绝分类目录、条目和入口上的符号链接，并显示各类条目数量；[测试](tests/test_check_repository.py) 验证这些检查能拒绝无效目录。结构检查脚本也可从任意工作目录通过完整路径调用。
+
+Linux运行时语义的离线夹具显式选择模拟平台，自有临时基础路径先规范化；平台拒绝、符号链接与用户状态保护另有用例。条件模拟通过不代表macOS/WSL受管安装已支持，实际证据仍见[验证记录](docs/lody4dot/validation.md)和[支持矩阵](docs/lody4dot/support-matrix.md)。
 
 数量为零时允许骨架检查通过；这不代表存在可运行插件。各条目仍需声明并执行自己的功能测试，结构检查不能替代插件打包、服务请求或技能加载验证。
 
