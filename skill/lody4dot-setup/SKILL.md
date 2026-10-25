@@ -30,10 +30,12 @@ description: 在用户运行 lody4dot 插件 setup 时，识别当前宿主与�
 有本端工具时，先从对应工作目录查看 `bootstrap.py --help`。仓库工作目录使用 `python3 plugin/lody4dot/scripts/bootstrap.py`，自包含包工作目录使用 `python3 scripts/bootstrap.py`；后续参数相同：
 
 - 仅检查：传入 `--prefix` 和已核实的本端绝对路径，再传 `--json`，不加动作参数。
-- 当前请求已授权依赖初始化：按目标选择 `--prepare`，或选择先检查、只修复缺失受管依赖的 `--repair-missing`；两者互斥。已有授权足够时直接继续，不要求用户重复确认。
+- 当前请求已授权依赖初始化：按目标选择 `--prepare`，或选择先检查、只修复缺失受管依赖的 `--repair-missing`；两者互斥。安装阶段在暂存目录定向更新lody锁、解析官方npm latest，遵守engine-strict、禁用生命周期脚本及保留的依赖约束，验证成功后切换；实际版本由收据记录，不把文档中的版本当未来latest。已有授权足够时直接继续，不要求用户重复确认。
 - `--repair-missing` 只处理明确的 `missing_runtime`；来源损坏、陌生目录、平台或真实命令失败按实际错误处理。Lody 版本不同、版本探测失败仅 warn，不触发重装或阻塞后续可执行流程。默认检查离线，不自动查询更新或升级。
 
 依赖准备不包含登录、注册 machine、启动 daemon、创建模型任务或恢复/重发旧业务。需要进一步认证或控制验收时，另按核心技能与本次已有授权执行，保持每端私密身份独立；不要输出凭证或将登录态放入插件包、共享快照。
+
+准备后先查实际CLI的`--version`及目标命令`--help`，再按[资源发现](../lody4dot/references/discovery.md)选择允许访问的工作区、机器、项目catalog及Agent config/Role。当前随包帮助为0.108.1，只证明帮助已执行；没有明确工作区或合法现有身份时列出缺项，不为列目录先自动登录、创建配置或派发Agent。
 
 ## 给出范围明确的 setup 回执
 

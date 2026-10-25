@@ -4,6 +4,8 @@
 
 先按 [资源发现](discovery.md) 找到 workspace、机器和配置，再查询具体配置/Role。Agent 可用模型、mode 和 config options 来自目标运行时的能力协商；不同 provider 或版本不自动支持同一组选项。
 
+0.108.1实际帮助已核对`agent-config list/get/show`和`agent-role list/get`等公开入口。优先只读枚举已允许的工作区，Agent config/Role列表按需要加`--machine`与`--all-pages`；发现和选择完成后才考虑获授权的配置变更。当前帮助采集不是本次账户资源查询，也未验证新的模型配置可执行。
+
 ```bash
 lody agent-config get AGENT_CONFIG_ID --workspace WORKSPACE_ID --json
 lody agent-role get ROLE_ID --workspace WORKSPACE_ID --json
@@ -16,7 +18,7 @@ lody agent-config show AGENT_CONFIG_ID --json
 
 `agent-config create/update/delete` 是真实配置变更，只在当前任务允许的范围内使用。通过该命令实际支持的环境文件入口提供所需变量，不把 token 写进聊天、示例或日志。更新时区分未传字段、空字符串清空和删除环境键，不能用一份不完整配置覆盖其他用户设置。
 
-实际 `0.107.2` 的 `session create --help` 已将每会话 `--env` 标为 deprecated，要求改在 Agent config 配置环境。官网旧示例仍曾说明每会话环境保存；遇到该差异以当前准确版本帮助为准，不继续推荐旧入口。差异记录在 [来源记录](sources.json)。
+实际`0.108.1`的`session create --help`仍将每会话`--env`标为deprecated，要求改在Agent config配置环境；该参数在0.107.2时已有此提示。官网旧示例仍曾说明每会话环境保存；以当前准确版本帮助为准，不继续推荐旧入口。差异记录在[来源记录](sources.json)。
 
 安装或升级底层 coding CLI、修改环境或可用模式后，可在正确机器上刷新能力：
 
@@ -51,9 +53,15 @@ JSON 文件和直接字段参数不能混用。更新文件只包含补丁字段
 
 这确认的是“按某 Role 执行某项目任务”；尚未核实 Project 持久拥有一组 Role 的绑定，不能据此编造该分组关系，也不据此断言其他版本或产品界面没有组织功能。角色提议、用户保存、只读查询已保存角色及按该角色执行项目任务分别取证，保存成功不代表执行成功。
 
+2026-10-25对`0.108.1`的`source_verified`复核保留上述边界：create/update schema与初始`runConfig={}`、多Role复用配置、身份机器的本地control socket提议路线，以及先解析Role最终机器再验证本地项目，均与已记录规则一致。CLI提议仍需有效本机host/Desktop或daemon和所属会话；不能套用普通远端session派发无需控制端daemon的结论。新版还支持已保存Role的多target解析，但CLI create提议字段仍为单一machine/config，不据此编造Project持久Role组。这里只核对发布源码，本轮未创建提议、保存角色、登记项目、启动host或执行项目任务；准确版本来源见[sources.json](sources.json)。
+
 ## MCP 与 GitHub
 
 `mcp list/add/set/remove` 的确切参数以帮助为准。配置变更和连接测试分别核验；不要把“保存了 MCP”当“当前 agent 已加载”。内置 Lody MCP 需要宿主注入会话、工作区和机器上下文，不能使用内部入口临时拼一个无上下文的服务。
+
+0.108.1源码中这些cloud CLI入口可用独立workspace manager，不要求已有控制端daemon。`mcp list`提供隐藏连接值的摘要；`mcp add/set`的JSON写回执则可能包含完整connection（bearer/header/env），不能一概当作脱敏结果回传。变更前核对授权，结果只提取必要安全字段，不收集连接秘密。
+
+0.108.1的`session create/chat --help`新增`--mcp-server-ids <json>`，接受MCP IDs的JSON数组，`[]`禁用全部。参数只控制该命令支持的MCP选择；使用已发现且获准的ID，不新建连接、猜ID或由参数存在推导目标turn已加载/调用MCP。新帮助未构成本轮真实MCP验收。
 
 `github list --workspace WORKSPACE_ID --json` 用于查看已经链接的仓库；访问目录与 GitHub 账户/App 授权是不同前提。不要从其他 Git 代理能够读某个仓库，推导 Lody 已完成 GitHub 集成授权。
 

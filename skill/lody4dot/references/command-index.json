@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "lody_version": "0.107.2",
+  "lody_version": "0.108.1",
   "commands": [
     {
       "command": "agent-config",
@@ -17,11 +17,12 @@
       "pagination": "按具体子命令帮助",
       "success_evidence": "核对具体子命令帮助及其业务结果；分组帮助本身不证明操作成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/cli-runtimes/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "95dfbc81076ae5639081c4f6fe2a16b3362bf185574572a1d0241f22266177df"
     },
     {
@@ -40,11 +41,12 @@
       "pagination": "not_applicable",
       "success_evidence": "读取安全配置/能力摘要，或后续查询确认保存变化；默认不得输出环境值。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/cli-runtimes/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "67d9774c7280cfd406f8332dc8829168de0465055bc2e277592b90fd386d98c3"
     },
     {
@@ -63,11 +65,12 @@
       "pagination": "not_applicable",
       "success_evidence": "读取安全配置/能力摘要，或后续查询确认保存变化；默认不得输出环境值。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/cli-runtimes/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "9b11689a5b4419f05f46d00fa7e12b740391cd676db93ab92f07b915d2481634"
     },
     {
@@ -86,11 +89,12 @@
       "pagination": "not_applicable",
       "success_evidence": "读取安全配置/能力摘要，或后续查询确认保存变化；默认不得输出环境值。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/cli-runtimes/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "22420942d942f70393c550eda0fc2c9f2cc65a1cd21e71feaba92f0a84729008"
     },
     {
@@ -109,11 +113,12 @@
       "pagination": "支持cursor续页；保持相同筛选条件；可用--all-pages完整遍历。",
       "success_evidence": "读取安全配置/能力摘要，或后续查询确认保存变化；默认不得输出环境值。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/cli-runtimes/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "a567997f82efb14df019b122fbba052ecd564ae6c76f640fa9ce842814f4a2d0"
     },
     {
@@ -133,11 +138,12 @@
       "pagination": "not_applicable",
       "success_evidence": "在当前机器更新并重新读取实际能力；不能从远端在线推导可跨机刷新。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/cli-runtimes/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "90b545d64199460e061925e10883fcfa94bfea58103534443293578e2a713288"
     },
     {
@@ -156,11 +162,12 @@
       "pagination": "not_applicable",
       "success_evidence": "读取安全配置/能力摘要，或后续查询确认保存变化；默认不得输出环境值。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/cli-runtimes/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "9b1b0ae2fd87353d29e03cb423629daf48cdd998f928fd4fcc4996c97800623e"
     },
     {
@@ -179,11 +186,12 @@
       "pagination": "not_applicable",
       "success_evidence": "读取安全配置/能力摘要，或后续查询确认保存变化；默认不得输出环境值。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/cli-runtimes/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "3a536b7b0613bdd190463cfbaa23854fa4d07dab7f35b091f1ea9b8e2996a690"
     },
     {
@@ -201,11 +209,12 @@
       "pagination": "按具体子命令帮助",
       "success_evidence": "核对具体子命令帮助及其业务结果；分组帮助本身不证明操作成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/agent-roles/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "8ecf602d77708406e4bc25c0b5ff17a2fea080c3650ebf9c078a27ea4c418d78"
     },
     {
@@ -214,7 +223,7 @@
       "requires": {
         "authentication": true,
         "workspace": true,
-        "local_runtime": "unknown"
+        "local_runtime": true
       },
       "effect": "propose",
       "output_formats": [
@@ -224,12 +233,14 @@
       "pagination": "not_applicable",
       "success_evidence": "确认卡片/提议标识与待保存状态；用户在Lody保存后才能报告角色已生效。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/agent-roles/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "4870e45e9b7f185415982e0c28beb5e0381c298b22146cf602f53289056250d4"
+      "verification": "help_verified",
+      "help_sha256": "4870e45e9b7f185415982e0c28beb5e0381c298b22146cf602f53289056250d4",
+      "source_note": "提议经当前身份机器本地control socket调用所属会话，需有效本机host/Desktop或daemon；目标machineId不是提议执行机。只生成确认卡片，用户保存才生效。"
     },
     {
       "command": "agent-role get",
@@ -247,11 +258,12 @@
       "pagination": "not_applicable",
       "success_evidence": "核对明确授权身份/工作区及分页结果；未知可用性不能报告为离线或派发成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/agent-roles/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "278a641a470a0dd47d93c03a1218223867bf8d91f96189c79d735c8ef81fa017"
     },
     {
@@ -270,11 +282,12 @@
       "pagination": "支持cursor续页；保持相同筛选条件；可用--all-pages完整遍历。",
       "success_evidence": "核对明确授权身份/工作区及分页结果；未知可用性不能报告为离线或派发成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/agent-roles/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "829b703a5e4ff95fdcf41a8b0b1cd555b37287a5d14830aaca16a67004a61649"
     },
     {
@@ -283,7 +296,7 @@
       "requires": {
         "authentication": true,
         "workspace": true,
-        "local_runtime": "unknown"
+        "local_runtime": true
       },
       "effect": "propose",
       "output_formats": [
@@ -293,19 +306,21 @@
       "pagination": "not_applicable",
       "success_evidence": "确认卡片/提议标识与待保存状态；用户在Lody保存后才能报告角色已生效。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/agent-roles/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "88fccabb7fe1eada81bc0cc80e6a678ee7088ee688c69198d06a1b29a2598018"
+      "verification": "help_verified",
+      "help_sha256": "88fccabb7fe1eada81bc0cc80e6a678ee7088ee688c69198d06a1b29a2598018",
+      "source_note": "提议经当前身份机器本地control socket调用所属会话，需有效本机host/Desktop或daemon；不是普通远端session派发路线。"
     },
     {
       "command": "app",
       "summary": "Open the Lody desktop app on a new chat with a local directory selected (registers it if needed)",
       "requires": {
-        "authentication": "conditional",
-        "workspace": "conditional",
+        "authentication": true,
+        "workspace": true,
         "local_runtime": "conditional"
       },
       "effect": "mixed",
@@ -316,11 +331,13 @@
       "pagination": "按具体子命令帮助",
       "success_evidence": "核对具体子命令帮助及其业务结果；分组帮助本身不证明操作成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "6780e008fc0532e42958673031759e02435eeb565f89a6040fb0ef28f888f64e"
+      "verification": "help_verified",
+      "help_sha256": "6780e008fc0532e42958673031759e02435eeb565f89a6040fb0ef28f888f64e",
+      "source_note": "根命令有真实action：登录后尝试登记本机项目并打开桌面/链接；不是只有分组帮助。"
     },
     {
       "command": "app reset-cache",
@@ -338,11 +355,13 @@
       "pagination": "not_applicable",
       "success_evidence": "清理请求已登记；须等桌面端后续启动确认执行，不是立即清理完成。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "d36ae77c75b8a70060c51d310fade076d0d5869effd874612037e14d66fe690b"
+      "verification": "help_verified",
+      "help_sha256": "d36ae77c75b8a70060c51d310fade076d0d5869effd874612037e14d66fe690b",
+      "source_note": "写下次启动清理请求；--hard清除本地数据/登录，--cancel仅撤未应用请求，不是立即清理完成。"
     },
     {
       "command": "daemon",
@@ -359,11 +378,12 @@
       "pagination": "按具体子命令帮助",
       "success_evidence": "核对具体子命令帮助及其业务结果；分组帮助本身不证明操作成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/quickstart/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "9eca77e3002016f9c42d4296f9291607705305aa7f019ab05664096f8aa4564e"
     },
     {
@@ -381,11 +401,12 @@
       "pagination": "not_applicable",
       "success_evidence": "读取本机状态或脱敏日志；不从状态显示推导任务完成。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/quickstart/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "e6df6cc31be0f4aa5c53d77e8a633a76d142e134aa626dd86aa808155fe2741e"
     },
     {
@@ -403,12 +424,14 @@
       "pagination": "not_applicable",
       "success_evidence": "核对运行中的真实版本、机器连接与daemon就绪，不仅看进程存在。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/quickstart/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "028dfd7550d87e32ff390e4762eaa005e0fd905669da31d0d96de6f7ab98441c"
+      "verification": "help_verified",
+      "help_sha256": "028dfd7550d87e32ff390e4762eaa005e0fd905669da31d0d96de6f7ab98441c",
+      "source_note": "停止并重新启动后台运行，可能进入启动认证路径；会影响正在承载的Agent，不是只读健康检查。"
     },
     {
       "command": "daemon start",
@@ -425,12 +448,14 @@
       "pagination": "not_applicable",
       "success_evidence": "核对运行中的真实版本、机器连接与daemon就绪，不仅看进程存在。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/quickstart/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "e7afb2ca676d1b976a526758a84d184515b0294f93ea7af74b1c3411eff47008"
+      "verification": "help_verified",
+      "help_sha256": "e7afb2ca676d1b976a526758a84d184515b0294f93ea7af74b1c3411eff47008",
+      "source_note": "启动长期进程；可能执行认证preflight或显式认证，缺身份的副作用先核授权；不自动使用skip-auth-check绕过。"
     },
     {
       "command": "daemon status",
@@ -447,11 +472,12 @@
       "pagination": "not_applicable",
       "success_evidence": "读取本机状态或脱敏日志；不从状态显示推导任务完成。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/quickstart/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "91bb457b978b8d1eebfc44a4b451af718e1469113c972d811a714f534f6d097e"
     },
     {
@@ -469,32 +495,36 @@
       "pagination": "not_applicable",
       "success_evidence": "确认被授权且属于当前操作范围的daemon已停止；不停止其他用户进程。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/quickstart/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "627f9eb907e5df2b4279f80ef36662d5bd917305957d4cfb85e0784d2c831460"
+      "verification": "help_verified",
+      "help_sha256": "627f9eb907e5df2b4279f80ef36662d5bd917305957d4cfb85e0784d2c831460",
+      "source_note": "停止受管host/daemon，可能中断承载工作；仅操作本任务明确拥有的进程。"
     },
     {
       "command": "export",
       "summary": "Export user-facing workspace session data",
       "requires": {
-        "authentication": "conditional",
+        "authentication": true,
         "workspace": true,
-        "local_runtime": "unknown"
+        "local_runtime": false
       },
       "effect": "local_file",
       "output_formats": [
         "files"
       ],
       "pagination": "not_applicable",
-      "success_evidence": "核对指定输出目录内用户可见会话文件与范围；offline读取缓存不表示资料一定新鲜。",
+      "success_evidence": "核对明确workspace/导出范围、实际文件和新鲜度；--offline不是无网络保证，不能绕过授权或输出范围。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "5ca1ec802169d50748e8a904d0f41ec2f1004f039d3071c98d370a86c1c826d6"
+      "verification": "help_verified",
+      "help_sha256": "5ca1ec802169d50748e8a904d0f41ec2f1004f039d3071c98d370a86c1c826d6",
+      "source_note": "即使--offline仍需身份和workspace；只跳过前置Loro同步，默认图片下载与usage查询仍可能联网。会写导出文件，无需已有本机daemon。"
     },
     {
       "command": "feedback",
@@ -512,10 +542,12 @@
       "pagination": "not_applicable",
       "success_evidence": "核对反馈提交结果；内容不包含凭证/私密诊断，不能默认自动外发。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "ee2999492b2c7647137c955692b8fc5114f41b486c035d2f09fa5235ce86fe47"
+      "verification": "help_verified",
+      "help_sha256": "ee2999492b2c7647137c955692b8fc5114f41b486c035d2f09fa5235ce86fe47",
+      "source_note": "发送反馈正文、账号身份及基本CLI/OS信息，是外部发送动作。"
     },
     {
       "command": "github",
@@ -532,10 +564,11 @@
       "pagination": "按具体子命令帮助",
       "success_evidence": "核对具体子命令帮助及其业务结果；分组帮助本身不证明操作成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "94478942c5b28aa54e03cc7d72074e38ee4dcddf44e6a12c417582bb029754f2"
     },
     {
@@ -554,10 +587,11 @@
       "pagination": "not_applicable",
       "success_evidence": "核对明确授权身份/工作区及分页结果；未知可用性不能报告为离线或派发成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "138b46e5eb012ed8939ff291e184355e7707be690ef77156e047ab0b333eae93"
     },
     {
@@ -575,11 +609,13 @@
       "pagination": "not_applicable",
       "success_evidence": "通过已有身份和授权资源的独立查询确认登录；登录响应本身不证明任务可执行。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "05853b8dbad1a9606a9ce4010c46c0e0e4237abb7c56860617dc890381b39c12"
+      "verification": "help_verified",
+      "help_sha256": "05853b8dbad1a9606a9ce4010c46c0e0e4237abb7c56860617dc890381b39c12",
+      "source_note": "API-key路径校验已有key并保存本机machine-id/credentials；device流程会创建远端CLI key，pairing会exchange，不能混入临时本地身份许可。"
     },
     {
       "command": "logout",
@@ -596,11 +632,13 @@
       "pagination": "not_applicable",
       "success_evidence": "本地保存的登录状态按请求清理；不得由诊断自动执行。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "9c5f7425f388ea44721ab4111591d9aa636b6d9ee8879b287c2009fb689ea9bc"
+      "verification": "help_verified",
+      "help_sha256": "9c5f7425f388ea44721ab4111591d9aa636b6d9ee8879b287c2009fb689ea9bc",
+      "source_note": "仅清除本机保存身份；该路径未撤销服务端key，不可报告远端凭据已作废。"
     },
     {
       "command": "machine",
@@ -617,10 +655,11 @@
       "pagination": "按具体子命令帮助",
       "success_evidence": "核对具体子命令帮助及其业务结果；分组帮助本身不证明操作成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "38043c7cf24b3509cf7ce114cf949aa7660b0fff0b43434856994ea06c7ce8a7"
     },
     {
@@ -639,10 +678,11 @@
       "pagination": "支持cursor续页；保持相同筛选条件；可用--all-pages完整遍历。",
       "success_evidence": "核对明确授权身份/工作区及分页结果；未知可用性不能报告为离线或派发成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "93b676780aa602e0fd54067f837e5fec42d9c131f65e98bf144b86d1e2b39a86"
     },
     {
@@ -660,10 +700,11 @@
       "pagination": "按具体子命令帮助",
       "success_evidence": "核对具体子命令帮助及其业务结果；分组帮助本身不证明操作成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "6d1039168fa98c66d6b3ebc8db2e9b998973ea4299d5311847d727125aa415a5"
     },
     {
@@ -672,7 +713,7 @@
       "requires": {
         "authentication": true,
         "workspace": true,
-        "local_runtime": "unknown"
+        "local_runtime": false
       },
       "effect": "modify",
       "output_formats": [
@@ -682,11 +723,13 @@
       "pagination": "not_applicable",
       "success_evidence": "读取不含连接值的目录或确认配置变化；MCP已配置/已选择不代表已加载。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "3734016efe010ee8d6eaede49af6d46c958c711350a8acc4035027f17166cafd"
+      "verification": "help_verified",
+      "help_sha256": "3734016efe010ee8d6eaede49af6d46c958c711350a8acc4035027f17166cafd",
+      "source_note": "写workspace MCP配置；JSON回执可能包含connection中的bearer/header/env原值，不保证脱敏。独立manager无需现有本机daemon。"
     },
     {
       "command": "mcp list",
@@ -694,7 +737,7 @@
       "requires": {
         "authentication": true,
         "workspace": true,
-        "local_runtime": "unknown"
+        "local_runtime": false
       },
       "effect": "read",
       "output_formats": [
@@ -704,11 +747,13 @@
       "pagination": "支持cursor续页；保持相同筛选条件；可用--all-pages完整遍历。",
       "success_evidence": "读取不含连接值的目录或确认配置变化；MCP已配置/已选择不代表已加载。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "7c7e7b2c161bba31a67c0235902c8b0258199003809e3fc91b0bbf2769f9d911"
+      "verification": "help_verified",
+      "help_sha256": "7c7e7b2c161bba31a67c0235902c8b0258199003809e3fc91b0bbf2769f9d911",
+      "source_note": "业务只读目录路线使用独立workspace manager，不要求已有本机daemon；仍可能写本地cache并经历正常Streams连接/短期token刷新。"
     },
     {
       "command": "mcp remove",
@@ -716,7 +761,7 @@
       "requires": {
         "authentication": true,
         "workspace": true,
-        "local_runtime": "unknown"
+        "local_runtime": false
       },
       "effect": "modify",
       "output_formats": [
@@ -726,11 +771,13 @@
       "pagination": "not_applicable",
       "success_evidence": "读取不含连接值的目录或确认配置变化；MCP已配置/已选择不代表已加载。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "d74d6334406a05189adaae931c852e19987f302a27b3f6c571abbe00558190c4"
+      "verification": "help_verified",
+      "help_sha256": "d74d6334406a05189adaae931c852e19987f302a27b3f6c571abbe00558190c4",
+      "source_note": "删除workspace MCP配置；独立manager无需现有本机daemon。"
     },
     {
       "command": "mcp set",
@@ -738,7 +785,7 @@
       "requires": {
         "authentication": true,
         "workspace": true,
-        "local_runtime": "unknown"
+        "local_runtime": false
       },
       "effect": "modify",
       "output_formats": [
@@ -748,11 +795,13 @@
       "pagination": "not_applicable",
       "success_evidence": "读取不含连接值的目录或确认配置变化；MCP已配置/已选择不代表已加载。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "e983c8310610b0927236107eeed937027786237c0e2cc2f35f2e33a4d804780c"
+      "verification": "help_verified",
+      "help_sha256": "e983c8310610b0927236107eeed937027786237c0e2cc2f35f2e33a4d804780c",
+      "source_note": "更新workspace MCP配置；JSON回执可能包含connection中的bearer/header/env原值，不保证脱敏。独立manager无需现有本机daemon。"
     },
     {
       "command": "migrate",
@@ -769,10 +818,12 @@
       "pagination": "not_applicable",
       "success_evidence": "核对现有目标工作区记录与引用附件，保留源数据；不报告项目代码或底层Agent凭证已迁移。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "5763ee291f3eea17d68e8f37f07093c4114441206197f2a0ed9a8156287239c5"
+      "verification": "help_verified",
+      "help_sha256": "5763ee291f3eea17d68e8f37f07093c4114441206197f2a0ed9a8156287239c5",
+      "source_note": "冻结OSS快照，写journal并导入远端数据；需源已停止，缺身份的交互路线可能进入device登录，不能当只读预检。"
     },
     {
       "command": "operation",
@@ -789,10 +840,11 @@
       "pagination": "按具体子命令帮助",
       "success_evidence": "核对具体子命令帮助及其业务结果；分组帮助本身不证明操作成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "a2435460ef948f224c80b91e7fa54adb19cbfe99df2edae90c32ba133d628324"
     },
     {
@@ -801,7 +853,7 @@
       "requires": {
         "authentication": true,
         "workspace": true,
-        "local_runtime": "unknown"
+        "local_runtime": false
       },
       "effect": "read",
       "output_formats": [
@@ -811,11 +863,13 @@
       "pagination": "支持cursor续页；保持相同筛选条件；不假定支持--all-pages。",
       "success_evidence": "读取本机store中指定requester session及当前用户的结果，不代表其他机器无任务。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "2deccc8e54e7d7c3a7f19bc971d1f2adb65c0eeda560462b8d1d968b48c8befd"
+      "verification": "help_verified",
+      "help_sha256": "2deccc8e54e7d7c3a7f19bc971d1f2adb65c0eeda560462b8d1d968b48c8befd",
+      "source_note": "按身份和requester session读取本机OperationStore；打开SQLite可能初始化文件，无需已有daemon；不是跨机器全局操作列表。"
     },
     {
       "command": "project",
@@ -832,10 +886,11 @@
       "pagination": "按具体子命令帮助",
       "success_evidence": "核对具体子命令帮助及其业务结果；分组帮助本身不证明操作成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "d8a28964d04b13a835395cd8e33ca27dd5bcab8f2d728a06499c8443676c8439"
     },
     {
@@ -844,7 +899,7 @@
       "requires": {
         "authentication": true,
         "workspace": "conditional",
-        "local_runtime": "unknown"
+        "local_runtime": true
       },
       "effect": "modify",
       "output_formats": [
@@ -854,11 +909,13 @@
       "pagination": "not_applicable",
       "success_evidence": "区分本机项目注册和cloud catalog，并确认准确项目范围，不把目录注册当项目代码迁移。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "5d23baec71a4217cb8fa57f484fa29dc2fe6b4191c1a684c622dfd32e57c287d"
+      "verification": "help_verified",
+      "help_sha256": "5d23baec71a4217cb8fa57f484fa29dc2fe6b4191c1a684c622dfd32e57c287d",
+      "source_note": "只登记当前机器目录，必须本机daemon/control host可达；不迁移代码或登记远端目录。"
     },
     {
       "command": "project delete",
@@ -866,7 +923,7 @@
       "requires": {
         "authentication": true,
         "workspace": "conditional",
-        "local_runtime": "unknown"
+        "local_runtime": true
       },
       "effect": "modify",
       "output_formats": [
@@ -876,11 +933,13 @@
       "pagination": "not_applicable",
       "success_evidence": "区分本机项目注册和cloud catalog，并确认准确项目范围，不把目录注册当项目代码迁移。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "a50ce67df6846ef58055de3e50554b966bcf4ff6d553f1fe72b7378fe8bc8d87"
+      "verification": "help_verified",
+      "help_sha256": "a50ce67df6846ef58055de3e50554b966bcf4ff6d553f1fe72b7378fe8bc8d87",
+      "source_note": "必须本机daemon/control host可达且有交互TTY；删除项目登记，影响对象先确认。"
     },
     {
       "command": "project list",
@@ -898,10 +957,11 @@
       "pagination": "支持cursor续页；保持相同筛选条件；可用--all-pages完整遍历。",
       "success_evidence": "区分本机项目注册和cloud catalog，并确认准确项目范围，不把目录注册当项目代码迁移。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "1684858639f430ba9ddbbdf864c8a989435665f7573b18fe36306c2acf3f1325"
     },
     {
@@ -920,11 +980,13 @@
       "pagination": "not_applicable",
       "success_evidence": "目标HTML已生成且对应正确提交/输入；渲染不代表评审意见正确。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/lody-review/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "cc8ed9d73d522db3b1f086488666d47cbf067ba9e177427ebad904edede78c1d"
+      "verification": "help_verified",
+      "help_sha256": "14766ff543d0e8bfb199a3c027ba1a730246d31fb4b5b7baa4fea521ffec6c2b",
+      "source_note": "无file时给指南；有file时读取Git/审查输入、可下载Viewer、写HTML并默认打开浏览器；不需Lody账号。"
     },
     {
       "command": "review prompt",
@@ -941,10 +1003,11 @@
       "pagination": "not_applicable",
       "success_evidence": "打印当前格式指引；不代表已经编写或校验评审结果。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/lody-review/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "430cdbcd4ead43a40648b50a75807cfb4f4b856c2fdec4bc844fa62bf4b51af2"
     },
     {
@@ -962,10 +1025,11 @@
       "pagination": "按具体子命令帮助",
       "success_evidence": "核对具体子命令帮助及其业务结果；分组帮助本身不证明操作成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/scheduled-tasks/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "dfd0ce7b33a7a68f4feefc73375ab600443bda9f1dd51128c27f3f069a6cf2fe"
     },
     {
@@ -983,10 +1047,11 @@
       "pagination": "not_applicable",
       "success_evidence": "区分调度保存、运行请求和关联Session的持久化结果；目标机器daemon拥有实际执行。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/scheduled-tasks/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "3c9fbe76c819fbdd18b612b1e08eb43eff632e328f094e610e540ccf7bb5eef2"
     },
     {
@@ -1004,10 +1069,11 @@
       "pagination": "not_applicable",
       "success_evidence": "区分调度保存、运行请求和关联Session的持久化结果；目标机器daemon拥有实际执行。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/scheduled-tasks/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "fe6956a639825145287850792c0f185902d1cd1748ce6fe2dabd6e72814010ff"
     },
     {
@@ -1025,10 +1091,11 @@
       "pagination": "not_applicable",
       "success_evidence": "区分调度保存、运行请求和关联Session的持久化结果；目标机器daemon拥有实际执行。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/scheduled-tasks/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "86081088dbf67e3fba8a32dd102362431b79546032b03e9656067f784f217196"
     },
     {
@@ -1046,10 +1113,11 @@
       "pagination": "支持--offset和--limit；按实际帮助保持相同筛选条件。",
       "success_evidence": "区分调度保存、运行请求和关联Session的持久化结果；目标机器daemon拥有实际执行。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/scheduled-tasks/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "1413aba5264f8ca53b327ad98e27134dfed8a9db2acaef7da987cb91d78a7616"
     },
     {
@@ -1067,10 +1135,11 @@
       "pagination": "not_applicable",
       "success_evidence": "区分调度保存、运行请求和关联Session的持久化结果；目标机器daemon拥有实际执行。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/scheduled-tasks/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "095f4fa6d15bd1f0fa98af791e866c1fede34bb957a864f2ff2ef731700340bf"
     },
     {
@@ -1088,10 +1157,11 @@
       "pagination": "not_applicable",
       "success_evidence": "区分调度保存、运行请求和关联Session的持久化结果；目标机器daemon拥有实际执行。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/scheduled-tasks/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "72c67bd1341997cf89ecd75cb9c6540a53c08fbde60fd6a62fea792c4fef91b3"
     },
     {
@@ -1109,10 +1179,11 @@
       "pagination": "not_applicable",
       "success_evidence": "区分调度保存、运行请求和关联Session的持久化结果；目标机器daemon拥有实际执行。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/scheduled-tasks/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "6993aa7e56ebbf40188efbf2e8825f6af1805d4729d28ab62c73e155700b4acd"
     },
     {
@@ -1130,10 +1201,11 @@
       "pagination": "not_applicable",
       "success_evidence": "区分调度保存、运行请求和关联Session的持久化结果；目标机器daemon拥有实际执行。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/scheduled-tasks/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "dac80468300322fd3dddc7340e25ffb7caebc80c3462a14878176567e319a656"
     },
     {
@@ -1151,12 +1223,13 @@
       "pagination": "按具体子命令帮助",
       "success_evidence": "核对具体子命令帮助及其业务结果；分组帮助本身不证明操作成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "7b1260fbbafc31a36ba6b47f4254c87d2584db725157c30d0879e47bf3631d5e"
+      "verification": "help_verified",
+      "help_sha256": "8e5a0d7491d1c9ce1d8cfc7e78580f3616fae169447b46020d53375788f3f450"
     },
     {
       "command": "session archive",
@@ -1174,11 +1247,12 @@
       "pagination": "not_applicable",
       "success_evidence": "事先以完整元数据核对parentSessionId ?? openedBySessionId递归后代及授权；随后确认根和实际受影响后代的isArchived与响应child IDs。归档可释放运行资源，不能仅看列表隐藏或假定restore完整回滚。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "19a5082e53c18f6a4493554f3d0737c97433229c8917d27ce87e353284cc03a3"
     },
     {
@@ -1197,13 +1271,14 @@
       "pagination": "not_applicable",
       "success_evidence": "用本次userTurnId匹配running回合，将assistantTurnId传给--turn-id，再核对同一user/assistant回合persisted/synced/canceled及活动列表；success ACK或alreadyStopped均不证明本次取消成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "40a9c1264c21b2f672f72ae17e37336d27c0ea4029ee72cf75dc8c9d10f58fde",
-      "runtime_note": "远端不要求控制端host/daemon；控制端同步后无活动或turn不匹配时可alreadyStopped，执行端陈旧请求也可忽略并ACK success；Operation inbox暂停还可能影响同一执行的后继。已在自有普通会话实测同一回合canceled，不泛化协作流程或工具进程终止。"
+      "runtime_note": "0.107.2历史源码与实测：远端不要求控制端host/daemon；控制端同步后无活动或turn不匹配时可alreadyStopped，执行端陈旧请求也可忽略并ACK success；Operation inbox暂停还可能影响同一执行的后继。已在自有普通会话实测同一回合canceled，不泛化协作流程或工具进程终止。 0.108.1本轮仅采集帮助，未重跑业务。"
     },
     {
       "command": "session chat",
@@ -1222,13 +1297,14 @@
       "pagination": "not_applicable",
       "success_evidence": "保存准确session/turn标识，并以持久化结果和目标产物核对完成、失败或取消；超时不重复创建。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "b874bc9964671425b27fb2bee1ffd4aad505b2b6b2e4edef7665624763fd07a5",
-      "runtime_note": "按会话machine选择本机或远端路径；本机目标需本机运行进程，远端控制端无需host/daemon，执行端仍需运行进程和Agent凭证。已有远端Codex的只读验证回合、持久化完成与回传字节校验已实测。"
+      "verification": "help_verified",
+      "help_sha256": "3384498718dedf819bbbc9dd055af392171ad70ec085c55e403c1b6d6e48ff49",
+      "runtime_note": "0.107.2历史源码与实测：按会话machine选择本机或远端路径；本机目标需本机运行进程，远端控制端无需host/daemon，执行端仍需运行进程和Agent凭证。已有远端Codex的只读验证回合、持久化完成与回传字节校验已实测。 0.108.1本轮仅采集帮助，未重跑业务。"
     },
     {
       "command": "session create",
@@ -1247,13 +1323,14 @@
       "pagination": "not_applicable",
       "success_evidence": "保存准确session/turn标识，并以持久化结果和目标产物核对完成、失败或取消；超时不重复创建。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "b1ebe8ef9f63aacce8b3838ba8f24056b3eee5c997df68c93ab106351eaabf16",
-      "runtime_note": "本机目标需本机Lody运行进程；远端目标经机器RPC派发，控制端无需host/daemon，执行端仍需运行进程和Agent凭证。已有远端Codex的创建、持久化完成和Agent回传字节校验已实测，不推导其他配置或平台。"
+      "verification": "help_verified",
+      "help_sha256": "ad3deb32adeaee6a008be46817de17ec1fb5a6d3065532aed8ef23dd3f55a88e",
+      "runtime_note": "0.107.2历史源码与实测：本机目标需本机Lody运行进程；远端目标经机器RPC派发，控制端无需host/daemon，执行端仍需运行进程和Agent凭证。已有远端Codex的创建、持久化完成和Agent回传字节校验已实测，不推导其他配置或平台。 0.108.1本轮仅采集帮助，未重跑业务。"
     },
     {
       "command": "session delete",
@@ -1271,11 +1348,12 @@
       "pagination": "not_applicable",
       "success_evidence": "后续查询确认对应会话的请求变更；delete针对已归档会话且可能排队清理机器资源。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "1b0cb517470aaa901cd9b56803abc3dc4ebbbcc82dfbb63b45ae792c5ff49b99"
     },
     {
@@ -1295,11 +1373,12 @@
       "pagination": "有--limit与--all读取范围；按帮助选择顺序，不是事件重放流。",
       "success_evidence": "核对明确session与返回的真实状态；metadata、idle或presence消失不能证明持久化任务完成。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "fbc9d97c0a9e28d368f13a16e3d5a10fc8d89fbc019ebd3fccc7721fb8e49d97"
     },
     {
@@ -1318,11 +1397,12 @@
       "pagination": "有--limit与活跃/归档筛选；--all表示含归档，不是all-pages。",
       "success_evidence": "核对明确session与返回的真实状态；metadata、idle或presence消失不能证明持久化任务完成。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "2c52eb872a0111e78e1e6c9866e38c65c794635be01fdf093268d3c8eafc3479"
     },
     {
@@ -1342,34 +1422,37 @@
       "pagination": "not_applicable",
       "success_evidence": "核对明确session与返回的真实状态；metadata、idle或presence消失不能证明持久化任务完成。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "6b97a701b145dde646b12c624ed32172bf816dd9c0d31f9eef72ca2a589f1b80"
     },
     {
       "command": "session recover-inbox",
-      "summary": "Inspect a blocked local execution; recover only after all its resources are released",
+      "summary": "Inspect blocked Inbox ownership offline; recover only after all old resources are released",
       "requires": {
-        "authentication": "unknown",
+        "authentication": false,
         "workspace": true,
-        "local_runtime": "unknown"
+        "local_runtime": false
       },
-      "effect": "modify",
+      "effect": "mixed",
       "output_formats": [
         "unspecified"
       ],
       "pagination": "not_applicable",
-      "success_evidence": "先检查被阻塞的执行；确认所有旧资源确已释放后才可按精确执行ID恢复，不自动声明资源已释放。",
+      "success_evidence": "默认仅离线检查所属本机store；恢复须先退出Desktop/停daemon，使用检查得到的准确execution+snapshot或orphan token，独立确认全部旧资源及请求已释放。帮助不证明真实恢复；恢复后Inbox保持paused，不自动重放旧请求。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "4f1ab4d8492ae455e44b165a20d0f9ae8185ccc3db081be227634275d23683de"
+      "verification": "help_verified",
+      "help_sha256": "2ea47a4af5e328ce509a221710f71be1fe94c4cffa908386fdd616359a33e164",
+      "source_note": "不读取账户身份，直接针对明确machine/workspace/session的本地store；默认inspect为readonly SQLite，但会取得host lease，须在Agent会话外且先停Desktop/daemon。恢复参数才写store，且另需确认全部旧资源已释放。"
     },
     {
       "command": "session rename",
@@ -1387,11 +1470,12 @@
       "pagination": "not_applicable",
       "success_evidence": "使用显式session/workspace/--title，后续同步查询确认对应标题；往返测试保存并还原标题，再核对最新回合和可见历史。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "25ba57c3484b34db15f5a12f6631c8c75aaaee8511be2bc93205bd38064b3d6f"
     },
     {
@@ -1410,11 +1494,12 @@
       "pagination": "not_applicable",
       "success_evidence": "先确认根已归档及全部直接parentSessionId子项的授权/原状态；后续同步查询核对根和实际受影响子项isArchived=false与响应child IDs。该范围不对称于archive，不证明递归后代或原进程恢复。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "b306806037a5cf0d2c820e928066f92f2b2d5b73460840adf3b997742fa7dba9"
     },
     {
@@ -1433,11 +1518,12 @@
       "pagination": "not_applicable",
       "success_evidence": "核对明确session与返回的真实状态；metadata、idle或presence消失不能证明持久化任务完成。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "6b30d216affadd2f5eafa9a5acf37078a5cfec4714fa8bd93d43b1aa0fd208bf"
     },
     {
@@ -1446,7 +1532,7 @@
       "requires": {
         "authentication": true,
         "workspace": true,
-        "local_runtime": "unknown"
+        "local_runtime": false
       },
       "effect": "read",
       "output_formats": [
@@ -1456,12 +1542,14 @@
       "pagination": "not_applicable",
       "success_evidence": "核对明确session与返回的真实状态；metadata、idle或presence消失不能证明持久化任务完成。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/session-orchestration/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "8110a64bbe8d1a4481ef91d82c155575e9512c94d2edfe85b5b940fcb07529cd"
+      "verification": "help_verified",
+      "help_sha256": "8110a64bbe8d1a4481ef91d82c155575e9512c94d2edfe85b5b940fcb07529cd",
+      "source_note": "可用独立workspace manager并查询目标状态，无需已有控制端daemon；状态查询成功不代表任务完成。"
     },
     {
       "command": "start",
@@ -1478,12 +1566,14 @@
       "pagination": "not_applicable",
       "success_evidence": "核对运行中的真实版本、机器连接与daemon就绪，不仅看进程存在。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://lody.ai/zh/docs/quickstart/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "3010d6dc8ca2d6507fd58b29451afbd262e12fba3e376f5dbcf8e1eee1728d27"
+      "verification": "help_verified",
+      "help_sha256": "3010d6dc8ca2d6507fd58b29451afbd262e12fba3e376f5dbcf8e1eee1728d27",
+      "source_note": "启动前台host；cloud缺身份时可能进入device授权，不能当只读健康检查或仅查询版本。"
     },
     {
       "command": "sync",
@@ -1491,7 +1581,7 @@
       "requires": {
         "authentication": true,
         "workspace": true,
-        "local_runtime": "unknown"
+        "local_runtime": false
       },
       "effect": "local_file",
       "output_formats": [
@@ -1502,10 +1592,12 @@
       "pagination": "not_applicable",
       "success_evidence": "确认所选工作区Loro数据已同步至本地缓存；不是代码Git推送或Agent任务完成。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
-      "help_sha256": "e3e1996c841e72c853481aebd2dd4a56c463a6e60c31d2f3c11d89d32f36d344"
+      "verification": "help_verified",
+      "help_sha256": "e3e1996c841e72c853481aebd2dd4a56c463a6e60c31d2f3c11d89d32f36d344",
+      "source_note": "写本地工作区cache，并进行网络同步；独立manager无需已有本机daemon。"
     },
     {
       "command": "workspace",
@@ -1522,10 +1614,11 @@
       "pagination": "按具体子命令帮助",
       "success_evidence": "核对具体子命令帮助及其业务结果；分组帮助本身不证明操作成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "434ae04811b9cbc292c21cbfbdd5559b89f10ad17c309366fd8054246cd49df8"
     },
     {
@@ -1544,11 +1637,13 @@
       "pagination": "not_applicable",
       "success_evidence": "核对明确授权身份/工作区及分页结果；未知可用性不能报告为离线或派发成功。",
       "sources": [
+        "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
         "https://lody.ai/zh/docs/cli/",
         "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz"
       ],
-      "verification": "documented",
+      "verification": "help_verified",
       "help_sha256": "8f035998fb9a5e52b3971007858bf938bbcb4b67ebabb2ee0175698e5bcfc14b"
     }
-  ]
+  ],
+  "verification_note": "0.108.1公开树由本轮实际root --help递归重发现，70业务/分组路径与12个内置help入口分别记录。help_verified仅证明帮助，source_note来自固定当前发布源码，业务online一律按command-audit单独记录；旧0.107.2任务实测不迁移成新版成功。"
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install the locked Lody runtime without login or daemon side effects."""
+"""Resolve and install Lody latest transactionally, without login or daemon effects."""
 
 import argparse
 import contextlib
@@ -12,6 +12,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from urllib.parse import urlsplit
 
 import platform_support
 from common import parse_cli_version, version_warnings
@@ -22,7 +23,8 @@ OWNER = {"schema_version": 1, "owner": "lody4dot"}
 RUNTIME_DIR = Path(__file__).resolve().parent.parent / "runtime"
 NATIVE_MODULES = ["better-sqlite3", "@lydell/node-pty", "@napi-rs/keyring",
                   "loro-crdt", "@loro-dev/roost-node"]
-LAUNCHER = '''#!/usr/bin/env python3
+PRIVATE_ENVIRONMENT_KEYS = ("LODY_CLI_TOKEN", "NPM_TOKEN", "NODE_AUTH_TOKEN", "GITEE_ACCESS_TOKEN")
+LEGACY_LAUNCHER = '''#!/usr/bin/env python3
 # Managed by lody4dot installer
 import os
 from pathlib import Path
@@ -30,6 +32,23 @@ import sys
 
 runtime = Path(__file__).resolve().parent.parent / "current"
 os.execvp("node", ["node", str(runtime / "node_modules/lody/dist/index.js"), *sys.argv[1:]])
+'''
+LAUNCHER = '''#!/usr/bin/env python3
+# Managed by lody4dot installer
+import json
+import os
+from pathlib import Path
+import sys
+
+runtime = Path(__file__).resolve().parent.parent / "current"
+receipt = json.loads((runtime / "receipt.json").read_text(encoding="utf-8"))
+if "node_path" not in receipt:
+    # Receipts written before Node pinning retain their original launch behavior.
+    os.execvp("node", ["node", str(runtime / "node_modules/lody/dist/index.js"), *sys.argv[1:]])
+node = receipt["node_path"]
+if not isinstance(node, str) or not Path(node).is_absolute():
+    raise SystemExit("Managed Node path is invalid")
+os.execv(node, [node, str(runtime / "node_modules/lody/dist/index.js"), *sys.argv[1:]])
 '''
 NATIVE_CHECK = '''import { createRequire } from 'node:module';
 const require = createRequire(process.cwd() + '/package.json');
@@ -95,13 +114,13 @@ def _inputs(runtime_dir):
     manifest = _read_json(runtime_dir / "package.json")
     lock = _read_json(runtime_dir / "package-lock.json")
     policy = _read_json(runtime_dir / "build-policy.json")
-    version = manifest.get("dependencies", {}).get("lody")
-    if not isinstance(version, str) or not re.fullmatch(r"\d+\.\d+\.\d+", version):
-        raise InstallError("Lody dependency must use one exact version", 5, "unsupported")
+    if manifest.get("dependencies", {}).get("lody") != "latest":
+        raise InstallError("Lody dependency must use latest", 5, "unsupported")
     packages = lock.get("packages")
+    version = packages.get("node_modules/lody", {}).get("version") if isinstance(packages, dict) else None
     if (lock.get("lockfileVersion") != 3 or not isinstance(packages, dict)
             or packages.get("", {}).get("dependencies") != manifest.get("dependencies")
-            or packages.get("node_modules/lody", {}).get("version") != version):
+            or not isinstance(version, str) or not re.fullmatch(r"\d+\.\d+\.\d+", version)):
         raise InstallError("Manifest and lockfile do not agree", 5, "unsupported")
     if (policy.get("schema_version") != 1 or policy.get("lifecycle_scripts") != "disabled"
             or policy.get("reviewed_install_script_packages") != []
@@ -110,6 +129,16 @@ def _inputs(runtime_dir):
     if any(not isinstance(item, dict) or item.get("hasInstallScript")
            for item in packages.values()):
         raise InstallError("Install scripts require a new reviewed build policy", 5, "unsupported")
+    for item in packages.values():
+        if "resolved" not in item:
+            continue
+        try:
+            source = urlsplit(item["resolved"]) if isinstance(item["resolved"], str) else None
+        except ValueError:
+            source = None
+        if (source is None or source.scheme != "https" or source.netloc != "registry.npmjs.org"
+                or not source.path.startswith("/") or source.query or source.fragment):
+            raise InstallError("Package sources must use the official npm HTTPS registry", 5, "unsupported")
     # The scoped override is a reviewed compatibility fix, not an npm audit downgrade.
     if manifest.get("overrides") != {"lody": {"tinypool": "2.1.2"}}:
         raise InstallError("Reviewed Tinypool override is required", 5, "unsupported")
@@ -128,7 +157,7 @@ def _preflight():
     version = _run([node, "--version"], timeout=15).stdout.strip()
     if not supported_node(version):
         raise InstallError("Node.js >=22.14 <23 or >=23.6 is required", 5, "unsupported")
-    return node, npm, version
+    return str(Path(node).resolve()), npm, version
 
 
 def _safe_directory(path):
@@ -154,7 +183,7 @@ def _check_layout(prefix):
         raise InstallError("Installation lock has an unexpected file type")
     launcher = prefix / "bin/lody"
     if launcher.is_symlink() or (launcher.exists() and
-            (not launcher.is_file() or launcher.read_text(encoding="utf-8") != LAUNCHER)):
+            (not launcher.is_file() or launcher.read_text(encoding="utf-8") not in {LAUNCHER, LEGACY_LAUNCHER})):
         raise InstallError("Refusing to replace an unknown CLI launcher")
     current = prefix / "current"
     if current.is_symlink():
@@ -183,13 +212,25 @@ def _write_json(path, value):
             os.unlink(filename)
 
 
+def _restore_receipt(path, contents):
+    fd, filename = tempfile.mkstemp(prefix=f".{path.name}-", dir=path.parent)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(contents)
+        os.replace(filename, path)
+    finally:
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(filename)
+
+
 def _verify(directory, node, version):
     cli = directory / "node_modules/lody/dist/index.js"
     if not cli.is_file() or cli.is_symlink():
         raise InstallError("Installed Lody entrypoint is unavailable", 4, "install")
     with tempfile.TemporaryDirectory(prefix="lody4dot-verify-") as state:
         env = os.environ.copy()
-        env.pop("LODY_CLI_TOKEN", None)
+        for name in PRIVATE_ENVIRONMENT_KEYS:
+            env.pop(name, None)
         env.update({"LODY_DATA_DIR": state, "NO_COLOR": "1"})
         try:
             reported = _run([node, str(cli), "--version"], cwd=directory, env=env,
@@ -210,27 +251,41 @@ def _verify(directory, node, version):
     return actual, warnings
 
 
+def _replace_launcher(launcher, text):
+    fd, filename = tempfile.mkstemp(prefix=".lody-", dir=launcher.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            stream.write(text)
+        os.chmod(filename, 0o755)
+        os.replace(filename, launcher)
+    finally:
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(filename)
+
+
 def _activate(prefix, digest):
-    # Nothing after current replacement may fail: old current remains usable until this point.
+    # A failed current switch also restores the previous known launcher.
     launcher = prefix / "bin/lody"
-    if not launcher.exists():
-        fd, filename = tempfile.mkstemp(prefix=".lody-", dir=launcher.parent)
-        try:
-            with os.fdopen(fd, "w", encoding="utf-8") as stream:
-                stream.write(LAUNCHER)
-            os.chmod(filename, 0o755)
-            os.replace(filename, launcher)
-        finally:
-            with contextlib.suppress(FileNotFoundError):
-                os.unlink(filename)
-    else:
-        launcher.chmod(0o755)
+    previous = launcher.read_text(encoding="utf-8") if launcher.exists() else None
     temporary = prefix / ".current-next"
     if temporary.is_symlink() or temporary.exists():
         raise InstallError("Unexpected activation temporary path; refusing replacement")
+    changed = False
     try:
         temporary.symlink_to(Path("versions") / digest)
+        if previous != LAUNCHER:
+            _replace_launcher(launcher, LAUNCHER)
+            changed = True
+        else:
+            launcher.chmod(0o755)
         os.replace(temporary, prefix / "current")
+    except BaseException:
+        if changed:
+            if previous is None:
+                launcher.unlink()
+            else:
+                _replace_launcher(launcher, previous)
+        raise
     finally:
         with contextlib.suppress(FileNotFoundError):
             temporary.unlink()
@@ -243,7 +298,7 @@ def install(prefix, *, runtime_dir=None):
         raise InstallError(str(exc), 5, "unsupported") from None
     prefix = Path(os.path.abspath(os.path.expanduser(str(prefix))))
     runtime_dir = Path(runtime_dir) if runtime_dir is not None else RUNTIME_DIR
-    version, digest = _inputs(runtime_dir)
+    _inputs(runtime_dir)
     node, npm, node_version = _preflight()
     _check_layout(prefix)
     prefix.mkdir(parents=True, exist_ok=True)
@@ -257,40 +312,60 @@ def install(prefix, *, runtime_dir=None):
         _check_layout(prefix)
         for name in ("versions", "cache", "bin"):
             (prefix / name).mkdir(exist_ok=True)
-        destination = prefix / "versions" / digest
-        _safe_directory(destination)
-        reused = destination.exists()
-        if reused:
-            receipt = _read_json(destination / "receipt.json")
-            _read_json(destination / "package-lock.json")
-            _read_json(destination / "package.json")
-            if (receipt.get("schema_version") != 1 or receipt.get("lock_sha256") != digest
-                    or hashlib.sha256((destination / "package-lock.json").read_bytes()).hexdigest() != digest
-                    or (destination / "package.json").read_bytes() != (runtime_dir / "package.json").read_bytes()):
-                raise InstallError("Existing version does not match its managed receipt")
-            actual, warnings = _verify(destination, node, version)
-            receipt.update({"lody_version": actual, "baseline_lody_version": version})
-            _write_json(destination / "receipt.json", receipt)
-        else:
-            with tempfile.TemporaryDirectory(prefix=".staging-", dir=prefix / "versions") as temporary:
-                staging = Path(temporary)
-                for name in ("package.json", "package-lock.json", "build-policy.json"):
-                    shutil.copyfile(runtime_dir / name, staging / name)
-                env = os.environ.copy()
-                env.pop("LODY_CLI_TOKEN", None)
-                _run([npm, "ci", "--ignore-scripts", "--no-fund", "--no-audit",
-                      "--cache", str(prefix / "cache")], cwd=staging, env=env, timeout=300)
+        receipt_backup = None
+        receipt_update = None
+        with tempfile.TemporaryDirectory(prefix=".staging-", dir=prefix / "versions") as temporary:
+            staging = Path(temporary)
+            for name in ("package.json", "package-lock.json", "build-policy.json"):
+                shutil.copyfile(runtime_dir / name, staging / name)
+            env = os.environ.copy()
+            for name in PRIVATE_ENVIRONMENT_KEYS:
+                env.pop(name, None)
+            env["PATH"] = str(Path(node).parent) + os.pathsep + env.get("PATH", os.defpath)
+            npm_options = ["--ignore-scripts", "--engine-strict", "--no-fund", "--no-audit",
+                           "--registry=https://registry.npmjs.org", "--cache", str(prefix / "cache")]
+            _run([npm, "update", "lody", "--package-lock-only", *npm_options],
+                 cwd=staging, env=env, timeout=300)
+            version, digest = _inputs(staging)
+            destination = prefix / "versions" / digest
+            _safe_directory(destination)
+            reused = destination.exists()
+            if reused:
+                receipt = _read_json(destination / "receipt.json")
+                _read_json(destination / "package-lock.json")
+                _read_json(destination / "package.json")
+                if (receipt.get("schema_version") != 1 or receipt.get("lock_sha256") != digest
+                        or hashlib.sha256((destination / "package-lock.json").read_bytes()).hexdigest() != digest
+                        or (destination / "package.json").read_bytes() != (staging / "package.json").read_bytes()):
+                    raise InstallError("Existing version does not match its managed receipt")
+                actual, warnings = _verify(destination, node, version)
+                old_receipt = (destination / "receipt.json").read_bytes()
+                receipt.update({"lody_version": actual, "baseline_lody_version": version,
+                                "node_path": node, "node_version": node_version})
+                receipt_backup = (destination / "receipt.json", old_receipt)
+                receipt_update = (destination / "receipt.json", receipt)
+            else:
+                _run([npm, "ci", *npm_options], cwd=staging, env=env, timeout=300)
                 actual, warnings = _verify(staging, node, version)
                 _write_json(staging / "receipt.json", {
                     "schema_version": 1, "lody_version": actual,
                     "baseline_lody_version": version, "lock_sha256": digest,
-                    "node_version": node_version, "platform": "linux", "native_modules": NATIVE_MODULES})
+                    "node_path": node, "node_version": node_version,
+                    "platform": "linux", "native_modules": NATIVE_MODULES})
                 staging.rename(destination)
                 # TemporaryDirectory cleanup tolerates the renamed staging path.
-        _activate(prefix, digest)
+        try:
+            if receipt_update is not None:
+                _write_json(*receipt_update)
+            _activate(prefix, digest)
+        except BaseException:
+            if receipt_backup is not None:
+                _restore_receipt(*receipt_backup)
+            raise
     return {"schema_version": 1, "status": "pass", "error_category": None,
             "lody_version": actual, "actual_lody_version": actual,
             "baseline_lody_version": version, "warnings": warnings,
+            "requested_lody_version": "latest", "node_path": node,
             "lock_sha256": digest, "reused": reused,
             "prefix": str(prefix), "cli": str(prefix / "bin/lody"),
             "evidence": (["version"] if actual is not None else []) + ["help", "native_modules"],

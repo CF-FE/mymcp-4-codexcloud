@@ -14,7 +14,7 @@ import subprocess
 import sys
 
 from common import (DEFAULT_PREFIX, LODY_VERSION, ToolError, emit, error_result, installed_cli,
-                    local_provenance, offline_version, require_runtime_platform, result,
+                    local_provenance, node_for_cli, offline_version, require_runtime_platform, result,
                     parse_cli_version, state_directory, supported_node, verify_account,
                     verify_catalog, version_warnings)
 
@@ -103,17 +103,25 @@ def diagnose(args):
     try:
         require_runtime_platform()
         active = "node"
-        if not shutil.which("node"):
+        runtime_error = None
+        try:
+            cli = installed_cli(args.prefix)
+        except ToolError as exc:
+            runtime_error = exc
+        executable = node_for_cli(cli) if cli is not None else "node"
+        if executable == "node" and not shutil.which("node"):
             raise ToolError(3, "missing_executable", "Node is unavailable.")
         try:
-            node = subprocess.run(["node", "--version"], capture_output=True, text=True, timeout=args.timeout)
+            node = subprocess.run([executable, "--version"], capture_output=True, text=True, timeout=args.timeout)
         except subprocess.TimeoutExpired as exc:
             raise ToolError(4, "timeout", "Node version check timed out.") from exc
         if node.returncode or not supported_node(node.stdout):
             raise ToolError(5, "unsupported_node", "Node must be >=22.14 <23 or >=23.6.")
-        check("node", "pass", "Supported Node version.", version=node.stdout.strip())
+        check("node", "pass", "Supported tooling Node version; installer checks CLI dependency engines.",
+              version=node.stdout.strip(), executable=executable)
         active = "runtime"
-        cli = installed_cli(args.prefix)
+        if runtime_error is not None:
+            raise runtime_error
         version = offline_version(cli, args.timeout)
         if version is None:
             check("runtime", "warn", "Managed CLI entrypoint exists; version execution was not verified.", version=None)

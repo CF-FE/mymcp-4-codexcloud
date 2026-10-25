@@ -2,6 +2,8 @@
 
 适用于 Lody `0.107.2` 的已记录用法。先用当前安装版本的帮助核实具体参数；以下参考没有执行真实调度或取消操作。
 
+2026-10-25已实际重发现0.108.1公开树并核对本节帮助，handler前提只做source_verified，见[审查矩阵](command-audit.json)。cloud CLI调度控制可使用独立workspace manager；目标机器daemon仍负责实际执行。OSS/local分支有本地control前提，不能从控制端没有daemon推导所有路径均失败或均可用。本轮未修改或运行调度。
+
 ## 选择正确的操作
 
 | 目标 | 入口 | 必须区分的结果 |
@@ -48,6 +50,8 @@ lody operation list --workspace WORKSPACE_ID --session REQUESTER_SESSION_ID --st
 ```
 
 请求方会话也可由受支持的 `LODY_SESSION_ID` 提供；使用前确认其身份和工作区。`operation list` 查询当前机器的持久 store，并限定请求方会话及登录用户；不能据此推断其他机器没有任务。
+
+0.108.1源码显示该查询不要求已有daemon，但打开本机OperationStore可能创建/初始化SQLite，不能称为零本地文件副作用。只读业务意图也不自动授予读取任意会话的权限。
 
 需要更多结果时，以本命令帮助为准使用 `--limit` 和 `--cursor`，保持相同筛选条件继续分页。取消或其他操作先查 `lody operation --help`，不要将 MCP 工具名机械转换成未经核实的 CLI 子命令。
 

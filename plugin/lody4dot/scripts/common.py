@@ -14,7 +14,19 @@ import tempfile
 import platform_support
 
 SCHEMA_VERSION = 1
-LODY_VERSION = "0.107.2"
+
+
+def _lock_baseline():
+    """The shipped lock is an observation, not the installation version policy."""
+    try:
+        runtime = Path(__file__).resolve().parent.parent / "runtime"
+        lock, _ = _provenance_json(runtime, "package-lock.json")
+        value = lock["packages"]["node_modules/lody"]["version"]
+        return value if isinstance(value, str) and re.fullmatch(r"\d+\.\d+\.\d+", value) else None
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
 DEFAULT_PREFIX = "/workspace/.tools/lody4dot"
 
 
@@ -28,8 +40,10 @@ def parse_cli_version(value):
     return match.group(1) if match else None
 
 
-def version_warnings(actual, baseline=LODY_VERSION):
+def version_warnings(actual, baseline=None):
     """Versions are observations and advice, never execution prerequisites."""
+    if baseline is None:
+        baseline = LODY_VERSION
     actual, baseline = parse_cli_version(actual), parse_cli_version(baseline)
     if actual is None:
         return [{"code": "cli_version_unknown", "status": "warn", "actual": None,
@@ -123,6 +137,35 @@ def installed_cli(prefix):
         raise ToolError(3, "missing_runtime", "Managed Lody runtime is unavailable; run install.py.") from exc
 
 
+def node_for_cli(cli):
+    """Keep the interpreter that was validated when this owned CLI was installed."""
+    cli = Path(cli)
+    if (cli.name != "index.js" or cli.parent.name != "dist"
+            or cli.parent.parent.name != "lody"):
+        return "node"
+    runtime = cli.parents[3]
+    receipt_path = runtime / "receipt.json"
+    if not receipt_path.exists():
+        return "node"
+    try:
+        receipt, _ = _provenance_json(runtime, "receipt.json")
+        if "node_path" not in receipt:
+            return "node"  # Previously installed receipts retain their PATH behavior.
+        raw = receipt["node_path"]
+        if not isinstance(raw, str) or not raw or len(raw) > 4096:
+            raise ValueError("invalid interpreter")
+        node = Path(raw)
+        if not node.is_absolute() or node.resolve() != node:
+            raise ValueError("invalid interpreter")
+        if not node.is_file() or not os.access(node, os.X_OK):
+            raise ToolError(3, "missing_executable", "Managed Node executable is unavailable; prepare supported Node.")
+        return str(node)
+    except ToolError:
+        raise
+    except (OSError, ValueError, TypeError):
+        raise ToolError(5, "invalid_runtime", "Managed Node interpreter receipt is invalid.") from None
+
+
 def _provenance_bytes(root, relative, limit=2 * 1024 * 1024):
     """Read bounded local evidence without following package members out of root."""
     name = PurePosixPath(relative)
@@ -155,6 +198,9 @@ def _provenance_json(root, relative):
     if not isinstance(value, dict):
         raise ValueError("invalid evidence object")
     return value, hashlib.sha256(raw).hexdigest()
+
+
+LODY_VERSION = _lock_baseline()
 
 
 def _bundle_member(name):
@@ -274,6 +320,9 @@ def run_native(argv, *, data_dir, timeout=30, keep_token=False):
     env.update(LODY_DATA_DIR=str(data_dir), NO_COLOR="1")
     if not keep_token:
         env.pop("LODY_CLI_TOKEN", None)
+    argv = list(argv)
+    if len(argv) > 1 and str(argv[0]) == "node":
+        argv[0] = node_for_cli(argv[1])
     try:
         process = subprocess.Popen([str(a) for a in argv], env=env, text=True,
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE,

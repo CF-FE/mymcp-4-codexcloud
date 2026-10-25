@@ -17,6 +17,8 @@
 
 实际 `0.107.2` 帮助已弃用每会话 `--env`，环境改在 Agent config 配置。`--wait` 与 `--timeout` 可用于当前命令支持的等待，但等待超时不取消已经接受的任务，也不授权重发。
 
+0.108.1实际帮助继续保留上述弃用提示，并为`session create/chat`增加`--mcp-server-ids <json>`；接受MCP IDs数组，`[]`禁用全部。先核对已授权的MCP目录与当前目标，再在本次任务范围内选择。帮助与参数存在不证明目标turn已加载工具；详见[配置与MCP](configuration.md)。
+
 ```bash
 lody session create --help
 lody session create --workspace WORKSPACE_ID --machine MACHINE_ID --agent-config AGENT_CONFIG_ID --title "Controlled task" --prompt-file /path/to/task.md --json
@@ -48,7 +50,9 @@ JSONL 的 sequence 只排序当前观察进程，不能用它保证跨进程恢�
 - 执行端观察到归档后会释放 runtime、终端、预览及 ACP 等资源，并可能清理关联的活动子会话、安排关联 worktree 的 GC；归档前也须评估磁盘清理影响。恢复元数据不代表恢复同一进程或还原已发生的 worktree 清理；源码还保留终止失败的处理，不能从归档成功推导所有进程已停止。维护命令没有取消命令的 `--turn-id` 条件；有活动回合、排队输入或不明关联时先核实，不为测试归档用户已有任务。
 - `delete` 永久删除已归档会话，并会排队进行机器侧资源清理；不能把它当普通归档或诊断动作。
 - `cancel` 针对当前任务明确允许取消的运行回合；先用本次请求的 userTurnId 匹配 observe 中的 running 回合，再将对应的 **assistantTurnId** 传给 `--turn-id`。按目标机器走本机或远端路径。控制端重新同步时没有活动回合或指定 turn 不匹配，可返回 `alreadyStopped`；派发后的陈旧请求也可能被执行端忽略却返回 `success:true`。ACK 不证明取消，仍须核对同一 user/assistant 回合的 persisted/synced/canceled 终态。Operation inbox 的暂停还可能影响同一执行的后继回合，不能把 `--turn-id` 当成适用于所有协作流程的原子隔离保证。不要在用户已有任务中试验取消。
-- `recover-inbox` 用于检查被阻塞的本地执行；恢复前必须确认所有旧资源（包括未记录的进程）已释放，才可按准确 workspace、machine 和 execution ID 使用恢复参数。不得自动加 `--confirm-resources-released` 来掩盖不明状态。
+- `recover-inbox` 的0.108.1帮助将默认行为明确为所属本机store的离线检查，不传恢复参数时不执行恢复。恢复前先退出所属机器的Lody Desktop并停daemon；`--execution`须配合检查产生的准确`--snapshot`，缺失execution所有权按帮助使用对应`--orphan` token。缺execution或daemon已死不证明资源释放，必须独立确认全部旧进程和请求均已释放，再使用`--confirm-resources-released`。帮助承诺恢复保留历史与已保存结果、不重放不确定旧请求、Inbox仍保持paused；不要为清除暂停而自动发送新的human/Agent-chat输入。本轮未执行真实恢复，Windows仍需人工处理。
+
+0.108.1源码补核：该operator入口不读取账号身份，按明确machine/workspace/session打开已有本地store；默认inspect以readonly方式打开SQLite，但仍先取得本机host lease，要求Desktop/daemon停止且不能在Agent会话内运行。它不等于普通线上session查询，也不是无任何本地影响的探针。本轮仅帮助与源码核对。
 
 ```bash
 lody session cancel SESSION_ID --workspace WORKSPACE_ID --turn-id ASSISTANT_TURN_ID --json

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "lody_version": "0.107.2",
-  "captured_at": "2026-10-20",
-  "verification_note": "documented表示资料和帮助可追溯，help_executed只表示帮助命令成功；均不表示已安装发布、登录、连接或真实业务功能通过。发行是否安全支持仍由运行时依赖检查与发布验收决定。",
+  "lody_version": "0.108.1",
+  "captured_at": "2026-10-25T06:56:46.898431+00:00",
+  "verification_note": "当前help-snapshot为0.108.1实际帮助，help_executed仅表示版本/帮助退出0，不表示登录、目录、任务或发布成功。2026-10-20至21的官网、0.107.2源码和业务记录保留当时版本范围；不能用本轮帮助覆盖其历史含义。",
   "sources": [
     {
       "id": "cli",
@@ -86,13 +86,13 @@
     },
     {
       "id": "public-help",
-      "url": "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz",
-      "retrieved_at": "2026-10-20",
-      "version_scope": "0.107.2",
-      "scope": "70个公开命令路径的--help实际exit0；20个一级入口，排除内部入口",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
+      "retrieved_at": "2026-10-25",
+      "version_scope": "0.108.1；Node24.22.1/npm11.19.1",
+      "scope": "本轮从实际根帮助重新递归发现20类70业务/分组命令，另实际验证12个自动help入口；全部正确帮助形式exit0，身份环境隔离、临时machine-id已清理。",
       "verification": "help_executed",
       "resource": "help-snapshot.json",
-      "sha256": "e3ee1b9668b26cf2e3a0ea8647b9841dc250099b6542fe41903721814eaefd85",
+      "sha256": "c6dbd148ab4bd0dbabe4b7fa85b488ee3a0c404a781c89f6324a37b278b45e48",
       "command_count": 70,
       "root_count": 20
     },
@@ -158,6 +158,69 @@
       "note": "archive按parentSessionId ?? openedBySessionId递归；restore仅根和直接parent子项，不能当对称回滚。自有无后代会话的改名往返/归档/恢复已实测，原标题和未归档状态恢复，6条可见历史和latestTurn不变、无activeTurns/队列。未测级联或进程恢复。执行端归档释放可能遇到终止失败；控制端按assistantTurnId预检取消，执行端陈旧请求可success:true但被忽略；Operation inbox暂停可影响同一执行的后继，必须核对持久化目标终态。"
     },
     {
+      "id": "latest-install-policy-20261025",
+      "url": "https://registry.npmjs.org/lody",
+      "retrieved_at": "2026-10-25",
+      "version_scope": "本轮latest解析结果0.108.1；将来结果以当次安装收据为准",
+      "scope": "已授权prepare在暂存目录定向更新lody锁并做engine-strict安装/复用；源码lock精确锁定0.108.1，inspect与已安装runtime启动检查不自动升级",
+      "verification": "managed_install_and_help_executed"
+    },
+    {
+      "id": "auth-state-boundary-0.108.1",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
+      "retrieved_at": "2026-10-25",
+      "version_scope": "0.108.1",
+      "resource_in_package": "dist/index.js",
+      "sha256": "9c8a160f6c77de765c263558e60d7b94c7293952e2c4d235ed2560f616fa8881",
+      "scope": "显式--auth分支、API-key validate/local identity、pairing exchange、device create API key、目录credentials/SQLite以及LODY_CLI_TOKEN仅为屏蔽名单",
+      "verification": "source_verified",
+      "source_locations": {
+        "loginCommand": "308567",
+        "api_key_login": "78665",
+        "machine_pairing_exchange": "78692",
+        "device_finalize": "78593",
+        "catalog_auth": "121108",
+        "workspace_manager": "102060",
+        "sqlite_store": "99194",
+        "token_mask_list": "281326"
+      },
+      "note": "静态发布源码审查；API-key分支没有显式远端key/machine创建，不等于已验证服务端全部副作用。本轮未login/配对/设备授权，无新版账户或目录成功证据；无已核实的官方环境token直读或无状态目录入口。"
+    },
+    {
+      "id": "streams-auth-diagnostics-0.108.1",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
+      "retrieved_at": "2026-10-25",
+      "version_scope": "0.108.1",
+      "resource_in_package": "dist/index.js",
+      "sha256": "9c8a160f6c77de765c263558e60d7b94c7293952e2c4d235ed2560f616fa8881",
+      "scope": "默认401/403短期Streams token刷新/一次重试，append Producer-Epoch例外，request ID/诊断投影及原始response body边界",
+      "verification": "source_verified",
+      "source_locations": {
+        "fetch_authorization_retry": "47574/47596",
+        "effect_authorization_retry": "46851",
+        "producer_epoch_append_exception": "47944/47987",
+        "cli_auth_callback": "101816",
+        "token_provider_reset": "35829/36045",
+        "safe_request_id": "45056/45116",
+        "diagnostic_attempt_id": "46748/47468",
+        "diagnostic_projection": "99426/99462/101803",
+        "response_error_body": "45121",
+        "undici_diagnostics": "74683/74802"
+      },
+      "note": "默认刷新的是短期Streams token，不是新建CLI API key或重新登录；未见CLI覆盖refreshOn403/refreshOnForbidden开关。request ID/cf-ray仅语法过滤，投影可含workspace/room、原始异常可含响应正文，不能自动视为脱敏。本轮未重试线上403，历史拒绝原因仍unknown。"
+    },
+    {
+      "id": "public-command-audit-0.108.1",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
+      "retrieved_at": "2026-10-25",
+      "version_scope": "0.108.1",
+      "resource": "command-audit.json",
+      "scope": "70公开业务/分组命令与12个自动help入口的参数、用途、身份/workspace、效果、验证和真实未运行状态；不执行mutation或线上目录。",
+      "verification": "help_executed_and_source_verified",
+      "source_artifact_sha256": "9c8a160f6c77de765c263558e60d7b94c7293952e2c4d235ed2560f616fa8881",
+      "note": "完整公开树由实际根递归发现后再与旧索引比较，不能由旧70清单证明覆盖。command-audit明确online未运行与模板时序阻点；帮助有临时machine-id写入并已清理。"
+    },
+    {
       "id": "agent-role-project-relationships",
       "url": "https://registry.npmjs.org/lody/-/lody-0.107.2.tgz",
       "retrieved_at": "2026-10-21",
@@ -165,6 +228,22 @@
       "scope": "AgentRoleCreateProposalSchema/AgentRoleUpdateProposalSchema、applyAgentRoleProposal、agentRoleWriteCommand、ProjectRefSchema、projectAddCommand及resolveAgentRoleCreate；多Role复用、初始runConfig与可写字段、身份机器的session/call-tool路由、本地项目和会话组合",
       "verification": "static_official_release_source_verified",
       "note": "多个Role可复用machineId和agentConfigId；create提议保存后runConfig为空，update补丁只支持name/description/promptPrefix。cloud CLI提议调用auth.machineId的会话工具，参数machineId仅绑定Role目标；不能套用普通远端会话派发前提。project add登记本机目录，会话可组合Role与local project或repo，local project须属于最终目标机器。未核实Project持久拥有Role组，不据此否定其他版本/UI；未实测本轮角色提议/用户保存、项目写入或按Role执行。"
+    },
+    {
+      "id": "agent-role-project-relationships-0.108.1",
+      "url": "https://registry.npmjs.org/lody/-/lody-0.108.1.tgz",
+      "retrieved_at": "2026-10-25",
+      "version_scope": "0.108.1",
+      "resource_in_package": "dist/index.js",
+      "sha256": "9c8a160f6c77de765c263558e60d7b94c7293952e2c4d235ed2560f616fa8881",
+      "scope": "复核main的0.2.6 Role/Project知识：proposal schemas、applyAgentRoleProposal、agentRoleWriteCommand、resolveCreateContext、multi-target Role解析与local project机器归属",
+      "verification": "source_verified",
+      "source_locations": {
+        "proposal_schema_and_apply": "4727-4795",
+        "role_target_and_proposal_route": "247600-247903",
+        "project_context_selection": "251548-251679"
+      },
+      "note": "保留0.107.2历史记录。0.108.1同样允许多Role复用machine/config，create保存runConfig为空，update仅name/description/promptPrefix；提议使用auth.machineId本地control host的所属会话而不是字段machineId，不能套用普通远端session派发前提。已保存Role支持多target解析，不扩大CLI create schema；local project须属于Role解析后的最终机器。未核实Project持久Role组，未运行提议/用户保存、项目登记或Role任务。"
     }
   ],
   "known_differences": [
@@ -191,6 +270,18 @@
       "topic": "控制端与执行端运行前提",
       "website": "官网概括这些会话命令需要本机运行进程，先前资料据此写为控制端必须运行daemon。",
       "resolution": "0.107.2源码按目标机器分支：本机目标需本机运行进程，远端经机器RPC且控制端可无host/daemon；无活动回合的cancel可alreadyStopped。本次已实测指定已有远端Codex的create/chat完成与Agent回传字节校验，不推导cancel、其他配置或所有平台已通过。"
+    },
+    {
+      "command": "session create / session chat",
+      "topic": "0.108.1帮助增量",
+      "website": "0.107.2帮助没有--mcp-server-ids；0.108.1实际帮助增加该参数。",
+      "resolution": "参数接受MCP IDs的JSON数组；[]禁用全部。只在已授权任务内按实际已发现的ID选择；参数存在不证明目标turn已加载MCP。"
+    },
+    {
+      "command": "session recover-inbox",
+      "topic": "0.108.1离线检查与恢复条件",
+      "website": "0.108.1实际帮助新增--snapshot与--orphan，细化offline检查及资源释放前提。",
+      "resolution": "不传恢复参数只检查；--execution需要准确--snapshot，或按帮助使用--orphan检查token。先退出所属机器Desktop并停daemon，缺execution或dead daemon不证明资源释放；确认旧进程/请求全部释放后才恢复，历史结果保留、旧不明请求不重放、Inbox保持paused。未运行真实恢复。"
     }
   ]
 }

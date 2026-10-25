@@ -559,6 +559,41 @@ Python工具、CLI/runtime锁、核心技能、setup、命令索引、帮助快�
 
 本轮是Linux上的夹具条件模拟，不证明真实macOS、WSL或Windows受管runtime；此前真实macOS失败按原记录保留。没有认证、daemon、模型/业务调用、资料保存、平台任务创建或原生加载，C04真实安装及C05/C08/C09/C10未由本轮关闭。忽略目录保留`dist/lody4dot-p2-fixture-red.json`、`dist/lody4dot-0.2.7-p2-regression.log`、`dist/lody4dot-0.2.7-fixture-matrix.json`及对应条件日志；首次生命周期失败另存`*-before-lifecycle.*`，不覆盖成成功。当前状态只维护[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
 
+## 2026-10-25当前任务升级与latest准备策略
+
+本次在Dot已创建的现有任务继续，初始checkout为用户指定的`0a044f14622902b6d8d93418338df2251b7a38f8`。最初仓库结构、132项测试、已有0.107.2受管运行时的prepare与启动检查通过，工作区当时干净；随后用户明确授权当前环境Node/CLI升级、仓库latest准备策略及按新CLI完善技能。下表记录首次升级完成、尚未取得模板保存授权时的观测，不改写此前正式发布或旧0.107.2任务验收；后续命令审查与保存步骤另见下节。
+
+| 检查 | 本轮实际结果与范围 |
+| --- | --- |
+| 当前任务运行时 | 受管官方Node`24.22.1`、npm`11.19.1`已实际执行；平台`/opt`内建Node未改。cloud-install/cloud-start在该受管路径存在时前置PATH；新CLI launcher与doctor按安装收据的`node_path`选择解释器。 |
+| CLI准备 | 真实`bootstrap --prepare`退出0，CLI为`0.108.1`。源码manifest请求`latest`，源码lock保存本轮精确结果；每次准备在暂存目录定向更新lody锁，再做engine-strict、禁用生命周期脚本的ci或同锁复用，验证成功后切换。其它锁约束和reviewed override保留。安装授权不包含认证、daemon或业务任务。 |
+| 实际公开帮助 | 在不含真实token的环境和临时state采集20个一级入口、70个公开命令，版本与全部帮助退出0，临时state已清理。随包仅保留一个当前`help-snapshot.json`；索引逐项更新版本、来源与help SHA，不能用旧帮助当新版已测。 |
+| 帮助差异 | 命令树未增删；只有session分组、create、chat、recover-inbox四份帮助变化。create/chat新增`--mcp-server-ids`；recover-inbox新增snapshot/orphan及更明确的离线检查、资源释放和paused语义。仅据帮助更新导航，未运行真实MCP选择或Inbox恢复。 |
+| 技能与发现 | 核心/setup入口先查实际CLI帮助，再按明确workspace选择machine、project catalog、Agent config/Role；优先官方CLI与原生只读查询，不从仓库名或本机目录推导Lody映射，不新造业务SDK。 |
+| 认证与403源码审查 | 0.108.1的API-key、pairing、device副作用与credentials/SQLite前提、Streams短期token刷新及诊断字段仅完成source_verified，来源摘要与固定发布物哈希在`sources.json`。本轮没有新版login、目录查询、旧403重试或Agent派发；无状态探针不替代原CLI调用，旧403原因仍unknown。 |
+| 最终回归 | 完整`.codex/cloud-install.sh`退出0：结构`mcp=1 skill=2 plugin=1`、150项测试、latest准备及离线inspect全部通过。启动`--repair-missing`仅doctor退出0；真实自包含构建31内容文件加receipt通过。认证、daemon、目录与业务恢复均not_run。 |
+| 发布边界 | 变更只在本任务工作副本与自有工具目录，保存环境模板/固定ref未更新或发布；没有部署、原生插件注册、远端身份创建、Cloud下游任务或代码提交。 |
+
+首次升级采集的帮助快照（任务回执）SHA-256为`f759b8673818607597b8d3870bf7454164dd89e185e611df921742604cf42494`；后续递归帮助修订以随包快照与全量矩阵为准。0.107.2历史源码、完整目录、远端session/turn与产物证据仍按各自版本记录；当前帮助和本地依赖通过不证明新版身份、目录、执行能力或新任务会采用本轮源码。本任务脱敏回执位于`/workspace/mymcp-initialization-20261025-236tp3x1/upgrade/`，依赖、缓存、登录态和运行生成物不入源码包。
+
+## 2026-10-25全量命令审查与模板保存准备
+
+用户随后授权保存更新现有模板，并要求新版CLI全部命令逐项复核、有差异固化到技能；模板更新后允许既有API key的临时私密身份及必要目录缓存，复验后清理。当前任务未提供Codex保存环境配置读写接口，线上复验的阻点是模板保存时序，不是缺身份写入许可或已发生登录失败。
+
+保存源码以原指定ref为基点，合入远程`main`截至`7b25a7e94f9c0cbd27a3244fa49f0c2c5e7780c9`的5项提交；保留0.2.6 Role/Project知识、0.2.7 ZIP与夹具修复，没有用旧基点覆盖main。保存分支为`chore/lody-latest-cloud-20261025`，最终提交/远程核验由交付回执记录；Git分支保存不等于模板ref已修改。
+
+| 检查 | 实际结果与边界 |
+| --- | --- |
+| 全量CLI发现 | 从当前0.108.1根帮助独立递归取得20类、70业务/分组路径，再核对12个自动help入口，共82项正确帮助退出0；根帮助与版本也通过。内部入口未执行。逐项参数、身份、workspace、效果、方法与结果见[审查矩阵](cli-command-audit.md)。 |
+| 形式与副作用差异 | `lody help --help`退出1的失败证据保留；正确help入口通过。帮助会在隔离state创建machine-id，目录已清理；没有写登录凭据或注册远端机器。14条索引前提及对应参考已修正，help/source不冒称线上通过。 |
+| 可复现Node准备 | 新增仓库`scripts/prepare_cloud_node.py`，固定官方Node24.22.1 Linux x64归档与已核实SHA256，兼容旧受管回执，精简探测环境并隔离npm配置，失败保留旧入口。16项离线回归通过，含checksum/probe/解压硬链接路径/清理/激活失败；真实空临时前缀下载、校验、安装及Node/npm探测通过并清理，当前受管前缀真实复用通过。仅本任务测试，未创建新环境。 |
+| 合并后完整初始化 | 实际`.codex/cloud-install.sh`退出0：受管Node复用、结构`mcp=1 skill=2 plugin=1`、179项测试、CLI latest准备与离线inspect通过；实际Node24.22.1、npm11.19.1、Lody0.108.1。 |
+| 夹具保留 | 合并后安装/回滚32项与ManagedNode5项在普通Linux、别名临时路径、模拟Darwin及组合条件各37项全通过；模拟条件不是真实macOS支持。 |
+| 启动及分发 | `bootstrap --repair-missing`退出0且仅doctor；真实自包含构建32内容文件加receipt，33文件ZIP的CRC与收据摘要通过，ZIP SHA256为`b522c55d21af896c03103daace2ce70ee3f222c276018ad6bb073736cd18177a`。包内离线bootstrap退出0且仅doctor，来源一致；未安装注册原生插件。 |
+| 模板及线上状态 | 目标模板读取/更新未尝试，原因是本端无对应受支持接口，非拒绝或不确定写入。用父级管理接口或同一环境设置保存最终已推送ref及install/start入口后须回读；不修改凭据、网络安全，不另建任务验证。原CLI登录/目录403及业务命令本轮线上实测为0，状态pending_template_update；旧403原因仍unknown。 |
+
+本轮完整记录在任务外部`upgrade/template-save/`回执目录；源码仅提交工具、技能、审查输入和测试，不提交依赖缓存、ZIP或身份。新环境实际采用、模板正式版本、生效实例、认证与目录结果继续分项取证；保存准备完成不提前标记这些项成功。
+
 ## 复现命令
 
 在仓库根目录运行：

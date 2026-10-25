@@ -28,7 +28,7 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 仓库结构检查无需安装第三方依赖，也没有公共服务需要启动。运行单个 MCP 时需按其 README 准备依赖和配置。后续导入按照 [导入步骤](docs/architecture.md#导入已有插件) 迁移，并在此补充条目入口。
 
-lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安装、只读诊断、显式认证和自包含打包。当前 Linux 云机已验证安装、真实授权和完整目录；通过已有远端 Codex Agent 完成了创建、执行、继续验证和持久化观察，并校验 Agent 二次读回的产物字节。控制端无需本机 daemon。已收到用户的安装、认证、目录和手动读取截图，仍需补齐入口来源与版本等回执；本机 Codex 执行的只读状态限制单独保留。见 [产品方案](docs/lody4dot/plan.md)、[开发契约](docs/lody4dot/development.md)、[验证记录](docs/lody4dot/validation.md) 和 [任务队列](.codex/agent-state/todo.md)。
+lody4dot 已实现20类70个公开命令导航、受管安装、只读诊断、显式认证和自包含打包。当前帮助快照已按实际CLI更新至`0.108.1`；准备阶段按用户授权解析官方npm latest，源码lock记录精确结果。此前`0.107.2`的Linux真实授权、完整目录与远端Codex Agent创建/继续/持久化结果仍归历史验收，本轮未将其当作新版业务已测。控制端与执行端分别核对，原截图来源及本机Codex只读状态限制继续保留。见[产品方案](docs/lody4dot/plan.md)、[开发契约](docs/lody4dot/development.md)、[验证记录](docs/lody4dot/validation.md)和[任务队列](.codex/agent-state/todo.md)。
 
 正式ref、工作副本、运行观测、readiness及下一步统一维护在[当前环境与下一步](.codex/agent-state/todo.md#当前环境与下一步)，本页不复制发布快照。保存配置、正式发布、实例应用和目标API授权分别取证；发布不会自动把固定commit切到GitHub最新代码。
 
@@ -36,7 +36,9 @@ lody4dot 已实现 20 类、70 个公开命令的知识导航，以及锁定安�
 
 上述是本项目的职责选择，不代表平台只允许Dot创建。Codex Cloud官方另有手动和CLI提交入口；与Work Cloud的手动、首方客户端代建及计划/事件入口分别对照，见[创建方式与证据边界](docs/lody4dot/product-collaboration-reference.md#codex-cloud-与-work-cloud-的创建方式对照)。本轮不接入新的创建路线，企业聊天工具委派延后。
 
-当前源码候选0.2.7在[源码builder](plugin/lody4dot/README.md#自包含插件包)提供显式离线ZIP生成、验包及摘要，已有产物保留；0.2.6的[配置与角色知识](skill/lody4dot/references/configuration.md)、0.2.5[任务入口知识](skill/lody4dot/references/collaboration.md#work-cloud与任务创建)、0.2.4的Work分类、0.2.3[资料交接规则](skill/lody4dot/references/material-handoff.md)和0.2.2[薄setup入口](skill/lody4dot-setup/SKILL.md)沿用。分别核对平台支持、当前访问、项目职责、实际运行及处理/保存/回读；知识与分发候选不代表原生接入、角色保存或项目执行已验收，也不是存储重置hook。0.2.1起的CLI版本策略继续保留：版本不同、探测或显式latest查询失败只warn，默认离线，不自动升级。受管runtime仅支持Linux，真实命令、身份、权限和完整性错误分别处理。各候选的验证范围见[验证记录](docs/lody4dot/validation.md)、[支持矩阵](docs/lody4dot/support-matrix.md)及[Dot接入运行单](docs/lody4dot/dot-acceptance.md)。
+当前源码候选0.2.7在[源码builder](plugin/lody4dot/README.md#自包含插件包)提供显式离线ZIP生成、验包及摘要，已有产物保留；0.2.6的[配置与角色知识](skill/lody4dot/references/configuration.md)、0.2.5[任务入口知识](skill/lody4dot/references/collaboration.md#work-cloud与任务创建)、0.2.4的Work分类、0.2.3[资料交接规则](skill/lody4dot/references/material-handoff.md)和0.2.2[薄setup入口](skill/lody4dot-setup/SKILL.md)沿用。分别核对平台支持、当前访问、项目职责、实际运行及处理/保存/回读；知识与分发候选不代表原生接入、角色保存或项目执行已验收，也不是存储重置hook。0.2.1起的CLI版本策略继续保留：版本不同、探测或显式latest查询失败只warn，检查默认离线，不因告警自动升级；安装准备按下述latest政策执行。受管runtime仅支持Linux，真实命令、身份、权限和完整性错误分别处理。各候选的验证范围见[验证记录](docs/lody4dot/validation.md)、[支持矩阵](docs/lody4dot/support-matrix.md)及[Dot接入运行单](docs/lody4dot/dot-acceptance.md)。
+
+2026-10-25按新授权更新当前任务Node/CLI和仓库安装策略：云准备脚本先用[受管Node准备工具](scripts/prepare_cloud_node.py)校验官方归档并安装或复用Linux x64 Node`24.22.1`；`install`/`bootstrap --prepare`再在暂存目录定向更新lody锁以解析latest，遵守engine-strict、禁用生命周期脚本及保留的依赖约束，验证后才切换入口。inspect和已有runtime的启动检查仍离线，版本warn不触发升级；缺失修复才进入CLI安装。Node是已验证兼容基线，未来latest的engines若提高需更新Node基线，不能忽略引擎要求或降级CLI。本轮实际npm`11.19.1`、Lody`0.108.1`；平台内建Node未改，保存环境模板与固定ref状态见任务队列。先按实际CLI帮助及[资源发现](skill/lody4dot/references/discovery.md)选择获准工作区、项目与Agent；本轮验证与线上范围见[验证记录](docs/lody4dot/validation.md#2026-10-25当前任务升级与latest准备策略)。
 
 spec12恢复演练已验证不同内核上下文下依赖、身份及原会话/产物对账，该阶段0新模型回合；后续实验各自计数，见[验证记录](docs/lody4dot/validation.md)。它不证明具体VM身份、磁盘重建机制、Dot hook或独立新任务首次加载。Review上游Viewer、旧截图来源及Dot实际接入仍按各自缺口跟进。
 
