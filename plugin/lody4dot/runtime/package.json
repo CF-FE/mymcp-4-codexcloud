@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "lody": "0.107.2"
+    "lody": "latest"
   },
   "overrides": {
     "lody": {

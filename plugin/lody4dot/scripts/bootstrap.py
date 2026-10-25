@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare owned dependencies or check them after startup; never restore identity or tasks."""
+"""Prepare Lody latest or inspect owned dependencies; never restore identity or tasks."""
 from __future__ import annotations
 
 import argparse
@@ -80,8 +80,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prefix", default=DEFAULT_PREFIX)
     actions = parser.add_mutually_exclusive_group()
-    actions.add_argument("--prepare", action="store_true", help="Run managed install and then inspect.")
-    actions.add_argument("--repair-missing", action="store_true", help="Inspect first; install only a missing managed runtime.")
+    actions.add_argument("--prepare", action="store_true", help="Resolve and install official Lody latest, then inspect.")
+    actions.add_argument("--repair-missing", action="store_true", help="Inspect first; resolve latest only for a missing managed runtime.")
     parser.add_argument("--timeout", type=float, default=600)
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)

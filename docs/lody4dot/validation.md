@@ -494,6 +494,23 @@ ZIP SHA-256为`e87dd9aaafb2b8459c6b024cf5bac4cdb1aa875b9b1ec1a8a8de24a91c6674fa`
 
 脱敏结果及日志在忽略的`dist/lody4dot-publish-current-*`、`dist/lody4dot-publish-preflight.json`和`dist/lody4dot-publish-source-correction.json`。正式来源、草稿与后续动作统一见[当前环境与下一步](../../.codex/agent-state/todo.md#当前环境与下一步)，源修正发布后仍需按实际新任务/宿主分别验收。
 
+## 2026-10-25当前任务升级与latest准备策略
+
+本次在Dot已创建的现有任务继续，初始checkout为用户指定的`0a044f14622902b6d8d93418338df2251b7a38f8`。最初仓库结构、132项测试、已有0.107.2受管运行时的prepare与启动检查通过，工作区当时干净；随后用户明确授权当前环境Node/CLI升级、仓库latest准备策略及按新CLI完善技能。以下升级结果不改写此前正式发布、spec16或旧0.107.2任务验收。
+
+| 检查 | 本轮实际结果与范围 |
+| --- | --- |
+| 当前任务运行时 | 受管官方Node`24.22.1`、npm`11.19.1`已实际执行；平台`/opt`内建Node未改。cloud-install/cloud-start在该受管路径存在时前置PATH；新CLI launcher与doctor按安装收据的`node_path`选择解释器。 |
+| CLI准备 | 真实`bootstrap --prepare`退出0，CLI为`0.108.1`。源码manifest请求`latest`，源码lock保存本轮精确结果；每次准备在暂存目录定向更新lody锁，再做engine-strict、禁用生命周期脚本的ci或同锁复用，验证成功后切换。其它锁约束和reviewed override保留。安装授权不包含认证、daemon或业务任务。 |
+| 实际公开帮助 | 在不含真实token的环境和临时state采集20个一级入口、70个公开命令，版本与全部帮助退出0，临时state已清理。随包仅保留一个当前`help-snapshot.json`；索引逐项更新版本、来源与help SHA，不能用旧帮助当新版已测。 |
+| 帮助差异 | 命令树未增删；只有session分组、create、chat、recover-inbox四份帮助变化。create/chat新增`--mcp-server-ids`；recover-inbox新增snapshot/orphan及更明确的离线检查、资源释放和paused语义。仅据帮助更新导航，未运行真实MCP选择或Inbox恢复。 |
+| 技能与发现 | 核心/setup入口先查实际CLI帮助，再按明确workspace选择machine、project catalog、Agent config/Role；优先官方CLI与原生只读查询，不从仓库名或本机目录推导Lody映射，不新造业务SDK。 |
+| 认证与403源码审查 | 0.108.1的API-key、pairing、device副作用与credentials/SQLite前提、Streams短期token刷新及诊断字段仅完成source_verified，来源摘要与固定发布物哈希在`sources.json`。本轮没有新版login、目录查询、旧403重试或Agent派发；无状态探针不替代原CLI调用，旧403原因仍unknown。 |
+| 最终回归 | 完整`.codex/cloud-install.sh`退出0：结构`mcp=1 skill=2 plugin=1`、150项测试、latest准备及离线inspect全部通过。启动`--repair-missing`仅doctor退出0；真实自包含构建31内容文件加receipt通过。认证、daemon、目录与业务恢复均not_run。 |
+| 发布边界 | 变更只在本任务工作副本与自有工具目录，保存环境模板/固定ref未更新或发布；没有部署、原生插件注册、远端身份创建、Cloud下游任务或代码提交。 |
+
+当前帮助快照SHA-256为`f759b8673818607597b8d3870bf7454164dd89e185e611df921742604cf42494`。0.107.2历史源码、完整目录、远端session/turn与产物证据仍按各自版本记录；当前帮助和本地依赖通过不证明新版身份、目录、执行能力或新任务会采用本轮源码。本任务脱敏回执位于`/workspace/mymcp-initialization-20261025-236tp3x1/upgrade/`，依赖、缓存、登录态和运行生成物不入源码包。
+
 ## 复现命令
 
 在仓库根目录运行：

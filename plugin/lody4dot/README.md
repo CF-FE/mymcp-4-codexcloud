@@ -1,6 +1,6 @@
 # lody4dot
 
-为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码候选为`0.2.5`，编写本候选时最近已核实的正式云来源为`0.2.1`；`0.107.2`是已验证知识与默认可复现CLI安装基线，不是唯一允许运行的版本。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际CLI的其他运行要求另行核对。
+为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。源码清单版本为`0.2.5`；历史正式云来源与当前任务工作副本分开记录。2026-10-25按用户授权改为准备阶段解析官方npm的`lody@latest`，本轮源码锁及实际帮助为`0.108.1`，0.107.2历史业务证据不改称新版已测。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际依赖另以engine-strict核对。
 
 核心能力源码在仓库的 `skill/lody4dot/`，薄setup入口在`skill/lody4dot-setup/`；本目录负责组合、运行时锁定和分发，不新增 MCP 服务。Lody 已有 MCP 只有在宿主提供有效 session/workspace/machine 上下文时才使用，不能将其内部入口当作独立通用服务。
 
@@ -33,14 +33,19 @@ Dot、ChatGPT、ChatGPT Work和Codex可共享插件连接及已授予权限；�
 在仓库根目录执行：
 
 ```bash
+if [ -x /workspace/.tools/lody4dot-node/current/bin/node ]; then
+  export PATH="/workspace/.tools/lody4dot-node/current/bin:$PATH"
+fi
 python3 plugin/lody4dot/scripts/install.py --prefix /workspace/.tools/lody4dot --json
 python3 plugin/lody4dot/scripts/doctor.py --prefix /workspace/.tools/lody4dot --profile inspect --json
 /workspace/.tools/lody4dot/bin/lody --version
 ```
 
-安装器使用固定依赖与锁文件，在自有暂存目录安装并验证，成功后切换稳定入口。它不登录、不注册机器、不启动 daemon。失败时保留旧版本与用户状态；不应将工具目录、npm 缓存或登录态提交到仓库。不要将一个已有非空目录直接指定为工具目录。
+安装器每次在自有暂存目录定向运行`npm update lody --package-lock-only`解析官方latest，保留其余锁约束和reviewed override，再按得到的精确锁执行`npm ci`或复用同锁运行时。更新与安装均启用engine-strict、禁用生命周期脚本并核对官方registry来源；帮助/native模块验证成功后切换稳定入口。latest解析或真实安装失败不会静默用旧锁冒充更新成功。它不登录、不注册机器、不启动daemon；失败保留旧入口与用户状态，不提交工具目录、npm缓存或登录态，也不覆盖陌生非空目录。
 
-默认安装使用`0.107.2`的锁定输入；依赖修订及实际验证以`runtime/`和仓库任务队列为准。已有CLI版本不必严格匹配；版本差异或版本查询失败只提示，不据此阻塞使用，也不自动重装或升级。安装锁/摘要/来源完整性、OS/Node支持和依赖实际可用性仍独立检查。安装成功与inspect通过只证明已检查范围，不代表账户、长连接或Agent任务已经验证。
+`runtime/package.json`请求`latest`，源码lock精确记录本轮`0.108.1`；未来latest以当次解析与安装收据为准。已有CLI版本不必严格匹配，诊断中的版本差异或查询失败只提示，不触发重装或升级。安装锁/摘要/来源完整性、OS/Node支持和依赖实际可用性仍独立检查。安装成功与inspect通过不代表账户、长连接或Agent任务已经验证。
+
+上述Node路径属于本任务受管runtime，本轮实际Node`24.22.1`、npm`11.19.1`；平台`/opt`内建Node未改。新launcher与doctor使用安装收据的`node_path`，不因PATH变化退回旧解释器。其他宿主核对自己的路径。源码和当前任务文件变更没有保存或发布环境模板，也没有更新固定ref。
 
 ## 可选更新检查与版本提示
 
@@ -82,11 +87,11 @@ python3 plugin/lody4dot/scripts/bootstrap.py --prefix /workspace/.tools/lody4dot
 
 | 入口 | 行为 |
 | --- | --- |
-| `--prepare` | 执行受管安装，再离线inspect；安装器可复用通过校验的同锁运行时。 |
+| `--prepare` | 在暂存目录解析官方latest、受管安装或同锁复用，再离线inspect。 |
 | 不传动作参数 | 只做inspect；缺运行时也不自动安装。 |
-| `--repair-missing` | 先inspect，仅在退出3且类别为`missing_runtime`时尝试受管安装，再复检；目录所有权和来源检查仍由安装器执行。 |
+| `--repair-missing` | 先离线inspect，仅在退出3且类别为`missing_runtime`时进入同一latest安装路线，再复检；目录所有权和来源检查仍由安装器执行。 |
 
-`--prepare`和`--repair-missing`不能同时使用。版本差异或版本查询失败只提示，不触发安装或升级；Node/OS不支持、来源完整性等实际错误也不被当作缺失自动修复。陌生或被修改的安装目录不会被当作可覆盖目录。报告的`verification_scope`为`owned_dependency_readiness`，`authentication`、`daemon`和`task_recovery`均为`not_run`：此工具不登录、不启daemon、不恢复或重发模型任务，调用方既有身份state保持独立；默认也不联网查更新。
+`--prepare`和`--repair-missing`不能同时使用。检查阶段的版本差异或探测失败只提示，不触发安装或升级；Node/OS不支持、来源完整性等实际错误也不被当作缺失自动修复。陌生或被修改的安装目录不会被当作可覆盖目录。报告的`verification_scope`为`owned_dependency_readiness`，`authentication`、`daemon`和`task_recovery`均为`not_run`：此工具不登录、不启daemon、不恢复或重发模型任务，调用方既有身份state保持独立。安装阶段会解析latest；inspect本身不联网查更新。
 
 已有环境准备入口可调用`--prepare`，运行入口可选择只检查或明确允许的`--repair-missing`。这不表示Dot支持存储重置hook。初始化后仍需核对本端身份与原Lody session/turn，再决定如何处理业务；详见包内`skills/lody4dot/references/collaboration.md`（源码为`skill/lody4dot/references/collaboration.md`）。
 
@@ -116,7 +121,7 @@ python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --ve
 python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --login --json
 ```
 
-登录会保存本机身份，配对或设备授权流程还可能连接/注册机器。0.107.2 的 API-key 路径验证 token 后保存本机身份；远端机器注册和在线状态仍需独立运行证据。CLI 当前的受支持入口通过子进程 argv 接收凭证；适配器不经 shell 展开，也不输出凭证，但本机同权限进程仍可能读取 argv，因此只在可信、隔离的任务环境中使用。凭证存在、登录成功、工作区权限和底层 Agent 凭证是不同条件。
+登录会保存本机身份，须单独核对本次授权。0.108.1源码审查显示API-key分支验证已有token并保存本机身份；配对会exchange，设备授权会创建远端CLI key，不能混入只允许临时本地身份的范围。本轮只有source_verified，没有运行新版认证。CLI仍无已核实的`LODY_CLI_TOKEN`直读或无状态目录flag；目录依赖已有credentials和SQLite，不自造HTTP认证层。受支持入口通过子进程argv接收凭证，适配器不经shell展开也不输出值，但同用户进程仍可能读argv。凭证存在、登录、工作区权限和底层Agent凭证分别验证。
 
 `0.107.2` 的 `session create/chat/cancel` 按目标区分运行前提：本机目标需要本机运行进程，远端可由控制端经机器 RPC 派发，无需控制端启动 host/daemon；执行端仍需运行进程、Agent 配置及凭证。取消返回 `alreadyStopped` 不证明本次取消了运行回合。`agent-config refresh-capabilities` 仍针对本机，不能套用远端派发规则。只读查询和请求被接受均不能单独证明任务完成。
 
@@ -131,6 +136,8 @@ python3 plugin/lody4dot/scripts/doctor.py --profile control --connect --workspac
 当前部署还会返回 Loro Streams 网关与分片后缀 `streams-api-x.loro.dev`。实测 `api`、`control-b`、`control-c`、`presence` 子域在只放行四个 Lody 域时被 CONNECT 403 拦截。源码的控制/数据/写入/presence 分片会使用同一后缀；云网络需包含 `*.streams-api-x.loro.dev`，不以只读账户查询成功替代该链路验证。该后缀属于本次实际返回值，部署变化时应重新核实。
 
 doctor会保留失败前已完成的检查，并通过`observed_at`、`verified_scope`、`control_environment`和`provenance`报告本次范围与可得来源。包清单、构建收据、安装收据及实际CLI版本分别记录；缺收据不补造，摘要一致不等于签名、正式发布或模型任务验证。账户查询通过但目录未运行时，报告范围仅覆盖已做查询。
+
+先查实际CLI `--help`，按随包`skills/lody4dot/references/discovery.md`只读选择明确workspace、machine、project catalog、Agent config/Role；仓库名和本机`/workspace`不自动映射Lody工作区。403保留原CLI退出码、HTTP状态、目标及响应来源，健康探针不能替代原CLI目录查询。0.108.1默认Streams短期token刷新/一次重试与新建CLI key不同；原始debug/响应正文不保证脱敏，诊断规则见随包`skills/lody4dot/references/troubleshooting.md`。
 
 `0.107.2` 的部分目录命令会在 JSON 前后输出同工作区的 `Remote Streams transport attached/detached` 诊断行。工具仅识别这两种精确消息及唯一完整 JSON，仍拒绝未知输出、混合工作区和多个 JSON；安全提示写 stderr，不回显日志或身份。账户与完整目录在本次云机已实测通过。
 

@@ -6,6 +6,12 @@
 
 2026-10-21执行修订：用户要求Lody CLI版本差异和版本探测失败不阻塞业务；`0.107.2`是知识与默认可复现安装基线。版本项仅告警，不自动升级；doctor只有显式`--check-updates`才查询固定npm latest，非最新版或查询失败同样只告警。默认inspect/bootstrap离线，真正CLI执行、身份、权限、Node/平台前提及安装输入完整性失败仍按实际结果处理。以下契约按此修订执行，d1基线版次保留，进度见队列V01。
 
+2026-10-25安装策略修订：用户授权当前环境Node/CLI升级及仓库latest安装政策。受管安装器/`bootstrap --prepare`每次在暂存目录定向更新lody锁，解析官方npm latest，以engine-strict、禁用生命周期脚本及保留的依赖约束执行ci或同锁复用；验证通过才切换稳定入口，失败保留旧入口。源码lock仍保存本轮精确解析结果，实际版本与Node路径写收据。inspect及已有runtime的启动检查保持离线，版本warn不触发升级；`--repair-missing`只为明确缺runtime进入安装。以下旧版固定安装/不追随dist-tag的描述保留当时基线，本修订优先用于当前安装准备，不扩大认证、目录或任务操作权限。
+
+本轮知识更新依据0.108.1实际全树帮助，保留0.107.2源码/连接/任务的历史证据；新增参数只有help_verified，认证与Streams实现审查只有source_verified。优先官方CLI、明确工作区的只读发现及原生输出，不新造无状态目录SDK。HTTP探针、token存在、帮助和安装通过各自报告，不能代替账户授权、完整目录或Agent执行。当前任务Node安装与源码变更不等于已保存/发布环境模板；结果入口仍为队列及[验证记录](validation.md)。
+
+保存模板的准备入口还须在空依赖目录可用：`.codex/cloud-install.sh`先调用仓库级`scripts/prepare_cloud_node.py`，仅管理独立Node前缀，核验官方Node `24.22.1` Linux x64归档摘要及实际版本，失败保留旧入口，随后再解析CLI latest。Node兼容基线与CLI latest政策分开；不忽略实际engines，不把本任务现有工具目录误当源码已保存。启动inspect不联网恢复Node，缺解释器按真实缺项处理。模板保存须另有目标配置、ref及回读证据，不以Git提交或当前目录测试替代新环境验收。
+
 ## 1. 目标、现状与交付终点
 
 用户已确定名称 `lody4dot`、帮助 agent 熟练使用 Lody、支持 Codex 云端安装、复用 `LODY_CLI_TOKEN`，并允许不同能力组合。Python 工具、具体文件数量和原生打包方式属于可调整的实现手段。
