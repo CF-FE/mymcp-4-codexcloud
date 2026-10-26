@@ -41,6 +41,16 @@ history 读取用户可见 transcript，不是执行状态流；observe 附着�
 
 JSONL 的 sequence 只排序当前观察进程，不能用它保证跨进程恢复或完整重放；观察重启后重新核对快照与历史。用户可见回复也不能代替目标产物与相应测试。
 
+### 慢任务与授权确认
+
+2026-10-26按Lody `0.108.1`公开帮助与源码补核：任务比预期慢时，第一步用原 workspace/session/userTurnId 查持久化状态和授权门，而不是继续空等。看到 observe 的 `state=waiting` 或 `status.type=requestPermission`，立即向用户反馈正在等待确认，并核对具体工具、必要参数、目标、风险和 requestID。反馈等待不等于结束整个有界任务；保留原任务，继续可独立完成的检查，确认后沿原回合跟进。
+
+该版本 `show/status` 只提供状态和回合等元数据，`observe` 不含工具详情；公开 CLI history 与内置 `lody_session_history` 只返回可见正文，过滤 `tool_call`。因此不能承诺从这些入口取得待批工具、参数或 requestID；能力不足时明确说明，并指向原会话受信任界面的权限卡查看具体请求。请求的原生选项可能包含 `allow_once/allow_always` 等，风险仍需按实际动作评估，不整段回传原始参数、输出或私密链接。
+
+只有用户已有授权覆盖该具体动作，且本端实际提供正式、受支持的单次确认入口，才可确认对应窄项。`0.108.1`公开 CLI 与内置 MCP 没有一次性 permission response/approve 入口；不要拼内部 RPC，不选全放行或 `allow_always`，不发“yes”、改 mode 或调整持久安全设置来代替回应。用户说“已授权”后立即重查原会话，不因这句话重发任务或再建会话。
+
+每次对账保留原 userTurnId 及其 assistantTurnId。若 `latestTurn` 已变为后续回合，按原 assistantTurnId 匹配 history 中 `role=assistant` 且 `id` 相同的条目，读取其 `text`；不能以最新回合替代原请求结果。正文可能含私密输入，只提取本次必要结果；对应条目或终态无法确认时保留不确定状态，先对账而不重发。用户后续回合仍在运行不授权本任务取消、改写或管理其继续工作。
+
 ## 会话维护与取消
 
 - `list` 先明确工作区、活跃/已归档筛选；查询结果不自动代表全部历史。
