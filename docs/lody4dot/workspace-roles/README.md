@@ -8,6 +8,8 @@
 
 角色模型建议顺序为sol、Kimi、DeepSeek 4.1，强度保留为角色建议意图。用户已决定创建使用平台默认，后续人工修改；不得报告建议已经参数化或因此改造运行配置。机器、模型、工具和权限按实际任务重新发现，配置名称与显示标签不证明后端映射。`work-win`为历史名称，当前同machine ID名为`win-work`；历史审计不机械改写。
 
+本用户工作区当前的新会话选择见[执行规范](execution-policy.md)；V2.2设计源保留审阅时点内容，角色创建采用默认不等于新会话应沿用历史Agent配置。通用并行与验收规则在[随包协作参考](../../../skill/lody4dot/references/collaboration.md#并行在办任务)维护。
+
 发布规则见[随包角色说明](../../../skill/lody4dot/references/workspace-roles.md)和[配置参考](../../../skill/lody4dot/references/configuration.md)。原视觉Role若已保存应同ID更新，不复制创建；其余项目先查重。卡片生成仍需用户Save，默认private不等于工作区全员可见。提示词不包含常设清理授权，任何有副作用操作核对当前任务有效授权。
 
 ## 来源与当前状态

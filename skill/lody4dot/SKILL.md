@@ -36,6 +36,7 @@ lookup只读随包资料，返回来源版本和范围，不调用Lody或证明�
 | Agent/Role/MCP配置与提议保存 | [配置](references/configuration.md)、[共享与项目角色](references/workspace-roles.md) |
 | 资料输入、结果存回或FileKiwi文件中转 | [资料交接](references/material-handoff.md)；用到FileKiwi时再读[文件中转](references/filekiwi-transfer.md) |
 | 跨端交接、编码集成、Work/Codex选路或接管 | [多宿主协作](references/collaboration.md) |
+| 并行在办任务、资源并发与统一集成 | [并行规范](references/collaboration.md#并行在办任务) |
 | 调度/operation；导出、迁移或评审 | [自动化](references/automation.md)；[交付维护](references/delivery.md) |
 | 安装/认证；错误；平台边界 | [准备](references/setup-cloud.md)；[故障处理](references/troubleshooting.md)；[兼容性](references/compatibility.md) |
 
