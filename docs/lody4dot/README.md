@@ -15,6 +15,8 @@ lody4dot的设计、接入、验收和配套图表集中在本目录；实际任
 | 如何安装、诊断和使用工具 | [插件说明](../../plugin/lody4dot/README.md)与[技能入口](../../skill/lody4dot/SKILL.md) |
 | 当前CLI全量命令的参数、身份前提、副作用与验证边界 | [逐项命令审查](cli-command-audit.md)，区分帮助、源码、隔离测试与线上结果 |
 | Agent怎样区分Work/Codex环境及任务创建证据 | [随包协作规则](../../skill/lody4dot/references/collaboration.md#work-cloud与任务创建)，复用既有资料交接；不是另一套方案 |
+| 文件如何跨环境中转，慢任务怎样先检查授权等待 | [FileKiwi中转与验收](../../skill/lody4dot/references/filekiwi-transfer.md)、[会话观察](../../skill/lody4dot/references/sessions.md#观察真实结果) |
+| 工作区共享职责、项目负责人和角色方案如何保存与落地 | [角色设计与落地记录](workspace-roles/README.md)、[随包协作规则](../../skill/lody4dot/references/workspace-roles.md) |
 | 安装后运行setup有什么作用 | [setup技能](../../skill/lody4dot-setup/SKILL.md)及[入口说明](../../plugin/lody4dot/README.md#安装后运行-setup)；平台调用仍待实际验收 |
 
 ## 设计方案

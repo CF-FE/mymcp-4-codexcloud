@@ -7,7 +7,7 @@ description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent
 
 先识别目标和环境，再执行。不要把安装 CLI、出现进程、变量存在或命令退出成功当作真实任务已经完成。
 
-本页事实范围为2026-10-25的Lody`0.108.1`帮助、源码及有界官方CLI实测。Lody是独立迭代的产品；版本变化时重核当时实际帮助和目标结果，不把本轮前提固定成未来永久规则。
+本页CLI事实范围为2026-10-25的Lody`0.108.1`帮助、源码及有界官方CLI实测；授权等待与文件中转规则于2026-10-26补充，具体版本和验收边界见对应参考。Lody是独立迭代的产品；版本变化时重核当时实际帮助和目标结果，不把本轮前提固定成未来永久规则。
 
 宿主、操作系统和运行角色分别识别。OpenAI的Dot是ChatGPT中的always-on agent产品，有自己的云电脑；它也可向预先配置的Codex云环境创建任务，或使用另行授权连接的本地电脑。这些执行位置分别核实，Dot不作为任意Agent的通用别名；实际插件加载、Lody工具与执行能力仍需分项验证，见[多宿主协作](references/collaboration.md)。
 
@@ -16,18 +16,20 @@ description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent
 | 当前目标 | 阅读 |
 | --- | --- |
 | 资料空间与Dot中转、输入交接或结果存回 | [资料交接](references/material-handoff.md) |
+| FileKiwi跨环境文件中转、浏览器接收与逐阶段验收 | [文件中转](references/filekiwi-transfer.md) |
 | Work/Work Cloud与Codex Cloud、任务创建或触发不明确 | [任务类型与创建入口](references/collaboration.md#work-cloud与任务创建) |
 | 多处安装、跨端协作、上下文交接或重建后继续 | [多宿主协作](references/collaboration.md) |
 | 安装、凭证、云环境准备 | [云端准备](references/setup-cloud.md) |
 | 找工作区、机器、项目或可用能力 | [资源发现](references/discovery.md) |
 | 配置 Agent、Role、MCP 或 GitHub | [配置与角色](references/configuration.md) |
+| 建立工作区共享职责、项目负责人或版本化角色方案 | [共享角色与项目协作](references/workspace-roles.md) |
 | 创建、继续、观察和整理会话 | [会话工作流](references/sessions.md) |
 | 调度、operation 和异步协调 | [自动化](references/automation.md) |
 | 同步、导出、迁移、评审、反馈或桌面恢复 | [交付与维护](references/delivery.md) |
 | cloud/OSS、CLI/MCP 或运行位置不明确 | [兼容性与状态](references/compatibility.md) |
 | 报错、超时、未登录、版本或连接异常 | [故障处理](references/troubleshooting.md) |
 
-完整导航见[命令索引](references/command-index.json)，逐项参数、身份/workspace、副作用和分层验证见[全量审查矩阵](references/command-audit.json)，来源见[来源记录](references/sources.json)。矩阵由0.108.1实际根帮助重新递归发现70业务/分组路径及12个内置help入口，其中只有login与workspace/project/agent-config list/get五个路径完成有界临时认证和必要元数据复验；其余77项仍仅帮助/源码核对，未执行Agent任务或配置变更。不要一次加载全部参考。
+完整导航见[命令索引](references/command-index.json)，逐项参数、身份/workspace、副作用和分层验证见[全量审查矩阵](references/command-audit.json)，来源见[来源记录](references/sources.json)。矩阵保留2026-10-25的0.108.1逐项快照：实际根帮助递归发现70业务/分组路径及12个内置help入口，该次只有login与workspace/project/agent-config list/get五个路径完成有界临时认证和必要元数据复验，其余77项在该快照中仅帮助/源码核对。后续有界会话与文件中转的分项结果见[仓库验证记录](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/docs/lody4dot/validation.md)，不改称全命令已测。不要一次加载全部参考。
 
 ## 执行流程
 

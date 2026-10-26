@@ -1,0 +1,46 @@
+{
+  "source_version": "2.2",
+  "base_roles_sha256": "95b514dcbebc36746ca3d6ce8b1fe720435dee8ad9c796bded9b8c829a839f30",
+  "roles_sha256": "afb8caf1782371feb88417fe28c0d402769de268664c73bd2c2c035d3965685e",
+  "change_scope": [
+    "top_level.version",
+    "workspace_dialectic.prompt",
+    "TEAM-PLAN headline/version and exact dialectic paragraph",
+    "OPERATING step 2"
+  ],
+  "other_10_role_definitions_unchanged": true,
+  "shared_role_count": 6,
+  "all_definition_count": 11,
+  "model_effort_binding": "platform_defaults_user_will_adjust_manually",
+  "files": [
+    {
+      "path": "OPERATING-CONTRACT-AND-DRYRUNS.md",
+      "bytes": 9082,
+      "sha256": "c243757d52dbfdf336d9071173bb71a3c2dfee8d83c6dde8d5a6c1e8ecfd1a49"
+    },
+    {
+      "path": "REVIEW-TRACE.md",
+      "bytes": 5813,
+      "sha256": "321933311b818a5932f42a794238cbaa558035f570c7ae92ea95c8ea0a9e2f26"
+    },
+    {
+      "path": "TEAM-PLAN-V2.md",
+      "bytes": 11769,
+      "sha256": "11e179a02eb2e0746505790cd4691d5ec924a5ee3ea38de72d151519ee6e0a80"
+    },
+    {
+      "path": "roles-v2.json",
+      "bytes": 94580,
+      "sha256": "afb8caf1782371feb88417fe28c0d402769de268664c73bd2c2c035d3965685e"
+    }
+  ],
+  "repository_normalization": [
+    {
+      "path": "OPERATING-CONTRACT-AND-DRYRUNS.md",
+      "change": "Remove one extra final blank line to satisfy repository whitespace check; body unchanged",
+      "transferred_derived_sha256": "27763be9b1b9e3c3ecc65b53e4cc6e415a9cf75f573e92fe557214b1e255ea05",
+      "repository_sha256": "c243757d52dbfdf336d9071173bb71a3c2dfee8d83c6dde8d5a6c1e8ecfd1a49",
+      "rollout_attachment": "Already-dispatched attachment retains original transferred bytes; roles JSON is identical"
+    }
+  ]
+}
