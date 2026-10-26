@@ -20,6 +20,8 @@
 | 任务比预期慢 | 第一步查原 workspace/session/userTurnId 的持久化状态和授权门；遇 observe waiting/requestPermission 立即反馈并沿原任务跟进 | 只空等、把等待当完成或直接结束整个有界任务 |
 | 等待权限确认 | 核对具体 tool、必要参数、目标、风险和 requestID；当前入口读不到时明确说明并指向原会话受信任界面 | 承诺 CLI 能读工具详情/approve，拼内部 RPC，选全放行/always，发 yes 或改 mode 绕过 |
 | 创建/聊天请求超时 | 已返回标识、operation、持久化会话状态和历史 | 未核实前重新创建或发送新消息 |
+| 聊天退出1但未得ack | 保留脱敏异常原文与退出码，核完整可见历史、队列和latest/handled turn；缺服务端受理证据时保持unknown | 只凭兜底分类猜权限，或仅凭最近若干条未见消息就改为未执行并重发 |
+| Role同名或pending卡需要新版内容 | 核原Role是否已保存、原卡/requestId与版本；已保存同ID更新，pending由用户在受信UI处理 | 用同requestId改内容，或换ID再建同名卡制造重复 |
 | 用户说已授权或最新回合已变化 | 立即重查原会话；按原 userTurnId/assistantTurnId 对账，必要时匹配原助手 history 条目的 text | 重发原任务、用最新新回合代替原结果，或擅自取消用户后续工作 |
 | Role 或 schedule 响应成功但未变化 | 是否只是确认提议、是否已由用户保存 | 自动当作配置已生效 |
 | CLI 更新但行为仍旧 | 稳定 launcher、运行中 daemon/watchdog 的真实版本 | 把 npm 安装成功当运行版本已切换 |

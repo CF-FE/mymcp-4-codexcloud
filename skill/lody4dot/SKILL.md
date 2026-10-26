@@ -22,6 +22,7 @@ description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent
 | 安装、凭证、云环境准备 | [云端准备](references/setup-cloud.md) |
 | 找工作区、机器、项目或可用能力 | [资源发现](references/discovery.md) |
 | 配置 Agent、Role、MCP 或 GitHub | [配置与角色](references/configuration.md) |
+| 建立工作区共享职责、项目负责人或版本化角色方案 | [共享角色与项目协作](references/workspace-roles.md) |
 | 创建、继续、观察和整理会话 | [会话工作流](references/sessions.md) |
 | 调度、operation 和异步协调 | [自动化](references/automation.md) |
 | 同步、导出、迁移、评审、反馈或桌面恢复 | [交付与维护](references/delivery.md) |
