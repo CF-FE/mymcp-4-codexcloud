@@ -1,0 +1,17 @@
+%% 软件任务示例；不是凡人生产并行授权或真实进度。
+flowchart TB
+    accTitle: 按依赖条件开启并行的示例
+    accDescr: T1接口约定版本被接受后，负责人检查授权、资源、独立性与写入范围，才允许T2模块A和T3模块B并行。两者明确版本和自检证据齐备后，由唯一集成者完成T4集成，再由独立QA检查T5。满足验收与交付才关闭，不通过或证据不足回原任务修正复验。时间预估不替代开始条件；输入变化需重核受影响分支。
+    t1["T1 接口约定\n确认版本与验收"] --> gate{"负责人核对\n依赖 / 授权 / 资源\n写入范围 / 独立性"}
+    gate -->|条件均满足| t2["T2 模块 A\n写者 A / 范围 A"]
+    gate -->|条件均满足| t3["T3 模块 B\n写者 B / 范围 B"]
+    t2 -->|版本与自检证据| t4["T4 统一集成\n唯一集成者"]
+    t3 -->|版本与自检证据| t4
+    t4 --> t5["T5 独立 QA\n检查同一集成版本"]
+    t5 --> accepted{"满足验收与交付？"}
+    accepted -->|是| done["负责人核验交付\n关闭 / 回传 Dot"]
+    accepted -->|否 / 证据不足| fix["回原任务精确修正\n核新版本后复验"]
+    classDef gateStyle fill:#fff5e6,stroke:#987334,color:#4e3c1d;
+    classDef parallel fill:#eff7f1,stroke:#4d7656,color:#203e27;
+    class gate,accepted,fix gateStyle;
+    class t2,t3 parallel;

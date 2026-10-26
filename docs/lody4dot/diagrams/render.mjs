@@ -13,8 +13,9 @@ const requireTool = createRequire(path.resolve(toolDirectory, "package.json"));
 const { default: puppeteer } = requireTool("puppeteer-core");
 const mermaidDist = path.dirname(requireTool.resolve("mermaid"));
 const config = JSON.parse(await fs.readFile(path.join(directory, "mermaid-config.json"), "utf8"));
-const known = ["environment-context", "environment-permissions", "environment-lifecycle"];
-const names = process.argv.length > 3 ? process.argv.slice(3) : known;
+const environmentNames = ["environment-context", "environment-permissions", "environment-lifecycle"];
+const known = [...environmentNames, "project-governance", "project-task-flow", "project-parallel-gates"];
+const names = process.argv.length > 3 ? process.argv.slice(3) : environmentNames;
 if (names.some(name => !known.includes(name))) throw new Error("Unknown documentation diagram.");
 
 const server = http.createServer(async (request, response) => {
@@ -54,10 +55,10 @@ browserEnv.XDG_CACHE_HOME = path.join(profile, "cache");
 let browser;
 try {
   browser = await puppeteer.launch({
-    executablePath: "/usr/bin/chromium",
+    executablePath: process.env.LODY4DOT_DIAGRAM_BROWSER || "/usr/bin/chromium",
     headless: true,
     userDataDir: path.join(profile, "profile"),
-    args: ["--no-sandbox", "--disable-dev-shm-usage"],
+    args: process.platform === "linux" ? ["--no-sandbox", "--disable-dev-shm-usage"] : [],
     env: browserEnv,
   });
   const page = await browser.newPage();
