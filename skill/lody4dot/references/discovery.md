@@ -22,6 +22,8 @@ lody mcp list --workspace WORKSPACE_ID --json
 
 ## 按命令读取随包资料
 
+随包提供了可重复使用的[lookup离线入口](knowledge.md)：`lookup.py command 'session observe'`默认只读index，必要时加`--detail help`或`--detail audit`。以下内联读取仍可用于没有该脚本的既有版本，不必为了查询资料先升级安装。
+
 三个JSON均以`commands[]`中的`command`定位单项。先从`command-index.json`取目标命令，需要参数或验证来源时再取`help-snapshot.json`或`command-audit.json`的同一项。以下路径替换为本端实际技能目录；脚本只读资料，不调用Lody：
 
 ```bash

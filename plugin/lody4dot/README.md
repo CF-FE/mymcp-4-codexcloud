@@ -1,6 +1,6 @@
 # lody4dot
 
-为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码清单版本为`0.2.7`，正式云来源与运行观测统一见仓库[任务队列](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/.codex/agent-state/todo.md#当前环境与下一步)，不把工作副本当作正式发布。2026-10-25按用户授权改为准备阶段解析官方npm的`lody@latest`，本轮源码锁及实际帮助为`0.108.1`，0.107.2历史业务证据不改称新版已测。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际依赖另以engine-strict核对。
+为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码清单版本为`0.3.0`，正式云来源与运行观测统一见仓库[任务队列](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/.codex/agent-state/todo.md#当前环境与下一步)，不把工作副本当作正式发布。2026-10-25按用户授权改为准备阶段解析官方npm的`lody@latest`，本轮源码锁及实际帮助为`0.108.1`，0.107.2历史业务证据不改称新版已测。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际依赖另以engine-strict核对。
 
 核心能力源码在仓库的 `skill/lody4dot/`，薄setup入口在`skill/lody4dot-setup/`；本目录负责组合、运行时锁定和分发，不新增 MCP 服务。Lody 已有 MCP 只有在宿主提供有效 session/workspace/machine 上下文时才使用，不能将其内部入口当作独立通用服务。
 
@@ -27,6 +27,22 @@ Dot、ChatGPT、ChatGPT Work和Codex可共享插件连接及已授予权限；�
 0.2.3增加随包的资料交接参考，由共享技能按需导航。对已确认可用且获授权的Dot资料中转直接复用；需要Lody节点发现、派发和观察时才组合Lody路线。分别记录原附件/正文/摘要、处理结果、保存回执和目的地回读；保存成功而回读受阻时保留两项事实，不盲目重复上传或替换对象。当前云任务不派生独立Codex云任务，任务创建由Dot承担。
 
 纯Cloud/Space资料记录不填入schema1的Lody引用，也不送给`handoff.py`冒充Lody业务结果。真实Lody部分仍使用原校验器；本次不增加JSON字段、schema2、远程桥接或工具调用入口。知识导航、分发检查不证明Dot实际加载或新的业务读写已验收。
+
+## 离线知识与两层角色库
+
+0.3.0增加只读`lookup.py`与工作区共享级/项目级角色库。已有会话按原引用跟进，不先运行全库查询。源码入口示例：
+
+```bash
+python3 plugin/lody4dot/scripts/lookup.py command 'session observe'
+python3 plugin/lody4dot/scripts/lookup.py role workspace_quality --project fanren-work --render
+python3 plugin/lody4dot/scripts/lookup.py check
+```
+
+自包含包改用`python3 scripts/lookup.py`，可从任意cwd用绝对脚本路径调用。工具只读包内资料，无需Lody身份、Node或网络；所有输出为JSON，成功0、资料/参数错误2。单命令返回原条目与快照来源；角色默认只给元数据，render一次组装完整必要prompt，保持`native_payload: false`。不自动安装外部方法或发布Role；未随包的方法只作为可选来源。
+
+角色库保留11份定义并显式选择项目，历史V2.2不改。维护时更新唯一正文/库版本，运行check，再构建：builder会校验全部角色组合、依赖与路径，失败不会替换已有产物。当前机器/配置、模型、权限及Save/回读独立记录。具体指南随包位于`skills/lody4dot/references/knowledge.md`和`workspace-roles.md`；本用户工作区新会话的执行规范由任务输入提供，不作为所有安装的通用默认。
+
+性能验证同时保留已有内联单项读取作为基线；新工具增加来源与校验，不能宣称比内联Python更快。入口读取量、工具输出量和离线耗时分别记录，真实模型token/延迟及业务效果未由此证明。
 
 ## 从仓库安装 CLI
 
@@ -162,7 +178,7 @@ python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot --json
 需要同时生成离线ZIP时，显式指定新路径：
 
 ```bash
-python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.2.7 --zip dist/lody4dot-0.2.7.zip --json
+python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.3.0 --zip dist/lody4dot-0.3.0.zip --json
 ```
 
 ZIP保留隐藏清单及所有资源，根直接是插件内容；生成后核对CRC、收据和逐文件SHA-256，再创建最终文件。成功JSON只在请求ZIP时附加`archive`，提供绝对`path`、含收据的`file_count`、`size_bytes`、ZIP的`sha256`、`receipt_sha256`和`verification`。这些摘要证明本地文件一致性，不提供签名或原生加载/业务验收。

@@ -15,23 +15,24 @@ import tempfile
 from urllib.parse import unquote, urlsplit
 import zipfile
 
+from lookup import KnowledgeError, validate_library
 
 RECEIPT = ".lody4dot-build.json"
 TOOL = "lody4dot-build"
-SCRIPT_NAMES = {"install.py", "doctor.py", "auth.py", "common.py", "build.py",
+SCRIPT_NAMES = {"install.py", "doctor.py", "auth.py", "common.py", "build.py", "lookup.py",
                 "platform_support.py", "bootstrap.py", "handoff.py"}
 HOST_NAMES = {"codex-cloud.md", "codex-cli.md", "dot.md"}
 RUNTIME_NAMES = {"package.json", "package-lock.json", "build-policy.json"}
 REQUIRED = (
     "README.md", ".codex-plugin/plugin.json", "scripts/install.py",
     "scripts/doctor.py", "scripts/auth.py", "scripts/common.py",
-    "scripts/platform_support.py", "scripts/bootstrap.py", "scripts/handoff.py",
+    "scripts/platform_support.py", "scripts/bootstrap.py", "scripts/handoff.py", "scripts/lookup.py",
     "hosts/codex-cloud.md", "hosts/codex-cli.md", "hosts/dot.md", "runtime/package.json",
     "runtime/package-lock.json", "runtime/build-policy.json",
 )
 SKILL_REQUIRED = (
     "SKILL.md", "references/command-index.json", "references/sources.json",
-    "references/help-snapshot.json",
+    "references/help-snapshot.json", "references/knowledge.md", "references/roles/index.json",
 )
 ONBOARDING_SKILL = "./skills/lody4dot-setup/SKILL.md"
 MARKDOWN_LINK = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
@@ -207,7 +208,7 @@ def build(repo: Path, output: Path) -> dict:
         raise BuildError("Plugin manifest must point onboardingSkill to the packaged lody4dot-setup skill")
     check_owned_output(output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    staging = Path(tempfile.mkdtemp(prefix=".lody4dot-build-", dir=output.parent))
+    staging = Path(tempfile.mkdtemp(prefix=".lody4dot-build-", dir=output.parent)).resolve()
     backup = None
     try:
         for source, selected, prefix in (
@@ -226,6 +227,10 @@ def build(repo: Path, output: Path) -> dict:
             "plugins": [{"name": "lody4dot", "source": {"source": "local", "path": "."}}],
         }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         check_references(staging)
+        try:
+            validate_library(staging / "skills/lody4dot")
+        except KnowledgeError as exc:
+            raise BuildError("Role library is invalid; run lookup.py check on the source.") from exc
         files = inventory(staging)
         receipt = {"schema_version": 1, "tool": TOOL, "plugin_version": manifest.get("version"), "files": files}
         (staging / RECEIPT).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

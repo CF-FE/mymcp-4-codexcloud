@@ -8,6 +8,8 @@ import json
 import os
 from pathlib import Path
 import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -15,6 +17,7 @@ import zipfile
 
 
 SCRIPT = Path(__file__).resolve().parents[2] / "plugin/lody4dot/scripts/build.py"
+sys.path.insert(0, str(SCRIPT.parent))
 SPEC = importlib.util.spec_from_file_location("lody4dot_build", SCRIPT)
 build_module = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(build_module)
@@ -32,7 +35,17 @@ class BuildTests(unittest.TestCase):
         self.output = self.root / "package"
         self.write(self.skill / "SKILL.md", "# Lody\n\n[Reference](references/cloud.md)\n")
         self.write(self.skill / "references/cloud.md", "# Cloud\n[Source](https://lody.ai/zh/docs/cli/)\n")
-        self.write_json(self.skill / "references/command-index.json", {"commands": []})
+        self.write_json(self.skill / "references/command-index.json", {"schema_version": 1, "lody_version": "0.108.1", "commands": []})
+        self.write(self.skill / "references/knowledge.md", "# Offline knowledge\n")
+        self.write(self.skill / "references/roles/common.md", "Use the authorized scope and preserve unknown results.\n")
+        self.write(self.skill / "references/roles/quality.md", "Review the selected artifact.\n")
+        self.write_json(self.skill / "references/roles/index.json", {
+            "schema_version": 1, "library_version": "1.0.0", "provenance": {},
+            "common": {"resource": "common.md"}, "projects": [], "methods": [],
+            "roles": [{"id": "fixture_quality", "name": "Quality", "scope": "workspace",
+                       "kind": "shared_role", "summary": "Read-only review", "resource": "quality.md",
+                       "methods": [], "source_role_id": "quality"}],
+        })
         self.write_json(self.skill / "references/sources.json", {"resource": "help-snapshot.json"})
         self.write_json(self.skill / "references/help-snapshot.json", {"commands": []})
         self.write(self.setup_skill / "SKILL.md", "# Setup\n[Core](../lody4dot/SKILL.md)\n")
@@ -47,6 +60,7 @@ class BuildTests(unittest.TestCase):
         for name in ("codex-cloud.md", "codex-cli.md", "dot.md"):
             self.write(self.plugin / "hosts" / name, "# Host\n[Prepare](../scripts/bootstrap.py)\n")
         self.write(self.plugin / "scripts/build.py", "# source-only builder\n")
+        self.write(self.plugin / "scripts/lookup.py", (SCRIPT.parent / "lookup.py").read_text())
         for name in ("package.json", "package-lock.json", "build-policy.json"):
             self.write_json(self.plugin / "runtime" / name, {})
 
@@ -281,6 +295,45 @@ class BuildTests(unittest.TestCase):
         build_module.build(self.repo, self.output)
         self.assertEqual((self.output / "skills/lody4dot/references/cloud.md").read_text(), "# Updated reference\n")
         build_module.check_owned_output(self.output)
+
+    def test_relocated_bundle_can_render_role_from_unrelated_directory(self):
+        build_module.build(self.repo, self.output)
+        relocated = self.root / "relocated"
+        shutil.move(self.output, relocated)
+        result = subprocess.run([sys.executable, str(relocated / "scripts/lookup.py"),
+                                 "role", "fixture_quality", "--render"],
+                                cwd=self.root, text=True, capture_output=True, timeout=10)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertFalse(payload["native_payload"])
+        self.assertIn("preserve unknown results", payload["prompt"])
+        self.assertIn("Review the selected artifact", payload["prompt"])
+        self.assertEqual(len(payload["components"]), 2)
+
+    def test_output_parent_aliases_preserve_role_validation(self):
+        parent = self.root / "real-parent"
+        parent.mkdir()
+        alias = self.root / "alias-parent"
+        alias.symlink_to(parent, target_is_directory=True)
+        nested = parent / "nested"
+        nested.mkdir()
+        for output in (alias / "bundle", nested / ".." / "another-bundle"):
+            with self.subTest(output=str(output)):
+                result = build_module.build(self.repo, output)
+                self.assertEqual(result["status"], "pass")
+                build_module.check_owned_output(output)
+                self.assertTrue((output / "skills/lody4dot/references/roles/index.json").is_file())
+
+    def test_invalid_role_dependency_cannot_replace_existing_bundle(self):
+        build_module.build(self.repo, self.output)
+        before = build_module.inventory(self.output)
+        path = self.skill / "references/roles/index.json"
+        catalog = json.loads(path.read_text())
+        catalog["roles"][0]["methods"] = ["missing_method"]
+        self.write_json(path, catalog)
+        with self.assertRaisesRegex(build_module.BuildError, "Role library"):
+            build_module.build(self.repo, self.output)
+        self.assertEqual(build_module.inventory(self.output), before)
 
     def test_post_commit_cleanup_failure_reports_applied_output_without_rollback(self):
         real_check = build_module.check_owned_output

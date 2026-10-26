@@ -2,6 +2,8 @@
 
 本目录保存用户已接受的角色设计源；设计、提议卡、用户Save、字段回读和实际运行分别验收。当前资料见[V2.2方案](v2.2/TEAM-PLAN-V2.md)、[中立角色定义](v2.2/roles-v2.json)、[执行合同与演练设计](v2.2/OPERATING-CONTRACT-AND-DRYRUNS.md)、[复核轨迹](v2.2/REVIEW-TRACE.md)。
 
+可编辑的随包派生库已归入[roles/index.json](../../../skill/lody4dot/references/roles/index.json)，按[使用与维护](../../../skill/lody4dot/references/workspace-roles.md#按需读取角色库)精确读取和组装；职责正文只在该处维护，V2.2继续作为不改字节的历史来源。[设计与辩证取舍](library-design.md)说明两层边界，部署回执不并入定义。
+
 组织为G8总协调、mac-work六项共享职责、win-work唯一项目负责人及三个按任务加载的制作职责模板。11份定义不等于11个Agent；本次只对六项共享Role准备保存流程，项目模板不另建常驻Agent。
 
 公子确认角色按**工作区共享级**与**项目级**组织。共享定义维护稳定职责及按需技能，项目定义维护项目owner、领域任务和验收差异；运行时绑定与Save/回读仍由下方部署记录保存。现有V2.2为已接受历史快照，不因角色库维护建议改写原定义或宣称已新增远端Role。
