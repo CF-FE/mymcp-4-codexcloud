@@ -707,6 +707,18 @@ Python工具、CLI/runtime锁、核心技能、setup、命令索引、帮助快�
 
 本Goal只完成本地源码、分发与行为验证。没有更新远端Role、用户模型/配置或云环境，没有重新认证/派发Lody业务；原生插件装载、模型token/延迟、业务效率和新的远端发布仍未由本轮证明。未以另一执行器回执冒称Dot自有云电脑新实测。
 
+## 2026-10-26角色目录来源校验修复（0.3.1）
+
+公子转交云端Dot对`cd80258e4be0693909a797a2daf6192dbcd2a7db`的复核，本地起始HEAD与origin/main均为该提交。合法角色目录被旧`_bundle_member`拒绝、doctor在汇总后才附加来源，两个问题在当前源码复现。上轮210项测试及CRC/逐文件摘要验证未覆盖完整bundle的provenance与总体状态；其通过不证明当时doctor来源检查通过。云端50成员核对来自Dot转交回执，本轮不冒充重新在Dot自有云电脑执行。
+
+修复以[BOUNDARY_NOTE](collaboration-development.md#51-角色与检查范围)明确schema1局部语义：构建器与校验器共用随包`package_layout.py`，只支持现有角色目录层级，保留非法路径、敏感文件、符号链接、越界及大小预算限制；构建工具自身仍不随包。已有证据invalid/mismatch计入`checks.provenance=fail`并在首个Node子进程前停止，正常前提下整体fail/退出5/invalid_provenance。已有前置错误保留主类别和非零退出，无收据则not_provided/warn，不计入来源已验证范围。固定reason区分格式、非法成员、SHA、缺文件和不安全路径，原始解析器消息不外泄。`bootstrap --repair-missing`遇到同时缺runtime与来源失败时只诊断、不安装。
+
+- 新增11项完整性行为测试和1项bootstrap联动回归，既有诊断测试删除“来源失配仍通过”的旧断言。角色路径、实际build、包内独立解释器导入、坏JSON/UTF-8、非法成员、文件及父目录链接、缺失文件、SHA变化和零子进程/账号调用均验证。UTF-8异常的原生reason曾导致非固定分类，先确认RED后修复。源码无收据保持可运行，但有明确warning。
+- 最终全仓222项中221通过、1项Linux真实锁测试在macOS跳过；使用`TMPDIR=/private/tmp PYTHONDONTWRITEBYTECODE=1`。仓库结构和diff检查通过。独立只读复核确认首个子进程前拦截、bootstrap零安装及最小收据兼容，未发现遗留必修项。
+- 实际0.3.1 ZIP含51个内容文件加收据，共52成员、203719字节；CRC、逐文件SHA及完整bundle provenance均通过，14个角色目录成员全部纳入。ZIP SHA为`b180536015ea0581d09e5f96559e15064a523f2d953fe59cbe9f45bfa289463d`，收据SHA为`8237b0f86dce3130334c3edf06132b111b940d9178986527562b423dfc6cfe9a`。正常doctor汇总以真实构建文件配合隔离受管运行时夹具和受控Node/CLI探针验证；不计为真实Lody运行。
+
+本轮为本地源码与离线分发修复，未登录、联网安装、创建任务、更新云环境或发布Role。来源保证仍仅为本地收据明列文件一致性，不是签名、未列成员检查或业务验收。重新装载0.3.1的云端doctor回执仍由目标执行器提供，不重跑已证实的协作业务链路。
+
 ## 复现命令
 
 在仓库根目录运行：

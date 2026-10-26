@@ -16,17 +16,15 @@ from urllib.parse import unquote, urlsplit
 import zipfile
 
 from lookup import KnowledgeError, validate_library
+from package_layout import SENSITIVE_NAME, bundle_member
 
 RECEIPT = ".lody4dot-build.json"
 TOOL = "lody4dot-build"
-SCRIPT_NAMES = {"install.py", "doctor.py", "auth.py", "common.py", "build.py", "lookup.py",
-                "platform_support.py", "bootstrap.py", "handoff.py"}
-HOST_NAMES = {"codex-cloud.md", "codex-cli.md", "dot.md"}
-RUNTIME_NAMES = {"package.json", "package-lock.json", "build-policy.json"}
 REQUIRED = (
     "README.md", ".codex-plugin/plugin.json", "scripts/install.py",
     "scripts/doctor.py", "scripts/auth.py", "scripts/common.py",
     "scripts/platform_support.py", "scripts/bootstrap.py", "scripts/handoff.py", "scripts/lookup.py",
+    "scripts/package_layout.py",
     "hosts/codex-cloud.md", "hosts/codex-cli.md", "hosts/dot.md", "runtime/package.json",
     "runtime/package-lock.json", "runtime/build-policy.json",
 )
@@ -37,10 +35,6 @@ SKILL_REQUIRED = (
 ONBOARDING_SKILL = "./skills/lody4dot-setup/SKILL.md"
 MARKDOWN_LINK = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 MARKDOWN_DEFINITION = re.compile(r"(?m)^ {0,3}\[[^\]]+\]:\s*(<[^>\r\n]+>|\S+)")
-SENSITIVE_NAME = re.compile(
-    r"(^\.env($|\.)|(^|[._-])(token|credentials?|secrets?)([._-]|$)|"
-    r"\.(pem|key|p12|pfx)$)", re.IGNORECASE,
-)
 SENSITIVE_CONTENT = re.compile(
     rb"-----BEGIN (?:[A-Z]+ )?PRIVATE KEY-----|"
     rb"[\"']?LODY_CLI_TOKEN[\"']?[ \t]*[:=][ \t]*"
@@ -95,21 +89,13 @@ def check_source_tree(root: Path, kind: str) -> list[Path]:
         if SENSITIVE_CONTENT.search(path.read_bytes()):
             raise BuildError(f"Sensitive content is not allowed in {kind}: {label}")
         if kind == "skill":
-            allowed = label == "SKILL.md" or (
-                relative.parts[0] == "references" and path.suffix in {".md", ".json"}
-            )
+            allowed = bundle_member("skills/lody4dot/" + label)
         elif kind == "setup skill":
-            allowed = label == "SKILL.md"
+            allowed = bundle_member("skills/lody4dot-setup/" + label)
         else:
-            allowed = (
-                label in {"README.md", ".codex-plugin/plugin.json"}
-                or len(relative.parts) == 2 and relative.parts[0] == "scripts"
-                and path.name in SCRIPT_NAMES
-                or len(relative.parts) == 2 and relative.parts[0] == "runtime"
-                and path.name in RUNTIME_NAMES
-                or len(relative.parts) == 2 and relative.parts[0] == "hosts"
-                and path.name in HOST_NAMES
-            )
+            # build.py is source-only; the marketplace is generated below.
+            allowed = label == "scripts/build.py" or (
+                not label.startswith(("skills/", ".agents/")) and bundle_member(label))
         if not allowed:
             raise BuildError(f"Unexpected file in {kind}: {label}")
         if path.suffix == ".json":

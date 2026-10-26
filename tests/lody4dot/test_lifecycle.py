@@ -85,6 +85,24 @@ class LifecycleTests(unittest.TestCase):
         self.assertEqual(report["error_category"], "subprocess")
         self.assertFalse(self.prefix.exists())
 
+    def test_missing_runtime_with_failed_provenance_never_installs(self):
+        for source in ("bundle", "runtime"):
+            with self.subTest(source=source):
+                inspection = {
+                    "schema_version": 1, "status": "blocked", "error_category": "missing_runtime",
+                    "checks": [{"name": "provenance", "status": "fail"}],
+                    "provenance": {source: {"status": "invalid"}},
+                }
+                (self.tools / "doctor.py").write_text(
+                    "import json; print(json.dumps(" + repr(inspection) + ")); raise SystemExit(3)"
+                )
+                code, report = self.run_bootstrap("--repair-missing")
+                self.assertEqual(code, 3)
+                self.assertEqual(report["error_category"], "missing_runtime")
+                self.assertEqual([step["tool"] for step in report["steps"]], ["doctor"])
+                self.assertEqual(report["inspection"]["checks"][0]["status"], "fail")
+                self.assertFalse(self.prefix.exists())
+
     def test_version_warning_continues_without_install_and_is_visible_in_text(self):
         (self.tools / "doctor.py").write_text(
             "import json; print(json.dumps({'schema_version':1,'status':'pass','checks':"

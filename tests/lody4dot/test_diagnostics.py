@@ -151,7 +151,7 @@ class DiagnosticTests(unittest.TestCase):
             self.assertEqual(value["provenance"]["plugin"]["version"], "0.1.4")
             self.assertEqual(value["provenance"]["bundle"]["status"], "not_provided")
 
-    def test_source_hash_mismatch_is_reported_without_changing_legacy_cli_scope(self):
+    def test_source_hash_mismatch_fails_before_cli_execution(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             prefix, version, _ = self.managed_fixture(root)
@@ -162,8 +162,10 @@ class DiagnosticTests(unittest.TestCase):
                  patch.object(doctor, "offline_version", return_value="0.107.2"), \
                  patch.object(doctor.subprocess, "run", return_value=argparse.Namespace(returncode=0, stdout="v24.19.0")):
                 code, value, _ = self.capture(doctor, ["--prefix", str(prefix)])
-            self.assertEqual(code, 0)
-            self.assertEqual(value["verified_scope"], ["node", "runtime"])
+            self.assertEqual(code, 5)
+            self.assertEqual(value["status"], "fail")
+            self.assertEqual(value["error_category"], "invalid_provenance")
+            self.assertEqual(value["verified_scope"], [])
             self.assertEqual(value["provenance"]["bundle"]["status"], "mismatch")
             self.assertEqual(value["provenance"]["runtime"]["status"], "mismatch")
 
@@ -199,7 +201,9 @@ class DiagnosticTests(unittest.TestCase):
                  patch.object(doctor, "offline_version", return_value="0.107.2"), \
                  patch.object(doctor.subprocess, "run", return_value=argparse.Namespace(returncode=0, stdout="v24.19.0")):
                 code, value, errors = self.capture(doctor, ["--prefix", str(prefix)])
-            self.assertEqual(code, 0)
+            self.assertEqual(code, 5)
+            self.assertEqual(value["status"], "fail")
+            self.assertEqual(value["error_category"], "invalid_provenance")
             self.assertEqual(value["provenance"]["bundle"]["status"], "invalid")
             self.assertNotIn("fixture-private-material", json.dumps(value) + errors)
 

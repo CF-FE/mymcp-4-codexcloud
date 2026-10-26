@@ -98,6 +98,19 @@ def diagnose(args):
         ("task_execution", "Agent credentials, target and persisted task results require separate validation."),
     ):
         check(name, "not_run", message)
+    provenance = local_provenance(args.prefix, Path(__file__).resolve().parent.parent)
+    sources = {name: provenance[name]["status"] for name in ("plugin", "bundle", "runtime")}
+    provenance_failed = any(status in {"invalid", "mismatch"} for status in sources.values())
+    if provenance_failed:
+        check("provenance", "fail", "Local provenance evidence is invalid or inconsistent.",
+              sources=sources, reasons={name: provenance[name].get("reason") for name in sources
+                                       if sources[name] in {"invalid", "mismatch"}})
+    elif "not_provided" in sources.values():
+        check("provenance", "warn", "Some local provenance evidence was not provided; consistency is not fully verified.",
+              sources=sources)
+    else:
+        check("provenance", "pass", "Provided local evidence is consistent; this is not signature or release verification.",
+              sources=sources, coverage="receipt_listed_files_only")
     session, cli, failure = "not_run", None, None
     active = "platform"
     try:
@@ -111,6 +124,14 @@ def diagnose(args):
         executable = node_for_cli(cli) if cli is not None else "node"
         if executable == "node" and not shutil.which("node"):
             raise ToolError(3, "missing_executable", "Node is unavailable.")
+        if provenance_failed:
+            # Preserve a known prerequisite error, but never run a probe or repair
+            # using evidence already known to be invalid or inconsistent.
+            if runtime_error is not None:
+                active = "runtime"
+                raise runtime_error
+            active = "provenance"
+            raise ToolError(5, "invalid_provenance", "Local provenance validation failed; execution was not attempted.")
         try:
             node = subprocess.run([executable, "--version"], capture_output=True, text=True, timeout=args.timeout)
         except subprocess.TimeoutExpired as exc:
@@ -163,7 +184,8 @@ def diagnose(args):
         evidence = dict(error_category=failure.category, raw_exit_code=failure.raw_exit_code)
         if failure.failure_layer is not None:
             evidence["failure_layer"] = failure.failure_layer
-        check(active, "blocked" if failure.code == 3 else "fail", str(failure), **evidence)
+        if active != "provenance":
+            check(active, "blocked" if failure.code == 3 else "fail", str(failure), **evidence)
         value, code = error_result(failure), failure.code
     else:
         passed = args.profile == "inspect" or (args.profile == "control" and args.connect)
@@ -181,7 +203,7 @@ def diagnose(args):
                                       "architecture": platform.machine(),
                                       "script_path": str(Path(__file__).resolve()),
                                       "cli_path": str(cli) if cli is not None else None},
-                 provenance=local_provenance(args.prefix, Path(__file__).resolve().parent.parent))
+                 provenance=provenance)
     return value, code
 
 

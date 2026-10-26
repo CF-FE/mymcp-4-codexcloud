@@ -225,6 +225,8 @@ doctor以附加字段`observed_at`、`verified_scope`、`control_environment`与
 
 失败报告保留此前已完成的checks，未知或未运行项继续如实报告。包receipt、安装receipt与实际CLI版本分别保留来源与一致性；本地摘要不证明发布者身份或签名。账户通过、目录未运行时，两者仍保留原始状态；task/worker不得为消除blocked而改为pass。
 
+2026-10-26 **BOUNDARY_NOTE（0.3.1）**：按公子转交的Dot复核修正来源失败仅被附加、未影响总体状态的缺陷。所有权仍是build生产收据、common只读校验、doctor汇总、bootstrap按诊断决定是否修复；新增纯标准库`package_layout.py`作为构建与校验共用的路径规则，随包发布，不引入服务或新权限。保留schema1与`receipt_listed_files_only`，来源分项增加固定`reason`，`checks.provenance`为新增检查。已提供证据的invalid/mismatch在首个受检子进程前阻断，正常前提下退出5/invalid_provenance；更早的真实前置错误保留，来源fail仍报告。无收据继续not_provided并warn，不误作来源已验；bootstrap不能因同时missing_runtime而掩盖来源失败触发安装。消费方及正反例覆盖见[插件说明](../../plugin/lody4dot/README.md)与`test_bundle_integrity.py`、诊断/生命周期测试。
+
 原生失败分类不能把代理CONNECT拒绝直接写成目标对象ACL拒绝。保留原始退出码，输出脱敏分类和证据强度；模糊信号保留未知，不自动登录、发布或重试写操作。
 
 ### 5.2 最小交接记录

@@ -38,12 +38,12 @@ class BuildTests(unittest.TestCase):
         self.write_json(self.skill / "references/command-index.json", {"schema_version": 1, "lody_version": "0.108.1", "commands": []})
         self.write(self.skill / "references/knowledge.md", "# Offline knowledge\n")
         self.write(self.skill / "references/roles/common.md", "Use the authorized scope and preserve unknown results.\n")
-        self.write(self.skill / "references/roles/quality.md", "Review the selected artifact.\n")
+        self.write(self.skill / "references/roles/workspace/quality.md", "Review the selected artifact.\n")
         self.write_json(self.skill / "references/roles/index.json", {
             "schema_version": 1, "library_version": "1.0.0", "provenance": {},
             "common": {"resource": "common.md"}, "projects": [], "methods": [],
             "roles": [{"id": "fixture_quality", "name": "Quality", "scope": "workspace",
-                       "kind": "shared_role", "summary": "Read-only review", "resource": "quality.md",
+                       "kind": "shared_role", "summary": "Read-only review", "resource": "workspace/quality.md",
                        "methods": [], "source_role_id": "quality"}],
         })
         self.write_json(self.skill / "references/sources.json", {"resource": "help-snapshot.json"})
@@ -61,6 +61,7 @@ class BuildTests(unittest.TestCase):
             self.write(self.plugin / "hosts" / name, "# Host\n[Prepare](../scripts/bootstrap.py)\n")
         self.write(self.plugin / "scripts/build.py", "# source-only builder\n")
         self.write(self.plugin / "scripts/lookup.py", (SCRIPT.parent / "lookup.py").read_text())
+        self.write(self.plugin / "scripts/package_layout.py", (SCRIPT.parent / "package_layout.py").read_text())
         for name in ("package.json", "package-lock.json", "build-policy.json"):
             self.write_json(self.plugin / "runtime" / name, {})
 

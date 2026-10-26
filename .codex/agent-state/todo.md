@@ -7,7 +7,13 @@
 ## 当前环境与下一步
 
 
-### 当前Goal：技能按需读取与两层角色库
+### 2026-10-26 Dot反馈修复：0.3.1本地交付
+
+起点为已同步origin/main的`cd80258`。公子转交Dot的角色目录/provenance反馈，两项在本地复现并修复：共用构建/校验路径规则，来源invalid/mismatch纳入doctor失败；首个Node探针前拦截，bootstrap不因同时missing_runtime而自动安装。无收据not_provided/warn，原schema1与明列文件范围保留。当前清单0.3.1，固定reason及消费方边界见[验证记录](../../docs/lody4dot/validation.md#2026-10-26角色目录来源校验修复031)。
+
+新增12项回归；222项中221通过、1项Linux真实锁测试在macOS跳过，结构/diff和独立复核通过。实际ZIP52成员，CRC/逐文件SHA/完整bundle provenance通过；正常doctor使用真实构建文件与受控运行时夹具，未冒称真实Lody运行。包与验证JSON位于`/private/tmp/lody-031-provenance-boza8ujb/`，摘要统一记在验证记录。上轮0.3.0未覆盖完整来源汇总链路的验收缺口已明确纠正；未重开已完成Goal，未改远端角色/云环境或重跑业务，0.3.1目标宿主装载回执尚待执行器提供。
+
+### 已完成Goal：技能按需读取与两层角色库
 
 2026-10-26公子明确授权“优化skill性能和推进角色库开发，一起推进；辩证优化并启动goal执行”。原审计修正的未提交diff保留。本Goal按[两层角色库设计](../../docs/lody4dot/workspace-roles/library-design.md)执行，采用短入口、单项知识读取、显式项目适配和一次组装；不新增远端服务或自动发布Role。独立对抗/优化线已完成，来源快照、权限/职责与性能口径已收敛。
 

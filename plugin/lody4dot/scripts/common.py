@@ -12,6 +12,7 @@ import sys
 import tempfile
 
 import platform_support
+from package_layout import bundle_member as _bundle_member
 
 SCHEMA_VERSION = 1
 
@@ -166,26 +167,38 @@ def node_for_cli(cli):
         raise ToolError(5, "invalid_runtime", "Managed Node interpreter receipt is invalid.") from None
 
 
+class ProvenanceError(ValueError):
+    """A fixed evidence failure category, without native path or file contents."""
+
+    def __init__(self, reason):
+        super().__init__(reason)
+        self.reason = reason
+
+
 def _provenance_bytes(root, relative, limit=2 * 1024 * 1024):
     """Read bounded local evidence without following package members out of root."""
     name = PurePosixPath(relative)
     if (not isinstance(relative, str) or not relative or "\\" in relative or ":" in relative
             or name.is_absolute() or name.as_posix() != relative or ".." in name.parts):
-        raise ValueError("invalid evidence path")
+        raise ProvenanceError("unsafe_path")
     root = Path(root).absolute()
     if root.resolve() != root:
-        raise ValueError("symlinked evidence root")
+        raise ProvenanceError("unsafe_path")
     path = root
     for part in name.parts:
         path = path / part
         if path.is_symlink():
-            raise ValueError("symlinked evidence")
-    if not path.is_file() or path.stat().st_size > limit:
-        raise ValueError("unavailable evidence")
+            raise ProvenanceError("unsafe_path")
+    if not path.exists():
+        raise ProvenanceError("missing_member")
+    if not path.is_file():
+        raise ProvenanceError("unsafe_path")
+    if path.stat().st_size > limit:
+        raise ProvenanceError("evidence_limit")
     with path.open("rb") as stream:
         raw = stream.read(limit + 1)
     if len(raw) > limit:
-        raise ValueError("evidence exceeds limit")
+        raise ProvenanceError("evidence_limit")
     return raw
 
 
@@ -201,23 +214,6 @@ def _provenance_json(root, relative):
 
 
 LODY_VERSION = _lock_baseline()
-
-
-def _bundle_member(name):
-    """Limit hashes to the existing package layout, never identity/cache files."""
-    if not isinstance(name, str):
-        return False
-    parts = PurePosixPath(name).parts
-    sensitive_name = r"(^\.env($|\.)|(^|[._-])(token|credentials?|secrets?)([._-]|$)|\.(pem|key|p12|pfx)$)"
-    if any(re.search(sensitive_name, part, re.IGNORECASE) for part in parts):
-        return False
-    return (name in {"README.md", ".codex-plugin/plugin.json", ".agents/plugins/marketplace.json"}
-            or name in {"hosts/codex-cloud.md", "hosts/codex-cli.md", "hosts/dot.md"}
-            or len(parts) == 2 and parts[0] == "scripts" and parts[1].endswith(".py")
-            or name in {"runtime/package.json", "runtime/package-lock.json", "runtime/build-policy.json"}
-            or name in {"skills/lody4dot/SKILL.md", "skills/lody4dot-setup/SKILL.md"}
-            or len(parts) == 4 and parts[:3] == ("skills", "lody4dot", "references")
-            and PurePosixPath(name).suffix in {".md", ".json"})
 
 
 def local_provenance(prefix, package_root):
@@ -239,37 +235,44 @@ def local_provenance(prefix, package_root):
             manifest_version = version
             value["plugin"] = {"status": "observed", "version": version,
                                "source": ".codex-plugin/plugin.json", "manifest_sha256": digest}
-        except (OSError, ValueError, TypeError):
-            value["plugin"] = {"status": "invalid"}
+        except (OSError, ValueError, TypeError) as exc:
+            value["plugin"] = {"status": "invalid", "reason": (exc.reason if isinstance(exc, ProvenanceError) else "invalid_manifest")}
     receipt_path = package_root / ".lody4dot-build.json"
     if receipt_path.exists() or receipt_path.is_symlink():
         try:
             receipt, digest = _provenance_json(package_root, ".lody4dot-build.json")
             files, version = receipt.get("files"), receipt.get("plugin_version")
-            if (receipt.get("schema_version") != 1 or receipt.get("tool") != "lody4dot-build"
+            if (type(receipt.get("schema_version")) is not int or receipt.get("schema_version") != 1
+                    or receipt.get("tool") != "lody4dot-build"
                     or not isinstance(version, str) or not re.fullmatch(semver, version)
                     or not isinstance(files, dict) or not 0 < len(files) <= 512
                     or ".codex-plugin/plugin.json" not in files
-                    or any(not _bundle_member(name) or not isinstance(digest, str)
+                    or any(not isinstance(digest, str)
                            or not re.fullmatch(r"[a-f0-9]{64}", digest) for name, digest in files.items())):
-                raise ValueError("invalid bundle receipt")
-            consistent = manifest_version == version
+                raise ProvenanceError("invalid_receipt")
+            if any(not _bundle_member(name) for name in files):
+                raise ProvenanceError("illegal_member")
+            reason = None if manifest_version == version else "plugin_version_mismatch"
             total = 0
             for name, expected in files.items():
                 try:
                     raw = _provenance_bytes(package_root, name)
                     total += len(raw)
                     if total > 16 * 1024 * 1024:
-                        consistent = False
+                        reason = reason or "evidence_limit"
                         break
-                    consistent = hashlib.sha256(raw).hexdigest() == expected and consistent
-                except (OSError, ValueError):
-                    consistent = False
-            value["bundle"] = {"status": "consistent" if consistent else "mismatch",
+                    if hashlib.sha256(raw).hexdigest() != expected:
+                        reason = reason or "sha256_mismatch"
+                except (OSError, ValueError) as exc:
+                    reason = reason or (exc.reason if isinstance(exc, ProvenanceError) else "unreadable_member")
+            value["bundle"] = {"status": "consistent" if reason is None else "mismatch",
                                "receipt_sha256": digest, "plugin_version": version,
                                "listed_file_count": len(files), "coverage": "receipt_listed_files_only"}
-        except (OSError, ValueError, TypeError):
-            value["bundle"] = {"status": "invalid", "coverage": "receipt_listed_files_only"}
+            if reason is not None:
+                value["bundle"]["reason"] = reason
+        except (OSError, ValueError, TypeError) as exc:
+            value["bundle"] = {"status": "invalid", "coverage": "receipt_listed_files_only",
+                               "reason": (exc.reason if isinstance(exc, ProvenanceError) else "invalid_receipt")}
     marker = Path(prefix).absolute() / ".lody4dot-managed.json"
     if marker.exists() or marker.is_symlink():
         try:
@@ -280,18 +283,21 @@ def local_provenance(prefix, package_root):
             if not isinstance(expected, str) or not re.fullmatch(r"[a-f0-9]{64}", expected):
                 raise ValueError("invalid runtime receipt")
             actual = None
+            reason = None
             try:
                 actual = hashlib.sha256(_provenance_bytes(runtime, "package-lock.json")).hexdigest()
-            except (OSError, ValueError):
-                pass
+            except (OSError, ValueError) as exc:
+                reason = (exc.reason if isinstance(exc, ProvenanceError) else "unreadable_member")
             value["runtime"] = {"status": "consistent" if actual == expected else "mismatch",
                                 "lody_version": parse_cli_version(receipt.get("lody_version")),
                                 "version_source": "installation_receipt",
                                 "baseline_lody_version": parse_cli_version(receipt.get("baseline_lody_version")),
                                 "receipt_sha256": digest,
                                 "lock_sha256": expected, "actual_lock_sha256": actual}
-        except (ToolError, OSError, ValueError, TypeError, IndexError):
-            value["runtime"] = {"status": "invalid"}
+            if actual != expected:
+                value["runtime"]["reason"] = reason or "sha256_mismatch"
+        except (ToolError, OSError, ValueError, TypeError, IndexError) as exc:
+            value["runtime"] = {"status": "invalid", "reason": (exc.reason if isinstance(exc, ProvenanceError) else "invalid_runtime")}
     return value
 
 

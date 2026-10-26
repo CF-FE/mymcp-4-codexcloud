@@ -1,6 +1,6 @@
 # lody4dot
 
-为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码清单版本为`0.3.0`，正式云来源与运行观测统一见仓库[任务队列](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/.codex/agent-state/todo.md#当前环境与下一步)，不把工作副本当作正式发布。2026-10-25按用户授权改为准备阶段解析官方npm的`lody@latest`，本轮源码锁及实际帮助为`0.108.1`，0.107.2历史业务证据不改称新版已测。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际依赖另以engine-strict核对。
+为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码清单版本为`0.3.1`，正式云来源与运行观测统一见仓库[任务队列](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/.codex/agent-state/todo.md#当前环境与下一步)，不把工作副本当作正式发布。2026-10-25按用户授权改为准备阶段解析官方npm的`lody@latest`，本轮源码锁及实际帮助为`0.108.1`，0.107.2历史业务证据不改称新版已测。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际依赖另以engine-strict核对。
 
 核心能力源码在仓库的 `skill/lody4dot/`，薄setup入口在`skill/lody4dot-setup/`；本目录负责组合、运行时锁定和分发，不新增 MCP 服务。Lody 已有 MCP 只有在宿主提供有效 session/workspace/machine 上下文时才使用，不能将其内部入口当作独立通用服务。
 
@@ -109,7 +109,7 @@ python3 plugin/lody4dot/scripts/bootstrap.py --prefix /workspace/.tools/lody4dot
 | --- | --- |
 | `--prepare` | 在暂存目录解析官方latest、受管安装或同锁复用，再离线inspect。 |
 | 不传动作参数 | 只做inspect；缺运行时也不自动安装。 |
-| `--repair-missing` | 先离线inspect，仅在退出3且类别为`missing_runtime`时进入同一latest安装路线，再复检；目录所有权和来源检查仍由安装器执行。 |
+| `--repair-missing` | 先离线inspect，仅在退出3、类别为`missing_runtime`且来源检查未失败时进入同一latest安装路线，再复检；目录所有权和来源检查仍由安装器执行。 |
 
 `--prepare`和`--repair-missing`不能同时使用。检查阶段的版本差异或探测失败只提示，不触发安装或升级；Node/OS不支持、来源完整性等实际错误也不被当作缺失自动修复。陌生或被修改的安装目录不会被当作可覆盖目录。报告的`verification_scope`为`owned_dependency_readiness`，`authentication`、`daemon`和`task_recovery`均为`not_run`：此工具不登录、不启daemon、不恢复或重发模型任务，调用方既有身份state保持独立。安装阶段会解析latest；inspect本身不联网查更新。
 
@@ -157,6 +157,10 @@ python3 plugin/lody4dot/scripts/doctor.py --profile control --connect --workspac
 
 doctor会保留失败前已完成的检查，并通过`observed_at`、`verified_scope`、`control_environment`和`provenance`报告本次范围与可得来源。包清单、构建收据、安装收据及实际CLI版本分别记录；缺收据不补造，摘要一致不等于签名、正式发布或模型任务验证。账户查询通过但目录未运行时，报告范围仅覆盖已做查询。
 
+0.3.1起，来源检查计入`checks.provenance`：已提供证据为`invalid`或`mismatch`时分项失败，在Node版本探针、CLI版本、更新与账号查询之前停止，正常前提下整体`fail`、退出5、类别`invalid_provenance`。已有OS/Node/受管依赖前置错误可保持主错误及非零退出，但来源分项仍为`fail`，不会自动修复缺失依赖。源码运行等缺收据场景保留`not_provided`，分项为`warn`，不计入`verified_scope`；其他检查满足时inspect仍可通过，不能据此认定来源已验证。
+
+具体失败以固定`reason`区分：`invalid_receipt`是格式/字段错误，`illegal_member`是白名单外成员，`sha256_mismatch`是内容变化，`missing_member`是已列文件缺失，`unsafe_path`是符号链接或不安全文件路径；另有版本、读取和大小预算错误。构建与检查共用`package_layout.py`，明确支持`references/roles/{common.md,index.json}`及`roles/{workspace,projects}/*.md`，不允许任意递归目录。包核验范围仍为收据明列文件（`receipt_listed_files_only`），不证明未列文件、发布者身份或远端业务。
+
 先查实际CLI `--help`，按随包`skills/lody4dot/references/discovery.md`只读选择明确workspace、machine、project catalog、Agent config/Role；仓库名和本机`/workspace`不自动映射Lody工作区。403保留原CLI退出码、HTTP状态、目标及响应来源，健康探针不能替代原CLI目录查询。0.108.1默认Streams短期token刷新/一次重试与新建CLI key不同；原始debug/响应正文不保证脱敏，诊断规则见随包`skills/lody4dot/references/troubleshooting.md`。
 
 `0.107.2` 的部分目录命令会在 JSON 前后输出同工作区的 `Remote Streams transport attached/detached` 诊断行。工具仅识别这两种精确消息及唯一完整 JSON，仍拒绝未知输出、混合工作区和多个 JSON；安全提示写 stderr，不回显日志或身份。账户与完整目录在本次云机已实测通过。
@@ -178,7 +182,7 @@ python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot --json
 需要同时生成离线ZIP时，显式指定新路径：
 
 ```bash
-python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.3.0 --zip dist/lody4dot-0.3.0.zip --json
+python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.3.1 --zip dist/lody4dot-0.3.1.zip --json
 ```
 
 ZIP保留隐藏清单及所有资源，根直接是插件内容；生成后核对CRC、收据和逐文件SHA-256，再创建最终文件。成功JSON只在请求ZIP时附加`archive`，提供绝对`path`、含收据的`file_count`、`size_bytes`、ZIP的`sha256`、`receipt_sha256`和`verification`。这些摘要证明本地文件一致性，不提供签名或原生加载/业务验收。

@@ -53,7 +53,9 @@ def bootstrap(args):
                     return report(value, requested, steps, inspection), code
             code, inspection = run("doctor")
             if (args.repair_missing and code == 3
-                    and inspection.get("error_category") == "missing_runtime"):
+                    and inspection.get("error_category") == "missing_runtime"
+                    and not any(item.get("name") == "provenance" and item.get("status") == "fail"
+                                for item in inspection.get("checks", []))):
                 code, value = run("install")
                 if code:
                     return report(value, requested, steps, inspection), code
@@ -67,7 +69,7 @@ def report(outcome, requested, steps, inspection):
     warnings = [
         {"code": item["name"], "status": "warn", "message": item["message"]}
         for item in (inspection or {}).get("checks", [])
-        if item.get("name") in {"runtime", "cli_version", "cli_updates"} and item.get("status") == "warn"
+        if item.get("name") in {"runtime", "cli_version", "cli_updates", "provenance"} and item.get("status") == "warn"
     ]
     return result(outcome["status"], requested_action=requested,
                   error_category=outcome.get("error_category"),
