@@ -221,7 +221,7 @@ Lody多宿主目标：**同一份lody4dot能力可以在Dot、Codex云端及本�
 
 doctor以附加字段`observed_at`、`verified_scope`、`control_environment`与`provenance`报告观察时间、控制端工具位置、范围及插件/CLI来源。保留`schema_version:1`和既有字段；消费方应允许附加字段。2026-10-21按用户要求执行V01修订：Lody版本差异、版本探测失败和可选更新查询失败改为分项`warn`，不使业务检查阻塞或失败，不再沿用旧严格版本退出；其他真实运行、身份、权限和安装完整性失败语义保留。后续其他契约变更仍须单独说明并核对消费方，不静默改变语义。
 
-`0.107.2`仅为知识与默认可复现安装基线。默认inspect/bootstrap离线；doctor只有显式`--check-updates`才查询固定`https://registry.npmjs.org/lody/latest`。非最新版、网络失败或无有效版本数据只告警，不自动升级，不把更新查询结果作为实际CLI命令的执行前提。
+当前prepare遵循2026-10-25修订，解析官方npm latest并暂存精确锁；0.107.2只保留历史业务证据。默认inspect及已有runtime的启动检查离线；doctor只有显式`--check-updates`才查询固定`https://registry.npmjs.org/lody/latest`。非最新版、网络失败或无有效版本数据只告警，不自动升级，不把更新查询结果作为实际CLI命令的执行前提。
 
 失败报告保留此前已完成的checks，未知或未运行项继续如实报告。包receipt、安装receipt与实际CLI版本分别保留来源与一致性；本地摘要不证明发布者身份或签名。账户通过、目录未运行时，两者仍保留原始状态；task/worker不得为消除blocked而改为pass。
 
@@ -369,7 +369,7 @@ python3 plugin/lody4dot/scripts/build.py --output /tmp/lody4dot-candidate
 
 ## 9. 迁移、发布与回滚
 
-0.2.2源码候选增加用户setup入口，0.2.3在其上补资料交接知识；用户授权的V01策略继续适用。正式云来源与运行观测读取唯一队列，不因候选打包而推定正式升级。`0.107.2`保留为知识与默认可复现安装基线，实际Lody执行不设版本号门槛。发布后的准备/启动配置无需为相同依赖再次保存草稿或重配token。新宿主包来自同一核心源码，分别记录格式、OS/架构、角色、源码与实际插件/CLI版本、锁和包摘要；CLI版本未知只告警并保留未知。源码候选、正式发布和实例实际版本分别取证；知识更新可复用同锁CLI，不能把知识版本和运行时目录强制一一绑定。
+0.2.2源码候选增加用户setup入口，0.2.3在其上补资料交接知识；用户授权的V01策略继续适用。正式云来源与运行观测读取唯一队列，不因候选打包而推定正式升级。当前prepare解析官方npm latest，精确版本以安装收据为准；0.107.2保留为历史知识/业务证据，实际Lody执行不设版本号门槛。发布后的准备/启动配置无需为相同依赖再次保存草稿或重配token。新宿主包来自同一核心源码，分别记录格式、OS/架构、角色、源码与实际插件/CLI版本、锁和包摘要；CLI版本未知只告警并保留未知。源码候选、正式发布和实例实际版本分别取证；知识更新可复用同锁CLI，不能把知识版本和运行时目录强制一一绑定。
 
 官方支持GitHub marketplace导入和日常同步，但导入只读取内容，不运行本仓库builder。三目录源码需构建后才能含完整技能；不新增catalog指向未构建的`plugin/lody4dot/`，也不提交生成分发物。首轮交付官方支持兼容清单的自包含ZIP候选，构建结果、资源数量和哈希以交付回执为准；ChatGPT web上传/扫描/安装另验。本轮[Plugin Management指南](https://learn.chatgpt.com/docs/enterprise/plugin-management)及打包指南均HTTP200，已核实source和onboardingSkill；ZIP外层包装的UI接受规则仍未知。候选不声明MCP或预设app ID，不以`.app.json`绕过Desktop only限制。
 

@@ -6,13 +6,13 @@
 
 没有控制端 host 时，CLI 可以建立选定工作区的独立 client；这与启动会登记全部可见工作区的 host 不同。已有 Lody MCP 的调用路径只有在宿主确实注入所需上下文且工具已可用时才使用。不手动运行 `__internal` 入口。`agent-config refresh-capabilities` 仍针对本机，不能套用远端派发规则。
 
-跨宿主共同处理目标时，先按[协作参考](collaboration.md)明确协调写入者、产物写入者和只读复验者。交接沿用准确原生引用，第二端读取或复验同一结果，不为接管重新create；路径与身份不因共享任务目标而共享。
+跨宿主共同处理目标时，按[协作参考](collaboration.md)明确协调写入者和产物写入者；独立复验仅在本次要求明确时增加。已有准确引用的观察直接使用下方入口，不重做目录发现。接管沿用原生引用，不重新create；路径与身份不因共享任务目标而共享。
 
 ## 创建或继续
 
 1. 根据任务授权选择工作区、机器、Agent config/Role、项目或仓库；需要隔离的测试任务必须用明确的隔离目标。
 2. 核实目标 Agent 能力、模型和执行凭证。`LODY_CLI_TOKEN` 只用于 Lody 账户，不给底层模型自动授权。
-3. 查当前 `session create --help`，确定提示词与工作上下文；指定项目时 `--repo` 与 `--local-project` 不能同时使用，也可省略两者。依赖具体目录的任务仍须核对执行端实际目录，不能把控制端路径当作远端路径。Role 可能覆盖手工 machine/agent/mode/model/config-option。
+3. 首次使用或版本/参数变化时查 `session create --help`，确定提示词与工作上下文；指定项目时 `--repo` 与 `--local-project` 不能同时使用，也可省略两者。依赖目录的任务核对执行端实际目录；Role可能覆盖手工参数。并行编码按[交接记录](collaboration.md#交接必要内容)明确base_commit、owned_paths、实际checkout/执行环境、integration_owner和集成验收，复用已隔离Cloud checkout。
 4. 创建后保存返回标识与实际参数。超时先查状态、operation 或历史，不能直接创建第二份同样工作。
 
 实际 `0.107.2` 帮助已弃用每会话 `--env`，环境改在 Agent config 配置。`--wait` 与 `--timeout` 可用于当前命令支持的等待，但等待超时不取消已经接受的任务，也不授权重发。

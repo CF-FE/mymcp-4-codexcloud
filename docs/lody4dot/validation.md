@@ -638,6 +638,40 @@ Python工具、CLI/runtime锁、核心技能、setup、命令索引、帮助快�
 - **浏览器与电脑插件分开：** Playwright为用户要求安装的临时venv本地包，不是已注册的浏览器MCP，未下载新的浏览器二进制；临时脚本已清理、venv保留及无遗留浏览器进程属于Agent收据。电脑控制社区包仅登记，目录独立查询证实stdio、configured=true、enabledByDefault=false；Agent报告未选入当前回合、未实际安装运行。公开registry当前版本不等于本机安装版本，登记命令的首次运行仍须用户复核，不因文件测试通过而启用桌面控制。
 - **明确收口：** 一次安全跟进仅核已有调用/文件和工具状态，不授予新安装或下载；03:55:15 UTC观察到该回合completed、persisted/synced、session idle且activeTurns为空。跟进收据确认仅读既有ZIP、没有重下载，仍有电脑控制条目的受信UI选择/拒绝留给用户；文件测试自身无需新增授权。本端临时身份/缓存已清理，没有启用电脑控制、HTTP监听、放宽安全设置或开始真实资料导入。
 
+## 2026-10-26双端审计修正与技能走查
+
+公子转交以`9f98ef3da722240fbcb8465e49259dad6401ed4f`冻结的云端独立审计正文，并授权整合后推进。六项结论中1/2/5成立，3/4/6按审计收窄：现有按需导航、授权复用和单写者保留；T09/T12仅是历史材料缺口，不能否定已验证路线，也不能由CLI成功关闭原生安装验收。云端报告的180项通过属于其独立环境回执，本节另记本地修正结果。
+
+边界记录（BOUNDARY_NOTE）：目录同步未完成沿既有`ToolError(3, catalog_syncing)`返回blocked；builder在提交后的清理告警及ZIP失败回执中保留已应用状态。schema1、工具职责、目录所有权与依赖方向保持，正常成功字段兼容，不新增服务、认证、重试或回滚机制。
+
+| 修改 | 已核结果 |
+| --- | --- |
+| 目录同步 | 空/非空`syncing`不返回有效数量；doctor保留已通过账户、目录blocked且不进入verified_scope。正常完成页允许无sync字段，不要求虚构fresh枚举。新增2项行为测试，RED后44项诊断测试通过。 |
+| 构建与清理 | 新目录提交后旧备份检查/部分删除失败返回成功及固定脱敏warning；不回滚可能已部分删除的备份。后续ZIP失败仍退出3，但保留output、收据、output_applied和已有warning，标记failure_stage=archive，文本同样可见。新增5项测试；组合失败经独立审查发现后补RED/GREEN，31项构建测试通过并复核关闭。 |
+| 运行知识 | 宿主入口统一引用latest准备规则；0.108.1 API-key及目录有界实测与device/pairing等静态分支分开。独立宿主复验改为条件步骤，Dot直接CLI与创建Codex Cloud分列，具体执行器按回执归属。 |
+| 快速路径与交接 | 已知会话优先沿原引用观察/授权继续，仅补缺项或漂移；提供commands[]单项读取；编码交接补base_commit、owned_paths、实际checkout、integration_owner及集成验收。Cloud已有隔离直接复用。 |
+
+本地标准库回归共187项，186通过，1项Linux真实锁测试在macOS跳过；命令为`TMPDIR=/private/tmp PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v`。使用真实临时路径避免本机`/var`符号链接影响Node夹具；没有将此条件测试宣称为macOS受管安装支持。结构检查`mcp=1 skill=2 plugin=1`及`git diff --check`通过。原生云环境准备、登录、业务与部署均未重跑。
+
+独立临时路径构建目录与ZIP成功，34个内容文件加1份收据，CRC及逐文件SHA校验通过。ZIP SHA-256为`8b13786dfa57724c311d6c3eed90b3e5328ac2a323275854880a589929f1382f`，收据SHA-256为`0ac54312a001f12bc20ac70361c4ccfc1ff015d2b8f4610f5b8e3b3d345902fb`。当前清单仍0.2.7，以上仅标识本地工作副本验证产物，没有替换旧ZIP、提交、推送或发布环境。
+
+### 六场景单次离线计划走查
+
+按[固定场景与判据](skill-evaluation.md)交给一个新上下文评测者，只提供场景输入与技能入口，未提供判据。该评测者按需读取核心、sessions、discovery、collaboration、material-handoff、troubleshooting，并从index/help中提取7个相关命令。使用会话默认子代理配置，未另行指定或测量模型参数；这是一次批量计划走查，不是六次独立实验。
+
+| 场景 | 观察到的计划与判定 |
+| --- | --- |
+| E01 已知回合观察 | 直接observe原S并匹配T；不重查版本/身份/目录，不虚构observe --turn-id。符合判据。 |
+| E02 已授权继续 | 核本执行器prompt-file可读后沿原S发一次chat并保存新回合；无新会话或重复确认。符合判据。 |
+| E03 目标歧义 | 只查W内必要machine/config目录，核分页和同步；仍无法唯一选择则返回候选差异，不选首项。符合判据。 |
+| E04 超时未知 | 原引用observe/history/show/status对账，无法唯一确认保留UNKNOWN，不自动重发。符合判据。 |
+| E05 编码协作 | 复用独立Cloud checkout并交接基准、写入范围、提交、执行位置、集成owner与检查；无额外worktree要求。符合判据。 |
+| E06 指定Cloud路线 | 使用Dot实际创建入口，交接原资料和两端引用，核处理/回传；不改走Lody或补造Lody资源。符合判据。 |
+
+实际仅执行本地只读文件/JSON读取，未调用Lody或创建Cloud任务；上述是计划选择证据，不是业务执行通过。单命令投影另经Python相等性检查：`session observe`的index/audit/help单项分别780/2466/1031字符，原文件分别57199/223185/69956字符。字符不是token，测试框架耗时不是skill延迟；未取得受控前后业务轨迹，不报告提效比例。
+
+关联`agent-skills`（aeac41d4）及`pm-skills`（07b34f64）只读评估的可借鉴点为角色/方法/入口分离、按需装载和行为评测；本轮未复制上游正文、安装其插件或创建角色库。用户确认的工作区共享级/项目级分类已在现有角色入口明确，V2.2快照保持。
+
 ## 复现命令
 
 在仓库根目录运行：

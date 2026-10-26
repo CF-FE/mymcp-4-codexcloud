@@ -44,6 +44,7 @@ lody4dot的设计、接入、验收和配套图表集中在本目录；实际任
 
 - [运行前提补充](runtime-findings.md)：云端ACP、身份和执行位置的实际调查。
 - [实现与验证记录](validation.md)：按轮次保存检查结果、实测范围和未运行项。
+- [技能行为评测](skill-evaluation.md)：六个固定离线场景、判据与效率记录方法；计划走查和真实执行分开。
 - [图表维护](diagrams/README.md)：图源、SVG和再生成方法。
 
 新增资料按[文档归档规范](../architecture.md#文档归档规范)归入所属目录；运行时技能资料继续维护在`skill/lody4dot/`，不在这里复制一份。

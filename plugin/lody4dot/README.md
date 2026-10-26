@@ -125,7 +125,7 @@ python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --ve
 python3 plugin/lody4dot/scripts/auth.py --prefix /workspace/.tools/lody4dot --login --json
 ```
 
-登录会保存本机身份，须单独核对本次授权。0.108.1源码审查显示API-key分支验证已有token并保存本机身份；配对会exchange，设备授权会创建远端CLI key，不能混入只允许临时本地身份的范围。本轮只有source_verified，没有运行新版认证。CLI仍无已核实的`LODY_CLI_TOKEN`直读或无状态目录flag；目录依赖已有credentials和SQLite，不自造HTTP认证层。受支持入口通过子进程argv接收凭证，适配器不经shell展开也不输出值，但同用户进程仍可能读argv。凭证存在、登录、工作区权限和底层Agent凭证分别验证。
+登录会保存本机身份，须核对本次授权。0.108.1的API-key分支已有2026-10-25临时身份及必要目录读取的有界实测，详见[准备与身份规则](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/skill/lody4dot/references/setup-cloud.md#凭证和授权)；设备授权、配对及其他未测分支仍按各自源码证据保留，本轮文档修正未重跑认证。CLI仍无已核实的`LODY_CLI_TOKEN`直读或无状态目录flag；目录依赖已有credentials和SQLite，不自造HTTP认证层。受支持入口通过子进程argv接收凭证，适配器不经shell展开也不输出值，但同用户进程仍可能读argv。凭证存在、登录、工作区权限和底层Agent凭证分别验证。
 
 `0.107.2` 的 `session create/chat/cancel` 按目标区分运行前提：本机目标需要本机运行进程，远端可由控制端经机器 RPC 派发，无需控制端启动 host/daemon；执行端仍需运行进程、Agent 配置及凭证。取消返回 `alreadyStopped` 不证明本次取消了运行回合。`agent-config refresh-capabilities` 仍针对本机，不能套用远端派发规则。只读查询和请求被接受均不能单独证明任务完成。
 
@@ -167,7 +167,11 @@ python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.2.7 --zip dist
 
 ZIP保留隐藏清单及所有资源，根直接是插件内容；生成后核对CRC、收据和逐文件SHA-256，再创建最终文件。成功JSON只在请求ZIP时附加`archive`，提供绝对`path`、含收据的`file_count`、`size_bytes`、ZIP的`sha256`、`receipt_sha256`和`verification`。这些摘要证明本地文件一致性，不提供签名或原生加载/业务验收。
 
-ZIP目标只允许新路径，已有文件、目录或符号链接一律保留并拒绝；重做请使用另一新路径。不在源码树或目录产物内部生成ZIP。已知目标/路径冲突会在目录构建前拒绝；后续ZIP失败可保留成功构建的目录，但不会覆盖旧ZIP，也不承诺两个输出共同原子提交。默认不带`--zip`的命令、JSON字段及退出码不变；构建/打包失败仍退出3。builder仅在仓库源码中提供，不随产物安装，也不自动发布或注册插件。
+ZIP目标只允许新路径，已有文件、目录或符号链接一律保留并拒绝；重做请使用另一新路径。不在源码树或目录产物内部生成ZIP。已知目标/路径冲突会在目录构建前拒绝；后续ZIP失败可保留成功构建的目录，但不会覆盖旧ZIP，也不承诺两个输出共同原子提交。正常成功字段保持兼容；构建/打包失败仍退出3。builder仅在仓库源码中提供，不随产物安装，也不自动发布或注册插件。
+
+新目录已提交后，旧备份检查或清理失败会保留`status: pass`/退出0，附`output_applied: true`及`warnings`：告警码为`backup_cleanup_failed`，`backup_path`指向残留备份。新产物和收据继续可用，文本模式也显示告警，显式ZIP生成继续执行。按回执核对并处理本任务所属备份，不因清理告警重复构建或回滚可能已部分删除的旧包。
+
+若目录构建成功后ZIP生成失败，整体仍为`status: fail`/退出3，并附`failure_stage: archive`和`output_applied: true`，保留目录路径、收据摘要及已有清理告警。此时目录已应用与归档失败是两项事实；文本输出也会报告已应用目录。
 
 将整个产物目录复制到其他位置后，以产物根为工作目录执行`python3 scripts/install.py`、`python3 scripts/doctor.py`、`python3 scripts/auth.py`、`python3 scripts/bootstrap.py`或`python3 scripts/handoff.py`及其相应参数。技能入口为`skills/lody4dot/SKILL.md`；随附参考均在包内。这里的包内路径与前面的仓库源码路径不同，不应直接互换。
 
@@ -206,7 +210,7 @@ python3 scripts/check_repository.py
 
 `0.2.0`增加多宿主协作参考、诊断来源与范围、离线handoff校验和依赖bootstrap；CLI与锁定输入保持不变。历史发布及验证记录在仓库任务队列维护，平台readiness、依赖、身份及原会话对账分别解释。
 
-`0.2.1`已正式发布，修正Dot官方身份、共享连接与运行位置知识，补充随包Dot接入指引，并将CLI实际版本作为非阻塞提示、增加显式更新查询。默认安装与知识基线仍为0.107.2。
+`0.2.1`历史发布修正Dot官方身份、共享连接与运行位置知识，补充随包Dot接入指引，并将CLI实际版本作为非阻塞提示、增加显式更新查询。当时安装与知识基线为0.107.2；当前准备政策以本文安装章节为准。
 
 `0.2.2`候选只增加官方用户setup入口及其分发/来源校验，复用现有bootstrap，保留受支持的兼容清单；尚未迁移为portable根`plugin.json`。Linux以外受管安装、ChatGPT web导入、原生setup调用、Dot工具接入及完整重建各自保留验收前提，知识和工具测试不代替这些证据。候选不自动升级正式环境，也不改变CLI锁定输入。
 

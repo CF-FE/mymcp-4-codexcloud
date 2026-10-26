@@ -2,7 +2,7 @@
 
 ## 选择目标
 
-先明确用户允许访问的 workspace，再查询该工作区的机器、项目和 Agent 配置。不要静默选首个匹配；名称冲突或 workspace 不明确时使用显式 ID。缓存中的可用性不是资源预留，也不是派发许可。
+已有当前任务确认的workspace/session等准确引用时，直接使用所需[会话命令](sessions.md#观察真实结果)，不为观察原任务重新遍历目录。首次派发或目标缺项时，先明确用户允许访问的workspace，再按需查询机器、项目或Agent配置。不要静默选首个匹配；名称冲突用显式ID。缓存中的可用性不是资源预留，也不是派发许可。
 
 先使用稳定CLI检查实际版本和对应`--help`，再进行已授权的只读发现。下列参数已用0.108.1实际帮助核对；帮助通过不表示本次身份、工作区或目录已查询成功。复用官方CLI和原生JSON，不猜HTTP地址，也不以无状态探针替代CLI调用。尚未指定工作区时，最小缺项是允许访问的名称或ID；在已有合法身份和相应授权下可先列出工作区供选择，不自动选第一项。
 
@@ -18,7 +18,25 @@ lody github list --workspace WORKSPACE_ID --json
 lody mcp list --workspace WORKSPACE_ID --json
 ```
 
-这些是已公布的命令形式，示例 ID 需替换为经发现且被授权的目标。实际使用前核对当前版本对应 `--help`。
+这些是可选择的命令，不是每次都要执行的清单。示例ID须来自已确认且获授权的目标；首次使用、版本变化或实际失败时核对对应帮助。
+
+## 按命令读取随包资料
+
+三个JSON均以`commands[]`中的`command`定位单项。先从`command-index.json`取目标命令，需要参数或验证来源时再取`help-snapshot.json`或`command-audit.json`的同一项。以下路径替换为本端实际技能目录；脚本只读资料，不调用Lody：
+
+```bash
+python3 - /absolute/path/to/lody4dot/references/command-index.json 'session observe' <<'PY'
+import json, sys
+from pathlib import Path
+data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+entries = [item for item in data["commands"] if item["command"] == sys.argv[2]]
+if len(entries) != 1:
+    raise SystemExit("Expected one exact command entry; check the command name and source.")
+print(json.dumps(entries[0], ensure_ascii=False, indent=2))
+PY
+```
+
+快照缺少当前命令或版本不同时，再读实际CLI的该命令帮助；不为查询一条命令展开完整审计矩阵，也不把历史帮助当作本次业务成功证据。
 
 ## 分页和输出
 

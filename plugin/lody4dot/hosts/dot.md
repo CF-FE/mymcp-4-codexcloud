@@ -12,7 +12,7 @@ Dot是ChatGPT的常驻Agent产品，有自己的云电脑；它还可以创建�
 | --- | --- | --- |
 | 已有合法Lody app/MCP连接 | 在已授予权限内复用实际提供的工具 | 真实工具名、目标workspace与只读查询；不猜内部MCP入口 |
 | 可使用已准备的Codex云环境 | 让Dot在指定已发布环境创建云任务，按本包共享技能使用该端Lody CLI | Dot实际发起的任务、插件/源码版本及Lody原生引用；任务工作目录各自独立 |
-| Dot当前执行器实际有Python/Node与合法凭证入口 | 按本端OS、prefix和身份边界做安装/检查 | 受管runtime当前仅支持Linux；不把另一台云机的安装回执套到此处 |
+| Dot自有云电脑具备CLI前提与合法身份入口 | 直接使用官方CLI控制获授权的既有Lody节点；需要准备依赖时按本端OS与自有prefix执行 | 记录命令实际执行器、安装回执及原生session/turn；受管runtime当前仅支持Linux，另一云执行器的回执不替代本端证据 |
 | 已明确连接到Dot的本地电脑 | 在本地任务中读取技能，使用该端已验证的工具 | Dot本地访问授权、电脑在线与桌面App运行；Codex连接和Work Sync不代替此授权 |
 | 只有技能可读 | 用知识规划、整理引用和交接 | 不能报告Lody工具调用、控制或执行已通过 |
 
@@ -32,7 +32,7 @@ MCP声明即使使用远程HTTPS，也可能使导入插件被标为Desktop only
 
 在确认适用的Linux执行器，从包根目录使用[bootstrap](../scripts/bootstrap.py)。默认只检查；环境准备可显式`--prepare`，启动时可选择`--repair-missing`。这些入口不登录、不启daemon、不重发模型任务；安装位置和身份属于本端。
 
-Lody`0.107.2`是已验证知识与默认可复现安装基线，不要求各执行器严格相同。实际版本不同或版本查询失败只warn；Node/OS、安装完整性及真实命令/身份/权限失败仍分别处理。inspect与启动bootstrap默认离线；只有显式`python3 scripts/doctor.py --prefix "$LODY4DOT_PREFIX" --profile inspect --check-updates --json`单次查npm latest，旧版或查询失败不自动升级，也不因此阻塞已有授权任务。
+`--prepare`解析官方npm latest，以当次精确锁安装或复用，实际版本以本端安装收据为准；当前策略与知识基线统一见[准备规则](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/skill/lody4dot/references/setup-cloud.md)。`0.107.2`仅保留历史验证范围。默认inspect离线，版本差异只warn；`--repair-missing`仅在明确缺依赖时进入安装，`doctor.py --check-updates`只查询、不升级。Node/OS、完整性及真实命令/身份/权限错误仍按实际结果处理。
 
 Dot的主动Reset会删除该Dot的上下文/会话/计划；这不是已核实的周期磁盘回收或存储reset hook。Dot自己的prepare/maintenance/磁盘重建hook仍无已读官方契约。Codex Cloud的已发布setup用于新任务、保存VM状态默认最多7天可恢复，这些规则也不直接套到Dot自己的电脑。依赖恢复与原Lody session/turn对账按共享协作参考执行。
 

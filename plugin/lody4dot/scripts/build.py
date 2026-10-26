@@ -242,11 +242,19 @@ def build(repo: Path, output: Path) -> dict:
                 os.replace(backup, output)
                 backup = None
             raise
+        result = {"schema_version": 1, "status": "pass", "output": str(output), "file_count": len(files), "manifest_sha256": digest(output / RECEIPT)}
         if backup is not None:
-            check_owned_output(backup)
-            shutil.rmtree(backup)
-            backup = None
-        return {"schema_version": 1, "status": "pass", "output": str(output), "file_count": len(files), "manifest_sha256": digest(output / RECEIPT)}
+            try:
+                check_owned_output(backup)
+                shutil.rmtree(backup)
+            except (BuildError, OSError):
+                # The new output is committed; a partly removed backup cannot be rolled back.
+                result.update(output_applied=True, warnings=[{
+                    "code": "backup_cleanup_failed",
+                    "backup_path": str(backup),
+                    "message": "New output is applied; previous bundle cleanup is incomplete.",
+                }])
+        return result
     finally:
         if staging.exists():
             shutil.rmtree(staging)
@@ -322,6 +330,7 @@ def main(argv=None) -> int:
                         help="Create and verify a ZIP at a new path; never replace an existing path")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
+    result = None
     try:
         repo = Path(__file__).resolve().parents[3]
         if args.zip_output is not None:
@@ -331,16 +340,25 @@ def main(argv=None) -> int:
             result["archive"] = create_archive(Path(result["output"]), args.zip_output)
         code = 0
     except (BuildError, OSError) as exc:
-        result = {"schema_version": 1, "status": "fail", "error_category": "build_input", "message": str(exc)}
+        if result is None:
+            result = {"schema_version": 1}
+        else:
+            result.update(output_applied=True, failure_stage="archive")
+        result.update(status="fail", error_category="build_input", message=str(exc))
         code = 3
     if args.json:
         print(json.dumps(result, ensure_ascii=False))
     elif code:
         print(result["message"], file=sys.stderr)
+        if result.get("output_applied"):
+            print(f"Directory output remains applied at {result['output']}; archive creation failed.", file=sys.stderr)
     else:
         print(f"Built {result['file_count']} files at {result['output']}")
         if "archive" in result:
             print(f"Verified ZIP at {result['archive']['path']} (SHA-256 {result['archive']['sha256']})")
+    if not args.json:
+        for warning in result.get("warnings", []):
+            print(f"Warning: {warning['code']}: {warning['message']} Backup: {warning['backup_path']}", file=sys.stderr)
     return code
 
 

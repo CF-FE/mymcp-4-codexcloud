@@ -430,6 +430,12 @@ def verify_catalog(cli, data_dir, workspace, timeout):
             raise ValueError("unexpected machine")
     except (ValueError, KeyError, TypeError, AttributeError) as exc:
         raise ToolError(4, "invalid_response", "Machine catalog query returned invalid JSON or incomplete pagination.", code) from exc
+    # 0.108.1 can exit successfully with a partial catalog while syncing.
+    # Completed pages, including older versions, may omit sync entirely.
+    sync = payload.get("sync")
+    if isinstance(sync, dict) and sync.get("state") == "syncing":
+        raise ToolError(3, "catalog_syncing",
+                        "Machine catalog is still syncing; a complete catalog has not been verified.", code)
     return len(machines)
 
 

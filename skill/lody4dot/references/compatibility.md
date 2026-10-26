@@ -51,7 +51,9 @@ Lody 内置 MCP 的资源发现、会话、operation、调度和角色工具需�
 
 模型/模式/权限和扩展能力来自目标运行时协商。支持一个 ACP 或 Lody 扩展不表示支持其余扩展；刷新能力也须满足实际机器与进程约束。Lody 账户 token 不等于 Provider 的模型凭证。
 
-0.108.1认证与Streams刷新仅完成静态源码核对：API-key登录会写本机身份；设备授权和配对具有不同远端副作用。目录CLI仍依赖credentials和SQLite，没有新增已核实的无状态目录入口。默认Streams对401/403可刷新短期Streams token并重试一次，这不是新建CLI API key或重新登录；不能凭403直接决定关闭刷新或推断认证可用。原始异常可能含响应正文，诊断仍须脱敏，见[准备规则](setup-cloud.md)与[故障处理](troubleshooting.md)。本轮未重试旧403或进行新版线上认证。
+2026-10-25已有Lody`0.108.1`官方CLI的有界API-key登录、workspace及指定project/agent-config目录读取通过记录，临时身份与缓存随后清理；具体范围见[准备规则](setup-cloud.md#凭证和授权)和[审查矩阵](command-audit.json)。这是既有验收，不是本轮文档修订重跑，也不覆盖设备授权、pairing、所有Streams分支或其他宿主。API-key登录会写本机身份，目录仍依赖credentials和SQLite，没有新增已核实的无状态目录入口。
+
+设备授权、配对及Streams刷新按0.108.1静态源码核对分别保留：前两者具有不同远端副作用；默认Streams对401/403可刷新短期Streams token并重试一次，这不是新建CLI API key或重新登录。既有认证成功不证明这些分支均已实测，不能凭403决定关闭刷新。原始异常可能含响应正文，诊断仍须脱敏，见[故障处理](troubleshooting.md)。
 
 ## 内置 Codex 与 host 范围
 

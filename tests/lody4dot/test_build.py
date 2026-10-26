@@ -201,6 +201,11 @@ class BuildTests(unittest.TestCase):
             code, result = self.run_cli("--zip", target)
         self.assertEqual(code, 3)
         self.assertEqual(result["status"], "fail")
+        self.assertTrue(result["output_applied"])
+        self.assertEqual(result["failure_stage"], "archive")
+        self.assertEqual(result["output"], str(self.output))
+        self.assertEqual(result["manifest_sha256"],
+                         hashlib.sha256((self.output / build_module.RECEIPT).read_bytes()).hexdigest())
         self.assertFalse(target.exists())
         self.assertEqual([], list(self.root.glob(".lody4dot-*")))
         build_module.check_owned_output(self.output)
@@ -276,6 +281,132 @@ class BuildTests(unittest.TestCase):
         build_module.build(self.repo, self.output)
         self.assertEqual((self.output / "skills/lody4dot/references/cloud.md").read_text(), "# Updated reference\n")
         build_module.check_owned_output(self.output)
+
+    def test_post_commit_cleanup_failure_reports_applied_output_without_rollback(self):
+        real_check = build_module.check_owned_output
+        real_remove = build_module.shutil.rmtree
+        for failure in ("ownership_check", "partial_removal"):
+            with self.subTest(failure=failure):
+                output = self.root / failure
+                self.write(self.skill / "references/cloud.md", "# Previous reference\n")
+                build_module.build(self.repo, output)
+                self.write(self.skill / "references/cloud.md", "# Applied reference\n")
+
+                def check(path):
+                    if path.name.startswith(".lody4dot-previous-") and failure == "ownership_check":
+                        raise build_module.BuildError("fixture-private-cleanup-details")
+                    return real_check(path)
+
+                def remove(path, *args, **kwargs):
+                    if Path(path).name.startswith(".lody4dot-previous-"):
+                        (Path(path) / "skills/lody4dot/references/cloud.md").unlink()
+                        raise PermissionError("fixture-private-cleanup-details")
+                    return real_remove(path, *args, **kwargs)
+
+                with patch.object(build_module, "check_owned_output", side_effect=check), \
+                     patch.object(build_module.shutil, "rmtree", side_effect=remove):
+                    code, result = self.run_cli(output=output)
+
+                self.assertEqual(code, 0)
+                self.assertEqual(result["status"], "pass")
+                self.assertTrue(result["output_applied"])
+                self.assertEqual(result["output"], str(output))
+                warning, = result["warnings"]
+                self.assertEqual(warning["code"], "backup_cleanup_failed")
+                backup = Path(warning["backup_path"])
+                self.assertEqual(backup.parent, output.parent)
+                self.assertTrue(backup.is_dir())
+                self.assertEqual((backup / "skills/lody4dot/references/cloud.md").exists(),
+                                 failure == "ownership_check")
+                self.assertNotIn("fixture-private-cleanup-details", json.dumps(result))
+                self.assertEqual((output / "skills/lody4dot/references/cloud.md").read_text(),
+                                 "# Applied reference\n")
+                real_check(output)
+                self.assertEqual(result["manifest_sha256"],
+                                 hashlib.sha256((output / build_module.RECEIPT).read_bytes()).hexdigest())
+
+    def test_zip_continues_after_backup_cleanup_warning(self):
+        build_module.build(self.repo, self.output)
+        self.write(self.skill / "references/cloud.md", "# Applied ZIP reference\n")
+        target = self.root / "release.zip"
+        real_remove = build_module.shutil.rmtree
+
+        def remove(path, *args, **kwargs):
+            if Path(path).name.startswith(".lody4dot-previous-"):
+                raise PermissionError("fixture-private-cleanup-details")
+            return real_remove(path, *args, **kwargs)
+
+        with patch.object(build_module.shutil, "rmtree", side_effect=remove):
+            code, result = self.run_cli("--zip", target)
+        self.assertEqual(code, 0)
+        self.assertEqual(result["warnings"][0]["code"], "backup_cleanup_failed")
+        self.assertTrue(result["output_applied"])
+        self.assertTrue(result["archive"]["verification"])
+        self.assertEqual(result["archive"]["sha256"], hashlib.sha256(target.read_bytes()).hexdigest())
+        with zipfile.ZipFile(target) as archive:
+            self.assertIsNone(archive.testzip())
+            self.assertEqual(archive.read("skills/lody4dot/references/cloud.md"),
+                             b"# Applied ZIP reference\n")
+
+    def test_archive_failure_preserves_applied_output_and_cleanup_warning(self):
+        build_module.build(self.repo, self.output)
+        self.write(self.skill / "references/cloud.md", "# Applied before archive failure\n")
+        target = self.root / "release.zip"
+        real_remove = build_module.shutil.rmtree
+
+        def remove(path, *args, **kwargs):
+            if Path(path).name.startswith(".lody4dot-previous-"):
+                raise PermissionError("fixture-private-cleanup-details")
+            return real_remove(path, *args, **kwargs)
+
+        with patch.object(build_module.shutil, "rmtree", side_effect=remove), \
+             patch.object(build_module.os, "link", side_effect=OSError("archive publish unavailable")):
+            code, result = self.run_cli("--zip", target)
+
+        self.assertEqual(code, 3)
+        self.assertEqual(result["status"], "fail")
+        self.assertEqual(result["failure_stage"], "archive")
+        self.assertTrue(result["output_applied"])
+        self.assertEqual(result["output"], str(self.output))
+        warning, = result["warnings"]
+        self.assertEqual(warning["code"], "backup_cleanup_failed")
+        self.assertTrue(Path(warning["backup_path"]).is_dir())
+        self.assertNotIn("fixture-private-cleanup-details", json.dumps(result))
+        self.assertNotIn("archive", result)
+        self.assertFalse(target.exists())
+        self.assertEqual((self.output / "skills/lody4dot/references/cloud.md").read_text(),
+                         "# Applied before archive failure\n")
+        self.assertEqual(result["manifest_sha256"],
+                         hashlib.sha256((self.output / build_module.RECEIPT).read_bytes()).hexdigest())
+        build_module.check_owned_output(self.output)
+
+    def test_text_cli_displays_backup_cleanup_warning(self):
+        build_module.build(self.repo, self.output)
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with patch.object(build_module, "__file__", str(self.plugin / "scripts/build.py")), \
+             patch.object(build_module.shutil, "rmtree", side_effect=PermissionError("fixture-private-cleanup-details")), \
+             redirect_stdout(stdout), redirect_stderr(stderr):
+            code = build_module.main(["--output", str(self.output)])
+        self.assertEqual(code, 0)
+        self.assertIn("Built", stdout.getvalue())
+        self.assertIn("backup_cleanup_failed", stderr.getvalue())
+        self.assertIn(".lody4dot-previous-", stderr.getvalue())
+        self.assertNotIn("fixture-private-cleanup-details", stdout.getvalue() + stderr.getvalue())
+
+    def test_text_cli_archive_failure_reports_applied_output_and_cleanup_warning(self):
+        build_module.build(self.repo, self.output)
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with patch.object(build_module, "__file__", str(self.plugin / "scripts/build.py")), \
+             patch.object(build_module.shutil, "rmtree", side_effect=PermissionError("fixture-private-cleanup-details")), \
+             patch.object(build_module.os, "link", side_effect=OSError("archive publish unavailable")), \
+             redirect_stdout(stdout), redirect_stderr(stderr):
+            code = build_module.main(["--output", str(self.output), "--zip", str(self.root / "release.zip")])
+        self.assertEqual(code, 3)
+        self.assertIn("Directory output remains applied", stderr.getvalue())
+        self.assertIn(str(self.output), stderr.getvalue())
+        self.assertIn("backup_cleanup_failed", stderr.getvalue())
+        self.assertIn(".lody4dot-previous-", stderr.getvalue())
+        self.assertNotIn("fixture-private-cleanup-details", stdout.getvalue() + stderr.getvalue())
 
     def test_unmanaged_or_modified_output_is_preserved(self):
         self.write(self.output / "user.txt", "user data")

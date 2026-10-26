@@ -24,6 +24,8 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 ## 当前状态
 
+2026-10-26双端审计后的本地源码修正、技能走查与交付边界见[验证记录](docs/lody4dot/validation.md#2026-10-26双端审计修正与技能走查)；当前进度仍由[唯一队列](.codex/agent-state/todo.md#当前环境与下一步)维护。角色定义按工作区共享级与项目级组织，入口见[角色资料](docs/lody4dot/workspace-roles/README.md)。
+
 已导入 [Gitee MCP 网关](mcp/gitee/README.md)：保留原源码、部署文档、验收资料和历史交付包，并记录来源与文件校验清单。文件导入与静态检查已验证；原服务的依赖安装、OAuth/Gitee 连接和实际运行尚未验证。另有 [lody4dot 技能](skill/lody4dot/SKILL.md) 和 [分发工具](plugin/lody4dot/README.md)。
 
 仓库结构检查无需安装第三方依赖，也没有公共服务需要启动。运行单个 MCP 时需按其 README 准备依赖和配置。后续导入按照 [导入步骤](docs/architecture.md#导入已有插件) 迁移，并在此补充条目入口。

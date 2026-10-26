@@ -466,6 +466,20 @@ class DiagnosticTests(unittest.TestCase):
                 self.assertEqual(caught.exception.code, 4)
                 self.assertEqual(caught.exception.category, "invalid_response")
 
+    def test_catalog_syncing_is_blocked_even_with_complete_pagination(self):
+        for machines in ([], [{"id": "machine-1", "name": "fixture machine"}]):
+            payload = {"ok": True, "items": machines, "hasMore": False,
+                       "sync": {"state": "syncing", "detail": "fixture-secret"}}
+            with self.subTest(machines=machines), \
+                 patch.object(common, "run_native", return_value=(0, json.dumps(payload), "")) as native:
+                with self.assertRaises(common.ToolError) as caught:
+                    common.verify_catalog(Path("/cli"), Path("/state"), "workspace", 2)
+                self.assertEqual(caught.exception.code, 3)
+                self.assertEqual(caught.exception.category, "catalog_syncing")
+                self.assertEqual(caught.exception.raw_exit_code, 0)
+                self.assertNotIn("fixture-secret", str(caught.exception))
+                self.assertEqual(native.call_count, 1)
+
     def test_native_json_accepts_only_known_stream_diagnostics_around_one_record(self):
         payload = {"ok": True, "workspaceId": "workspace-1", "items": [
             {"id": "machine-1", "name": "test machine"}], "machines": [
@@ -533,6 +547,31 @@ class DiagnosticTests(unittest.TestCase):
             self.assertEqual(checks["account"]["status"], "pass")
             self.assertEqual(checks["workspace_catalog"]["status"], "fail")
             self.assertNotIn("machine_count", checks["workspace_catalog"]["evidence"])
+
+    def test_catalog_syncing_retains_account_without_verifying_catalog(self):
+        for profile in ("control", "inspect"):
+            for machines in ([], [{"id": "machine-1", "name": "fixture machine"}]):
+                payload = {"ok": True, "items": machines, "hasMore": False,
+                           "nextCursor": None, "sync": {"state": "syncing"}}
+                with self.subTest(profile=profile, machines=machines), \
+                     patch.object(doctor, "installed_cli", return_value=Path("/fixture/cli")), \
+                     patch.object(doctor, "offline_version", return_value="0.108.1"), \
+                     patch.object(doctor.subprocess, "run", return_value=argparse.Namespace(returncode=0, stdout="v24.22.1")), \
+                     patch.object(doctor, "state_directory", return_value=Path("/private/state")), \
+                     patch.object(doctor, "verify_account", return_value=2), \
+                     patch.object(common, "run_native", return_value=(0, json.dumps(payload), "")):
+                    code, value, _ = self.capture(doctor, ["--profile", profile, "--connect", "--workspace", "chosen-id"])
+                    self.assertEqual(code, 3)
+                    self.assertEqual(value["status"], "blocked")
+                    self.assertEqual(value["account"], "authenticated")
+                    self.assertEqual(value["error_category"], "catalog_syncing")
+                    self.assertEqual(value["raw_exit_code"], 0)
+                    checks = {check["name"]: check for check in value["checks"]}
+                    self.assertEqual(checks["account"]["status"], "pass")
+                    self.assertEqual(checks["workspace_catalog"]["status"], "blocked")
+                    self.assertNotIn("machine_count", checks["workspace_catalog"]["evidence"])
+                    self.assertIn("account", value["verified_scope"])
+                    self.assertNotIn("workspace_catalog", value["verified_scope"])
 
     def test_catalog_success_passes_control_but_not_task_execution(self):
         for profile, expected_code in (("control", 0), ("task", 3), ("worker", 3)):
