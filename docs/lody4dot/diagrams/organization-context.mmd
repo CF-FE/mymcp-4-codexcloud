@@ -1,0 +1,15 @@
+%% 2026-10-26 评审候选v0.2；组织协作与专业角色库分开。
+flowchart TB
+    accTitle: 组织协作规则与本次责任关系
+    accDescr: 所有参与端具备独立组织协作skill，它保存稳定规则。按任务归属读取工作区或项目正式记录，取得有来源版本的负责人和汇报通道；本次任务包提供身份、范围、派发者及验收者。三者形成当前协作上下文，明确对谁负责和向谁汇报。专业角色库独立保存领域能力，仅在需要时参与执行，不决定组织职位或权限。此图为设计，非自动注入或已部署能力。
+    protocol["组织协作 skill\n共同规则 / 按岗位读取"] --> context["本次协作上下文\n我对谁负责 / 向谁汇报\n通道、任务关联与边界"]
+    relation["工作区 / 项目正式记录\n负责人 / 通道 / 版本"] --> context
+    assignment["本次任务包\n身份、范围、派发与验收"] --> context
+    context --> work["按任务执行与回报\n证据送达指定负责人"]
+    professional["独立专业角色库\n领域职责与工作方法"] -.->|需要时选用| work
+    classDef org fill:#e7f0fb,stroke:#315f93,color:#17304b;
+    classDef task fill:#fff5e6,stroke:#987334,color:#4e3c1d;
+    classDef skill fill:#eff7f1,stroke:#4d7656,color:#203e27;
+    class protocol,relation,context org;
+    class assignment task;
+    class professional,work skill;

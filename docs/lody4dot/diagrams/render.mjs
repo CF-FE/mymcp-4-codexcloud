@@ -14,7 +14,7 @@ const { default: puppeteer } = requireTool("puppeteer-core");
 const mermaidDist = path.dirname(requireTool.resolve("mermaid"));
 const config = JSON.parse(await fs.readFile(path.join(directory, "mermaid-config.json"), "utf8"));
 const environmentNames = ["environment-context", "environment-permissions", "environment-lifecycle"];
-const known = [...environmentNames, "project-governance", "project-task-flow", "project-parallel-gates"];
+const known = [...environmentNames, "project-governance", "project-task-flow", "project-parallel-gates", "organization-context"];
 const names = process.argv.length > 3 ? process.argv.slice(3) : environmentNames;
 if (names.some(name => !known.includes(name))) throw new Error("Unknown documentation diagram.");
 

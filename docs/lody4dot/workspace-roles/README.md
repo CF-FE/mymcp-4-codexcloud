@@ -4,7 +4,7 @@
 
 可编辑的随包派生库已归入[roles/index.json](../../../skill/lody4dot/references/roles/index.json)，按[使用与维护](../../../skill/lody4dot/references/workspace-roles.md#按需读取角色库)精确读取和组装；职责正文只在该处维护，V2.2继续作为不改字节的历史来源。[设计与辩证取舍](library-design.md)说明两层边界，部署回执不并入定义。
 
-云端Dot总负责、项目负责人统一治理需求及按节点开启并行的增量候选，见[项目协作方案与三张流程图](../project-coordination.md)。该页保留公子已确认的原则、优化建议及未验能力；不把文档候选当作远端角色已经更新。
+云端Dot总负责、项目负责人治理需求及按节点开启并行，见[组织协作skill方案与图解](../project-coordination.md)。新候选明确组织协议、当前汇报关系与专业角色库分开；该页保留公子已确认原则、优化建议及未验能力，不把文档候选当作远端角色已经更新。
 
 组织为G8总协调、mac-work六项共享职责、win-work唯一项目负责人及三个按任务加载的制作职责模板。11份定义不等于11个Agent；本次只对六项共享Role准备保存流程，项目模板不另建常驻Agent。
 
