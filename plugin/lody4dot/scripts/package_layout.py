@@ -25,11 +25,14 @@ def bundle_member(name):
             or any(SENSITIVE_NAME.search(part) for part in parts)):
         return False
     if name in {"README.md", ".codex-plugin/plugin.json", ".agents/plugins/marketplace.json",
-                "skills/lody4dot/SKILL.md", "skills/lody4dot-setup/SKILL.md"}:
+                "skills/lody4dot/SKILL.md", "skills/lody4dot-setup/SKILL.md",
+                "skills/organization-collaboration/SKILL.md"}:
         return True
     if len(parts) == 2:
         allowed = {"scripts": SCRIPT_NAMES, "hosts": HOST_NAMES, "runtime": RUNTIME_NAMES}
         return parts[1] in allowed.get(parts[0], ())
+    if parts[:3] == ("skills", "organization-collaboration", "references"):
+        return len(parts) == 4 and path.suffix == ".md"
     if parts[:3] != ("skills", "lody4dot", "references"):
         return False
     if len(parts) == 4:

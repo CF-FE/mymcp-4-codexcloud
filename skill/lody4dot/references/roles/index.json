@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "library_version": "1.0.0",
+  "library_version": "1.1.0",
   "common": {
     "resource": "common.md"
   },
@@ -10,7 +10,7 @@
       "name": "G8 总协调",
       "scope": "workspace",
       "kind": "coordinator",
-      "summary": "跨项目优先级、授权边界与争议协调。",
+      "summary": "旧ID兼容入口；总协调组织职责由独立organization-collaboration维护。",
       "resource": "workspace/coordinator.md",
       "methods": [
         "task-planning",

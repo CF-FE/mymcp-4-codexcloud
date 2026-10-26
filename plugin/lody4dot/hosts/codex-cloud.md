@@ -16,13 +16,15 @@ python3 scripts/bootstrap.py --prefix "$LODY4DOT_PREFIX" --prepare --json
 
 ## Agent进入任务
 
-平台实际提供启动指引时，指向包内`skills/lody4dot/SKILL.md`并按目标读取参考，再执行：
+平台实际提供启动指引时，先指向包内`skills/organization-collaboration/SKILL.md`，交接本次岗位、业务责任、汇报对象与通道、派发/验收及真实任务引用。源码入口为`skill/organization-collaboration/SKILL.md`；已有有效任务上下文直接复用。只有实际涉及Lody时再读取`skills/lody4dot/SKILL.md`及按需参考，并执行：
 
 ```bash
 python3 scripts/bootstrap.py --prefix "$LODY4DOT_PREFIX" --repair-missing --json
 ```
 
 工具先离线检查；仅在诊断明确缺少受管runtime时进入上述latest安装阶段，安装器仍检查prefix所有权与输入。版本差异或查询失败只warn，其他真实失败不会被当作缺失覆盖。可显式用`doctor.py --check-updates`查询更新，查询本身不升级。依赖、账户、目标Agent、任务与worker分别验收；启动说明送达与实际读取分别记录，不要求技能全文自动注入。
+
+只需要组织协作时使用独立skill文件，无需Node、Lody安装或登录。修改仓库启动指引不等于已保存环境ref／发布或新任务已读取；目标执行器须回报实际入口、版本与本次责任关系。
 
 ## 身份与任务恢复
 

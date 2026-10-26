@@ -5,7 +5,7 @@ description: 用 Lody CLI 或合法已有 MCP 发现资源、创建与跟进会�
 
 # 使用 Lody 完成任务
 
-先使用本任务已确认的入口、目标与授权，补齐实际缺项。Dot自己的执行器、它创建的Codex Cloud任务和Lody远端节点分别定位；每条回执归实际执行位置。纯资料任务沿已有资料工具处理，无须额外创建Lody资源。
+组织责任、向谁汇报、任务粒度与依赖放行由独立[组织协作skill](../organization-collaboration/SKILL.md)维护；复用已加载协议和本次上下文，仅补实际缺项。本技能负责Lody操作。Dot自己的执行器、它创建的Codex Cloud任务和Lody远端节点分别定位；每条回执归实际执行位置。纯资料任务沿已有资料工具处理，无须额外创建Lody资源。
 
 ## 选择最短路径
 
@@ -36,7 +36,7 @@ lookup只读随包资料，返回来源版本和范围，不调用Lody或证明�
 | Agent/Role/MCP配置与提议保存 | [配置](references/configuration.md)、[共享与项目角色](references/workspace-roles.md) |
 | 资料输入、结果存回或FileKiwi文件中转 | [资料交接](references/material-handoff.md)；用到FileKiwi时再读[文件中转](references/filekiwi-transfer.md) |
 | 跨端交接、编码集成、Work/Codex选路或接管 | [多宿主协作](references/collaboration.md) |
-| 并行在办任务、资源并发与统一集成 | [并行规范](references/collaboration.md#并行在办任务) |
+| 任务规划、并行开始条件、进度与汇报 | [组织协作skill](../organization-collaboration/SKILL.md)；Lody编码交接见[平台补充](references/collaboration.md#并行在办任务) |
 | 调度/operation；导出、迁移或评审 | [自动化](references/automation.md)；[交付维护](references/delivery.md) |
 | 安装/认证；错误；平台边界 | [准备](references/setup-cloud.md)；[故障处理](references/troubleshooting.md)；[兼容性](references/compatibility.md) |
 

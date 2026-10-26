@@ -31,6 +31,7 @@ class BuildTests(unittest.TestCase):
         self.repo = self.root / "repo"
         self.skill = self.repo / "skill/lody4dot"
         self.setup_skill = self.repo / "skill/lody4dot-setup"
+        self.organization_skill = self.repo / "skill/organization-collaboration"
         self.plugin = self.repo / "plugin/lody4dot"
         self.output = self.root / "package"
         self.write(self.skill / "SKILL.md", "# Lody\n\n[Reference](references/cloud.md)\n")
@@ -49,6 +50,8 @@ class BuildTests(unittest.TestCase):
         self.write_json(self.skill / "references/sources.json", {"resource": "help-snapshot.json"})
         self.write_json(self.skill / "references/help-snapshot.json", {"commands": []})
         self.write(self.setup_skill / "SKILL.md", "# Setup\n[Core](../lody4dot/SKILL.md)\n")
+        self.write(self.organization_skill / "SKILL.md", "# Organization\n[Context](references/context.md)\n")
+        self.write(self.organization_skill / "references/context.md", "# Task context\n")
         self.write(self.plugin / "README.md", "# Plugin\n[Skill](skills/lody4dot/SKILL.md)\n")
         self.write_json(self.plugin / ".codex-plugin/plugin.json", {
             "name": "lody4dot", "version": "0.1.0", "skills": "./skills",
@@ -287,6 +290,9 @@ class BuildTests(unittest.TestCase):
         setup = relocated / manifest["extensions"]["com.openai"]["onboardingSkill"]
         self.assertEqual(setup.read_text(), "# Setup\n[Core](../lody4dot/SKILL.md)\n")
         self.assertIn("skills/lody4dot-setup/SKILL.md", receipt["files"])
+        self.assertIn("skills/organization-collaboration/SKILL.md", receipt["files"])
+        self.assertEqual((relocated / "skills/organization-collaboration/references/context.md").read_text(),
+                         "# Task context\n")
         marketplace = json.loads((relocated / ".agents/plugins/marketplace.json").read_text())
         self.assertEqual(marketplace["plugins"][0]["source"], {"source": "local", "path": "."})
 
@@ -518,6 +524,14 @@ class BuildTests(unittest.TestCase):
         previous = build_module.inventory(self.output)
         self.write(self.setup_skill / "references/extra.md", "# Unowned setup resource\n")
         with self.assertRaisesRegex(build_module.BuildError, "Unexpected file in setup skill"):
+            build_module.build(self.repo, self.output)
+        self.assertEqual(previous, build_module.inventory(self.output))
+
+    def test_missing_organization_skill_preserves_existing_bundle(self):
+        build_module.build(self.repo, self.output)
+        previous = build_module.inventory(self.output)
+        (self.organization_skill / "SKILL.md").unlink()
+        with self.assertRaisesRegex(build_module.BuildError, "Missing required source: SKILL.md"):
             build_module.build(self.repo, self.output)
         self.assertEqual(previous, build_module.inventory(self.output))
 

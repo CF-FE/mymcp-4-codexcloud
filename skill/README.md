@@ -10,6 +10,8 @@
 
 当前条目：[lody4dot](lody4dot/SKILL.md)，按需导航 Lody 公开命令、任务流程和云端安装。
 
+[organization-collaboration](organization-collaboration/SKILL.md) 独立维护组织岗位、任务责任、汇报与进度、接管和岗位／角色更新。所有参与端可使用同一协议，真实任职关系由当前任务提供；不依赖Lody、Node或专业角色库。[分发与加载](../docs/organization-collaboration/README.md)区分文件安装、实际读取和业务验收。
+
 [lody4dot-setup](lody4dot-setup/SKILL.md) 是插件用户运行 setup 时的薄引导入口，复用核心技能和已有初始化工具，按本端实际能力检查或准备依赖；不作为自动安装或存储重置 hook。
 
 返回 [仓库首页](../README.md)。

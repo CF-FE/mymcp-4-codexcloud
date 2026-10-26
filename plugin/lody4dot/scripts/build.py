@@ -20,6 +20,9 @@ from package_layout import SENSITIVE_NAME, bundle_member
 
 RECEIPT = ".lody4dot-build.json"
 TOOL = "lody4dot-build"
+ORGANIZATION_SKILL = "organization-collaboration"
+ORGANIZATION_RECEIPT = ".organization-collaboration-build.json"
+ORGANIZATION_TOOL = "organization-collaboration-build"
 REQUIRED = (
     "README.md", ".codex-plugin/plugin.json", "scripts/install.py",
     "scripts/doctor.py", "scripts/auth.py", "scripts/common.py",
@@ -92,6 +95,8 @@ def check_source_tree(root: Path, kind: str) -> list[Path]:
             allowed = bundle_member("skills/lody4dot/" + label)
         elif kind == "setup skill":
             allowed = bundle_member("skills/lody4dot-setup/" + label)
+        elif kind == "organization skill":
+            allowed = bundle_member(f"skills/{ORGANIZATION_SKILL}/" + label)
         else:
             # build.py is source-only; the marketplace is generated below.
             allowed = label == "scripts/build.py" or (
@@ -138,14 +143,17 @@ def check_references(root: Path) -> None:
 
     for path in root.rglob("*"):
         if path.suffix == ".md":
-            contents = path.read_text(encoding="utf-8")
+            try:
+                contents = path.read_text(encoding="utf-8")
+            except UnicodeError as exc:
+                raise BuildError(f"Invalid UTF-8 document: {path.relative_to(root)}") from exc
             for link in MARKDOWN_LINK.findall(contents) + MARKDOWN_DEFINITION.findall(contents):
                 check_local_reference(root, path, link)
         elif path.suffix == ".json":
             json_resources(read_json(path), path)
 
 
-def check_owned_output(output: Path) -> None:
+def check_owned_output(output: Path, *, receipt_name=RECEIPT, tool=TOOL) -> None:
     if output.is_symlink():
         raise BuildError("Output must not be a symlink")
     if not output.exists():
@@ -155,12 +163,12 @@ def check_owned_output(output: Path) -> None:
     actual = inventory(output)
     if not actual:
         return
-    if RECEIPT not in actual:
+    if receipt_name not in actual:
         raise BuildError("Refusing to replace a non-empty unmanaged output directory")
-    receipt = read_json(output / RECEIPT)
-    if not isinstance(receipt, dict) or receipt.get("tool") != TOOL or receipt.get("schema_version") != 1:
+    receipt = read_json(output / receipt_name)
+    if not isinstance(receipt, dict) or receipt.get("tool") != tool or receipt.get("schema_version") != 1:
         raise BuildError("Output has an invalid ownership receipt")
-    actual.pop(RECEIPT)
+    actual.pop(receipt_name)
     if actual != receipt.get("files"):
         raise BuildError("Existing output contains changed or unowned files; preserve it separately")
 
@@ -173,18 +181,23 @@ def build(repo: Path, output: Path) -> dict:
     output = output.absolute()
     skill = repo / "skill/lody4dot"
     setup_skill = repo / "skill/lody4dot-setup"
+    organization_skill = repo / "skill" / ORGANIZATION_SKILL
     plugin = repo / "plugin/lody4dot"
-    for source in (skill, setup_skill, plugin):
+    for source in (skill, setup_skill, organization_skill, plugin):
         resolved = output.resolve()
         if resolved == source.resolve() or resolved.is_relative_to(source.resolve()) or source.resolve().is_relative_to(resolved):
             raise BuildError("Output must be separate from the source trees")
     skill_files = check_source_tree(skill, "skill")
     setup_files = check_source_tree(setup_skill, "setup skill")
+    organization_files = check_source_tree(organization_skill, "organization skill")
     plugin_files = check_source_tree(plugin, "plugin")
-    for source, required in ((skill, SKILL_REQUIRED), (setup_skill, ("SKILL.md",)), (plugin, REQUIRED)):
+    for source, required in ((skill, SKILL_REQUIRED), (setup_skill, ("SKILL.md",)),
+                             (organization_skill, ("SKILL.md",)), (plugin, REQUIRED)):
         for relative in required:
             if not (source / relative).is_file():
                 raise BuildError(f"Missing required source: {relative}")
+    # The organization skill must also work without its optional plugin siblings.
+    check_references(organization_skill)
     manifest = read_json(plugin / ".codex-plugin/plugin.json")
     if not isinstance(manifest, dict) or manifest.get("name") != "lody4dot" or manifest.get("skills") != "./skills":
         raise BuildError("Plugin manifest must declare lody4dot with skills ./skills")
@@ -200,6 +213,7 @@ def build(repo: Path, output: Path) -> dict:
         for source, selected, prefix in (
             (skill, skill_files, Path("skills/lody4dot")),
             (setup_skill, setup_files, Path("skills/lody4dot-setup")),
+            (organization_skill, organization_files, Path("skills") / ORGANIZATION_SKILL),
             (plugin, plugin_files, Path(".")),
         ):
             for path in selected:
@@ -251,6 +265,52 @@ def build(repo: Path, output: Path) -> dict:
             shutil.rmtree(staging)
 
 
+def build_organization_skill(repo: Path, output: Path) -> dict:
+    """Export only the standalone Markdown skill to a new, never replaced path."""
+    repo = repo.resolve()
+    if output.is_symlink() or output.exists():
+        raise BuildError("Standalone skill output must be a new path; existing paths are preserved")
+    output = output.absolute()
+    source = repo / "skill" / ORGANIZATION_SKILL
+    for tree in (source, repo / "skill/lody4dot", repo / "skill/lody4dot-setup", repo / "plugin/lody4dot"):
+        resolved, tree = output.resolve(), tree.resolve()
+        if resolved == tree or resolved.is_relative_to(tree) or tree.is_relative_to(resolved):
+            raise BuildError("Output must be separate from the source trees")
+    selected = check_source_tree(source, "organization skill")
+    if not (source / "SKILL.md").is_file():
+        raise BuildError("Missing required source: SKILL.md")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    staging = Path(tempfile.mkdtemp(prefix=".organization-skill-build-", dir=output.parent)).resolve()
+    try:
+        for path in selected:
+            destination = staging / path.relative_to(source)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, destination)
+        check_references(staging)
+        files = inventory(staging)
+        receipt = {"schema_version": 1, "tool": ORGANIZATION_TOOL,
+                   "skill": ORGANIZATION_SKILL, "files": files}
+        (staging / ORGANIZATION_RECEIPT).write_text(
+            json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        # Reserve a new leaf atomically. An existing empty directory is not ours.
+        output.mkdir()
+        try:
+            os.replace(staging, output)
+        except BaseException:
+            # Only remove our empty reservation; preserve any concurrent additions.
+            try:
+                output.rmdir()
+            except OSError:
+                pass
+            raise
+        return {"schema_version": 1, "status": "pass", "artifact_type": "organization_skill",
+                "skill": ORGANIZATION_SKILL, "output": str(output), "file_count": len(files),
+                "receipt_sha256": digest(output / ORGANIZATION_RECEIPT)}
+    finally:
+        if staging.exists():
+            shutil.rmtree(staging)
+
+
 def check_archive_target(repo: Path, output: Path, target: Path) -> None:
     if target.is_symlink() or target.exists():
         raise BuildError("ZIP output must be a new path; existing paths are preserved")
@@ -258,7 +318,7 @@ def check_archive_target(repo: Path, output: Path, target: Path) -> None:
         if parent.exists() and not parent.is_dir():
             raise BuildError("ZIP parent must be a directory")
     resolved = target.resolve()
-    roots = (output, repo / "skill/lody4dot", repo / "skill/lody4dot-setup",
+    roots = (output, repo / "skill/lody4dot", repo / "skill/lody4dot-setup", repo / "skill" / ORGANIZATION_SKILL,
              repo / "plugin/lody4dot")
     for root in roots:
         root = root.resolve()
@@ -266,14 +326,14 @@ def check_archive_target(repo: Path, output: Path, target: Path) -> None:
             raise BuildError("ZIP output must be separate from source and directory outputs")
 
 
-def create_archive(output: Path, target: Path) -> dict:
+def create_archive(output: Path, target: Path, *, receipt_name=RECEIPT, tool=TOOL) -> dict:
     """Verify a temporary archive before publishing it without replacing any file."""
     target = target.absolute()
     if target.is_symlink() or target.exists():
         raise BuildError("ZIP output must be a new path; existing paths are preserved")
-    check_owned_output(output)
+    check_owned_output(output, receipt_name=receipt_name, tool=tool)
     files = inventory(output)
-    if RECEIPT not in files:
+    if receipt_name not in files:
         raise BuildError("ZIP input requires a complete build receipt")
     if any("\\" in name or name.startswith("/") or ".." in name.split("/") for name in files):
         raise BuildError("ZIP input contains an unsafe archive path")
@@ -291,9 +351,9 @@ def create_archive(output: Path, target: Path) -> dict:
                 names = archive.namelist()
                 if len(names) != len(files) or set(names) != set(files) or archive.testzip() is not None:
                     raise BuildError("ZIP file inventory or CRC verification failed")
-                receipt = json.loads(archive.read(RECEIPT))
+                receipt = json.loads(archive.read(receipt_name))
                 if not isinstance(receipt, dict) or receipt.get("files") != {
-                    name: value for name, value in files.items() if name != RECEIPT
+                    name: value for name, value in files.items() if name != receipt_name
                 }:
                     raise BuildError("ZIP build receipt does not match its input")
                 for name, expected in files.items():
@@ -304,7 +364,7 @@ def create_archive(output: Path, target: Path) -> dict:
         result = {
             "path": str(target), "file_count": len(files),
             "size_bytes": temporary.stat().st_size, "sha256": digest(temporary),
-            "receipt_sha256": files[RECEIPT],
+            "receipt_sha256": files[receipt_name],
             "verification": "crc_and_receipt_sha256",
         }
         # Both paths share a directory/filesystem. link fails if another writer wins.
@@ -316,19 +376,26 @@ def create_archive(output: Path, target: Path) -> dict:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=Path("dist/lody4dot"))
+    parser.add_argument("--output", type=Path,
+                        help="Output directory (default: dist/lody4dot, or dist/organization-collaboration for skill-only)")
+    parser.add_argument("--organization-skill-only", action="store_true",
+                        help="Export the standalone organization skill to a new directory, without Lody tools or runtime")
     parser.add_argument("--zip", dest="zip_output", type=Path,
                         help="Create and verify a ZIP at a new path; never replace an existing path")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
+    if args.output is None:
+        args.output = Path("dist") / (ORGANIZATION_SKILL if args.organization_skill_only else "lody4dot")
     result = None
     try:
         repo = Path(__file__).resolve().parents[3]
         if args.zip_output is not None:
             check_archive_target(repo, args.output, args.zip_output)
-        result = build(repo, args.output)
+        result = (build_organization_skill if args.organization_skill_only else build)(repo, args.output)
         if args.zip_output is not None:
-            result["archive"] = create_archive(Path(result["output"]), args.zip_output)
+            options = ({"receipt_name": ORGANIZATION_RECEIPT, "tool": ORGANIZATION_TOOL}
+                       if args.organization_skill_only else {})
+            result["archive"] = create_archive(Path(result["output"]), args.zip_output, **options)
         code = 0
     except (BuildError, OSError) as exc:
         if result is None:

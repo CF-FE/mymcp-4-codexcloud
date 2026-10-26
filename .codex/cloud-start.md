@@ -2,6 +2,10 @@
 
 使用 `/workspace/mymcp-4-codexcloud` 中现有 checkout；不创建 Git worktree，除非用户明确要求。
 
+先读取`skill/organization-collaboration/SKILL.md`，按本次组织岗位读取必要参考，并复用当前有效任务包。确认业务责任人、汇报对象与实际通道、唯一派发者、验收者、协议/岗位/关系版本和原生任务引用；无依据的项保留UNKNOWN，只暂停依赖该缺项的动作。已批准任务内的读取和实现步骤不重复建单，普通跟进不重扫组织。该skill仅含Markdown，独立于Lody和专业角色库；不为组织接入安装Node或登录。
+
+本组织由公子确认云端Dot统筹。Dot代建项目Cloud任务时，项目owner仍负责审阅规划分配和验收，Cloud沿原关联回传结果；Dot自身协调任务可用工作区上下文。不要因创建者、机器名或专业角色推定任职。岗位/角色新增更新及接管按组织skill的maintenance参考处理，普通在途版本与当前权限撤销分别判断。修改此源码指引不等于保存云环境已更新或新任务已实际读取，分端回执另验。
+
 涉及 Lody 时，先读取 `skill/lody4dot/SKILL.md`，再按目标读取随附参考。稳定 CLI 是 `/workspace/.tools/lody4dot/bin/lody`，先检查依赖，仅在受管依赖明确缺失时进入安装准备：
 
 ```bash

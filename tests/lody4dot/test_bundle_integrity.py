@@ -109,6 +109,9 @@ class BundleIntegrityTests(unittest.TestCase):
         receipt = json.loads((bundle / ".lody4dot-build.json").read_text())
         manifest = json.loads((bundle / ".codex-plugin/plugin.json").read_text())
         self.assertIn("scripts/package_layout.py", receipt["files"])
+        self.assertIn("skills/organization-collaboration/SKILL.md", receipt["files"])
+        self.assertTrue(any(name.startswith("skills/organization-collaboration/references/")
+                            for name in receipt["files"]))
         self.assertTrue(any(name.startswith("skills/lody4dot/references/roles/workspace/")
                             for name in receipt["files"]))
         self.assertTrue(any(name.startswith("skills/lody4dot/references/roles/projects/")
@@ -153,6 +156,25 @@ class BundleIntegrityTests(unittest.TestCase):
         self.assertEqual(result["status"], "mismatch")
         self.assertEqual(result.get("reason"), "sha256_mismatch")
 
+    def test_organization_members_are_verified_and_tampering_blocks_doctor(self):
+        entry = "skills/organization-collaboration/SKILL.md"
+        reference = "skills/organization-collaboration/references/new-position.md"
+        bundle = self.bundle_fixture(extra={entry: "# Organization\n", reference: "# Position\n"})
+        for name in (entry, reference):
+            self.assertTrue(common._bundle_member(name))
+        prefix = self.managed_fixture()
+        code, value, _, _ = self.diagnose(bundle, prefix)
+        self.assertEqual(code, 0)
+        self.assertEqual(value["provenance"]["bundle"]["status"], "consistent")
+        (bundle / reference).write_text("# Changed position\n")
+        code, value, _, calls = self.diagnose(bundle, prefix, "--connect")
+        self.assertEqual(code, 5)
+        self.assertEqual(value["status"], "fail")
+        self.assertEqual(value["error_category"], "invalid_provenance")
+        self.assertEqual(value["provenance"]["bundle"]["reason"], "sha256_mismatch")
+        for call in calls.values():
+            call.assert_not_called()
+
     def test_illegal_members_are_rejected_before_any_member_is_opened(self):
         names = (
             "../private-fixture-material.md", "/tmp/private-fixture-material.md",
@@ -160,6 +182,10 @@ class BundleIntegrityTests(unittest.TestCase):
             "scripts\\doctor.py", "scripts/private-token.py",
             "scripts/build.py", "scripts/arbitrary.py",
             "skills/lody4dot/references/roles/extra.md",
+            "skills/organization-collaboration/extra.md",
+            "skills/organization-collaboration/references/context.json",
+            "skills/organization-collaboration/references/nested/position.md",
+            "skills/organization-collaboration/references/private-token.md",
             "skills/lody4dot/references/roles/workspace/.env",
             "skills/lody4dot/references/roles/projects/credentials.md",
             "skills/lody4dot/references/roles/workspace/private.key",

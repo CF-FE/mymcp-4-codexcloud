@@ -1,5 +1,7 @@
 # 本地Codex CLI接入
 
+组织协作可独立读取`skills/organization-collaboration/SKILL.md`；源码入口为`skill/organization-collaboration/SKILL.md`。将完整独立skill目录放到本机已支持且获准的技能入口，先检查已有目录与用户修改，不覆盖未知版本。安装/文件到位、下一任务实际发现、已绑定汇报关系及业务运行分别记录。纯组织协作不要求运行下面的Lody准备或注册组合插件。
+
 宿主加载与OS运行支持分别检查。Codex CLI本身提供多种平台版本，不代表本插件安装工具已经跨平台；当前受管runtime工具只支持Linux。macOS、WSL和Windows均需各自真实验证，WSL不称原生Windows支持。
 
 在允许写入配置的Codex CLI环境，先核对本机`codex --version`和plugin帮助。本包清单与marketplace依据已核实的Codex CLI0.163.0契约；从完整自包含包注册，而不是从源码中尚未生成skills目录的插件文件夹注册：

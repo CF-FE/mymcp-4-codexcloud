@@ -8,7 +8,9 @@
 
 共享角色不携带固定机器或项目生产路径。显式选择`fanren-work`才加入该项目的完整审稿、听证、共享锁、冻结输入等要求；项目模板必须给匹配project。定义scope只是库的分类，不表示原生Project→Role绑定；中立输出也不是CLI发布载荷。
 
-维护时修改唯一职责正文或共同合同，并更新index中的library_version；项目差异写入显式项目适配，不复制全部共享角色。外部方法记录固定仓库/commit/路径及许可，当前均未随包，不将其作为所有任务的强制前置。共同合同变化后运行全库check与项目行为走查，按实际选中的完整prompt核长度和摘要。
+组织岗位、汇报与任务治理由独立[组织协作skill](../../organization-collaboration/SKILL.md)维护；专业角色、组织岗位和实际关系按其[维护流程](../../organization-collaboration/references/maintenance.md)分别更新。旧`g8_coordinator`是组织导航兼容入口，`fanren_owner`保留凡人项目适配；render不自动读取组织skill，已保存Role须另验版本。
+
+维护专业定义时修改唯一职责正文或共同合同，并更新index中的library_version；项目差异写入显式项目适配，不复制全部共享角色。外部方法记录固定仓库/commit/路径及许可，当前均未随包，不将其作为所有任务的强制前置。共同合同变化后运行全库check与项目行为走查，按实际选中的完整prompt核长度和摘要。
 
 工作区专属执行规范作为当前任务输入交接，不能因通用角色省略机器信息而忽略它。源仓库本用户的win-work新会话选择由`docs/lody4dot/workspace-roles/execution-policy.md`维护；自包含包不自动携带该用户配置，派发时须复用当前有效映射和规则，不能从历史默认或角色名称推断。角色提议、用户Save与回读仍按下面流程进行。
 

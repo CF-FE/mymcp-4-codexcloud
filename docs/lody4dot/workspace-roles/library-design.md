@@ -11,7 +11,7 @@
 ## 所有权与范围
 
 - 当前可编辑角色知识归`skill/lody4dot/references/roles/`；V2.2四文件与来源清单保留为历史，不改字节。
-- `index.json`只维护角色元数据、项目适配、方法来源及版本；职责正文各维护一次。`common.md`保留必要的授权、单写者、UNKNOWN、证据/独立QA、模型建议与Save边界。
+- `index.json`只维护角色元数据、项目适配、方法来源及版本；职责正文各维护一次。`common.md`保留专业证据/独立QA、模型建议与Save边界，并指向独立组织协议；通用责任、单写者、UNKNOWN与汇报正文由组织skill承接。
 - 共享角色适用于工作区内跨项目任务；项目owner/模板须明确项目。显式选择项目才组合该项目合同。共享提示词不携带固定机器、真实ID或项目生产路径。
 - 现有六共享职责、G8、项目owner与三模板共11个定义，不创建11个运行实例。定义版本与Lody实际Role ID、machine/config、模型、权限、Save/回读分开；库中的scope/project_id不是原生Lody字段。
 - PR #4的[工作区执行规范](execution-policy.md)与[并行规范](../../../skill/lody4dot/references/collaboration.md#并行在办任务)已合入本地：本用户win-work新会话显式选择已核映射的codex over Claude配置，不降级；此规则作为当前任务输入，不烘焙为所有用户的通用角色默认。
@@ -21,7 +21,7 @@
 
 ## 最小数据合同
 
-`roles/index.json`采用`schema_version: 1`、`library_version: "1.0.0"`：
+`roles/index.json`采用`schema_version: 1`、`library_version: "1.1.0"`：
 
 - `common: {resource}`指向通用合同。
 - `roles[]`：`id/name/scope/kind/summary/resource/methods/source_role_id`；scope为workspace或project，project条目另有`project_id`。id在库内唯一；kind保留coordinator/shared_role/project_owner/task_template区别。
@@ -49,6 +49,12 @@ command默认仅返回一条原index对象，保留来源文件、知识版本�
 先完成一个共享角色及项目适配的端到端，再扩齐11份定义。测试针对单项输出隔离、精确选择、来源保留、缺项失败、语义硬要求与迁出仓库后的运行；新增工具不执行网络、Lody、环境查询或写入。构建仅增加lookup.py的明确白名单，沿用原收据与ZIP验证。
 
 性能同时比较：现有完整文件、已有内联单项读取、新lookup输出；角色比较完整V2.2快照和单角色组装。记录实际UTF-8输出字节、字符与离线调用数，helper耗时只代表本地工具。对同一已知会话、未知目标、超时、两层角色选择做独立场景走查；无实际业务轨迹时，模型延迟、token和成本改善保持未测。
+
+## 组织协议分离（1.1.0）
+
+公子已授权实现独立[组织协作skill](../../../skill/organization-collaboration/SKILL.md)。通用责任、汇报、派工、进度及岗位维护由它唯一承接；本库保留专业与项目约束。`g8_coordinator`改为组织岗位导航兼容入口，`fanren_owner`保留凡人生产/审定/恢复适配，ID、kind和索引schema1均保留。协议1.0.0、岗位定义、专业库1.1.0和实际关系记录分别版本化。
+
+`lookup role --render`仍只组装common+当前角色+显式项目，链接不自动展开；它不输出本次组织关系或宣称新skill已读取。调用方先按组织入口绑定本次责任，再按需选择专业能力。旧已保存Role的更新必须单独取得授权、Save及字段回读，不随源码自动发生。V2.2历史字节不改。
 
 ## 维护
 
