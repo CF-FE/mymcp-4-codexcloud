@@ -18,6 +18,7 @@ description: 使用 Lody CLI 或已有 Lody MCP 管理工作区、机器、Agent
 | 资料空间与Dot中转、输入交接或结果存回 | [资料交接](references/material-handoff.md) |
 | FileKiwi跨环境文件中转、浏览器接收与逐阶段验收 | [文件中转](references/filekiwi-transfer.md) |
 | Work/Work Cloud与Codex Cloud、任务创建或触发不明确 | [任务类型与创建入口](references/collaboration.md#work-cloud与任务创建) |
+| 安排并行在办任务、选择多会话或Codex Cloud、分配写入与集成责任 | [并行协作规范](references/collaboration.md#并行在办任务) |
 | 多处安装、跨端协作、上下文交接或重建后继续 | [多宿主协作](references/collaboration.md) |
 | 安装、凭证、云环境准备 | [云端准备](references/setup-cloud.md) |
 | 找工作区、机器、项目或可用能力 | [资源发现](references/discovery.md) |

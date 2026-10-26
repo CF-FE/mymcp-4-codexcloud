@@ -11,3 +11,4 @@
 - 当前没有公共服务需要安装或启动。新增条目时补充其命令、工作目录和有实际行为断言的验证方法。
 - 文档检查与目录存在不能证明插件安装、技能加载或 MCP 调用成功，报告时区分这些状态。
 - 云任务已有隔离环境，使用现有 checkout；除非用户明确要求，不创建 Git worktree。
+- 安排并行在办任务先读[并行协作规范](skill/lody4dot/references/collaboration.md#并行在办任务)；涉及本用户Lody工作区的会话派发，另读[工作区执行规范](docs/lody4dot/workspace-roles/execution-policy.md)，不把专属配置作为通用技能默认。
