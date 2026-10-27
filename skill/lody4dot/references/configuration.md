@@ -38,12 +38,16 @@ lody agent-config refresh-capabilities AGENT_CONFIG_ID --workspace WORKSPACE_ID
 
 该版本以 cloud 身份运行 CLI 时，提议通过当前登录身份机器的合法会话工具执行 `session/call-tool`，需要对应的会话与运行条件；创建字段中的 `machineId` 只是 Role 的绑定目标，不选择提议调用的机器。不能从无本机 host 的控制端已能向远端派发普通会话，推导它也能生成角色提议；已有 MCP 路线同样须核实实际宿主上下文，不手工调用内部入口或为此自动启动 host。
 
+在批量准备发布稿前先核这条正式入口。控制端本机IPC前的`DAEMON_NOT_RUNNING`只定位该路径缺前提，不证明目标机器离线、未安装CLI或卡片已在等待Save；`--session`也不把本机control socket自动改成远端执行。按[用途预检](setup-cloud.md#初始化与任务前预检)选择当前获准且有正式工具的宿主/会话，不能只发一条提示词就宣称工具已调用。
+
 ```bash
 lody agent-role create --file role.json --session SESSION_ID
 lody agent-role update ROLE_ID --file patch.json --session SESSION_ID
 ```
 
 JSON 文件和直接字段参数不能混用。更新文件只包含补丁字段，不再包一层 patch；角色 ID 放位置参数，重试使用相同输入及支持的 `--request-id`。可修改字段与限制查 `agent-role create/update --help`；不支持的字段不能用猜测值绕过。
+
+只改`promptPrefix`时不回写整份旧Role快照；并发修改的模型/effort等非本次写入字段应保留。回读核本次字段及必要绑定，发现其他字段变化先核来源，不推定修改者或当作本次覆盖而回滚。多个独立Role可在资源和授权允许时批量/并行处理，逐项保留回执；同一Role的依赖更新串行，UNKNOWN先对账。
 
 `0.107.2` 的 create 业务字段为 `name`、`machineId`、`agentConfigId`，以及可选的 `description`、`promptPrefix`；保存后初始 `runConfig` 为空。update 补丁仅支持 `name`、`description`、`promptPrefix`，不能据此承诺 CLI 可编辑产品界面的全部运行设置。其他版本以其实际帮助和 schema 为准。
 
@@ -59,7 +63,7 @@ JSON 文件和直接字段参数不能混用。更新文件只包含补丁字段
 
 这确认的是“按某 Role 执行某项目任务”；尚未核实 Project 持久拥有一组 Role 的绑定，不能据此编造该分组关系，也不据此断言其他版本或产品界面没有组织功能。角色提议、用户保存、只读查询已保存角色及按该角色执行项目任务分别取证，保存成功不代表执行成功。
 
-2026-10-25对`0.108.1`的`source_verified`复核保留上述边界：create/update schema与初始`runConfig={}`、多Role复用配置、身份机器的本地control socket提议路线，以及先解析Role最终机器再验证本地项目，均与已记录规则一致。CLI提议仍需有效本机host/Desktop或daemon和所属会话；不能套用普通远端session派发无需控制端daemon的结论。新版还支持已保存Role的多target解析，但CLI create提议字段仍为单一machine/config，不据此编造Project持久Role组。这里只核对发布源码，本轮未创建提议、保存角色、登记项目、启动host或执行项目任务；准确版本来源见[sources.json](sources.json)。
+2026-10-25对`0.108.1`的`source_verified`复核支持上述schema、绑定与本机control socket边界。该版支持已保存Role的多target解析，但CLI create提议字段仍为单一machine/config，不是Project持久Role组。该次仅核发布源码，未执行提议、Save、登记、启动或项目任务；后续业务证据各保留原范围，来源见[sources.json](sources.json)。
 
 ## MCP 与 GitHub
 

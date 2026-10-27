@@ -20,7 +20,9 @@ python3 plugin/lody4dot/scripts/bootstrap.py --prefix /workspace/.tools/lody4dot
 
 `bootstrap.py`默认只做离线inspect；`--prepare`在环境准备时按已授权策略解析官方npm latest、暂存精确锁、受管安装/复用并检查；`--repair-missing`先检查，仅在受管依赖明确缺失时进入同一安装路线。Lody CLI版本差异或版本探测失败只warn，不阻塞或触发重装；`doctor.py --check-updates`仅查询提示，不自动升级。安装保留engine-strict、禁用生命周期脚本和原锁约束，真实失败不覆盖旧入口。网络、身份或实际运行错误分别处理。它不恢复登录态、启动daemon或重建模型任务。环境中断后先按已持久化的原生session/turn引用查询原任务，核对产物；状态未知时停止重派。
 
-当前随包帮助为0.108.1；先核实际CLI版本与目标命令`--help`，再只读选择已允许的workspace、machine、project catalog与Agent config/Role。没有指定工作区或合法已有身份时报告最小缺项，不自动选历史资源、登录、注册或发起任务。HTTP探针不代替原CLI查询，403诊断仅保留必要脱敏证据，见`skill/lody4dot/references/troubleshooting.md`。
+当前随包帮助为0.108.1；核实际CLI版本与所需命令`--help`，只补本次用途缺少的已授权目标，不全量重扫workspace、machine、project catalog及Agent config/Role。没有指定工作区或合法已有身份时报告最小缺项，不自动选历史资源、登录、注册或发起任务。HTTP探针不代替原CLI查询，403诊断仅保留必要脱敏证据，见`skill/lody4dot/references/troubleshooting.md`。
+
+复用已有版本/帮助与用途回执，按[初始化与任务前预检](../skill/lody4dot/references/setup-cloud.md#初始化与任务前预检)先核本次所需的正式入口，再批量准备或派发。bootstrap的`not_run`项不能算通过；本机IPC、Role提议与远端会话控制分开，不每回合重跑初始化或靠新建资源探活。
 
 安装与环境快照只保存依赖，不登录、不注册机器、不启 daemon。需要账户操作时，在当前任务的同一 shell 中先创建私密状态目录：
 

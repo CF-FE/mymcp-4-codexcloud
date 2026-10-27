@@ -44,6 +44,7 @@ lody4dot的设计、接入、验收和配套图表集中在本目录；实际任
 
 ## 运行记录与图表
 
+- [CLI路由与观察排错复盘](cli-troubleshooting-cases.md)：初始化/任务前预防、本机IPC与Role提议、有界分页及用户Save后的补丁回读。
 - [运行前提补充](runtime-findings.md)：云端ACP、身份和执行位置的实际调查。
 - [实现与验证记录](validation.md)：按轮次保存检查结果、实测范围和未运行项。
 - [技能行为评测](skill-evaluation.md)：六个固定离线场景、判据与效率记录方法；计划走查和真实执行分开。

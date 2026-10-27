@@ -25,7 +25,7 @@ lody session create --workspace WORKSPACE_ID --machine MACHINE_ID --agent-config
 lody session chat SESSION_ID --workspace WORKSPACE_ID --prompt-file /path/to/follow-up.md
 ```
 
-示例不代表已授权替换这些 ID。需要项目时，使用目标机器上的已授权项目选择器，不默认为控制端创建项目。附件和 prompt-file 从运行命令的机器读取，相对路径基于当前目录；先验证全部附件准备成功，再发送。独立重跑 chat/create 是新消息或新任务，不是安全重试。
+示例不代表已授权替换这些 ID。需要项目时，使用目标机器上的已授权项目选择器，不默认为控制端创建项目。附件和prompt-file从运行命令的机器读取，相对路径基于当前目录；先验证附件准备成功，再发送。控制端路径不证明目标可读，提示词中的skill路径/阅读指引不代替安装或实际读取回执，按[资料交接](material-handoff.md)分别核对。独立重跑chat/create是新消息或新任务，不是安全重试。
 
 ## 观察真实结果
 
@@ -41,13 +41,15 @@ history 读取用户可见 transcript，不是执行状态流；observe 附着�
 
 0.108.1的`history --all --json`支持完整可见历史并返回`total/returned`；可按时间窗口查唯一标识与等价内容，再结合`show`的history/queue计数、`status`的latest/handled消息ID及对应turn核对。它们不提供完整服务端接收账本，可见历史为空、队列0或idle仍不能单独证明写入前失败。结果unknown时不重发；明确的新版本任务也须独立授权、核目标与基线，不以换版本或换requestId掩盖原未知操作。
 
+读取协作端进度或分页回执时，先保留来源系统及原生引用，按该工具自己的游标继续有界读取；空页仍有后续游标不能判不存在。预设页数/时间/条数预算，到界仍未确认时报告已读范围、未读游标及下一步，保留UNKNOWN，不催促重发或重建。此规则不新增Lody CLI参数。用户问“哪个会话”时，在获准私密渠道先给真实session ID、当前名称；涉及提议卡时附本次卡数及pending/已保存/未知状态。尚无创建回执就直说未确认，不描述未经确认的卡片位置。
+
 成功核验至少保留 workspace/session、所针对的 turn 或操作标识、持久化状态及可检查产物。observe 的 `turn.finished` 区分 `completed / failed / canceled`；初始快照的 latestTurn 可反映已快速完成的任务。只读 metadata、idle、presence 消失或 workspace ready 都不能证明任务完成。`freshness: unavailable` 或仅 metadata 来源时明确证据不足。
 
 JSONL 的 sequence 只排序当前观察进程，不能用它保证跨进程恢复或完整重放；观察重启后重新核对快照与历史。用户可见回复也不能代替目标产物与相应测试。
 
 ### 慢任务与授权确认
 
-2026-10-26按Lody `0.108.1`公开帮助与源码补核：任务比预期慢时，第一步用原 workspace/session/userTurnId 查持久化状态和授权门，而不是继续空等。看到 observe 的 `state=waiting` 或 `status.type=requestPermission`，立即向用户反馈正在等待确认，并核对具体工具、必要参数、目标、风险和 requestID。反馈等待不等于结束整个有界任务；保留原任务，继续可独立完成的检查，确认后沿原回合跟进。
+2026-10-26按Lody `0.108.1`公开帮助与源码补核：任务比预期慢时，先查审批/授权等待，再沿原 workspace/session/userTurnId 核执行状态、同步/分页覆盖及长调用所在层；不要只反复报“进行中”、重跑基线或催促重发。看到 observe 的 `state=waiting` 或 `status.type=requestPermission`，立即反馈正在等待确认，并核具体工具、必要参数、目标、风险和 requestID。反馈等待不等于结束整个有界任务；继续无依赖的获准检查，确认后沿原回合跟进。
 
 该版本 `show/status` 只提供状态和回合等元数据，`observe` 不含工具详情；公开 CLI history 与内置 `lody_session_history` 只返回可见正文，过滤 `tool_call`。因此不能承诺从这些入口取得待批工具、参数或 requestID；能力不足时明确说明，并指向原会话受信任界面的权限卡查看具体请求。请求的原生选项可能包含 `allow_once/allow_always` 等，风险仍需按实际动作评估，不整段回传原始参数、输出或私密链接。
 
@@ -57,6 +59,7 @@ JSONL 的 sequence 只排序当前观察进程，不能用它保证跨进程恢�
 
 ## 会话维护与取消
 
+- 只读归档历史不授权restore、续发或恢复旧记录者职责；环境/服务恢复也不自动恢复旧业务会话。
 - `list` 先明确工作区、活跃/已归档筛选；查询结果不自动代表全部历史。
 - `rename` 修改标题；显式传入 session、workspace 与 `--title`，避免环境 session 选择器和位置参数歧义。保存原标题，需要往返验证时先检查目标空闲。
 - `archive` 在 `0.107.2` 会递归归档以 `parentSessionId ?? openedBySessionId` 关联的后代，包括已经归档的后代；不能只核对根会话。先用 `session list --all --workspace WORKSPACE_ID --json` 取得包含已归档项的完整元数据，核对关联图和授权范围；该版本省略 `--limit` 返回全部同步条目，`--opened-by` 不能替代 parent 关系检查。
