@@ -1,23 +1,35 @@
-%% 2026-10-26 评审候选v0.1；全部纳管，按风险与粒度展开。
+%% 2026-10-27 实施规范v0.3；全部纳管，区分未验阻塞与已证实不符合。
 flowchart TB
     accTitle: 项目任务从审阅到验收
-    accDescr: 所有项目需求、缺陷和可交付子任务先由项目负责人审阅。小任务在同一回合给出一步计划并指定执行者；复杂或高风险任务展开依赖与检查节点。分配后核前置、授权和资源，满足时执行，不满足时记录缺口。成果按要求检查，失败回原任务修正，通过后负责人核交付并关闭，Dot汇总。超时未知先沿原引用对账。
-    incoming["项目需求 / 缺陷\n新的可交付子任务"] --> review["项目负责人审阅\n归属、范围、风险、验收"]
+    accDescr: 所有项目需求、缺陷和可交付子任务先按负责人关系审阅。身份未确认时仅继续已有授权无依赖工作，依赖身份的决定及最终验收待确认。小任务同一回合给一步计划并分配；复杂或高风险任务展开依赖与检查节点。产物默认就地检查，自检、质量复核与负责人验收分列。阻断性不符合进入精确修订，缺文件、工具或必验项未验进入补条件阻塞，不能当作产物缺陷。负责人核验收与交付后，获记录者核冲突后登记正式记录，Dot汇总。未知先对账，不重复派发。
+    incoming["项目需求 / 缺陷\n新的可交付子任务"] --> ownerReady{"负责人身份及\n必要授权明确？"}
+    ownerReady -->|是| review["项目负责人审阅\n归属、范围、风险、验收"]
+    ownerReady -->|否| identity["有效任命方确认关系\n只继续已授权无依赖工作\n最终验收待确认"]
+    identity -->|关系补齐| review
     review --> size{"选择规划粒度"}
     size -->|小且明确、低风险| small["一步计划\n自领或指定执行者"]
     size -->|多步骤 / 高风险| plan["拆成果、依赖与检查节点\n维护现有项目进度表"]
     small --> assign["明确任务包\n输入版本 / 写入范围\n唯一写者与派发者"]
     plan --> assign
-    assign --> ready{"前置 / 授权 / 资源\n是否就绪？"}
+    assign --> record["创建或关联正式任务\n记录者查重并回读\nIssue / Project按切换规则"]
+    record --> ready{"前置 / 授权 / 资源\n是否就绪？"}
     ready -->|否| blocked["记录缺口和下一责任人\n继续无依赖工作"]
     ready -->|是| run["沿选定路线执行\n满足条件才并行"]
-    run --> verify["检查明确版本\n自检 / 集成 / 独立 QA\n按适用验收要求"]
-    verify --> outcome{"满足验收与交付？"}
-    outcome -->|否| fix["回原任务精确修正\n范围变化重新审阅"]
-    outcome -->|是| close["负责人核证并关闭\nDot 汇总交付"]
+    run --> refs["原生任务 / 回合引用\n回填同一正式任务"]
+    refs --> verify["明确版本就地复核\n制作自检 / 质量复核分列\n方法与实际覆盖分别记录"]
+    verify --> outcome{"检查结果及\n必验条件？"}
+    outcome -->|阻断性不符合| fix["定位证据 / 修订责任人\n修订绑定新版本\n范围变化重新审阅"]
+    fix -->|核新版本及受影响范围| verify
+    outcome -->|未验 / 缺文件或工具| unverified["记录未验与验收阻塞\n缺项 / 责任人 / 解除证据\n不据此认定产物缺陷"]
+    unverified -->|补齐检查条件| verify
+    outcome -->|必验已核且无阻断问题| acceptance{"负责人核证\n满足约定交付？"}
+    acceptance -->|身份待确认| identity
+    acceptance -->|交付条件未齐| delivery["记录交付缺项\n责任人及解除证据"]
+    delivery -->|交付证据补齐| acceptance
+    acceptance -->|是| close["负责人确认最终验收\n记录者核冲突后登记\nDot 汇总结论"]
     note["UNKNOWN 先对账\n沿原任务和回合查询\n超时不重复派发"]
     run -.-> note
     classDef lead fill:#e7f0fb,stroke:#315f93,color:#17304b;
     classDef caution fill:#fff5e6,stroke:#987334,color:#4e3c1d;
-    class review,assign,close lead;
-    class blocked,fix,note caution;
+    class review,assign,acceptance,close lead;
+    class blocked,fix,unverified,identity,delivery,note caution;

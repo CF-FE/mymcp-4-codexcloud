@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "library_version": "1.1.0",
+  "library_version": "1.1.1",
   "common": {
     "resource": "common.md"
   },

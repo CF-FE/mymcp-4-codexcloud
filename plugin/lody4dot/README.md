@@ -1,12 +1,16 @@
 # lody4dot
 
-为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码清单版本为`0.4.0`，正式云来源与运行观测统一见仓库[任务队列](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/.codex/agent-state/todo.md#当前环境与下一步)，不把工作副本当作正式发布。2026-10-25按用户授权改为准备阶段解析官方npm的`lody@latest`，本轮源码锁及实际帮助为`0.108.1`，0.107.2历史业务证据不改称新版已测。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际依赖另以engine-strict核对。
+为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码清单版本为`0.6.0`，正式云来源与运行观测统一见仓库[任务队列](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/.codex/agent-state/todo.md#当前环境与下一步)，不把工作副本当作正式发布。2026-10-25按用户授权改为准备阶段解析官方npm的`lody@latest`，本轮源码锁及实际帮助为`0.108.1`，0.107.2历史业务证据不改称新版已测。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际依赖另以engine-strict核对。
 
 核心能力源码在仓库的`skill/lody4dot/`，薄setup入口在`skill/lody4dot-setup/`，独立组织协议在`skill/organization-collaboration/`；本目录负责组合、运行时锁定和分发，不新增MCP服务。Lody已有MCP只有在宿主提供有效session/workspace/machine上下文时才使用，不能将其内部入口当作独立通用服务。
 
-0.4.0新增[组织协作入口](skills/organization-collaboration/SKILL.md)，用于确认岗位、对谁负责、汇报通道、任务规划与依赖并行；其协议不依赖Lody工具或专业角色库。当前协议1.0.0、专业库1.1.0、实际关系版本分别记录，新增岗位／角色的变更影响和更新流程随组织skill提供。旧`g8_coordinator`保留导航，`fanren_owner`保留项目适配；`lookup role --render`不自动载入新组织协议，已保存Role也不会因源码更新自动变化。
+0.4.0新增[组织协作入口](skills/organization-collaboration/SKILL.md)，用于确认岗位、对谁负责、汇报通道、任务规划与依赖并行；其协议不依赖Lody工具或专业角色库。当前协议1.2.0、专业库1.1.1、实际关系版本分别记录，新增岗位／角色的变更影响和更新流程随组织skill提供。旧`g8_coordinator`保留导航，`fanren_owner`保留项目适配；`lookup role --render`不自动载入新组织协议，已保存Role也不会因源码更新自动变化。
 
 多宿主知识与工具基础已提供，具体宿主的加载、控制与执行能力仍分别验收。OpenAI官方确认Dot是ChatGPT中的always-on agent产品，有自己的云电脑；它也能向预先配置的Codex云环境创建任务，或使用另行授权连接的本地电脑。这些执行位置分别核对，Dot不作为任意Agent的通用别名。macOS、WSL2和原生Windows未因此进入本插件实际安装支持列表，安装成功也不自动注册machine或启用worker。
+
+0.5.0本地候选在原有组织skill内补充通用产物就地复核、分项证据和负责人最终验收，独立协议为1.1.0；旧1.0.0接入回执仅覆盖旧版本。新规范适用于各类项目产物，音频项目只是适配示例，详见[组织接入说明](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/docs/organization-collaboration/README.md)。本轮不自动安装到执行端或更改在途任务版本。
+
+0.6.0组合协议1.2.0，补齐可委派的授权记录职责、记录工具切换和增量回报，修正纯角色查询的不必要平台预检。专业库1.1.1仅对齐检查结论和汇报路径，岗位及角色ID不变；CF-FE适配及本机MCP验收只在[组织项目说明](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/docs/organization-collaboration/github-projects.md)维护，不把本机凭据或组织默认打进通用skill。
 
 ## Dot与其他宿主如何接入
 
@@ -174,7 +178,7 @@ doctor会保留失败前已完成的检查，并通过`observed_at`、`verified_
 仅分发组织skill时，在仓库根使用下列独立模式；目录和ZIP均须为新路径：
 
 ```bash
-python3 plugin/lody4dot/scripts/build.py --organization-skill-only --output dist/organization-collaboration-1.0.0 --zip dist/organization-collaboration-1.0.0.zip --json
+python3 plugin/lody4dot/scripts/build.py --organization-skill-only --output dist/organization-collaboration-1.2.0 --zip dist/organization-collaboration-1.2.0.zip --json
 ```
 
 独立输出只含`SKILL.md`、平铺Markdown参考和`.organization-collaboration-build.json`，没有Lody运行依赖、插件清单或角色库；它是技能文件包。该收据与组合插件收据分开，不能用Lody doctor称其原生安装已验。组合包则将`skills/organization-collaboration/`纳入原有逐文件摘要和来源检查；新增平铺岗位参考无需逐个修改构建代码，深层目录、脚本、敏感路径及符号链接仍拒绝。
@@ -192,7 +196,7 @@ python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot --json
 需要同时生成离线ZIP时，显式指定新路径：
 
 ```bash
-python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.4.0 --zip dist/lody4dot-0.4.0.zip --json
+python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.6.0 --zip dist/lody4dot-0.6.0.zip --json
 ```
 
 ZIP保留隐藏清单及所有资源，根直接是插件内容；生成后核对CRC、收据和逐文件SHA-256，再创建最终文件。成功JSON只在请求ZIP时附加`archive`，提供绝对`path`、含收据的`file_count`、`size_bytes`、ZIP的`sha256`、`receipt_sha256`和`verification`。这些摘要证明本地文件一致性，不提供签名或原生加载/业务验收。

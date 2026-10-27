@@ -1,6 +1,6 @@
 # 组织协作 skill
 
-组织协议1.0.0的唯一源码为[skill/organization-collaboration](../../skill/organization-collaboration/SKILL.md)。它让各参与端按本次任务确定岗位、责任、汇报通道、派发和验收，包含粒度评估、依赖并行、进度表及岗位／角色更新流程。实现与[已接受的方案及四张图](../lody4dot/project-coordination.md)对应；实际状态统一记录于[任务队列O01–O05](../../.codex/agent-state/todo.md#当前goal独立组织协作skill)。
+组织协议1.2.0的唯一源码为[skill/organization-collaboration](../../skill/organization-collaboration/SKILL.md)。它让各参与端按本次任务确定岗位、责任、汇报通道、派发和验收，包含粒度评估、依赖并行、进度表及岗位／角色更新流程。实现与[已接受的方案及四张图](../lody4dot/project-coordination.md)对应；实际状态统一记录于[任务队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
 
 该skill全部为Markdown，不要求Python、Node、Lody身份、专业角色库或常驻服务。通用协议、当前关系、任务上下文分别维护；真实参与者和组织名单保留在已有私密正式记录中，不写进技能包。
 
@@ -10,14 +10,18 @@
 
 岗位和专业角色更新走[维护流程](../../skill/organization-collaboration/references/maintenance.md)。协议／岗位、专业角色库、实际任职关系各自版本化；新增岗位修改唯一导航和一份平铺参考，不能自动创建Agent或写远端配置。普通在途任务按明确版本及节点迁移；当前权限撤销、安全修正和公子新指令优先。
 
+1.1.0在现有职责、汇报和验收指引中补充[通用产物就地复核](../../skill/organization-collaboration/references/execution-and-review.md#产物就地复核)及[统一回执](../../skill/organization-collaboration/references/context-and-reporting.md#产物复核与验收回执)，适用于软件、文档、图像及音视频等产物。该候选的负责人、执行者和审查者定义为1.1.0，总负责人为1.0.1；专业角色库及实际任职关系不随之升级。新任务采用新版，在途任务按维护规则选择明确迁移点，不重派、覆盖旧证据或自动安装。凡人项目的音频适配与合并说明见[项目补丁示例](fanren-review-patch.md)，不能把该例的路径、会话或当前阻塞设为通用规则。
+
+1.2.0保留上述验收规则，新增按需[授权记录者职责](../../skill/organization-collaboration/references/authorized-recording.md)（创建前查重、更新核当前记录、关闭核依据、冲突处置及回读），并明确模板可引用既有记录、普通跟进只报增量。负责人和执行者定义为1.2.0，审查者1.1.0、总负责人1.1.0；没有新增第五岗位。组织默认、GitHub工具选择及本机持久接入证据见[CF-FE任务记录适配](github-projects.md)，真实任职和其他端接入仍独立核验。
+
 ## 分发
 
 从仓库根目录构建独立skill，仅打包该技能及自己的收据：
 
 ```bash
 python3 plugin/lody4dot/scripts/build.py --organization-skill-only \
-  --output dist/organization-collaboration-1.0.0 \
-  --zip dist/organization-collaboration-1.0.0.zip --json
+  --output dist/organization-collaboration-1.2.0 \
+  --zip dist/organization-collaboration-1.2.0.zip --json
 ```
 
 输出根直接包含`SKILL.md`、`references/`和`.organization-collaboration-build.json`，没有插件清单、Lody工具或专业角色库。这是技能文件包，不把它冒充ChatGPT原生插件ZIP。构建工具使用Python标准库，使用skill本身不需要Python；输出目录和ZIP必须是新路径，旧目录和自定义修改不会被覆盖。独立收据的工具名为`organization-collaboration-build`，CRC与SHA只证明本地文件一致性，不能用Lody doctor代替技能加载验收。
@@ -25,8 +29,8 @@ python3 plugin/lody4dot/scripts/build.py --organization-skill-only \
 组合分发使用既有构建命令：
 
 ```bash
-python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.4.0 \
-  --zip dist/lody4dot-0.4.0.zip --json
+python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.6.0 \
+  --zip dist/lody4dot-0.6.0.zip --json
 ```
 
 组合包增加`skills/organization-collaboration/`并纳入原收据和provenance；组织协作入口与Lody操作入口分开。只需组织协议的执行端使用独立skill，不因组合包包含Lody而执行setup或安装CLI。
@@ -46,7 +50,9 @@ python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.4.0 \
 
 ## 本轮接入证据
 
-2026-10-26已完成独立skill、组合分发、源码启动指引和三个新上下文离线走查；本机`~/.codex/skills/organization-collaboration`已放置完整文件并核对摘要。新一轮原生发现、云端Dot和各项目端实际加载尚未取得回执。包摘要、测试和分端状态统一见[验证记录](../lody4dot/validation.md#2026-10-26独立组织协作skill-goal)，不以可读文件推定全端安装成功。
+1.0.0在2026-10-26完成本地构建、三个新上下文离线走查及本机文件放置。公子后续转回固定提交`6abc45c46dedddb290076ca154fab44fe43a72b5`的云端Dot回执：Dot、云端执行任务及win-work A/B/QA已完成文件接入与实际读取；不属于原生注册或自动发现验收。正式项目owner绑定、组织关系版本、mac-work指定接入会话、保存环境模板与原生注册仍有各自缺口，详见[回执核对](../lody4dot/validation.md#2026-10-27组织skill接入回执核对)。这是用户转交的目标端证据，本机未重跑远端核验。
+
+1.1.0候选规范的[本地验证](../lody4dot/validation.md#2026-10-27通用产物复核规范)与上述1.0.0接入分开：没有覆盖本机已装技能、win-work文件或远端模板，不将旧回执推广为新版已接入。1.2.0最终候选的检查、分发与待验范围见[本轮全局收敛](../lody4dot/validation.md#2026-10-27组织协作全局收敛)。
 
 ## 验证与维护
 
@@ -61,5 +67,9 @@ python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.4.0 \
 | 原派发UNKNOWN且owner变更，新负责人要求立刻再开同目标任务 | 交接原引用和责任，先对账，不用接管重派；不把旧写者失联当已停止 |
 | 新增组织岗位与更新视觉专业角色；一项在途工作使用旧版本，另有权限撤销 | 两类定义各归其主库；稳定ID/版本/影响范围/分端回执；普通更新不重启在途，撤权立即约束相关动作 |
 | Dot的跨项目现状汇总，没有项目归属 | 可用工作区关系，不虚构项目；Dot在有效授权内自派自验；涉及项目资产则转对应owner |
+| 两项同名需求范围不同，其中一项创建请求UNKNOWN；要求合并或换名再建 | 按目标、范围、版本与原关联判断；不只看标题，未知先对账，候选建单不批准执行 |
+| 当前V2阻塞，迟到V1通过回执要求覆盖；owner结论又与必验未验冲突 | 保留原报告为对应版本的事件，暂停冲突覆盖／完成关闭，交相应责任人核实，不重做QA或补造通过 |
+| 有效取消决定已由T9承接未知运行，但另一会话刚更新字段 | 取消决定、运行状态和记录写入分别处理；不声称进程停止，不自动撤回他人的新值 |
+| 小任务已有完整上下文；另一个请求只查共享角色职责 | 引用既有任务做增量回报；纯角色查询直接离线读取，不引入Lody平台预检 |
 
 保留实际输入、读取文件、回答、判定和未验证项。单次批量计划走查不是多个独立实验，不证明模型延迟降低或持续正确执行。全部项目检查仍在仓库根运行`python3 scripts/check_repository.py`及`python3 -m unittest discover -s tests -v`。

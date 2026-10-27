@@ -21,7 +21,7 @@
 
 ## 最小数据合同
 
-`roles/index.json`采用`schema_version: 1`、`library_version: "1.1.0"`：
+`roles/index.json`采用`schema_version: 1`、`library_version: "1.1.1"`：
 
 - `common: {resource}`指向通用合同。
 - `roles[]`：`id/name/scope/kind/summary/resource/methods/source_role_id`；scope为workspace或project，project条目另有`project_id`。id在库内唯一；kind保留coordinator/shared_role/project_owner/task_template区别。
@@ -55,6 +55,8 @@ command默认仅返回一条原index对象，保留来源文件、知识版本�
 公子已授权实现独立[组织协作skill](../../../skill/organization-collaboration/SKILL.md)。通用责任、汇报、派工、进度及岗位维护由它唯一承接；本库保留专业与项目约束。`g8_coordinator`改为组织岗位导航兼容入口，`fanren_owner`保留凡人生产/审定/恢复适配，ID、kind和索引schema1均保留。协议1.0.0、岗位定义、专业库1.1.0和实际关系记录分别版本化。
 
 `lookup role --render`仍只组装common+当前角色+显式项目，链接不自动展开；它不输出本次组织关系或宣称新skill已读取。调用方先按组织入口绑定本次责任，再按需选择专业能力。旧已保存Role的更新必须单独取得授权、Save及字段回读，不随源码自动发生。V2.2历史字节不改。
+
+1.1.1按组织协议澄清逐项结论为通过／不通过／未验，条件和非阻断取舍另记；质量报告沿实际report_to/report_route，不从G8名称推断接收者。仅修正文义，角色ID、schema和V2.2历史字节不变。
 
 ## 维护
 
