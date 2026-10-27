@@ -22,7 +22,7 @@ class CloudNodeTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name)
+        self.root = Path(self.temp.name).resolve()
         self.prefix = self.root / "node"
         self.archive = self.make_archive()
         self.digest = hashlib.sha256(self.archive).hexdigest()
