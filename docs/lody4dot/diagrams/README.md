@@ -1,13 +1,13 @@
 # 指引图表维护
 
-环境三图服务于[环境、Dot、会话引用与权限指引](../environment-model.md)；组织协作四图服务于[组织协作skill与云端Dot方案](../project-coordination.md)。环境图不声明物理部署或一对一绑定。组织职责与任务流图按2026-10-27实施规范v0.3维护，沿用的上下文与并行图仍表达其原有流程；图均不表示已实现自动加载、路由、派发或正式看板迁移。连线不扩大授权。
+环境三图服务于[环境、Dot、会话引用与权限指引](../environment-model.md)；组织协作四图服务于[组织协作skill与云端Dot方案](../project-coordination.md)。环境图不声明物理部署或一对一绑定。组织职责图按2026-10-27实施规范v0.3.1维护，任务流图沿用v0.3，沿用的上下文与并行图仍表达其原有流程；图均不表示已实现自动加载、路由、派发或正式看板迁移。连线不扩大授权。
 
 | 图源 | 生成图 | 主要问题 |
 | --- | --- | --- |
 | [environment-context.mmd](environment-context.mmd) | [SVG](environment-context.svg) | Dot、其执行去向和Lody接入怎样分层 |
 | [environment-lifecycle.mmd](environment-lifecycle.mmd) | [SVG](environment-lifecycle.svg) | 配置应用与技能读取怎样分别取证 |
 | [environment-permissions.mmd](environment-permissions.mmd) | [SVG](environment-permissions.svg) | 共享插件连接后还须核对哪些执行与访问条件 |
-| [project-governance.mmd](project-governance.mmd) | [SVG](project-governance.svg) | 云端Dot、负责人、执行与QA怎样分工；记录职责如何委派而不转移验收权 |
+| [project-governance.mmd](project-governance.mmd) | [SVG](project-governance.svg) | 云端Dot、负责人、执行与QA怎样分工；Dot如何经记录者查询／登记而不取得直接凭证或转移验收权 |
 | [project-task-flow.mmd](project-task-flow.mmd) | [SVG](project-task-flow.svg) | 全部需求如何纳管；未验阻塞、修订与最终验收如何分流，小任务怎样保持轻量 |
 | [project-parallel-gates.mmd](project-parallel-gates.mmd) | [SVG](project-parallel-gates.svg) | 依赖、版本和资源满足后怎样开启并行并统一集成 |
 | [organization-context.mmd](organization-context.mmd) | [SVG](organization-context.svg) | 组织skill、当前关系、任务上下文和专业角色库怎样分开 |
@@ -72,3 +72,5 @@ LODY4DOT_DIAGRAM_BROWSER="/Applications/Google Chrome.app/Contents/MacOS/Google 
 - 记录者是已有executor可承担的任务职责，不画成第五个组织岗位或全局锁；职责、机器和凭证分别识别。代录按条目及字段授权，事实按预授权更新，业务决定和最终验收保留负责人来源。
 - 任务流将已证实不符合送修订、未验或缺条件送阻塞解除。缺文件／听辨工具不能沿图直接变成产物缺陷；负责人身份未确认时最终验收保持待确认。只有核验收与交付条件后才记录完成。
 - 本图无需外部服务、真实业务数据或凭证。公开文件不含实际任务、会话、运行实例标识或私密资料。
+
+- 当前组织的Dot不直接访问GitHub：请求与标源回执经授权记录者；看板到派发核对节点的证据也经记录者回读，不画成Dot已有GitHub连接。

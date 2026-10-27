@@ -1,8 +1,8 @@
-%% 2026-10-27 实施规范v0.3；职责与回执路线，非部署拓扑。
+%% 2026-10-27 实施规范v0.3.1；职责与回执路线，非部署拓扑。
 %% 依据公子本轮明确要求；说明与边界见../project-coordination.md。
 flowchart TB
     accTitle: 云端 Dot、项目负责人、执行审查与授权记录
-    accDescr: 公子与云端Dot沟通，Dot与各项目唯一负责人沟通，在当前正式任务登记并回读后代建Cloud任务，原生引用回填同一任务；项目业务由负责人决策验收，Dot自身协调任务由Dot验收。执行者交事实证据，审查者交复核报告。授权记录是executor可承担的任务职责，负责人可亲自记录或明确委派，按条目和字段先审查创建、更新、关闭与当前记录的一致性，按授权写入正式记录并回读，普通事实按预授权更新。虚线表示查阅引用。图不表示机器任命、共享凭证或已生效的看板。
+    accDescr: 公子与云端Dot沟通，Dot与各项目唯一负责人沟通，在当前正式任务登记并回读后代建Cloud任务，原生引用回填同一任务；项目业务由负责人决策验收，Dot自身协调任务由Dot验收。执行者交事实证据，审查者交复核报告。授权记录是executor可承担的任务职责，负责人可亲自记录或明确委派，按条目和字段先审查创建、更新、关闭与当前记录的一致性，按授权写入正式记录并回读，普通事实按预授权更新。Dot没有GitHub Projects直接授权，查询和登记经授权记录者回传，不要求共享凭证。图不表示机器任命、共享凭证或已生效的看板。
     user["公子"] <--> dot["云端 Dot · 总负责人\n用户沟通 / 跨项目协调\n承担 G8 职责"]
     dot <-->|需求 / 任务包 / 回执| owner["各项目唯一负责人\n审阅 / 规划 / 分配\n业务决策 / 最终验收"]
     dot --> gate["派发前核正式任务关联\n依赖、授权与已有执行"]
@@ -10,12 +10,11 @@ flowchart TB
     cloud -->|原生引用 / 结果回传| dot
     owner <-->|派工与成果| execute["按需执行者\n明确范围 / 自检 / 交证据"]
     owner <-->|送审与报告| qa["独立 QA / 专业审定\n按需介入 / 核明确版本"]
-    owner -->|明确决定 / 可委派记录范围| recorder["授权记录职责 · executor\n可由已有参与者兼任\n创建 / 更新 / 关闭先核冲突\n按授权登记并回读"]
+    owner <-->|业务决定 / 查询登记及回执| recorder["授权记录职责 · executor\n可由已有参与者兼任\n创建 / 更新 / 关闭先核冲突\n按授权查询 / 登记 / 回读"]
     execute -->|预授权事实进度 / 证据| recorder
-    recorder -->|获授权写入 / 核回读| records["唯一正式记录\nIssue任务 / Project阶段\n负责人验收回执"]
-    records -.->|查阅项目事实| owner
-    records -->|已登记引用 / 已回读| gate
-    records -.->|引用结论与阻塞| dot
+    dot <-->|查询或登记请求 / 标源回执| recorder
+    recorder <-->|查询 / 授权写入 / 回读| records["唯一正式记录\nIssue任务 / Project阶段\n负责人验收回执"]
+    recorder -->|已登记引用 / 已回读| gate
     classDef lead fill:#e7f0fb,stroke:#315f93,color:#17304b;
     classDef work fill:#eff7f1,stroke:#4d7656,color:#203e27;
     classDef review fill:#fff5e6,stroke:#987334,color:#4e3c1d;
