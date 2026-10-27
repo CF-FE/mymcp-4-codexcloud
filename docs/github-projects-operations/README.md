@@ -1,10 +1,12 @@
 # GitHub Projects 操作 skill
 
-通用技能1.0.0的源码在[skill/github-projects-operations](../../skill/github-projects-operations/SKILL.md)。适用于已提供官方GitHub Projects MCP的ChatGPT、Lody或其他兼容宿主，查询与写入使用实际工具；不要求运行Lody CLI，不包含MCP服务器、凭证或新的组织岗位。
+通用技能1.0.1的源码在[skill/github-projects-operations](../../skill/github-projects-operations/SKILL.md)。适用于已提供官方GitHub Projects MCP的ChatGPT、Lody或其他兼容宿主，查询与写入使用实际工具；不要求运行Lody CLI，不包含MCP服务器、凭证或新的组织岗位。
 
 - [完整方案](plan.md)：全员按范围读取、按对象收敛写入、skill分层、效率策略与接入步骤。
 - [双端合并验证](validation.md)：ChatGPT Work与Lody的20方法覆盖、异常、遗留资源及本地技能验收。
 - [组织适配](../organization-collaboration/github-projects.md)：本组织CF-FE默认及实际接入事实；这些值不进入通用skill。
+
+固定提交`5a2186f`的1.0.0已取得[云端接入验收](validation.md#2026-10-27固定提交接入验收)：执行器与Dot实际读取通过，Dot直接完成指定Project与字段定义读取。原生skill自动发现仍未验。1.0.1只澄清字段定义／条目值的区别，以及复用已读取版本和连接证据；旧回执继续覆盖1.0.0，不推广为1.0.1已在所有端加载。
 
 ## 内容与使用
 
@@ -19,8 +21,8 @@
 在仓库根可用Python标准库生成一个新ZIP；先确认目标路径不存在，且源码目录不含缓存或临时文件：
 
 ```bash
-python3 -m zipfile -c /private/tmp/github-projects-operations-1.0.0.zip skill/github-projects-operations
-python3 -m zipfile -t /private/tmp/github-projects-operations-1.0.0.zip
+python3 -m zipfile -c /private/tmp/github-projects-operations-1.0.1.zip skill/github-projects-operations
+python3 -m zipfile -t /private/tmp/github-projects-operations-1.0.1.zip
 ```
 
 本轮正式交付文件及逐文件SHA收据的位置见验证记录，生成物不入Git。现有lody4dot组合候选0.6.1和组织协议1.2.1保持各自版本；本技能独立分发，不隐式改变旧组合包、远端Role或在途加载版本。

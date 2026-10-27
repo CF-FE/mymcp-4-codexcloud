@@ -45,6 +45,8 @@ LODY4DOT_DIAGRAM_BROWSER="/Applications/Google Chrome.app/Contents/MacOS/Google 
   project-governance project-task-flow project-parallel-gates organization-context
 ```
 
+同一脚本另支持`access-and-recording operation-flow`，输出到[Projects图源目录](../../github-projects-operations/diagrams/README.md)，用于仓库首页的直读／单写与操作对账图。图名采用显式白名单，其他名称不产生输出。
+
 `LODY4DOT_DIAGRAM_BROWSER`可选择已有浏览器可执行文件，默认仍为`/usr/bin/chromium`；macOS保持浏览器默认sandbox，原Linux临时容器参数保留。脚本从临时工具目录读取依赖，只向`127.0.0.1`提供Mermaid静态资源，并拒绝页面对其他origin的请求。它使用新建临时profile、保留继承的代理与CA、移除上述业务凭证环境，结束后清理浏览器profile；不读取用户浏览器登录态。
 
 本容器未提供可用的Chromium SUID/namespace sandbox，因此此导出进程采用下列临时启动配置，**仅处理本仓库可信的本地图源**。该配置不改变托管执行器、网络策略或持久浏览器管理设置，也不适用于浏览不可信网页：
@@ -73,4 +75,4 @@ LODY4DOT_DIAGRAM_BROWSER="/Applications/Google Chrome.app/Contents/MacOS/Google 
 - 任务流将已证实不符合送修订、未验或缺条件送阻塞解除。缺文件／听辨工具不能沿图直接变成产物缺陷；负责人身份未确认时最终验收保持待确认。只有核验收与交付条件后才记录完成。
 - 本图无需外部服务、真实业务数据或凭证。公开文件不含实际任务、会话、运行实例标识或私密资料。
 
-- 当前组织的Dot不直接访问GitHub：请求与标源回执经授权记录者；看板到派发核对节点的证据也经记录者回读，不画成Dot已有GitHub连接。
+- v0.3.1职责图保留当时的委托访问路线；后续Dot已取得直接读取回执，最新直读／单写路线见Projects图。旧图不能作为当前没有GitHub连接的证据，也不能由读取成功推导业务写入授权。

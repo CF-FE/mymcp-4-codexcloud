@@ -1,6 +1,6 @@
 # Projects协作边界与通用操作方案
 
-2026-10-27，方案v1。公子已明确：ChatGPT云端和Lody均已接入GitHub Projects MCP；组织参与者在既定授权范围内可直接list/read，write需要收敛。两端实测支持具体操作路径，不代表所有会话均有相同账号权限。本文给出完整协作方案，操作技能1.0.0在本仓库独立实现；正式看板切换、写者任命及远端安装另按实际回执落地。
+2026-10-27，方案v1。公子已明确：ChatGPT云端和Lody均已接入GitHub Projects MCP；组织参与者在既定授权范围内可直接list/read，write需要收敛。两端实测支持具体操作路径，不代表所有会话均有相同账号权限。操作技能1.0.0已取得固定提交的文件接入、实际读取及Dot指定对象只读回执，1.0.1为本地内容澄清候选；正式看板切换、写者任命及各端原生自动发现仍分别取证。
 
 ## 取舍与分层
 
@@ -15,7 +15,7 @@
 
 第一版不复制MCP SDK、认证或传输代码。可选日期脚本仅处理已发现的具体迭代输入问题；不建立新的业务数据库、常驻记录服务或自动派发器。
 
-职责和调用路线见[可编辑Mermaid图源](diagrams/access-and-recording.mmd)，维护边界见[图源说明](diagrams/README.md)。
+职责和调用路线见[协作图](diagrams/access-and-recording.svg)，查询／写入与未知结果处理见[操作流程图](diagrams/operation-flow.svg)；对应Mermaid唯一图源及再生成方式见[维护说明](diagrams/README.md)。
 
 ## 操作边界
 

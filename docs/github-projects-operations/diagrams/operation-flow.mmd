@@ -1,0 +1,26 @@
+%% 2026-10-27 操作skill 1.0.1。流程约定，不代表服务端事务或自动派发。
+flowchart TB
+    request["复用目标与有效上下文"] --> intent{"本次操作"}
+    intent -->|list / read| read["按准确引用或范围读取
+条目进度显式选择字段"]
+    read --> answer["回答所需内容
+注明覆盖与未取得项"]
+    intent -->|write| check["核写入范围、依据与当前写者
+定向读取当前值和相关版本"]
+    check --> ready{"前提满足且无冲突？"}
+    ready -->|否| blocked["保留缺项 / 补必要依据
+其他无依赖工作继续"]
+    ready -->|是| act["执行最小变更"]
+    act --> observe["核逐项结果并独立回读"]
+    observe --> state{"回读达到预期？"}
+    state -->|是| report["记录完成范围与回读证据"]
+    state -->|不符 / 失败 / UNKNOWN| reconcile["保留成功部分
+沿原引用对账，核副作用
+不自动重放或重建"]
+    reconcile --> pending["报告未完成项与下一责任人"]
+    classDef readPath fill:#e7f0fb,stroke:#315f93,color:#17304b;
+    classDef writePath fill:#eff7f1,stroke:#4d7656,color:#203e27;
+    classDef caution fill:#fff5e6,stroke:#987334,color:#4e3c1d;
+    class request,intent,read,answer readPath;
+    class check,act,observe,report writePath;
+    class ready,state,blocked,reconcile,pending caution;

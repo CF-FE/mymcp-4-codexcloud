@@ -1,5 +1,5 @@
 %% 2026-10-27 方案v1。职责与调用路线，不表示所有端已安装或权限已隔离。
-flowchart LR
+flowchart TB
     everyone["所有参与者"] -->|既定范围 list / read| read["Projects 查询工具"]
     read --> board["正式 Project 与任务记录"]
     executor["执行者"] -->|预授权事实 / 版本证据| writer["当前记录写者\n负责人可兼任或委派\n按对象核范围与冲突"]
@@ -9,3 +9,9 @@ flowchart LR
     keeper["获授权的看板维护者"] -->|共享结构变更| write
     write --> board
     board -->|独立回读 / 未完成项| writer
+    classDef readPath fill:#e7f0fb,stroke:#315f93,color:#17304b;
+    classDef writePath fill:#eff7f1,stroke:#4d7656,color:#203e27;
+    classDef decision fill:#fff5e6,stroke:#987334,color:#4e3c1d;
+    class everyone,read,board readPath;
+    class executor,writer,write writePath;
+    class reviewer,owner,keeper decision;

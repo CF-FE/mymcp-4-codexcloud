@@ -1,77 +1,67 @@
 # mymcp-4-codexcloud
 
-面向 Codex 云端的 MCP、skills 和插件集合。
+面向 **Codex Cloud 与云端 Dot** 的 MCP、skills 和插件集合，提供组织协作、Projects 任务记录、Lody 跨端操作及云环境准备能力。
 
-## 三个部分
+本项目由 Dot 与公子沟通、协调项目负责人，并创建独立 Codex 云任务；执行端通过 Lody 协作和回传结果。这是本项目的职责约定，平台其他创建入口见[创建方式对照](docs/lody4dot/product-collaboration-reference.md#codex-cloud-与-work-cloud-的创建方式对照)。
 
-| 目录 | 职责 | 每个条目的入口 |
-| --- | --- | --- |
-| [mcp/](mcp/README.md) | MCP 服务的源码、依赖及运行说明 | `mcp/<id>/README.md` |
-| [skill/](skill/README.md) | 技能指令及其 references、scripts、资源 | `skill/<id>/SKILL.md` |
-| [plugin/](plugin/README.md) | 将一个或多个能力组合成可安装插件的分发定义 | `plugin/<id>/README.md` |
+## 从这里开始
 
-MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以同时包含多个 MCP 和 skills；能力源码只维护一份。三目录使用单数名称，保持统一。
-
-仓库组织方式不等于 Codex 的自动发现或安装配置。把文件放入上述目录，并不能证明 Codex 已加载它们。设计依据、取舍和迁移方法见 [架构说明](docs/architecture.md)。
-
-项目专属文档统一按`docs/<id>/`归档。lody4dot的完整阅读入口见[文档索引](docs/lody4dot/README.md)；新增资料遵循[文档归档规范](docs/architecture.md#文档归档规范)。
-
-云任务、运行实例、本地环境、Dot、会话引用和协作空间权限的区别，见[环境与权限指引](docs/lody4dot/environment-model.md)：先读一分钟速查和执行链路，再按问题查表。跨环境协作的对象关系、记录模板与评审清单见[架构设计参考](docs/lody4dot/environment-design.md)。
-
-多处加载安装、经Lody协作及环境初始化/恢复，见[多宿主协作开发方案c3](docs/lody4dot/collaboration-development.md)与[C01–C10任务卡](docs/lody4dot/collaboration-tasks.md)。c3结合产品对话与实测：保留Lody主干，复用公子已试通的Dot资料中转，明确schema1与资料回存的边界；现已落入候选包的资料交接知识。官方已确认Dot是ChatGPT中的常驻Agent产品，拥有自己的云电脑，也可创建独立的Codex云任务或使用获授权的本地电脑；三种执行位置分别建模。插件连接可在已授予范围内跨产品共享，本地访问、CLI身份和模型凭证另行核对。来源见[宿主契约](docs/lody4dot/host-contracts.md)，实现与真实验收见[任务队列](.codex/agent-state/todo.md)。
-
-本次完整讨论沉淀为两种阅读入口：[产品协作参考（分享版）](docs/lody4dot/product-collaboration-reference.md)讲解概念、云环境、资料空间、MCP与图标；[云端任务交接版](docs/lody4dot/space-cloud-handoff.md)对照仓库实现，给出方案取舍、最小优化与验收边界。主方案仍为上面的c3，运行状态仍只在任务队列维护。
+| 要做什么 | 入口 |
+| --- | --- |
+| 明确岗位、汇报、任务分配与验收 | [组织协作 skill](skill/organization-collaboration/SKILL.md) · [接入说明](docs/organization-collaboration/README.md) |
+| 查询或维护 GitHub Projects | [操作 skill](skill/github-projects-operations/SKILL.md) · [完整方案](docs/github-projects-operations/plan.md) · [CF-FE 接入记录](docs/organization-collaboration/github-projects.md) |
+| 通过 Lody 发现资源、操作会话和跨端交接 | [Lody skill](skill/lody4dot/SKILL.md) · [文档索引](docs/lody4dot/README.md) |
+| 使用工作区共享级／项目级专业角色 | [角色库](docs/lody4dot/workspace-roles/README.md) · [设计与边界](docs/lody4dot/workspace-roles/library-design.md) |
+| 准备云环境、构建或分发插件 | [lody4dot 分发](plugin/lody4dot/README.md) · [新任务验收](docs/lody4dot/fresh-task-acceptance.md) |
+| 查看已导入的 Gitee MCP | [源码与运行说明](mcp/gitee/README.md) |
 
 ## 当前状态
 
-新增独立[GitHub Projects操作skill](skill/github-projects-operations/SKILL.md) 1.0.0：按范围直接读取、按有效职责执行写入，提供字段／分页、批量对账和显式迭代规划。两端报告的成功路径、默认迭代异常和未验项合并于[交付说明](docs/github-projects-operations/README.md)，[完整方案](docs/github-projects-operations/plan.md)将组织权责、操作方法和实际接入分开。技能源码与文件包不等于目标端已安装；现有lody4dot组合候选版本不随之变化。
+- **GitHub Projects 操作 skill：**当前源码候选为 **1.0.1**。此前 **1.0.0** 已取得执行器文件接入、实际读取、Linux 240 项测试及 Dot 指定对象只读调用回执；该证据不自动覆盖新版、原生自动发现或全员写权限。见[合并验证记录](docs/github-projects-operations/validation.md)。
+- **组织与 Lody：**组织协议 **1.2.1**、lody4dot 组合候选 **0.6.1** 和两层专业角色库分别维护版本与接入状态。Projects 操作 skill 独立分发，未自动加入该组合包。
+- **Gitee MCP：**已完成源码与资料导入；服务依赖安装、认证连接和实际运行未在本仓库验证。
+- **正式任务管理：**全员在授权范围直接 list/read，写入按职责和对象收敛；正式主看板、当前写者及队列切换仍需明确。当前进度和下一步以[唯一任务队列](.codex/agent-state/todo.md#当前环境与下一步)为准。
 
-当前源码候选0.6.1提供独立[组织协作skill](skill/organization-collaboration/SKILL.md)、[离线知识入口](skill/lody4dot/references/knowledge.md)与[两层专业角色库](docs/lody4dot/workspace-roles/library-design.md)，沿用既有CLI协作和受管运行工具。组织协议1.2.1提供通用产物就地复核、负责人验收及授权记录者职责；实际关系、专业角色和任务上下文分别维护。独立分发与分端加载见[接入说明](docs/organization-collaboration/README.md)，候选源码不等于已发布到云端。
+## 协作与操作流程
 
-2026-10-26双端审计后的本地源码修正、技能走查与交付边界见[验证记录](docs/lody4dot/validation.md#2026-10-26双端审计修正与技能走查)；当前进度仍由[唯一队列](.codex/agent-state/todo.md#当前环境与下一步)维护。角色定义按工作区共享级与项目级组织，入口见[角色资料](docs/lody4dot/workspace-roles/README.md)。
+项目负责人作业务决定和最终验收，当前记录写者登记并回读，参与者可直接查询已授权范围。图表示职责与调用路线，不表示已部署自动路由或已完成权限隔离。
 
-已导入 [Gitee MCP 网关](mcp/gitee/README.md)：保留原源码、部署文档、验收资料和历史交付包，并记录来源与文件校验清单。文件导入与静态检查已验证；原服务的依赖安装、OAuth/Gitee 连接和实际运行尚未验证。另有 [lody4dot 技能](skill/lody4dot/SKILL.md) 和 [分发工具](plugin/lody4dot/README.md)。
+![全员读取与按对象收敛写入](docs/github-projects-operations/diagrams/access-and-recording.svg)
 
-仓库结构检查无需安装第三方依赖，也没有公共服务需要启动。运行单个 MCP 时需按其 README 准备依赖和配置。后续导入按照 [导入步骤](docs/architecture.md#导入已有插件) 迁移，并在此补充条目入口。
+[协作图源](docs/github-projects-operations/diagrams/access-and-recording.mmd) · [完整操作与协作方案](docs/github-projects-operations/plan.md)
 
-lody4dot 已实现20类70个公开命令导航、受管安装、只读诊断、显式认证和自包含打包。当前帮助快照已按实际CLI更新至`0.108.1`；准备阶段按用户授权解析官方npm latest，源码lock记录精确结果。此前`0.107.2`的Linux真实授权、完整目录与远端Codex Agent创建/继续/持久化结果仍归历史验收，本轮未将其当作新版业务已测。控制端与执行端分别核对，原截图来源及本机Codex只读状态限制继续保留。见[产品方案](docs/lody4dot/plan.md)、[开发契约](docs/lody4dot/development.md)、[验证记录](docs/lody4dot/validation.md)和[任务队列](.codex/agent-state/todo.md)。
+<details>
+<summary>展开 Projects 最短操作流程与 UNKNOWN 对账</summary>
 
-2026-10-25已从用户合并后的远程main重新初始化，并用Lody `0.108.1`官方CLI完成临时既有身份验证、workspace及本地项目catalog、Agent配置list/get只读验收；临时身份/缓存已清理，未启动Agent。此结论限定当次版本和日期，后续以实际CLI帮助与响应复核。结果及边界见[当前状态](.codex/agent-state/todo.md#当前环境与下一步)和[逐项审查](docs/lody4dot/cli-command-audit.md)。
+![Projects 操作与对账流程](docs/github-projects-operations/diagrams/operation-flow.svg)
 
-正式ref、工作副本、运行观测、readiness及下一步统一维护在[当前环境与下一步](.codex/agent-state/todo.md#当前环境与下一步)，本页不复制发布快照。保存配置、正式发布、实例应用和目标API授权分别取证；发布不会自动把固定commit切到GitHub最新代码。
+[操作图源](docs/github-projects-operations/diagrams/operation-flow.mmd) · [图表维护说明](docs/github-projects-operations/diagrams/README.md)
 
-本项目独立Codex云任务由Dot创建，用户已确认Dot具备权限；云任务加载lody4dot后，通过Lody与其他节点协作并回传结果。云任务不派生Codex云任务，OpenAI任务目录API及其历史401不属于插件前置或项目阻塞；具体交接见[新任务验收](docs/lody4dot/fresh-task-acceptance.md)。
+</details>
 
-上述是本项目的职责选择，不代表平台只允许Dot创建。Codex Cloud官方另有手动和CLI提交入口；与Work Cloud的手动、首方客户端代建及计划/事件入口分别对照，见[创建方式与证据边界](docs/lody4dot/product-collaboration-reference.md#codex-cloud-与-work-cloud-的创建方式对照)。本轮不接入新的创建路线，企业聊天工具委派延后。
+## 目录与开发
 
-历史源码候选0.2.7在[源码builder](plugin/lody4dot/README.md#自包含插件包)提供显式离线ZIP生成、验包及摘要，已有产物保留；0.2.6的[配置与角色知识](skill/lody4dot/references/configuration.md)、0.2.5[任务入口知识](skill/lody4dot/references/collaboration.md#work-cloud与任务创建)、0.2.4的Work分类、0.2.3[资料交接规则](skill/lody4dot/references/material-handoff.md)和0.2.2[薄setup入口](skill/lody4dot-setup/SKILL.md)沿用。分别核对平台支持、当前访问、项目职责、实际运行及处理/保存/回读；知识与分发候选不代表原生接入、角色保存或项目执行已验收，也不是存储重置hook。0.2.1起的CLI版本策略继续保留：版本不同、探测或显式latest查询失败只warn，检查默认离线，不因告警自动升级；安装准备按下述latest政策执行。受管runtime仅支持Linux，真实命令、身份、权限和完整性错误分别处理。各候选的验证范围见[验证记录](docs/lody4dot/validation.md)、[支持矩阵](docs/lody4dot/support-matrix.md)及[Dot接入运行单](docs/lody4dot/dot-acceptance.md)。
+| 目录 | 职责 |
+| --- | --- |
+| [mcp/](mcp/README.md) | MCP 服务源码、依赖和运行说明 |
+| [skill/](skill/README.md) | 技能唯一源码及完整随附资源 |
+| [plugin/](plugin/README.md) | 组合、构建与分发定义 |
 
-2026-10-25按新授权更新当前任务Node/CLI和仓库安装策略：云准备脚本先用[受管Node准备工具](scripts/prepare_cloud_node.py)校验官方归档并安装或复用Linux x64 Node`24.22.1`；`install`/`bootstrap --prepare`再在暂存目录定向更新lody锁以解析latest，遵守engine-strict、禁用生命周期脚本及保留的依赖约束，验证后才切换入口。inspect和已有runtime的启动检查仍离线，版本warn不触发升级；缺失修复才进入CLI安装。Node是已验证兼容基线，未来latest的engines若提高需更新Node基线，不能忽略引擎要求或降级CLI。本轮实际npm`11.19.1`、Lody`0.108.1`；平台内建Node未改，保存环境模板与固定ref状态见任务队列。先按实际CLI帮助及[资源发现](skill/lody4dot/references/discovery.md)选择获准工作区、项目与Agent；本轮验证与线上范围见[验证记录](docs/lody4dot/validation.md#2026-10-25当前任务升级与latest准备策略)。
+MCP 与 skill 提供能力，plugin 负责组合分发；生成物中的副本不单独维护。新增能力先读 [AGENTS.md](AGENTS.md)、目标目录说明及[架构与文档归档约定](docs/architecture.md)。
 
-spec12恢复演练已验证不同内核上下文下依赖、身份及原会话/产物对账，该阶段0新模型回合；后续实验各自计数，见[验证记录](docs/lody4dot/validation.md)。它不证明具体VM身份、磁盘重建机制、Dot hook或独立新任务首次加载。Review上游Viewer、旧截图来源及Dot实际接入仍按各自缺口跟进。
-
-此前通过Lody原生附件将0.2.0包交给Darwin/arm64已有Agent，解包后的receipt/技能摘要匹配，273字节产物二次读回及随机challenge验证通过；未独立核验远端原始ZIP字节。随后远端通过实际暴露的内置MCP查询同一会话，原引用、产物字节与challenge再次匹配，补齐有限双端控制/复验范围。缺少PATH中的Node/npm/CLI不等于缺少宿主内置工具；macOS受管安装、真实云主机重建及Dot接入仍未验证。
-
-## 开发与验证
-
-1. 先阅读目标目录的 README，新增 `mcp/<id>/`、`skill/<id>/` 或 `plugin/<id>/`。
-2. 每个 MCP 自行声明并锁定依赖，记录运行、停止和功能验证命令。每个 skill 保留完整随附资源。
-3. 插件说明必须列出所组合能力的路径，以及目标平台、安装方法、所需配置和验证方法。
-4. 在仓库根目录执行下方检查，以及受影响条目的真实验证命令，再检查 `git diff --check` 和 `git status --short`。
-
-仓库检查只需 Python 3.10+，不需要安装第三方包：
+在仓库根执行，检查仅依赖 Python 3.10+ 标准库：
 
 ```bash
 python3 scripts/check_repository.py
 python3 -m unittest discover -s tests -v
 ```
 
-[结构检查](scripts/check_repository.py) 验证必需文档、条目命名和入口，拒绝分类目录、条目和入口上的符号链接，并显示各类条目数量；[测试](tests/test_check_repository.py) 验证这些检查能拒绝无效目录。结构检查脚本也可从任意工作目录通过完整路径调用。
+本仓库没有需要统一启动的公共服务；各 MCP 按自己的说明运行。lody4dot 受管 runtime 仅支持 Linux，其他宿主的工具、安装和加载能力按[支持矩阵](docs/lody4dot/support-matrix.md)分别核验。
 
-Linux运行时语义的离线夹具显式选择模拟平台，自有临时基础路径先规范化；平台拒绝、符号链接与用户状态保护另有用例。条件模拟通过不代表macOS/WSL受管安装已支持，实际证据仍见[验证记录](docs/lody4dot/validation.md)和[支持矩阵](docs/lody4dot/support-matrix.md)。
+结构检查、文件可读、实际技能读取、MCP 调用和业务验收是不同证据层级。凭证使用目标环境的安全配置，不提交凭证、依赖缓存或构建包。
 
-数量为零时允许骨架检查通过；这不代表存在可运行插件。各条目仍需声明并执行自己的功能测试，结构检查不能替代插件打包、服务请求或技能加载验证。
+## 深入阅读
 
-## 配置与凭证
-
-运行所需的变量名称、用途和网络目的地写入条目说明；凭证通过云环境设置安全注入。仓库只保存不含真实值的配置示例。构建产物和安装缓存不作为能力源码提交。
+- [环境、会话与权限边界](docs/lody4dot/environment-model.md) · [多宿主方案](docs/lody4dot/collaboration-development.md) · [任务卡](docs/lody4dot/collaboration-tasks.md)
+- [产品协作参考](docs/lody4dot/product-collaboration-reference.md) · [云端任务交接](docs/lody4dot/space-cloud-handoff.md)
+- [Lody 历史验证与已知缺口](docs/lody4dot/validation.md) · [Projects 双端报告与技能验收](docs/github-projects-operations/validation.md)

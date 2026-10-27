@@ -15,6 +15,11 @@ const mermaidDist = path.dirname(requireTool.resolve("mermaid"));
 const config = JSON.parse(await fs.readFile(path.join(directory, "mermaid-config.json"), "utf8"));
 const environmentNames = ["environment-context", "environment-permissions", "environment-lifecycle"];
 const known = [...environmentNames, "project-governance", "project-task-flow", "project-parallel-gates", "organization-context"];
+const locations = Object.fromEntries(known.map(name => [name, directory]));
+for (const name of ["access-and-recording", "operation-flow"]) {
+  known.push(name);
+  locations[name] = path.resolve(directory, "../../github-projects-operations/diagrams");
+}
 const names = process.argv.length > 3 ? process.argv.slice(3) : environmentNames;
 if (names.some(name => !known.includes(name))) throw new Error("Unknown documentation diagram.");
 
@@ -71,7 +76,7 @@ try {
   await page.goto(origin, { waitUntil: "networkidle0" });
   await page.waitForFunction("window.mermaid !== undefined");
   for (const name of names) {
-    const source = await fs.readFile(path.join(directory, `${name}.mmd`), "utf8");
+    const source = await fs.readFile(path.join(locations[name], `${name}.mmd`), "utf8");
     const rendered = await page.evaluate(async ({ name, source, config }) => {
       window.mermaid.initialize(config);
       await window.mermaid.parse(source);
@@ -84,7 +89,7 @@ try {
       element.style.backgroundColor = "#fff";
       return element.outerHTML;
     }, { name, source, config });
-    await fs.writeFile(path.join(directory, `${name}.svg`), rendered + "\n");
+    await fs.writeFile(path.join(locations[name], `${name}.svg`), rendered + "\n");
     console.log(`Rendered ${name}.svg`);
   }
 } finally {
