@@ -1,6 +1,14 @@
 # CF-FE 任务记录与授权记录者
 
-本页是本组织的 GitHub 适配与接入记录，承接[组织协作方案](../lody4dot/project-coordination.md)和[通用记录规则](../../skill/organization-collaboration/references/context-and-reporting.md#授权记录与正式状态)。公子已确定全局采用 CF-FE Projects；本机已通过官方 MCP 协议验证。正式主看板尚未选定，任务队列尚未迁移，不能把接入测试当作组织管理已经切换。
+本页是本组织的 GitHub 适配与接入记录，承接[组织协作方案](../lody4dot/project-coordination.md)和[通用记录规则](../../skill/organization-collaboration/references/context-and-reporting.md#授权记录与正式状态)。公子已确定全局采用 CF-FE Projects；本机及后续ChatGPT Work／Lody连接的证据分别记录。正式主看板尚未选定，任务队列尚未迁移，不能把接入测试当作组织管理已经切换。
+
+## 最新接入与职责方向
+
+2026-10-27公子确认ChatGPT云端和Lody均已安装Projects MCP，并明确“全员在既定范围直接list/read，write收敛”。后续取得两端报告；ChatGPT Work与Lody的20方法成功路径、默认迭代异常、授权阻断和残留资源统一见[合并证据](../github-projects-operations/validation.md)。本地当前会话也已通过新插件读取私有Project #2及11个字段；这不替代其他会话的实际调用证据。
+
+此前“Dot当前没有直接连接、查询须经记录者”的事实范围已发生变化，不再作为本组织默认查询路线。已有有效读取范围的参与者可直接查询；委托查询保留为可选协作方式。安装与端侧测试不自动任命所有人为写者，正式写入继续依据有效任务的决定与当前写者执行。
+
+[完整操作与协作方案](../github-projects-operations/plan.md)细化按对象单写、共享结构维护和可选的追加事实评论；[通用操作skill](../../skill/github-projects-operations/SKILL.md)独立提供方法。本轮没有调整账号权限、实际写者或正式队列，组织协议1.2.1也未被同版本改写。下文较早的接入记录保留当时范围；其“未验”不覆盖本节已取得的新证据。
 
 ## 固定默认与最小落地方案
 
@@ -15,7 +23,11 @@
 
 CF-FE 是组织层默认，不能写入通用技能作为所有用户的默认。项目仓库路由改变时明确后续任务落点及在办项处理，不自动复制旧 Issue。普通独立问答不因此生成工单；归属项目的有效需求仍按负责人流程审阅和处置。
 
-## 云端Dot经授权记录者访问
+<a id="云端dot经授权记录者访问"></a>
+
+## 较早的委托访问方案
+
+以下为1.2.1发布时的接入事实及可选委托路线；当前直接读取方向以上节为准。
 
 公子已明确：云端Dot当前没有GitHub Projects直接授权，查询和登记通过授权记录者完成。**Dot发请求 → 记录者用获准连接查询／核对／写入及回读 → 沿原通道回传 → Dot核对并作其职责内的判断。** 本机独立MCP读写已有历史证据；mac-work内承担记录职责的具体Lody会话、工具入口及请求回传闭环尚未验通，不能按机器名称继承本机终端的结果。
 
@@ -89,7 +101,9 @@ GitHub Assignees 填实际合适的 GitHub 账号；AI 名称、组织岗位和�
 
 本次聊天的原生工具目录尚未显示新工具，记录执行端的客户端原生发现待后续会话核实；协议级调用通过不能替代该项。云端Dot按上述分工不持有Projects直接授权；win-work等其他执行端不要求一律接入GitHub，只有承担直接记录工作的目标才核自身连接。正常接续先复用有效配置及准确引用，只有实际失败、范围或绑定变化时定位相应层，不重复申请已有效的授权。
 
-### Lody会话阻塞与候选入口
+<a id="lody会话阻塞与候选入口"></a>
+
+### 较早Lody会话阻塞与候选入口
 
 2026-10-27公子转回mac-work侧Lody会话的诊断：`gh --version`正常；`gh api graphql`连接本机代理时返回`operation not permitted`，独立TCP检查也返回`PermissionError / errno 1`。该请求未到达GitHub，不能据此判断凭证或Projects权限失效；此会话也未发现Projects专用MCP，CF-FE读取未验、无GitHub写入。本地终端曾成功与受限会话失败可以同时成立。本仓库仅核对转交回执，未自行重跑该会话。
 
@@ -103,8 +117,8 @@ GitHub Assignees 填实际合适的 GitHub 账号；AI 名称、组织岗位和�
 
 固定提交`62a121d`的云端源码／文件接入、实际读取、构建完整性及八场景已取得公子转回的验收报告，详见[接入回执核对](../lody4dot/validation.md#2026-10-27云端120回执与委托访问修正)。该结论仅覆盖1.2.0，不证明补丁版读取或持续自动发现。
 
-下一步先验证**委托查询闭环**：Dot经已确认通道提出一个具体只读请求（可针对既有验收Project #2），记录者读取并回传完整范围和同一请求关联，Dot核对引用、观察时间及结果。它不需要先选正式主看板，也不要求给Dot直接授权。缺实际通道或目标时明确未验，不用本机独立查询冒充跨端闭环。
+下一步按实际参与会话确认读取入口；已完成的两端报告按其范围复用。需要委托查询时，Dot经已确认通道提出具体请求，记录者回传来源、观察时间、覆盖及请求关联；这条可选路线不必等待正式主看板迁移，不能用本机独立查询冒充跨端闭环。
 
-**委托登记闭环**另以正式看板、记录者、通信绑定及有效业务决定齐备为前提；记录者核冲突、写入、回读后，Dot按同一Issue／item对账。绑定不齐时记未验及下一责任人，不新建或重开看板来凑验收。源码读取、协议理解、记录端访问、跨端回执、原生发现和业务验收分别报告；“Dot直接读写”标为不适用。
+**正式登记闭环**另以正式看板、当前写者、通信绑定及有效业务决定齐备为前提；写者核冲突、写入、回读后，相关责任方按同一Issue／item对账。绑定不齐时记未验及下一责任人，不新建或重开看板来凑验收。源码读取、协议理解、实际连接、跨端回执、原生发现和业务验收分别报告；Dot直接读取与写入按当前工具和任务授权分别判断。
 
 依据：[官方MCP工具集配置](https://github.com/github/github-mcp-server/blob/main/docs/server-configuration.md)、[远程接入](https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md)、[Projects API](https://docs.github.com/en/rest/projects)、[访问权限](https://docs.github.com/en/issues/planning-and-tracking-with-projects/managing-your-project/managing-access-to-your-projects)。配置方式以目标宿主实际版本为准；本页不分发本机配置或凭据。

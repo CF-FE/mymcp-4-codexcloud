@@ -24,6 +24,8 @@ MCP 和 skill 是能力，plugin 是组合与分发单元。一个插件可以�
 
 ## 当前状态
 
+新增独立[GitHub Projects操作skill](skill/github-projects-operations/SKILL.md) 1.0.0：按范围直接读取、按有效职责执行写入，提供字段／分页、批量对账和显式迭代规划。两端报告的成功路径、默认迭代异常和未验项合并于[交付说明](docs/github-projects-operations/README.md)，[完整方案](docs/github-projects-operations/plan.md)将组织权责、操作方法和实际接入分开。技能源码与文件包不等于目标端已安装；现有lody4dot组合候选版本不随之变化。
+
 当前源码候选0.6.1提供独立[组织协作skill](skill/organization-collaboration/SKILL.md)、[离线知识入口](skill/lody4dot/references/knowledge.md)与[两层专业角色库](docs/lody4dot/workspace-roles/library-design.md)，沿用既有CLI协作和受管运行工具。组织协议1.2.1提供通用产物就地复核、负责人验收及授权记录者职责；实际关系、专业角色和任务上下文分别维护。独立分发与分端加载见[接入说明](docs/organization-collaboration/README.md)，候选源码不等于已发布到云端。
 
 2026-10-26双端审计后的本地源码修正、技能走查与交付边界见[验证记录](docs/lody4dot/validation.md#2026-10-26双端审计修正与技能走查)；当前进度仍由[唯一队列](.codex/agent-state/todo.md#当前环境与下一步)维护。角色定义按工作区共享级与项目级组织，入口见[角色资料](docs/lody4dot/workspace-roles/README.md)。

@@ -1,0 +1,11 @@
+%% 2026-10-27 方案v1。职责与调用路线，不表示所有端已安装或权限已隔离。
+flowchart LR
+    everyone["所有参与者"] -->|既定范围 list / read| read["Projects 查询工具"]
+    read --> board["正式 Project 与任务记录"]
+    executor["执行者"] -->|预授权事实 / 版本证据| writer["当前记录写者\n负责人可兼任或委派\n按对象核范围与冲突"]
+    reviewer["审查者"] -->|质量报告| owner["对应业务负责人\n项目负责人：项目验收\nDot：授权内组织决定"]
+    owner -->|有效决定 / 验收依据| writer
+    writer -->|范围内变更| write["Projects 写工具"]
+    keeper["获授权的看板维护者"] -->|共享结构变更| write
+    write --> board
+    board -->|独立回读 / 未完成项| writer
