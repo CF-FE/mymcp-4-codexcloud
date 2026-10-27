@@ -27,6 +27,11 @@ class DiagnosticTests(unittest.TestCase):
         linux_platform = patch.object(sys, "platform", "linux")
         linux_platform.start()
         self.addCleanup(linux_platform.stop)
+        # Node probes below are simulated; locating Node must not depend on PATH.
+        # Missing-Node cases override this fixture with return_value=None.
+        node_lookup = patch.object(doctor.shutil, "which", return_value="/fixture/node")
+        node_lookup.start()
+        self.addCleanup(node_lookup.stop)
 
     def capture(self, module, args):
         output, errors = io.StringIO(), io.StringIO()
