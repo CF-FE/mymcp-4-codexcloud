@@ -37,6 +37,8 @@ lody session history SESSION_ID --limit 20 --jsonl
 
 history 读取用户可见 transcript，不是执行状态流；observe 附着观察持久化状态，不发送任务，也不改写已读状态。需要持续观察时，核对帮助后用 `--jsonl --follow`，不循环发送新任务或无意义高频查询。停止观察不会取消正在运行的任务。
 
+观察断连时按[主动恢复规则](troubleshooting.md#断连后的主动恢复)恢复原获准通道，再核同一session/turn及观察覆盖；不因此重发chat/create，也不把消息受理当作执行器恢复。
+
 发送前记录规范化请求摘要、操作版本/幂等标识与准确目标；stdout/stderr分开接收。失败时先保留退出码及必要的脱敏原始错误字段，再清理本任务临时身份；不能只留下`native_command`分类而丢失具体异常，也不保存完整凭据、签名URL、私密输入或任意debug对象。该分类只是兜底，不能据此判定权限、网络或未送达。
 
 0.108.1的`history --all --json`支持完整可见历史并返回`total/returned`；可按时间窗口查唯一标识与等价内容，再结合`show`的history/queue计数、`status`的latest/handled消息ID及对应turn核对。它们不提供完整服务端接收账本，可见历史为空、队列0或idle仍不能单独证明写入前失败。结果unknown时不重发；明确的新版本任务也须独立授权、核目标与基线，不以换版本或换requestId掩盖原未知操作。
