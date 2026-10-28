@@ -1,6 +1,6 @@
 # 组织协作 skill
 
-组织协议1.3.0的唯一源码为[skill/organization-collaboration](../../skill/organization-collaboration/SKILL.md)。它让各参与端按本次任务确定岗位、责任、汇报通道、派发和验收，包含粒度评估、依赖并行、进度表及岗位／角色更新流程。实现与[已接受的方案及流程图](../lody4dot/project-coordination.md)对应；实际状态统一记录于[任务队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
+组织协议1.4.0的唯一源码为[skill/organization-collaboration](../../skill/organization-collaboration/SKILL.md)。它让各参与端按本次任务确定岗位、责任、汇报通道、派发和验收，包含粒度评估、依赖并行、进度表及岗位／角色更新流程。实现与[已接受的方案及流程图](../lody4dot/project-coordination.md)对应；实际状态统一记录于[任务队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
 
 该skill全部为Markdown，不要求Python、Node、Lody身份、专业角色库或常驻服务。通用协议、当前关系、任务上下文分别维护；真实参与者和组织名单保留在已有私密正式记录中，不写进技能包。
 
@@ -29,14 +29,20 @@
 
 [图源与再生成](diagrams/README.md)。新增岗位和可引用的事件模板不强迫旧任务重填或重派；在途保持原版本，到明确节点采用新增能力，撤权和公子新指令立即适用。独立包保持平铺Markdown，构建白名单无需放宽。
 
+## 1.4.0：局部阻塞与并行交付
+
+[迭代设计](parallel-delivery.md)落实“一个排查问题不阻塞整个项目”。详细规则与可引用模板集中在[规划与进度](../../skill/organization-collaboration/references/planning-and-progress.md)：限定阻塞影响，同时安排独立就绪项；排障有预算和交接；执行、承诺、待验及资源按实际范围核算；取消业务与未知执行分别承接。新增方法兼容原任务记录，不强制填齐模板或增加审批。
+
+E/W/Q及资源限制由项目或共享资源范围确认，4/6/2仅为项目试行示例；不按角色或机器数预设全组织额度。总负责人1.3.0、项目负责人1.4.0、执行者1.4.0更新相关方法，审查者1.1.1、审计者1.0.0及专业库1.1.1保持。组织协议实际读取、参数采用及运行效果分别取证；源码交付不启动真实调度。
+
 ## 分发
 
 从仓库根目录构建独立skill，仅打包该技能及自己的收据：
 
 ```bash
 python3 plugin/lody4dot/scripts/build.py --organization-skill-only \
-  --output dist/organization-collaboration-1.3.0 \
-  --zip dist/organization-collaboration-1.3.0.zip --json
+  --output dist/organization-collaboration-1.4.0 \
+  --zip dist/organization-collaboration-1.4.0.zip --json
 ```
 
 输出根直接包含`SKILL.md`、`references/`和`.organization-collaboration-build.json`，没有插件清单、Lody工具或专业角色库。这是技能文件包，不把它冒充ChatGPT原生插件ZIP。构建工具使用Python标准库，使用skill本身不需要Python；输出目录和ZIP必须是新路径，旧目录和自定义修改不会被覆盖。独立收据的工具名为`organization-collaboration-build`，CRC与SHA只证明本地文件一致性，不能用Lody doctor代替技能加载验收。
@@ -44,11 +50,11 @@ python3 plugin/lody4dot/scripts/build.py --organization-skill-only \
 组合分发使用既有构建命令：
 
 ```bash
-python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.7.1 \
-  --zip dist/lody4dot-0.7.1.zip --json
+python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.8.0 \
+  --zip dist/lody4dot-0.8.0.zip --json
 ```
 
-组合包增加`skills/organization-collaboration/`并纳入原收据和provenance；组织协作入口与Lody操作入口分开。只需组织协议的执行端使用独立skill，不因组合包包含Lody而执行setup或安装CLI。0.7.1仅区分新增Lody重连指引的组合内容，组织协议仍为1.3.0；[新版构建与采用边界](../lody4dot/validation.md#2026-10-28重连知识与071组合包)不替代下方旧版固定接入回执。
+组合包增加`skills/organization-collaboration/`并纳入原收据和provenance；组织协作入口与Lody操作入口分开。只需组织协议的执行端使用独立skill，不因组合包包含Lody而执行setup或安装CLI。当前0.8.0组合组织协议1.4.0，采用与在途边界见[本轮迭代](parallel-delivery.md#采用与在途处理)。[0.7.1重连知识交付](../lody4dot/validation.md#2026-10-28重连知识与071组合包)和下方旧版固定接入回执保留各自版本范围。
 
 ## 安装与实际加载
 
@@ -73,6 +79,8 @@ python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.7.1 \
 4. **保持可观测与所需派发能力。** 分开回报本地规范读取、连接／执行器、CLI、所需派发入口及任务状态覆盖；复用有效证据并核实际缺口，不用真实业务任务或新消息探活。`UNKNOWN`先对账、不重派；已有明确授权且前提满足的工作继续。后续按当前待办及约定检查点定向跟进，无待办不无限轮询全部项目，也不因重载重跑已完成业务或重复验收。
 
 ## 本轮接入证据
+
+当前源码1.4.0／组合0.8.0的交付验证另见[本轮验证](validation.md#140局部阻塞与并行交付)。下方为已取得的历史端侧接入回执，不推广为新版已读取。
 
 最新固定`b37b3e9`的组织协议1.3.0已取得指定云端执行器与Dot文件接入、实际读取回执；Linux240项测试、包完整性和E01–E16离线走查通过。后续真实登记任务的负责人确认、限定切换及关闭也已回读；证据来源、适用范围与未验项统一见[当前验证记录](validation.md#云端固定版本接入回执)。已读取会话可在有效授权内继续使用，原生发现与持续审计未由本次证明。以下旧版记录保留当时范围，不将其中待验项继续套用于已经取得新证据的版本和对象。
 
