@@ -44,11 +44,11 @@ python3 plugin/lody4dot/scripts/build.py --organization-skill-only \
 组合分发使用既有构建命令：
 
 ```bash
-python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.7.0 \
-  --zip dist/lody4dot-0.7.0.zip --json
+python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.7.1 \
+  --zip dist/lody4dot-0.7.1.zip --json
 ```
 
-组合包增加`skills/organization-collaboration/`并纳入原收据和provenance；组织协作入口与Lody操作入口分开。只需组织协议的执行端使用独立skill，不因组合包包含Lody而执行setup或安装CLI。
+组合包增加`skills/organization-collaboration/`并纳入原收据和provenance；组织协作入口与Lody操作入口分开。只需组织协议的执行端使用独立skill，不因组合包包含Lody而执行setup或安装CLI。0.7.1仅区分新增Lody重连指引的组合内容，组织协议仍为1.3.0；[新版构建与采用边界](../lody4dot/validation.md#2026-10-28重连知识与071组合包)不替代下方旧版固定接入回执。
 
 ## 安装与实际加载
 
