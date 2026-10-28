@@ -9,6 +9,7 @@
 | 要做什么 | 入口 |
 | --- | --- |
 | 明确岗位、汇报、任务分配与验收 | [组织协作 skill](skill/organization-collaboration/SKILL.md) · [接入说明](docs/organization-collaboration/README.md) |
+| 归档项目资产、区分原件／副本及恢复证据 | [资产归档指引](skill/organization-collaboration/references/asset-archiving.md) · [迭代与采用范围](docs/organization-collaboration/asset-archiving.md) |
 | 查询或维护 GitHub Projects | [操作 skill](skill/github-projects-operations/SKILL.md) · [完整方案](docs/github-projects-operations/plan.md) · [CF-FE 接入记录](docs/organization-collaboration/github-projects.md) |
 | 通过 Lody 发现资源、操作会话和跨端交接 | [Lody skill](skill/lody4dot/SKILL.md) · [文档索引](docs/lody4dot/README.md) |
 | 使用工作区共享级／项目级专业角色 | [角色库](docs/lody4dot/workspace-roles/README.md) · [设计与边界](docs/lody4dot/workspace-roles/library-design.md) |
@@ -18,7 +19,7 @@
 ## 当前状态
 
 - **云端已验入口：**固定提交 `b37b3e9` 的组织协议 **1.3.0**、Projects 操作 skill **1.1.0** 已取得指定云端执行器与 Dot 的文件接入、实际读取回执；Linux 240 项测试、包校验和 16 项离线走查通过。已读取的会话可在有效授权内继续使用，见[云端接入证据](docs/organization-collaboration/validation.md#云端固定版本接入回执)。
-- **源码与分发：**组织协议 **1.4.0**、组合包 **0.8.0** 增加[局部阻塞与并行交付](docs/organization-collaboration/parallel-delivery.md)，详细规则按需读取，项目阈值不自动启用。旧版接入与0.7.1构建证据保留；Projects skill **1.1.0** 仍独立分发。新版实际读取、原生发现、持续审计和真实效果分别取证，见[本轮验证](docs/organization-collaboration/validation.md#140局部阻塞与并行交付)。
+- **源码与分发：**组织协议 **1.5.0**、组合包 **0.9.0** 增加[项目资产归档与交付](docs/organization-collaboration/asset-archiving.md)，保留[局部阻塞与并行交付](docs/organization-collaboration/parallel-delivery.md)。详细规则按需读取，项目阈值不自动启用。Projects skill **1.1.0** 仍独立分发；历史证据、新版读取和实际效果分开，见[本轮验证](docs/organization-collaboration/validation.md#150项目资产归档与交付)。
 - **Gitee MCP：**已完成源码与资料导入；服务依赖安装、认证连接和实际运行未在本仓库验证。
 - **正式任务管理：**正式看板是统一首查入口，全员在授权范围 list/read，写入按职责和对象收敛。已有[登记与限定切换闭环](docs/organization-collaboration/validation.md#真实登记与限定切换闭环)完成并回读；各项目仍分别确认路由和采用范围。环境仓库尚未切换正式看板，当前进度沿[唯一任务队列](.codex/agent-state/todo.md#当前环境与下一步)。
 

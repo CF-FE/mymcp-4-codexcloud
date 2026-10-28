@@ -1,8 +1,12 @@
 # 组织协作 Skill 与云端 Dot 协作方案
 
-2026-10-28，实施规范 v0.5。v0.2于2026-10-26经公子接受并启动Goal实现：云端 Dot 是最上层负责人，沟通公子与各项目负责人；项目下所有大小需求和任务都经过审阅、规划、分配；开始任务先判断粒度与并行机会；Dot 可直接委派 Codex Cloud；所有参与端具备独立组织协作skill，按本次上下文确定责任及汇报关系，专业角色库另行维护。本版按公子要求整合通用就地复核、CF-FE任务记录及授权代录职责，保留上述组织边界。规范、分发与实际端侧生效分别验收，见[组织skill接入](../organization-collaboration/README.md)及[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)；本页不宣称正式看板、任职绑定或远端技能已生效。
+2026-10-28，实施规范 v0.6。v0.2于2026-10-26经公子接受并启动Goal实现：云端 Dot 是最上层负责人，沟通公子与各项目负责人；项目下所有大小需求和任务都经过审阅、规划、分配；开始任务先判断粒度与并行机会；Dot 可直接委派 Codex Cloud；所有参与端具备独立组织协作skill，按本次上下文确定责任及汇报关系，专业角色库另行维护。本版按公子要求整合通用就地复核、CF-FE任务记录及授权代录职责，保留上述组织边界。规范、分发与实际端侧生效分别验收，见[组织skill接入](../organization-collaboration/README.md)及[唯一队列](../../.codex/agent-state/todo.md#当前环境与下一步)；本页不宣称正式看板、任职绑定或远端技能已生效。
 
 这是[多宿主协作方案](collaboration-development.md)的治理增量，当前只维护这一份组织设计。[GitHub记录适配](../organization-collaboration/github-projects.md)落实本组织的工具选择，通用skill保持平台中立。组织规则、当前关系、任务上下文和[专业角色库](workspace-roles/library-design.md)分别维护；正式入口的选择和迁移状态见[任务队列](../../.codex/agent-state/todo.md)。本文图表均为流程设计或示例，不填写实际业务状态。
+
+## v0.6：项目资产归档与交付
+
+公子批准[归档迭代](../organization-collaboration/asset-archiving.md)并启动Goal，目标为按用途归档、来源与副本可追溯、恢复证据明确且不过量重复检查。通用正文归组织skill的[资产归档参考](../../skill/organization-collaboration/references/asset-archiving.md)，平台交接仅引用；资产索引不接管任务阶段或负责人验收。BOUNDARY_NOTE保留原权威与副作用所有者，阈值和组织／项目绑定分别采用。本轮只交付规范与模板，不迁移历史、上传媒体、调整权限或运行归档脚本；1.4.0并行治理继续有效，归档缺口只阻断依赖它的动作。
 
 ## v0.5：局部阻塞与并行交付
 
