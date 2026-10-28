@@ -20,6 +20,8 @@ for (const name of ["access-and-recording", "operation-flow"]) {
   known.push(name);
   locations[name] = path.resolve(directory, "../../github-projects-operations/diagrams");
 }
+known.push("traceability-and-audit");
+locations["traceability-and-audit"] = path.resolve(directory, "../../organization-collaboration/diagrams");
 const names = process.argv.length > 3 ? process.argv.slice(3) : environmentNames;
 if (names.some(name => !known.includes(name))) throw new Error("Unknown documentation diagram.");
 

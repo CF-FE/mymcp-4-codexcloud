@@ -17,18 +17,18 @@
 
 ## 当前状态
 
-- **GitHub Projects 操作 skill：**当前源码候选为 **1.0.1**。此前 **1.0.0** 已取得执行器文件接入、实际读取、Linux 240 项测试及 Dot 指定对象只读调用回执；该证据不自动覆盖新版、原生自动发现或全员写权限。见[合并验证记录](docs/github-projects-operations/validation.md)。
-- **组织与 Lody：**组织协议 **1.2.1**、lody4dot 组合候选 **0.6.1** 和两层专业角色库分别维护版本与接入状态。Projects 操作 skill 独立分发，未自动加入该组合包。
+- **GitHub Projects 操作 skill：**当前源码候选为 **1.1.0**。此前 **1.0.0** 已取得执行器文件接入、实际读取、Linux 240 项测试及 Dot 指定对象只读调用回执；该证据不自动覆盖新版、原生自动发现或全员写权限。见[合并验证记录](docs/github-projects-operations/validation.md)。
+- **组织与 Lody：**组织协议 **1.3.0**、lody4dot 组合候选 **0.7.0** 和两层专业角色库分别维护版本与接入状态。Projects 操作 skill 独立分发，未自动加入该组合包。
 - **Gitee MCP：**已完成源码与资料导入；服务依赖安装、认证连接和实际运行未在本仓库验证。
-- **正式任务管理：**全员在授权范围直接 list/read，写入按职责和对象收敛；正式主看板、当前写者及队列切换仍需明确。当前进度和下一步以[唯一任务队列](.codex/agent-state/todo.md#当前环境与下一步)为准。
+- **正式任务管理：**正式看板是统一首查入口，全员在授权范围 list/read，写入按职责和对象收敛；每个项目的记录路由、任职、接入及切换分别确认。当前进度和下一步以[唯一任务队列](.codex/agent-state/todo.md#当前环境与下一步)为准。
 
 ## 协作与操作流程
 
-项目负责人作业务决定和最终验收，当前记录写者登记并回读，参与者可直接查询已授权范围。图表示职责与调用路线，不表示已部署自动路由或已完成权限隔离。
+项目负责人作业务决定和最终验收，当前记录写者登记并回读，流程审计者核对遗漏与整改；参与者优先查询正式看板及关联证据。图表示职责与调用路线，不表示已部署自动路由或已完成权限隔离。
 
-![全员读取与按对象收敛写入](docs/github-projects-operations/diagrams/access-and-recording.svg)
+![看板统一入口与流程审计](docs/organization-collaboration/diagrams/traceability-and-audit.svg)
 
-[协作图源](docs/github-projects-operations/diagrams/access-and-recording.mmd) · [完整操作与协作方案](docs/github-projects-operations/plan.md)
+[协作图源](docs/organization-collaboration/diagrams/traceability-and-audit.mmd) · [组织方案](docs/lody4dot/project-coordination.md) · [本轮验证与接入](docs/organization-collaboration/validation.md)
 
 <details>
 <summary>展开 Projects 最短操作流程与 UNKNOWN 对账</summary>

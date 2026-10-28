@@ -1,12 +1,12 @@
 # 组织协作 skill
 
-组织协议1.2.1的唯一源码为[skill/organization-collaboration](../../skill/organization-collaboration/SKILL.md)。它让各参与端按本次任务确定岗位、责任、汇报通道、派发和验收，包含粒度评估、依赖并行、进度表及岗位／角色更新流程。实现与[已接受的方案及四张图](../lody4dot/project-coordination.md)对应；实际状态统一记录于[任务队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
+组织协议1.3.0的唯一源码为[skill/organization-collaboration](../../skill/organization-collaboration/SKILL.md)。它让各参与端按本次任务确定岗位、责任、汇报通道、派发和验收，包含粒度评估、依赖并行、进度表及岗位／角色更新流程。实现与[已接受的方案及流程图](../lody4dot/project-coordination.md)对应；实际状态统一记录于[任务队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
 
 该skill全部为Markdown，不要求Python、Node、Lody身份、专业角色库或常驻服务。通用协议、当前关系、任务上下文分别维护；真实参与者和组织名单保留在已有私密正式记录中，不写进技能包。
 
 ## 读取与任务上下文
 
-先读取`SKILL.md`，按稳定岗位ID只读对应指引：`organization_lead`、`project_owner`、`executor`、`reviewer`。首次接单、换项目和接管时用[上下文模板](../../skill/organization-collaboration/references/context-and-reporting.md)确认责任、报告对象与实际通道；已有有效任务上下文直接复用。纯独立问答不因此建立组织流程。
+先读取`SKILL.md`，按稳定岗位ID只读对应指引：`organization_lead`、`project_owner`、`executor`、`reviewer`、`auditor`。首次接单、换项目和接管时用[上下文模板](../../skill/organization-collaboration/references/context-and-reporting.md)确认责任、报告对象与实际通道；已有有效任务上下文直接复用。纯独立问答不因此建立组织流程。
 
 岗位和专业角色更新走[维护流程](../../skill/organization-collaboration/references/maintenance.md)。协议／岗位、专业角色库、实际任职关系各自版本化；新增岗位修改唯一导航和一份平铺参考，不能自动创建Agent或写远端配置。普通在途任务按明确版本及节点迁移；当前权限撤销、安全修正和公子新指令优先。
 
@@ -16,14 +16,27 @@
 
 1.2.1澄清已有委派职责：授权记录者也负责查询和标源回传，请求方不必取得直接凭证；执行者定义1.2.1，总负责人1.1.1，其他定义不变。记录职责可兼任，实际绑定到会话、工具连接、访问范围和回报通道，同机终端验证不自动覆盖其他受限会话。该版交付时CF-FE组织的Dot直接GitHub访问为不适用；后续两端MCP接入及全员按范围直读方向已更新，见[最新接入](github-projects.md#最新接入与职责方向)。组织协议不因外部连接变化而被同版本改写。
 
+## 1.3.0：统一入口与独立流程审计
+
+正式看板及其关联任务、有效回执是各角色接单、跟进、交接与判断下一步的统一首查入口；尚未切换时沿原正式入口。详情按链接展开，不把运行日志、音频原件或另一份进度表复制进看板。看板滞后或冲突时标明待核对，沿原生引用取得证据，由当前写者补写；聊天提报不能直接覆盖正式状态。
+
+- [全过程追溯](../../skill/organization-collaboration/references/task-traceability.md)：三层记录、事件模板、派发意图与执行关联、补写、历史补录和遗留承接。
+- [流程审计者](../../skill/organization-collaboration/references/auditor.md)：跨来源核对漏项、声明覆盖与回避、发现整改复核；保留项目负责人业务验收权。
+- [行为场景](eval-inputs.json)与[判定标准](eval-rubric.md)：评测时只交场景及技能，不把答案交给评测者。
+- [本轮验证](validation.md)与[云端接入和复核说明](cloud-acceptance.md)：源码、构建、实际读取、原生发现和业务切换分项取证。
+
+![看板统一入口与审计闭环](diagrams/traceability-and-audit.svg)
+
+[图源与再生成](diagrams/README.md)。新增岗位和可引用的事件模板不强迫旧任务重填或重派；在途保持原版本，到明确节点采用新增能力，撤权和公子新指令立即适用。独立包保持平铺Markdown，构建白名单无需放宽。
+
 ## 分发
 
 从仓库根目录构建独立skill，仅打包该技能及自己的收据：
 
 ```bash
 python3 plugin/lody4dot/scripts/build.py --organization-skill-only \
-  --output dist/organization-collaboration-1.2.1 \
-  --zip dist/organization-collaboration-1.2.1.zip --json
+  --output dist/organization-collaboration-1.3.0 \
+  --zip dist/organization-collaboration-1.3.0.zip --json
 ```
 
 输出根直接包含`SKILL.md`、`references/`和`.organization-collaboration-build.json`，没有插件清单、Lody工具或专业角色库。这是技能文件包，不把它冒充ChatGPT原生插件ZIP。构建工具使用Python标准库，使用skill本身不需要Python；输出目录和ZIP必须是新路径，旧目录和自定义修改不会被覆盖。独立收据的工具名为`organization-collaboration-build`，CRC与SHA只证明本地文件一致性，不能用Lody doctor代替技能加载验收。
@@ -31,8 +44,8 @@ python3 plugin/lody4dot/scripts/build.py --organization-skill-only \
 组合分发使用既有构建命令：
 
 ```bash
-python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.6.1 \
-  --zip dist/lody4dot-0.6.1.zip --json
+python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.7.0 \
+  --zip dist/lody4dot-0.7.0.zip --json
 ```
 
 组合包增加`skills/organization-collaboration/`并纳入原收据和provenance；组织协作入口与Lody操作入口分开。只需组织协议的执行端使用独立skill，不因组合包包含Lody而执行setup或安装CLI。

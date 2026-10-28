@@ -1,0 +1,29 @@
+%% 2026-10-28：职责与追溯设计，不表示已自动派发、巡检或完成看板切换。
+flowchart TB
+    accTitle: 统一看板入口与独立流程审计
+    accDescr: 各角色先查正式看板，按链接展开任务和版本证据。负责人规划授权与验收，执行和质量复核分别留证，当前记录者核依据后更新回读。独立审计交叉核对需求、执行、任务与验收来源，发现交负责人整改并复核，向Dot报告。未知结果先沿原引用对账，不自动重派。
+    everyone["各角色在授权范围内\n接单、跟进、交接先查"] --> board["正式 Project：统一入口\n任务 · 负责人 · 阶段\n阻塞 · 下一步 · 结论链接"]
+    board -->|按链接展开| task["关联任务与有效回执\n范围 · 授权 · 输入版本\n执行关联与证据"]
+    task --> owner["项目负责人\n规划、授权与最终验收"]
+    owner -->|明确任务与验收标准| work["执行者实施与自检\n审查者独立核对明确产物"]
+    work -->|产物与质量回执| owner
+    work -->|事实进展与版本证据| writer["当前记录写者\n核依据与冲突 · 更新并回读"]
+    owner -->|有效决定与验收依据| writer
+    writer -->|确认后的阶段与关联| board
+    writer -->|缺项、冲突或 UNKNOWN| reconcile["沿原引用对账并补写\n保留成功，不自动重派"]
+    reconcile -->|核实结果与待处理项| writer
+
+    sources["获准访问的独立来源\n需求入口 · 原生派发与执行\n任务事件 · 产物与验收回执"] -.声明范围与覆盖.-> auditor["auditor：独立流程审计\n核关联与证据一致性"]
+    board -.核对记录，不只查在办项.-> auditor
+    auditor -->|发现与整改要求| fix["对应负责人组织整改\n修正者提交证据"]
+    fix -->|修正证据与独立复核| auditor
+    auditor -->|审计结论、未验与争议| dot["Dot：组织协调\n按绑定通道接收报告"]
+
+    classDef entry fill:#e7f0fb,stroke:#315f93,color:#17304b;
+    classDef execution fill:#eff7f1,stroke:#4d7656,color:#203e27;
+    classDef decision fill:#fff5e6,stroke:#987334,color:#4e3c1d;
+    classDef audit fill:#f1ecfa,stroke:#79629b,color:#3b2a53;
+    class everyone,board,task entry;
+    class work,writer,reconcile execution;
+    class owner,fix decision;
+    class sources,auditor,dot audit;

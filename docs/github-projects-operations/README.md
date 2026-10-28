@@ -1,6 +1,6 @@
 # GitHub Projects 操作 skill
 
-通用技能1.0.1的源码在[skill/github-projects-operations](../../skill/github-projects-operations/SKILL.md)。适用于已提供官方GitHub Projects MCP的ChatGPT、Lody或其他兼容宿主，查询与写入使用实际工具；不要求运行Lody CLI，不包含MCP服务器、凭证或新的组织岗位。
+通用技能1.1.0的源码在[skill/github-projects-operations](../../skill/github-projects-operations/SKILL.md)。适用于已提供官方GitHub Projects MCP的ChatGPT、Lody或其他兼容宿主，查询与写入使用实际工具；不要求运行Lody CLI，不包含MCP服务器、凭证或新的组织岗位。
 
 - [完整方案](plan.md)：全员按范围读取、按对象收敛写入、skill分层、效率策略与接入步骤。
 - [双端合并验证](validation.md)：ChatGPT Work与Lody的20方法覆盖、异常、遗留资源及本地技能验收。
@@ -8,11 +8,13 @@
 
 固定提交`5a2186f`的1.0.0已取得[云端接入验收](validation.md#2026-10-27固定提交接入验收)：执行器与Dot实际读取通过，Dot直接完成指定Project与字段定义读取。原生skill自动发现仍未验。1.0.1只澄清字段定义／条目值的区别，以及复用已读取版本和连接证据；旧回执继续覆盖1.0.0，不推广为1.0.1已在所有端加载。
 
+1.1.0新增兼容的记录操作指引：正式看板作为统一工作入口，详情沿任务和有效回执展开；事件关联、迟到报告、跨对象部分成功、回填失败补写及可见性核对沿原入口处理。流程审计的职责和模板归[组织协作skill](../../skill/organization-collaboration/SKILL.md)，本技能只提供对应读取、登记与回读方法。新增源码不等于目标端已读取或项目已切换，验证范围仍单独记录。
+
 ## 内容与使用
 
 技能入口只保留最短操作路径；查询参考、写入／对账参考、迭代参考按需读取。只有生成等长连续周期时才需要可选的Python脚本，普通MCP操作没有本地运行时依赖。脚本只生成JSON计划，不认证、不联网、不写GitHub。
 
-有准确任务引用和有效授权就复用；没有明确写入意图／范围时保持只读。组织场景从现有任务取得决定者、当前写者和验收来源；已安装组织协作skill时复用其规则，独立安装本技能也不会产生断链或自动授予权限。
+有准确任务引用和有效授权就复用；没有明确写入意图／范围时保持只读。正式切换后的接单、进度、交接和下一步判断先查指定Project及关联任务，聊天报告作为提报核对；未切换仍沿原入口。组织场景从现有任务取得决定者、当前写者和验收来源；已安装组织协作skill时复用其规则，独立安装本技能也不会产生断链或自动授予权限。
 
 ## 分发与接入
 
@@ -21,11 +23,11 @@
 在仓库根可用Python标准库生成一个新ZIP；先确认目标路径不存在，且源码目录不含缓存或临时文件：
 
 ```bash
-python3 -m zipfile -c /private/tmp/github-projects-operations-1.0.1.zip skill/github-projects-operations
-python3 -m zipfile -t /private/tmp/github-projects-operations-1.0.1.zip
+python3 -m zipfile -c /private/tmp/github-projects-operations-1.1.0.zip skill/github-projects-operations
+python3 -m zipfile -t /private/tmp/github-projects-operations-1.1.0.zip
 ```
 
-本轮正式交付文件及逐文件SHA收据的位置见验证记录，生成物不入Git。现有lody4dot组合候选0.6.1和组织协议1.2.1保持各自版本；本技能独立分发，不隐式改变旧组合包、远端Role或在途加载版本。
+本轮交付文件及逐文件SHA收据的位置见验证记录，生成物不入Git。lody4dot组合包和组织协议的当前版本见[组织接入说明](../organization-collaboration/README.md)；本技能独立分发，不隐式改变旧组合包、远端Role或在途加载版本。新任务按正式采用点使用新版，在途任务保留原引用与已用版本，明确节点迁移，不为接入重建或重派。
 
 ## 本地检查
 
