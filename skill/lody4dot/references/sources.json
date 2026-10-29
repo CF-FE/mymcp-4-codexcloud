@@ -2,7 +2,7 @@
   "schema_version": 1,
   "lody_version": "0.108.1",
   "captured_at": "2026-10-25T06:56:46.898431+00:00",
-  "verification_note": "当前help-snapshot为0.108.1实际帮助，help_executed仅表示版本/帮助退出0，不表示登录、目录、任务或发布成功。2026-10-20至21的官网、0.107.2源码和业务记录保留当时版本范围；不能用本轮帮助覆盖其历史含义。 2026-10-25的有界官方CLI复验另记native-cli-online-followup-20261025，仅5个实际路径，不从帮助或源码升级其余能力。",
+  "verification_note": "当前help-snapshot为0.108.1实际帮助，help_executed仅表示版本/帮助退出0，不表示登录、目录、任务或发布成功。2026-10-20至21的官网、0.107.2源码和业务记录保留当时版本范围；不能用本轮帮助覆盖其历史含义。 2026-10-25的有界官方CLI复验另记native-cli-online-followup-20261025，仅5个实际路径，不从帮助或源码升级其余能力。 2026-10-29会话接续、额度和归档官网资料按各条retrieved_at新增，不更新既有CLI帮助捕获时间或业务验收范围。",
   "sources": [
     {
       "id": "cli",
@@ -272,6 +272,54 @@
         "new_container_created": false
       },
       "note": "同任务从远程main重载并初始化，不是环境模板更新或容器重建。未执行key创建、machine配对登记、Agent启动/发送或用户配置变更；不保存具体资源名称/ID和原始输出。2026-10-25当前CLI实测未出现401/403，旧探针不参与当前验收；本条不保证未来版本或未执行命令。"
+    },
+    {
+      "id": "session-quota-pricing",
+      "url": "https://lody.ai/price/",
+      "retrieved_at": "2026-10-29",
+      "version_scope": "官网当日说明；当前应用准入另核，不表示CLI或端侧操作已验",
+      "scope": "Free及功能对照：200 sessions per workspace与30 turns per session分别计量；不解释归档计数或额度返还",
+      "verification": "retrieved"
+    },
+    {
+      "id": "long-session-summary",
+      "url": "https://lody.ai/docs/first-session/",
+      "retrieved_at": "2026-10-29",
+      "version_scope": "官网当日说明；当前应用准入另核，不表示CLI或端侧操作已验",
+      "scope": "第4步：长对话用简短摘要开始fresh session；不是工作区额度重置或任务完成证据",
+      "verification": "retrieved"
+    },
+    {
+      "id": "context-quota-guidance",
+      "url": "https://lody.ai/docs/usage-and-quota/",
+      "retrieved_at": "2026-10-29",
+      "version_scope": "官网当日说明；当前应用准入另核，不表示CLI或端侧操作已验",
+      "scope": "Context window remaining capacity：按上下文余量选择摘要或新会话；不定义工作区200会话统计口径",
+      "verification": "retrieved"
+    },
+    {
+      "id": "session-quota-terms",
+      "url": "https://lody.ai/terms/",
+      "retrieved_at": "2026-10-29",
+      "version_scope": "官网当日说明；当前应用准入另核，不表示CLI或端侧操作已验",
+      "scope": "9.1指向当期定价及应用限制；所查文本未另定同任务跨会话累计轮次，不作法律结论",
+      "verification": "retrieved"
+    },
+    {
+      "id": "archive-preservation",
+      "url": "https://lody.ai/docs/session/#archive-sessions",
+      "retrieved_at": "2026-10-29",
+      "version_scope": "官网当日说明；当前应用准入另核，不表示CLI或端侧操作已验",
+      "scope": "归档保留会话历史但受管worktree可被回收；原本地项目目录不由该清理机制移除",
+      "verification": "retrieved"
+    },
+    {
+      "id": "worktree-cleanup-boundaries",
+      "url": "https://lody.ai/docs/worktrees/#automatic-cleanup",
+      "retrieved_at": "2026-10-29",
+      "version_scope": "官网当日说明；当前应用准入另核，不表示CLI或端侧操作已验",
+      "scope": "本地分支及非ignored改动备份、ignored与cleanup脚本影响边界；恢复依赖原仓库和分支；不证明远程备份或全部资源释放",
+      "verification": "retrieved"
     }
   ],
   "known_differences": [

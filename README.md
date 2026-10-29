@@ -19,7 +19,7 @@
 ## 当前状态
 
 - **云端已验入口：**已取得 Dot 在自身云端直接取得固定提交 `d699199`、读取组织协议 **1.5.0** 的回执；源码完整性、指定链接及一批七题离线走查通过。Projects **1.1.0** 复用原阅读证据，本次采用源码路线，未复验分发包或全仓测试。Dot 可在已授权范围使用；原生发现、其他端加载和真实业务效果分别取证，见[增量接入回执](docs/organization-collaboration/validation.md#150云端dot本地增量接入回执)。
-- **源码与分发：**组织协议 **1.5.0**、组合包 **0.9.0** 增加[项目资产归档与交付](docs/organization-collaboration/asset-archiving.md)，保留[局部阻塞与并行交付](docs/organization-collaboration/parallel-delivery.md)。详细规则按需读取，项目阈值不自动启用。Projects skill **1.1.0** 仍独立分发；历史证据、新版读取和实际效果分开，见[本轮验证](docs/organization-collaboration/validation.md#150项目资产归档与交付)。
+- **源码与分发：**组合包 **0.9.1** 修订[Lody长会话接续与额度单位](skill/lody4dot/references/sessions.md#长会话接续与额度单位)，仅为知识补丁；组织协议 **1.5.0** 保留0.9.0提供的[项目资产归档与交付](docs/organization-collaboration/asset-archiving.md)，保留[局部阻塞与并行交付](docs/organization-collaboration/parallel-delivery.md)。详细规则按需读取，项目阈值不自动启用。Projects skill **1.1.0** 仍独立分发；历史证据、新版读取和实际效果分开，见[本轮验证](docs/lody4dot/validation.md#2026-10-29长会话接续与091知识补丁)。
 - **Gitee MCP：**已完成源码与资料导入；服务依赖安装、认证连接和实际运行未在本仓库验证。
 - **正式任务管理：**正式看板是统一首查入口，全员在授权范围 list/read，写入按职责和对象收敛。已有[登记与限定切换闭环](docs/organization-collaboration/validation.md#真实登记与限定切换闭环)完成并回读；各项目仍分别确认路由和采用范围。环境仓库尚未切换正式看板，当前进度沿[唯一任务队列](.codex/agent-state/todo.md#当前环境与下一步)。
 

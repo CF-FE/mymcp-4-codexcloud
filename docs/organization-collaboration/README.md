@@ -56,11 +56,11 @@ python3 plugin/lody4dot/scripts/build.py --organization-skill-only \
 组合分发使用既有构建命令：
 
 ```bash
-python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.9.0 \
-  --zip dist/lody4dot-0.9.0.zip --json
+python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.9.1 \
+  --zip dist/lody4dot-0.9.1.zip --json
 ```
 
-组合包增加`skills/organization-collaboration/`并纳入原收据和provenance；组织协作入口与Lody操作入口分开。只需组织协议的执行端使用独立skill，不因组合包包含Lody而执行setup或安装CLI。当前0.9.0组合组织协议1.5.0，采用与历史资产边界见[归档迭代](asset-archiving.md#验证与采用)；1.4.0的[并行治理](parallel-delivery.md#采用与在途处理)继续适用。[0.7.1重连知识交付](../lody4dot/validation.md#2026-10-28重连知识与071组合包)和下方旧版固定接入回执保留各自版本范围。
+组合包增加`skills/organization-collaboration/`并纳入原收据和provenance；组织协作入口与Lody操作入口分开。只需组织协议的执行端使用独立skill，不因组合包包含Lody而执行setup或安装CLI。当前0.9.1组合组织协议1.5.0，仅在0.9.0基础上修订[Lody长会话接续知识](../lody4dot/validation.md#2026-10-29长会话接续与091知识补丁)，独立组织协议不变；采用与历史资产边界见[归档迭代](asset-archiving.md#验证与采用)；1.4.0的[并行治理](parallel-delivery.md#采用与在途处理)继续适用。[0.7.1重连知识交付](../lody4dot/validation.md#2026-10-28重连知识与071组合包)和下方旧版固定接入回执保留各自版本范围。
 
 ## 安装与实际加载
 

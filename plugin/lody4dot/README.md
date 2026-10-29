@@ -1,6 +1,6 @@
 # lody4dot
 
-为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码清单版本为`0.9.0`，正式云来源与运行观测统一见仓库[任务队列](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/.codex/agent-state/todo.md#当前环境与下一步)，不把工作副本当作正式发布。2026-10-25按用户授权改为准备阶段解析官方npm的`lody@latest`，本轮源码锁及实际帮助为`0.108.1`，0.107.2历史业务证据不改称新版已测。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际依赖另以engine-strict核对。
+为 Agent 提供 Lody 的任务指引、版本化命令资料、多宿主交接规则、资料交接指引，以及独立的安装、只读诊断、显式认证、依赖初始化和离线交接校验工具。当前源码清单版本为`0.9.1`，正式云来源与运行观测统一见仓库[任务队列](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/.codex/agent-state/todo.md#当前环境与下一步)，不把工作副本当作正式发布。2026-10-25按用户授权改为准备阶段解析官方npm的`lody@latest`，本轮源码锁及实际帮助为`0.108.1`，0.107.2历史业务证据不改称新版已测。首个已验证安装目标是Linux Codex云环境，工具需要Python3.10+、npm及受支持的Node：`>=22.14.0 <23`或`>=23.6.0`；实际依赖另以engine-strict核对。
 
 核心能力源码在仓库的`skill/lody4dot/`，薄setup入口在`skill/lody4dot-setup/`，独立组织协议在`skill/organization-collaboration/`；本目录负责组合、运行时锁定和分发，不新增MCP服务。Lody已有MCP只有在宿主提供有效session/workspace/machine上下文时才使用，不能将其内部入口当作独立通用服务。
 
@@ -21,6 +21,8 @@
 0.8.0组合组织协议1.4.0，增加局部阻塞隔离、排障预算、按范围计数的E/W/Q和共享资源准入指引。详细正文归组织规划参考，参数由项目确认；不全局启用4/6/2，不新增调度服务或改变实际派发／验收权。Projects skill1.1.0、专业库1.1.1和运行工具不变；新包接入与实际采用分开，见[迭代设计](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/docs/organization-collaboration/parallel-delivery.md)。
 
 0.9.0组合组织协议1.5.0，增加按需[项目资产归档](skills/organization-collaboration/references/asset-archiving.md)：按用途选落点、维护来源与副本关系、保管与恢复证据、索引及增量回读。资料交接只链接通用规则；10/50 MiB未自动启用，旧资产不迁移，归档不授予上传／脚本执行／正式验收权限。Projects skill1.1.0、专业库1.1.1及运行工具保持，组织适配与本轮证据见[归档迭代](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/docs/organization-collaboration/asset-archiving.md)。
+
+0.9.1修订[长会话接续与额度单位](skills/lody4dot/references/sessions.md#长会话接续与额度单位)：按官方说明区分单session与workspace额度，已获准同任务用摘要交接、新端受理／回读后归档旧会话，保留UNKNOWN、单写与worktree成果保全边界。仅为知识补丁；组织1.5.0、Projects1.1.0、专业库1.1.1及运行工具不变，不升级实际接入端。来源、离线回归与构建范围见[本轮验证](https://github.com/CF-FE/mymcp-4-codexcloud/blob/main/docs/lody4dot/validation.md#2026-10-29长会话接续与091知识补丁)。
 
 ## Dot与其他宿主如何接入
 
@@ -206,7 +208,7 @@ python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot --json
 需要同时生成离线ZIP时，显式指定新路径：
 
 ```bash
-python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.9.0 --zip dist/lody4dot-0.9.0.zip --json
+python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.9.1 --zip dist/lody4dot-0.9.1.zip --json
 ```
 
 ZIP保留隐藏清单及所有资源，根直接是插件内容；生成后核对CRC、收据和逐文件SHA-256，再创建最终文件。成功JSON只在请求ZIP时附加`archive`，提供绝对`path`、含收据的`file_count`、`size_bytes`、ZIP的`sha256`、`receipt_sha256`和`verification`。这些摘要证明本地文件一致性，不提供签名或原生加载/业务验收。
