@@ -10,7 +10,7 @@ description: 用 Lody CLI 或合法已有 MCP 发现资源、创建与跟进会�
 ## 选择最短路径
 
 - **初始化或开始新用途：** 以当前版本`--help`及所需子命令帮助导航，按[初始化与任务前预检](references/setup-cloud.md#初始化与任务前预检)复用最小可用性回执，先选前提已核且获授权的入口，再批量准备或派发；不每回合重跑检查。
-- **已有会话：** CLI/身份/用法未变时，直接按准确workspace/session/turn[观察原结果](references/sessions.md#观察真实结果)；断连时[主动恢复原入口](references/troubleshooting.md#断连后的主动恢复)，补齐进度观察及所需派发入口核对。用户授权继续则沿原session发一次新回合；上一请求结果未知时先对账，不能用新chat/create代替查询。无需重扫资源、重查版本或重复询问有效授权。
+- **已有会话：** CLI/身份/用法未变时，直接按准确workspace/session/turn[观察原结果](references/sessions.md#观察真实结果)；断连时[主动恢复原入口](references/troubleshooting.md#断连后的主动恢复)，补齐进度观察及所需派发入口核对。用户授权继续且原会话可追加时，沿原session发一次新回合；长对话或单会话满额按[摘要交接与新会话接续](references/sessions.md#长会话接续与额度单位)处理，不把单会话限额扩成同任务禁止接续。上一请求结果未知时先对账，不能用新chat/create代替查询。无需重扫资源、重查版本或重复询问有效授权。
 - **首次派发或目标不明：** 只[发现缺少的目标](references/discovery.md)。重名用稳定ID，确需目录查询时处理分页和同步。版本/配置变化、权限失效或真实命令失败时，再查对应帮助和必要资源。
 - **选择或维护角色：** 只有任务确需职责定义时才读[角色库](references/workspace-roles.md#按需读取角色库)。工作区共享级与项目级分开；显式选择项目才加载项目适配。日常会话操作不先读角色库。
 - **准备或恢复：** 按[本端准备规则](references/setup-cloud.md)检查依赖，恢复后沿原生引用核原任务。prepare解析官方npm latest；已有runtime的inspect保持离线，版本warn不触发升级。

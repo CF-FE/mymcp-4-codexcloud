@@ -16,6 +16,7 @@ lody4dot的设计、接入、验收和配套图表集中在本目录；实际任
 | 如何安装、诊断和使用工具 | [插件说明](../../plugin/lody4dot/README.md)与[技能入口](../../skill/lody4dot/SKILL.md) |
 | 当前CLI全量命令的参数、身份前提、副作用与验证边界 | [逐项命令审查](cli-command-audit.md)，区分帮助、源码、隔离测试与线上结果 |
 | Agent怎样区分Work/Codex环境及任务创建证据 | [随包协作规则](../../skill/lody4dot/references/collaboration.md#work-cloud与任务创建)，复用既有资料交接；不是另一套方案 |
+| 长会话怎样摘要交接、按单会话／工作区额度正常接续 | [会话接续规则](../../skill/lody4dot/references/sessions.md#长会话接续与额度单位)、[工作区执行规范](workspace-roles/execution-policy.md#长会话接续) |
 | 文件如何跨环境中转，慢任务怎样先检查授权等待 | [FileKiwi中转与验收](../../skill/lody4dot/references/filekiwi-transfer.md)、[会话观察](../../skill/lody4dot/references/sessions.md#观察真实结果) |
 | 工作区共享职责、项目负责人和角色方案如何保存与落地 | [角色设计与落地记录](workspace-roles/README.md)、[随包协作规则](../../skill/lody4dot/references/workspace-roles.md) |
 | 单命令查询、两层角色选择和离线组装 | [知识入口](../../skill/lody4dot/references/knowledge.md)、[角色库设计](workspace-roles/library-design.md) |
@@ -47,7 +48,7 @@ lody4dot的设计、接入、验收和配套图表集中在本目录；实际任
 - [CLI路由与观察排错复盘](cli-troubleshooting-cases.md)：初始化/任务前预防、本机IPC与Role提议、有界分页及用户Save后的补丁回读。
 - [运行前提补充](runtime-findings.md)：云端ACP、身份和执行位置的实际调查。
 - [实现与验证记录](validation.md)：按轮次保存检查结果、实测范围和未运行项。
-- [技能行为评测](skill-evaluation.md)：六个固定离线场景、判据与效率记录方法；计划走查和真实执行分开。
+- [技能行为评测](skill-evaluation.md)：九个固定离线场景、判据与效率记录方法；计划走查和真实执行分开。
 - [图表维护](diagrams/README.md)：图源、SVG和再生成方法。
 
 新增资料按[文档归档规范](../architecture.md#文档归档规范)归入所属目录；运行时技能资料继续维护在`skill/lody4dot/`，不在这里复制一份。
