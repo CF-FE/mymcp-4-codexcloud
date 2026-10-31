@@ -18,8 +18,8 @@
 
 ## 当前状态
 
-- **云端已验入口：**已取得 Dot 在自身云端同步固定 `4386ddf`、实际读取组织 **1.5.1／组合源码0.9.2** 增量的[回执](docs/organization-collaboration/validation.md#151云端dot本地同步与增量读取回执)，采用限当前获准的阻塞分流、逐项代办与回读；旧包未覆盖、在途绑定未迁移。历史目录 `intake-4d2ffe4` 在本轮工作区未定位，不能据此确认仍存在或已删除；原生发现、原服务恢复及真实业务效果仍未验。[0.9.1旧回执](docs/lody4dot/validation.md#2026-10-29云端dot的091同步与增量读取)及更早证据保留原范围。
-- **源码与分发：**组合源码候选 **0.9.3**、组织协议 **1.5.2** 补充[派发时的可达汇报约定](skill/organization-collaboration/references/context-and-reporting.md#派发时约定可达汇报)，本地review待定；保留已合入main的1.5.1的[403等局部阻塞分流](skill/organization-collaboration/references/planning-and-progress.md#403等局部阻塞的独立会话分流)，见[1.5.1范围与证据](docs/organization-collaboration/validation.md#151阻塞分流说明补丁)。保留[Lody长会话接续](skill/lody4dot/references/sessions.md#长会话接续与额度单位)、[项目资产归档](docs/organization-collaboration/asset-archiving.md)和[并行交付](docs/organization-collaboration/parallel-delivery.md)。Projects skill **1.1.0**、岗位定义与专业库不变；源码读取不等于分发包安装，项目阈值、实际加载与在途采用仍各自取证。
+- **云端已验入口：**已取得 Dot 自身云端固定 `a9d287c` 的源码同步与组织 **1.5.2** 增量读取[回执](docs/organization-collaboration/validation.md#152云端dot本地同步与增量读取回执)（组合源码 **0.9.3**），采用限当前 Dot 后续获准协调。三个已定位旧目录保持原状，更早未定位目录仍未定位；在途任务未重建、重派或迁移绑定。原生发现、真实通道可达及业务效果仍未验。[1.5.1旧回执](docs/organization-collaboration/validation.md#151云端dot本地同步与增量读取回执)、[0.9.1旧回执](docs/lody4dot/validation.md#2026-10-29云端dot的091同步与增量读取)保留原范围。
+- **源码与分发：**PR #11已合入main，组合源码 **0.9.3**、组织协议 **1.5.2** 补充[派发时的可达汇报约定](skill/organization-collaboration/references/context-and-reporting.md#派发时约定可达汇报)；保留1.5.1的[403等局部阻塞分流](skill/organization-collaboration/references/planning-and-progress.md#403等局部阻塞的独立会话分流)，见[1.5.1范围与证据](docs/organization-collaboration/validation.md#151阻塞分流说明补丁)。保留[Lody长会话接续](skill/lody4dot/references/sessions.md#长会话接续与额度单位)、[项目资产归档](docs/organization-collaboration/asset-archiving.md)和[并行交付](docs/organization-collaboration/parallel-delivery.md)。Projects skill **1.1.0**、岗位定义与专业库不变；源码读取不等于分发包安装，项目阈值、实际加载与在途采用仍各自取证。
 - **Gitee MCP：**已完成源码与资料导入；服务依赖安装、认证连接和实际运行未在本仓库验证。
 - **正式任务管理：**正式看板是统一首查入口，全员在授权范围 list/read，写入按职责和对象收敛。已有[登记与限定切换闭环](docs/organization-collaboration/validation.md#真实登记与限定切换闭环)完成并回读；各项目仍分别确认路由和采用范围。环境仓库尚未切换正式看板，当前进度沿[唯一任务队列](.codex/agent-state/todo.md#当前环境与下一步)。
 
