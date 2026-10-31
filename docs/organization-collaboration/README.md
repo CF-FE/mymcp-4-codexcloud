@@ -43,6 +43,8 @@ E/W/Q及资源限制由项目或共享资源范围确认，4/6/2仅为项目试�
 
 ## 1.5.1：阻塞分流说明补丁
 
+本轮[需求说明](blockage-fallback-requirements.md)集中列出背景、已确认要求、方案取舍及P18–P21验收追溯，供本地review与优化使用。
+
 [独立会话分流](../../skill/organization-collaboration/references/planning-and-progress.md#403等局部阻塞的独立会话分流)澄清既有局部隔离规则：403等阻塞先核实际来源与性质，需要持续排障时由独立会话在原授权内排查／执行，主线继续；拒绝不换路绕过，UNKNOWN沿原引用对账，保留单写、恢复证据及向本次主协调者交还。只读核听按实际能力报告，不能虚报已听或通过。
 
 同一补丁澄清[服务故障时的最终代办](../../skill/organization-collaboration/references/authorized-recording.md#服务故障时的最终代办)：负责人先交完整操作汇总，指定主协调者在既有授权和实际能力内完成操作、回读、反馈与单写交还；用户专属的Lody／云端Dot绑定仅在[CF-FE适配](github-projects.md#2026-10-31lody服务不可用时的最终兜底)维护，不成为通用默认。
