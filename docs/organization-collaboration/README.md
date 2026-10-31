@@ -1,6 +1,6 @@
 # 组织协作 skill
 
-组织协议1.5.0的唯一源码为[skill/organization-collaboration](../../skill/organization-collaboration/SKILL.md)。它让各参与端按本次任务确定岗位、责任、汇报通道、派发和验收，包含粒度评估、依赖并行、进度表及岗位／角色更新流程。实现与[已接受的方案及流程图](../lody4dot/project-coordination.md)对应；实际状态统一记录于[任务队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
+组织协议1.5.1的唯一源码为[skill/organization-collaboration](../../skill/organization-collaboration/SKILL.md)。它让各参与端按本次任务确定岗位、责任、汇报通道、派发和验收，包含粒度评估、依赖并行、进度表及岗位／角色更新流程。实现与[已接受的方案及流程图](../lody4dot/project-coordination.md)对应；实际状态统一记录于[任务队列](../../.codex/agent-state/todo.md#当前环境与下一步)。
 
 该skill全部为Markdown，不要求Python、Node、Lody身份、专业角色库或常驻服务。通用协议、当前关系、任务上下文分别维护；真实参与者和组织名单保留在已有私密正式记录中，不写进技能包。
 
@@ -41,14 +41,22 @@ E/W/Q及资源限制由项目或共享资源范围确认，4/6/2仅为项目试�
 
 项目负责人和执行者定义为1.5.0；总负责人1.3.0、审查者1.1.1、审计者1.0.0及专业库1.1.1不变。阈值、空间政策和仓库绑定按各自范围采用；本轮不启用10/50 MiB、不批量迁移历史、不上传真实媒体、不改变权限或执行归档脚本。
 
+## 1.5.1：阻塞分流说明补丁
+
+[独立会话分流](../../skill/organization-collaboration/references/planning-and-progress.md#403等局部阻塞的独立会话分流)澄清既有局部隔离规则：403等阻塞先核实际来源与性质，需要持续排障时由独立会话在原授权内排查／执行，主线继续；拒绝不换路绕过，UNKNOWN沿原引用对账，保留单写、恢复证据及向本次主协调者交还。只读核听按实际能力报告，不能虚报已听或通过。
+
+同一补丁澄清[服务故障时的最终代办](../../skill/organization-collaboration/references/authorized-recording.md#服务故障时的最终代办)：负责人先交完整操作汇总，指定主协调者在既有授权和实际能力内完成操作、回读、反馈与单写交还；用户专属的Lody／云端Dot绑定仅在[CF-FE适配](github-projects.md#2026-10-31lody服务不可用时的最终兜底)维护，不成为通用默认。
+
+本轮仅交源码候选和离线证据供review；岗位定义、专业库和任职关系不变。组合源码清单随知识补丁记0.9.2；旧1.5.0／0.9.1回执保留原范围，不自动迁移在途任务、重装旧包、更新目标端或启用业务调度。
+
 ## 分发
 
 从仓库根目录构建独立skill，仅打包该技能及自己的收据：
 
 ```bash
 python3 plugin/lody4dot/scripts/build.py --organization-skill-only \
-  --output dist/organization-collaboration-1.5.0 \
-  --zip dist/organization-collaboration-1.5.0.zip --json
+  --output dist/organization-collaboration-1.5.1 \
+  --zip dist/organization-collaboration-1.5.1.zip --json
 ```
 
 输出根直接包含`SKILL.md`、`references/`和`.organization-collaboration-build.json`，没有插件清单、Lody工具或专业角色库。这是技能文件包，不把它冒充ChatGPT原生插件ZIP。构建工具使用Python标准库，使用skill本身不需要Python；输出目录和ZIP必须是新路径，旧目录和自定义修改不会被覆盖。独立收据的工具名为`organization-collaboration-build`，CRC与SHA只证明本地文件一致性，不能用Lody doctor代替技能加载验收。
@@ -56,11 +64,11 @@ python3 plugin/lody4dot/scripts/build.py --organization-skill-only \
 组合分发使用既有构建命令：
 
 ```bash
-python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.9.1 \
-  --zip dist/lody4dot-0.9.1.zip --json
+python3 plugin/lody4dot/scripts/build.py --output dist/lody4dot-0.9.2 \
+  --zip dist/lody4dot-0.9.2.zip --json
 ```
 
-组合包增加`skills/organization-collaboration/`并纳入原收据和provenance；组织协作入口与Lody操作入口分开。只需组织协议的执行端使用独立skill，不因组合包包含Lody而执行setup或安装CLI。当前0.9.1组合组织协议1.5.0，仅在0.9.0基础上修订[Lody长会话接续知识](../lody4dot/validation.md#2026-10-29长会话接续与091知识补丁)，独立组织协议不变；采用与历史资产边界见[归档迭代](asset-archiving.md#验证与采用)；1.4.0的[并行治理](parallel-delivery.md#采用与在途处理)继续适用。[0.7.1重连知识交付](../lody4dot/validation.md#2026-10-28重连知识与071组合包)和下方旧版固定接入回执保留各自版本范围。
+组合包增加`skills/organization-collaboration/`并纳入原收据和provenance；组织协作入口与Lody操作入口分开。只需组织协议的执行端使用独立skill，不因组合包包含Lody而执行setup或安装CLI。当前源码候选0.9.2组合组织协议1.5.1；上一版0.9.1组合组织协议1.5.0，仅在0.9.0基础上修订[Lody长会话接续知识](../lody4dot/validation.md#2026-10-29长会话接续与091知识补丁)，独立组织协议不变；采用与历史资产边界见[归档迭代](asset-archiving.md#验证与采用)；1.4.0的[并行治理](parallel-delivery.md#采用与在途处理)继续适用。[0.7.1重连知识交付](../lody4dot/validation.md#2026-10-28重连知识与071组合包)和下方旧版固定接入回执保留各自版本范围。
 
 ## 安装与实际加载
 
