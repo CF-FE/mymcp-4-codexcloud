@@ -19,7 +19,7 @@
 ## 当前状态
 
 - **云端已验入口：**已取得 Dot 同步固定提交 `4d2ffe4` 并增量读取 Lody **0.9.1** 的[回执](docs/lody4dot/validation.md#2026-10-29云端dot的091同步与增量读取)，采用限当前获准的 Lody 协调操作；旧目录、包及在途绑定未改，原生发现和未验证业务效果仍为未验。[组织1.5.0／Projects1.1.0既有接入](docs/organization-collaboration/validation.md#150云端dot本地增量接入回执)保留原范围，本次未要求重复测试、构建或升级其他端。
-- **源码与分发：**组合包 **0.9.1** 修订[Lody长会话接续与额度单位](skill/lody4dot/references/sessions.md#长会话接续与额度单位)，仅为知识补丁；组织协议 **1.5.0** 保留0.9.0提供的[项目资产归档与交付](docs/organization-collaboration/asset-archiving.md)，保留[局部阻塞与并行交付](docs/organization-collaboration/parallel-delivery.md)。详细规则按需读取，项目阈值不自动启用。Projects skill **1.1.0** 仍独立分发；历史证据、新版读取和实际效果分开，见[本轮验证](docs/lody4dot/validation.md#2026-10-29长会话接续与091知识补丁)。
+- **源码与分发：**组合源码候选 **0.9.2**、组织协议 **1.5.1** 补充[403等局部阻塞分流](skill/organization-collaboration/references/planning-and-progress.md#403等局部阻塞的独立会话分流)，见[本轮范围与证据](docs/organization-collaboration/validation.md#151阻塞分流说明补丁)。保留[Lody长会话接续](skill/lody4dot/references/sessions.md#长会话接续与额度单位)、[项目资产归档](docs/organization-collaboration/asset-archiving.md)和[并行交付](docs/organization-collaboration/parallel-delivery.md)。Projects skill **1.1.0**、岗位定义与专业库不变；项目阈值、实际加载与在途采用仍各自取证。
 - **Gitee MCP：**已完成源码与资料导入；服务依赖安装、认证连接和实际运行未在本仓库验证。
 - **正式任务管理：**正式看板是统一首查入口，全员在授权范围 list/read，写入按职责和对象收敛。已有[登记与限定切换闭环](docs/organization-collaboration/validation.md#真实登记与限定切换闭环)完成并回读；各项目仍分别确认路由和采用范围。环境仓库尚未切换正式看板，当前进度沿[唯一任务队列](.codex/agent-state/todo.md#当前环境与下一步)。
 
