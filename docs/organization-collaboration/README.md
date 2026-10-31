@@ -43,11 +43,11 @@ E/W/Q及资源限制由项目或共享资源范围确认，4/6/2仅为项目试�
 
 ## 1.5.1：阻塞分流说明补丁
 
-本轮[需求说明](blockage-fallback-requirements.md)集中列出背景、已确认要求、方案取舍及P18–P21验收追溯，供本地review与优化使用。
+本轮[需求说明](blockage-fallback-requirements.md)集中列出背景、已确认要求、方案取舍及P18–P23验收追溯，供本地review与优化使用。
 
 [独立会话分流](../../skill/organization-collaboration/references/planning-and-progress.md#403等局部阻塞的独立会话分流)澄清既有局部隔离规则：403等阻塞先核实际来源与性质，需要持续排障时由独立会话在原授权内排查／执行，主线继续；拒绝不换路绕过，UNKNOWN沿原引用对账，保留单写、恢复证据及向本次主协调者交还。只读核听按实际能力报告，不能虚报已听或通过。
 
-同一补丁澄清[服务故障时的最终代办](../../skill/organization-collaboration/references/authorized-recording.md#服务故障时的最终代办)：负责人先交完整操作汇总，指定主协调者在既有授权和实际能力内完成操作、回读、反馈与单写交还；用户专属的Lody／云端Dot绑定仅在[CF-FE适配](github-projects.md#2026-10-31lody服务不可用时的最终兜底)维护，不成为通用默认。
+同一补丁澄清[服务故障时的最终代办](../../skill/organization-collaboration/references/authorized-recording.md#服务故障时的最终代办)：负责人逐项交最小变更包，指定主协调者在既有授权和实际能力内办理就绪项、回读并反馈，原服务恢复与单写交还另记；本次Lody MCP中GitHub Projects服务故障的云端Dot绑定仅在[CF-FE适配](github-projects.md#2026-10-31lody-mcp中的github-projects服务不可用时的兜底)维护，不成为通用默认。
 
 本轮仅交源码候选和离线证据供review；岗位定义、专业库和任职关系不变。组合源码清单随知识补丁记0.9.2；旧1.5.0／0.9.1回执保留原范围，不自动迁移在途任务、重装旧包、更新目标端或启用业务调度。
 
