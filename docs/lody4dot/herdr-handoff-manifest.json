@@ -1,0 +1,675 @@
+{
+  "schema_version": 1,
+  "purpose": "review_and_material_handoff_only",
+  "review_date": "2026-11-01",
+  "source": {
+    "repository": "https://github.com/CF-FE/mymcp-4-codexcloud",
+    "commit": "8481136f3a24289978ba207317c8b9b8397318e7",
+    "top_level_license_files": [],
+    "license_note": "No top-level license file was found in this fixed snapshot; do not infer a new license for optional role excerpts or external bundled:false methods. Preserve source attribution."
+  },
+  "receiver": {
+    "repository": "https://github.com/CF-FE/herdr-4-codexcloud",
+    "committed_baseline": "f9e3b0f644a2ca0afe369e720089e9ac8d230788",
+    "pending_work": "Receiver-owned VPS plan changes were present at review; do not overwrite."
+  },
+  "already_aligned": {
+    "initial_import_files": 19,
+    "organization_skill_version": "1.5.2",
+    "organization_file_count": 11,
+    "projects_skill_version": "1.1.0",
+    "projects_file_count": 5,
+    "other_files": [
+      "scripts/check_repository.py",
+      "tests/test_check_repository.py",
+      "tests/test_projects_iterations.py"
+    ],
+    "comparison": "All 19 on-disk receiver imports equal fixed source bytes at review."
+  },
+  "boundaries": [
+    "Two independently maintained repositories; no symlinks/submodules/shared runtime/automatic sync.",
+    "Initial and incremental provenance remain historical; imported material does not inherit runtime state, credentials, assignments or acceptance.",
+    "This manifest is not an installer, a migration runner or an authorization record.",
+    "Only copy/adapt entries form the proposed first intake; optional entries need a concrete documentation or role use.",
+    "No service shutdown, credential change, deletion, live dispatch, board migration or automatic installation."
+  ],
+  "entries": [
+    {
+      "source_path": "docs/organization-collaboration/eval-inputs.json",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/organization-collaboration/eval-inputs.json",
+      "classification": "copy",
+      "reason": "55 anonymized offline inputs; not a runner or evidence of target behavior.",
+      "suggested_target_path": "docs/organization-collaboration/eval-inputs.json",
+      "included_in_handoff_payload": true,
+      "bytes": 33009,
+      "sha256": "a65d987f1ef7e587dfca7449f31a509d593a3ce2791dd82a3fbfeb3f77419b8b",
+      "mode": "100644",
+      "dependency_notes": [
+        "No file or runtime dependencies. Preserve P21-P23 as source Lody scenarios."
+      ]
+    },
+    {
+      "source_path": "docs/organization-collaboration/eval-rubric.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/organization-collaboration/eval-rubric.md",
+      "classification": "copy",
+      "reason": "Judging method and criteria; keep answers separate from forward-test inputs.",
+      "suggested_target_path": "docs/organization-collaboration/eval-rubric.md",
+      "included_in_handoff_payload": true,
+      "bytes": 22188,
+      "sha256": "821e143f883fa72bebd3373a2da727554021e34c1d2a0ba3084827ee0f6b5ccb",
+      "mode": "100644",
+      "dependency_notes": [
+        "Relative link: eval-inputs.json, included beside this file."
+      ]
+    },
+    {
+      "source_path": "docs/organization-collaboration/reporting-contract-requirements.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/organization-collaboration/reporting-contract-requirements.md",
+      "classification": "adapt",
+      "reason": "Extract R01-R05 as document criteria; remove source candidate status, do not clone operational rules.",
+      "suggested_target_path": "docs/organization-collaboration/reporting-evals.md",
+      "included_in_handoff_payload": true,
+      "bytes": 3364,
+      "sha256": "2308c2ef06ab41ec5c8f730013dcb3611c85da5f2531b05d8467274b01624366",
+      "mode": "100644",
+      "dependency_notes": [
+        "Source relative link resolves to skill/organization-collaboration/references/context-and-reporting.md#派发时约定可达汇报, already in receiver. Raw source snapshot is for review, not direct adoption."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/workspace/visual.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/workspace/visual.md",
+      "classification": "optional_reference_snapshot",
+      "reason": "Professional-method candidate, not an installed role or assignment; original model guidance is historical.",
+      "suggested_target_path": "docs/role-references/source-8481136/visual.md",
+      "included_in_handoff_payload": true,
+      "bytes": 1041,
+      "sha256": "da0e15773516c363d0a3ca1d4cf03bea4199d295649fe75d7577b986f161306b",
+      "mode": "100644",
+      "dependency_notes": [
+        "No relative resource links. Do not claim a complete role library or inherit model/permission settings."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/workspace/research.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/workspace/research.md",
+      "classification": "optional_reference_snapshot",
+      "reason": "Professional-method candidate, not an installed role or assignment; original model guidance is historical.",
+      "suggested_target_path": "docs/role-references/source-8481136/research.md",
+      "included_in_handoff_payload": true,
+      "bytes": 962,
+      "sha256": "d1ab9382235024287ea1de6b6bab2df554425feeb652570d90aa7f18ff6b55a2",
+      "mode": "100644",
+      "dependency_notes": [
+        "No relative resource links. Do not claim a complete role library or inherit model/permission settings."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/workspace/quality.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/workspace/quality.md",
+      "classification": "optional_reference_snapshot",
+      "reason": "Professional-method candidate, not an installed role or assignment; original model guidance is historical.",
+      "suggested_target_path": "docs/role-references/source-8481136/quality.md",
+      "included_in_handoff_payload": true,
+      "bytes": 1194,
+      "sha256": "96950ddd10c6a9594ac586a5180f6a68b3aae8f74e7c2e56a5c3d383fb78649a",
+      "mode": "100644",
+      "dependency_notes": [
+        "No relative resource links. Adopted derivatives must reference receiver organization skill. quality.md retains historical G8 wording requiring adaptation."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/workspace/runtime.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/workspace/runtime.md",
+      "classification": "optional_reference_snapshot",
+      "reason": "Professional-method candidate, not an installed role or assignment; original model guidance is historical.",
+      "suggested_target_path": "docs/role-references/source-8481136/runtime.md",
+      "included_in_handoff_payload": true,
+      "bytes": 1225,
+      "sha256": "ebddfc187abb4d9ac1de4a4649acd390f83863f417707dd3e4b52266da6469fb",
+      "mode": "100644",
+      "dependency_notes": [
+        "No relative resource links. Do not claim a complete role library or inherit model/permission settings."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/workspace/knowledge.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/workspace/knowledge.md",
+      "classification": "optional_reference_snapshot",
+      "reason": "Professional-method candidate, not an installed role or assignment; original model guidance is historical.",
+      "suggested_target_path": "docs/role-references/source-8481136/knowledge.md",
+      "included_in_handoff_payload": true,
+      "bytes": 948,
+      "sha256": "32c0518c29418c2f5e7bb8b75a9a2011a1a129375919c592d6a630853829f7a7",
+      "mode": "100644",
+      "dependency_notes": [
+        "No relative resource links. Do not claim a complete role library or inherit model/permission settings."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/workspace/dialectic.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/workspace/dialectic.md",
+      "classification": "optional_reference_snapshot",
+      "reason": "Professional-method candidate, not an installed role or assignment; original model guidance is historical.",
+      "suggested_target_path": "docs/role-references/source-8481136/dialectic.md",
+      "included_in_handoff_payload": true,
+      "bytes": 1937,
+      "sha256": "a8e1004244361405340983316a8699fba835da305f6051fb5be7fd90ea5cb7fe",
+      "mode": "100644",
+      "dependency_notes": [
+        "No relative resource links. Do not claim a complete role library or inherit model/permission settings."
+      ]
+    },
+    {
+      "source_path": "docs/organization-collaboration/diagrams/traceability-and-audit.mmd",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/organization-collaboration/diagrams/traceability-and-audit.mmd",
+      "classification": "optional_copy",
+      "reason": "Editable diagram and generated display must stay paired; not runtime or permission evidence.",
+      "suggested_target_path": "docs/organization-collaboration/diagrams/traceability-and-audit.mmd",
+      "included_in_handoff_payload": true,
+      "bytes": 2372,
+      "sha256": "f7123efb5a964a43595e38d63e5e274c059b1d5b8c9350eb3a2bdb932fc420c9",
+      "mode": "100644",
+      "dependency_notes": [
+        "Paired file: docs/organization-collaboration/diagrams/traceability-and-audit.svg",
+        "No external runtime assets. Write a receiver-local maintenance note if adopted; do not import the Lody renderer README or install rendering dependencies for intake."
+      ]
+    },
+    {
+      "source_path": "docs/organization-collaboration/diagrams/traceability-and-audit.svg",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/organization-collaboration/diagrams/traceability-and-audit.svg",
+      "classification": "optional_copy",
+      "reason": "Editable diagram and generated display must stay paired; not runtime or permission evidence.",
+      "suggested_target_path": "docs/organization-collaboration/diagrams/traceability-and-audit.svg",
+      "included_in_handoff_payload": true,
+      "bytes": 42708,
+      "sha256": "63880c0426ff980f7245af2ed23717b5d746051afc6132d83e2570610a2d5a12",
+      "mode": "100644",
+      "dependency_notes": [
+        "Paired file: docs/organization-collaboration/diagrams/traceability-and-audit.mmd",
+        "No external runtime assets. Write a receiver-local maintenance note if adopted; do not import the Lody renderer README or install rendering dependencies for intake."
+      ]
+    },
+    {
+      "source_path": "docs/github-projects-operations/diagrams/operation-flow.mmd",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/github-projects-operations/diagrams/operation-flow.mmd",
+      "classification": "optional_copy",
+      "reason": "Editable diagram and generated display must stay paired; not runtime or permission evidence.",
+      "suggested_target_path": "docs/github-projects-operations/diagrams/operation-flow.mmd",
+      "included_in_handoff_payload": true,
+      "bytes": 1346,
+      "sha256": "6fdf2a2b6f103e6e4627db684f2d3e66320401e2bb49ea165e0e8cc3061793ca",
+      "mode": "100644",
+      "dependency_notes": [
+        "Paired file: docs/github-projects-operations/diagrams/operation-flow.svg",
+        "No external runtime assets. Write a receiver-local maintenance note if adopted; do not import the Lody renderer README or install rendering dependencies for intake."
+      ]
+    },
+    {
+      "source_path": "docs/github-projects-operations/diagrams/operation-flow.svg",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/github-projects-operations/diagrams/operation-flow.svg",
+      "classification": "optional_copy",
+      "reason": "Editable diagram and generated display must stay paired; not runtime or permission evidence.",
+      "suggested_target_path": "docs/github-projects-operations/diagrams/operation-flow.svg",
+      "included_in_handoff_payload": true,
+      "bytes": 34813,
+      "sha256": "5b44eac6252b4123b44714ab72530502fe52b917146bfb8b2e954138385cad84",
+      "mode": "100644",
+      "dependency_notes": [
+        "Paired file: docs/github-projects-operations/diagrams/operation-flow.mmd",
+        "No external runtime assets. Write a receiver-local maintenance note if adopted; do not import the Lody renderer README or install rendering dependencies for intake."
+      ]
+    },
+    {
+      "source_path": "docs/github-projects-operations/plan.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/github-projects-operations/plan.md",
+      "classification": "reference_only",
+      "reason": "Existing skills own operational rules; use fixed design context and separately confirm CF-FE/current repository routing.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 14542,
+      "sha256": "955ba882e71a402c909f17870a05864c6f4fb9d4487a3892e15e256b3c58a137",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "docs/github-projects-operations/validation.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/github-projects-operations/validation.md",
+      "classification": "reference_only",
+      "reason": "Historical source-connection evidence only; no target acceptance or cleanup authority.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 24003,
+      "sha256": "0bb125cca42bb070f4d972c7fc5510692f50375a6d8202e2569eea6ac843fd1a",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "docs/organization-collaboration/parallel-delivery.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/organization-collaboration/parallel-delivery.md",
+      "classification": "reference_only",
+      "reason": "Design rationale; current operational rules already copied. Example limits are not adopted defaults.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 8938,
+      "sha256": "f02ab90d24a681320dc4507397345e02735d0432bf56e12776616f3ca1eda206",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "docs/organization-collaboration/asset-archiving.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/organization-collaboration/asset-archiving.md",
+      "classification": "reference_only",
+      "reason": "Design rationale; asset template already belongs to copied skill.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 7556,
+      "sha256": "3795529914056165180a96766c98505c90f1510fbceb946c716590fd43ce3644",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "docs/organization-collaboration/github-projects.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/organization-collaboration/github-projects.md",
+      "classification": "reference_only",
+      "reason": "Organization policy and historical connection routing; do not import actual bindings or old access state.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 23783,
+      "sha256": "01b1842de15b9f016e0d7b8dd39f1cad210fb2bfb285d83d3c317191c33d0a1e",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "docs/organization-collaboration/validation.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/organization-collaboration/validation.md",
+      "classification": "reference_only",
+      "reason": "Historical test/read receipts and unresolved directory evidence; not target validation.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 51934,
+      "sha256": "006feb18ade67edcac6ea03f340d2ae33d2a2ca6b0c585786ba03d6cdccfc56e",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "docs/lody4dot/project-coordination.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/lody4dot/project-coordination.md",
+      "classification": "reference_only",
+      "reason": "Organization design context; runtime route and historical project bindings need separation.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 32102,
+      "sha256": "f934a4ba68c7aaacb599bfa7c8d8f38eec02a4a0ee49a9b1aa1002a6fa13fa0c",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/material-handoff.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/material-handoff.md",
+      "classification": "reference_only",
+      "reason": "Input representation and save/readback concepts; Lody schema1 is not a Herdr contract.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 7782,
+      "sha256": "0f53dc76eab51cf7181adcb1a494ac98ed85890dbd20a71f44803c2bb3cdfbed",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/common.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/common.md",
+      "classification": "reference_only",
+      "reason": "Mixed common constraints, Lody Save and legacy model guidance; receiver already owns organization protocol.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 2412,
+      "sha256": "c1144b434237b53302eeeddc576e3a065bf5da9df40dd35bbeb50f78f80fb7b8",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/index.json",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/index.json",
+      "classification": "reference_only",
+      "reason": "Mixed project binding and external bundled:false method references; not a receiver registry.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 11335,
+      "sha256": "4824af9c0806091dc24f04089ab15333939060bae8275713a3b5d9f77c96b835",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/workspace/coordinator.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/workspace/coordinator.md",
+      "classification": "reference_only",
+      "reason": "Legacy coordinator ID and organization binding, not a new appointment.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 891,
+      "sha256": "4d1fc0840815941e1cc99eb35797251344cc5d8a638254361ab88bf8eb3099e4",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "docs/lody4dot/workspace-roles/execution-policy.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/lody4dot/workspace-roles/execution-policy.md",
+      "classification": "reference_only",
+      "reason": "Source workspace policy requires explicit codex over Claude mapping; not current OS/SSH/provider evidence.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 1995,
+      "sha256": "23d51041c1a9ae043081dc2f4c8726ab95014b8e2d451d1a7eb1668214fdaf7a",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "docs/lody4dot/workspace-roles/deployment-status.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/lody4dot/workspace-roles/deployment-status.md",
+      "classification": "reference_only",
+      "reason": "Historical Save/online evidence dated 2026-10-26, not current active-role or runtime inventory.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 2348,
+      "sha256": "a7cb59f07cd19893fca5d280b06607d25fe20e19e1ad93f06ce1e9b88d4e413e",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "docs/lody4dot/support-matrix.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/lody4dot/support-matrix.md",
+      "classification": "reference_only",
+      "reason": "Source support matrix; not current receiver-host evidence.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 21380,
+      "sha256": "26e0d6fcd5534d68a82e3e8cd937fa558fe7828ec580c580cca4fc3fb54216af",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "docs/lody4dot/runtime-findings.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/lody4dot/runtime-findings.md",
+      "classification": "reference_only",
+      "reason": "Historical source runtime findings; no new host configuration authority.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 9359,
+      "sha256": "e9083ce297297d1d5c28030af101cc066505527973ec78a7431a87fde0f9fd00",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "docs/lody4dot/fresh-task-acceptance.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/lody4dot/fresh-task-acceptance.md",
+      "classification": "reference_only",
+      "reason": "Historical Lody-specific acceptance format; do not run its task creation/login steps.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 9228,
+      "sha256": "93295a2bdc54216561b5f1ca0c17fe6d83e18969357ce3725229163e73b9e720",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/projects/fanren-audio-production.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/projects/fanren-audio-production.md",
+      "classification": "reference_only",
+      "reason": "Project-only candidate. Original project owner must confirm current inputs, voice/baseline contracts, versions and unresolved external references before any derived use.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 3255,
+      "sha256": "7fad9d436515b9ba0d9f11f199b15dc099a026d4e9c44f506a7d65ea6022f904",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/projects/fanren-canon-story.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/projects/fanren-canon-story.md",
+      "classification": "reference_only",
+      "reason": "Project-only candidate. Original project owner must confirm current inputs, voice/baseline contracts, versions and unresolved external references before any derived use.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 1881,
+      "sha256": "c1a0c313efded8f5dc5db6b0107480aceb0b7e70532b828aec49aaba720cca2b",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/projects/fanren-owner.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/projects/fanren-owner.md",
+      "classification": "reference_only",
+      "reason": "Project-only candidate. Original project owner must confirm current inputs, voice/baseline contracts, versions and unresolved external references before any derived use.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 2691,
+      "sha256": "9e47e5761017cd63dbbf8f448be26c632e99833aff3b40b22b0febe00cbbe260",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/projects/fanren-script-performance.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/projects/fanren-script-performance.md",
+      "classification": "reference_only",
+      "reason": "Project-only candidate. Original project owner must confirm current inputs, voice/baseline contracts, versions and unresolved external references before any derived use.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 2142,
+      "sha256": "f38f7c271e6acb5de59c1a473be234cd02d1afbf9117af1751d2bcd4c5b43db8",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "skill/lody4dot/references/roles/projects/fanren-work.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/skill/lody4dot/references/roles/projects/fanren-work.md",
+      "classification": "reference_only",
+      "reason": "Project-only candidate. Original project owner must confirm current inputs, voice/baseline contracts, versions and unresolved external references before any derived use.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 3275,
+      "sha256": "ad2d642109e038e60b5f98c827e7367528c783f1004624f45997bc3c2bf8ea41",
+      "mode": "100644",
+      "dependency_notes": [
+        "Not copied; original relative references remain anchored to this fixed source repository."
+      ]
+    },
+    {
+      "source_path": "plugin/lody4dot/scripts/build.py",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/plugin/lody4dot/scripts/build.py",
+      "classification": "exclude_direct_copy",
+      "reason": "Imports lookup/package_layout and encodes Lody source/output layout; no receiver distribution need established.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 20139,
+      "sha256": "6a3f138c7fef3b128fa72a054c8c777c2ce0726c9007e4aba488144c1d24a3d1",
+      "mode": "100644",
+      "dependency_notes": [
+        "Reference for audit only; no executable import or instruction adoption."
+      ]
+    },
+    {
+      "source_path": "plugin/lody4dot/scripts/handoff.py",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/plugin/lody4dot/scripts/handoff.py",
+      "classification": "exclude_direct_copy",
+      "reason": "Requires lody_refs and native persisted/synced state; never fabricate Lody references to pass it.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 15598,
+      "sha256": "c99f54ddbdb0afce47313ced96daa54971cb2e3d75e73be59cf5b4f19919e225",
+      "mode": "100644",
+      "dependency_notes": [
+        "Reference for audit only; no executable import or instruction adoption."
+      ]
+    },
+    {
+      "source_path": "plugin/lody4dot/scripts/lookup.py",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/plugin/lody4dot/scripts/lookup.py",
+      "classification": "exclude_direct_copy",
+      "reason": "Hardcoded Lody skill roots, command index and legacy role length assumptions.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 13148,
+      "sha256": "756c110978aea72d0ad6df315db4b6b78305de3505eb6249066955fdb98a6200",
+      "mode": "100644",
+      "dependency_notes": [
+        "Reference for audit only; no executable import or instruction adoption."
+      ]
+    },
+    {
+      "source_path": "scripts/prepare_cloud_node.py",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/scripts/prepare_cloud_node.py",
+      "classification": "exclude_direct_copy",
+      "reason": "Source-specific Linux x64/Node/npm/Lody prefix policy; not the unbound VPS installer.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 15136,
+      "sha256": "d7afcc1adaf5988afe64267e0f979b2eb288933da46fe5d6555f76188b417cd3",
+      "mode": "100644",
+      "dependency_notes": [
+        "Reference for audit only; no executable import or instruction adoption."
+      ]
+    },
+    {
+      "source_path": ".codex/cloud-install.sh",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/.codex/cloud-install.sh",
+      "classification": "exclude_direct_copy",
+      "reason": "Source checkout and Lody bootstrap; must not execute as Herdr setup.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 551,
+      "sha256": "cf9e726981317f825e720e81234bb3d8bf9f267603651d23acb3eb4fc6d52d34",
+      "mode": "100644",
+      "dependency_notes": [
+        "Reference for audit only; no executable import or instruction adoption."
+      ]
+    },
+    {
+      "source_path": ".codex/cloud-start.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/.codex/cloud-start.md",
+      "classification": "exclude_direct_copy",
+      "reason": "Source startup instructions, Lody and original environment bindings.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 5338,
+      "sha256": "d0bcff852f4f09d279e889d0f724fd4fb99d9bd902c818209a2dbb3df38f9e11",
+      "mode": "100644",
+      "dependency_notes": [
+        "Reference for audit only; no executable import or instruction adoption."
+      ]
+    },
+    {
+      "source_path": "docs/organization-collaboration/cloud-acceptance.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/organization-collaboration/cloud-acceptance.md",
+      "classification": "exclude_direct_copy",
+      "reason": "Old fixed-version acceptance instructions and Lody build commands; receiver owns current pilot plan.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 6808,
+      "sha256": "a1719214d715b2edbf1de6cc24ae2f8f9f5f16d77db966cab7e8a3df55884240",
+      "mode": "100644",
+      "dependency_notes": [
+        "Reference for audit only; no executable import or instruction adoption."
+      ]
+    },
+    {
+      "source_path": "docs/organization-collaboration/diagrams/README.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/organization-collaboration/diagrams/README.md",
+      "classification": "exclude_direct_copy",
+      "reason": "References source Lody renderer, browser path and temporary dependencies; replace if diagram adopted.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 1936,
+      "sha256": "13adb3f344f38601f6c11a57b40266dbf75f586e29a69841db075d8fcd5f341e",
+      "mode": "100644",
+      "dependency_notes": [
+        "Reference for audit only; no executable import or instruction adoption."
+      ]
+    },
+    {
+      "source_path": "docs/github-projects-operations/diagrams/README.md",
+      "source_url": "https://github.com/CF-FE/mymcp-4-codexcloud/blob/8481136f3a24289978ba207317c8b9b8397318e7/docs/github-projects-operations/diagrams/README.md",
+      "classification": "exclude_direct_copy",
+      "reason": "References source Lody renderer and source README/plan; replace if diagram adopted.",
+      "suggested_target_path": null,
+      "included_in_handoff_payload": false,
+      "bytes": 1750,
+      "sha256": "790958eb28b1a8dab5de2c680b28a73c7ee86a3262da45bf47a8dd0ad9efa63e",
+      "mode": "100644",
+      "dependency_notes": [
+        "Reference for audit only; no executable import or instruction adoption."
+      ]
+    }
+  ],
+  "excluded_groups": [
+    {
+      "paths": [
+        "plugin/lody4dot/scripts/auth.py",
+        "plugin/lody4dot/scripts/bootstrap.py",
+        "plugin/lody4dot/scripts/common.py",
+        "plugin/lody4dot/scripts/doctor.py",
+        "plugin/lody4dot/scripts/install.py",
+        "plugin/lody4dot/scripts/package_layout.py",
+        "plugin/lody4dot/scripts/platform_support.py",
+        "plugin/lody4dot/runtime/",
+        "tests/lody4dot/"
+      ],
+      "reason": "Lody runtime/build/CLI-specific dependency closure; source tests do not become Herdr runtime tests."
+    },
+    {
+      "paths": [
+        "skill/lody4dot/references/command-index.json",
+        "skill/lody4dot/references/help-snapshot.json",
+        "docs/lody4dot/workspace-roles/v2.2/",
+        ".codex/agent-state/"
+      ],
+      "reason": "Legacy commands, source-specific deployment and operational history; retain source, do not transplant as current target state."
+    },
+    {
+      "paths": [
+        "mcp/gitee/"
+      ],
+      "reason": "Independent service with no confirmed dependency in the current Herdr pilot; separate future intake if needed."
+    }
+  ]
+}

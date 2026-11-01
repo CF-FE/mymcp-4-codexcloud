@@ -6,6 +6,7 @@ lody4dot的设计、接入、验收和配套图表集中在本目录；实际任
 
 | 想了解什么 | 阅读入口 |
 | --- | --- |
+| 准备退出Lody路线时，还需向Herdr移交哪些资料 | [剩余资产审查与交接](herdr-handoff.md) · [固定来源清单](herdr-handoff-manifest.json)；资料移交不等于在途切换或旧服务停用 |
 | 独立组织协作skill、汇报关系、Dot委派、进度与并行节点怎样配合 | [组织协作方案与图解](project-coordination.md)、[独立skill接入](../organization-collaboration/README.md)（与专业角色库分开） |
 | Dot、云任务、本地环境、会话引用和权限有什么区别 | [环境与权限指引](environment-model.md) |
 | 对外分享Chat、Work、Dot、云电脑、Codex Cloud、资料空间与侧栏图标的完整概念 | [产品协作参考（分享版）](product-collaboration-reference.md) |
