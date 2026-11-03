@@ -13,7 +13,7 @@
 | 归档项目资产、区分原件／副本及恢复证据 | [资产归档指引](skill/organization-collaboration/references/asset-archiving.md) · [迭代与采用范围](docs/organization-collaboration/asset-archiving.md) |
 | 查询或维护 GitHub Projects | [操作 skill](skill/github-projects-operations/SKILL.md) · [完整方案](docs/github-projects-operations/plan.md) · [CF-FE 接入记录](docs/organization-collaboration/github-projects.md) |
 | 查 Lody 旧路线、收尾与交接责任 | [Lody skill](skill/lody4dot/SKILL.md) · [历史文档索引](docs/lody4dot/README.md) · [逐任务交接边界](https://github.com/CF-FE/herdr-4-codexcloud/blob/main/docs/organization-collaboration/README.md#退出与运行交接待办的责任) |
-| 查专业角色来源及接收后的当前位置 | [角色来源与导航](docs/lody4dot/workspace-roles/README.md) · [Herdr 仓库](https://github.com/CF-FE/herdr-4-codexcloud)，资源路径 `docs/worker-library/README.md`（本地已提交，待 main 发布） |
+| 查专业角色来源及接收后的当前位置 | [角色来源与导航](docs/lody4dot/workspace-roles/README.md) · [Herdr Worker／角色库](https://github.com/CF-FE/herdr-4-codexcloud/blob/c2d88bdb12d3ff9638e00c433f7b0f457d5c7593/docs/worker-library/README.md)（固定版本已发布；各执行端采用另验） |
 | 准备云环境、构建或分发插件 | [lody4dot 分发](plugin/lody4dot/README.md) · [新任务验收](docs/lody4dot/fresh-task-acceptance.md) |
 | 查看已导入的 Gitee MCP | [源码与运行说明](mcp/gitee/README.md) |
 

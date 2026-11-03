@@ -4,7 +4,7 @@
 
 可编辑的随包派生库已归入[roles/index.json](../../../skill/lody4dot/references/roles/index.json)，按[使用与维护](../../../skill/lody4dot/references/workspace-roles.md#按需读取角色库)精确读取和组装；职责正文只在该处维护，V2.2继续作为不改字节的历史来源。[设计与辩证取舍](library-design.md)说明两层边界，部署回执不并入定义。
 
-Herdr 新任务接收后的当前位置见 [Herdr 仓库](https://github.com/CF-FE/herdr-4-codexcloud)，资源路径为 `docs/worker-library/README.md`（本地已提交，待 main 发布）；[来源与接收边界](https://github.com/CF-FE/herdr-4-codexcloud/blob/main/docs/organization-collaboration/README.md)已在核实的远端版本中保留。接收方独立维护，本页只作导航，不复制正文或自动同步；本目录的 Lody 来源、在途绑定与历史部署证据仍保留原范围。
+Herdr 新任务接收后的当前位置见 [Herdr Worker／角色库固定版本](https://github.com/CF-FE/herdr-4-codexcloud/blob/c2d88bdb12d3ff9638e00c433f7b0f457d5c7593/docs/worker-library/README.md)（2026-11-03 已发布至 main，各执行端采用另验）；[来源与接收边界](https://github.com/CF-FE/herdr-4-codexcloud/blob/main/docs/organization-collaboration/README.md)已在核实的远端版本中保留。接收方独立维护，本页只作导航，不复制正文或自动同步；本目录的 Lody 来源、在途绑定与历史部署证据仍保留原范围。
 
 云端Dot总负责、项目负责人治理需求及按节点开启并行，见[组织协作skill方案与图解](../project-coordination.md)。独立组织skill已承接通用协议；当前汇报关系与专业角色库分开。专业库1.1.1保留旧G8导航ID与凡人owner适配，并对齐三值检查结论和任务绑定的汇报路径；源码迁移不等于已保存Role或任职关系已更新。
 
