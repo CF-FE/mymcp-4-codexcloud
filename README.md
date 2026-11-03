@@ -1,22 +1,25 @@
 # mymcp-4-codexcloud
 
-面向 **Codex Cloud 与云端 Dot** 的 MCP、skills 和插件集合，提供组织协作、Projects 任务记录、Lody 跨端操作及云环境准备能力。
+面向 **Codex Cloud 与云端 Dot** 的 MCP、skills 和插件集合，保留组织协作、Projects 任务记录、Lody 旧路线资料及云环境准备能力。
 
-本项目由 Dot 与公子沟通、协调项目负责人，并创建独立 Codex 云任务；执行端通过 Lody 协作和回传结果。这是本项目的职责约定，平台其他创建入口见[创建方式对照](docs/lody4dot/product-collaboration-reference.md#codex-cloud-与-work-cloud-的创建方式对照)。
+本项目由 Dot 与公子沟通、协调项目负责人，并按既有分工创建独立 Codex 云任务；**新任务沿 [Herdr 协作路线](https://github.com/CF-FE/herdr-4-codexcloud/blob/main/docs/collaboration-iteration-guide.md)推进**，信箱与 Mac 协调桥在 [CF-FE/task-mailbox-mcp](https://github.com/CF-FE/task-mailbox-mcp)维护。旧 Lody 任务沿原任务、会话和控制入口逐项收尾，或在明确节点交接；不据此宣称旧任务、UNKNOWN 或写控制已全部退出。平台其他创建入口见[创建方式对照](docs/lody4dot/product-collaboration-reference.md#codex-cloud-与-work-cloud-的创建方式对照)。
 
 ## 从这里开始
 
 | 要做什么 | 入口 |
 | --- | --- |
 | 明确岗位、汇报、任务分配与验收 | [组织协作 skill](skill/organization-collaboration/SKILL.md) · [接入说明](docs/organization-collaboration/README.md) |
+| 按当前路线承接新任务 | [Herdr 协作入口](https://github.com/CF-FE/herdr-4-codexcloud) · [Task Mailbox／Mac 协调桥](https://github.com/CF-FE/task-mailbox-mcp) |
 | 归档项目资产、区分原件／副本及恢复证据 | [资产归档指引](skill/organization-collaboration/references/asset-archiving.md) · [迭代与采用范围](docs/organization-collaboration/asset-archiving.md) |
 | 查询或维护 GitHub Projects | [操作 skill](skill/github-projects-operations/SKILL.md) · [完整方案](docs/github-projects-operations/plan.md) · [CF-FE 接入记录](docs/organization-collaboration/github-projects.md) |
-| 通过 Lody 发现资源、操作会话和跨端交接 | [Lody skill](skill/lody4dot/SKILL.md) · [文档索引](docs/lody4dot/README.md) |
-| 使用工作区共享级／项目级专业角色 | [角色库](docs/lody4dot/workspace-roles/README.md) · [设计与边界](docs/lody4dot/workspace-roles/library-design.md) |
+| 查 Lody 旧路线、收尾与交接责任 | [Lody skill](skill/lody4dot/SKILL.md) · [历史文档索引](docs/lody4dot/README.md) · [逐任务交接边界](https://github.com/CF-FE/herdr-4-codexcloud/blob/main/docs/organization-collaboration/README.md#退出与运行交接待办的责任) |
+| 查专业角色来源及接收后的当前位置 | [角色来源与导航](docs/lody4dot/workspace-roles/README.md) · [Herdr 仓库](https://github.com/CF-FE/herdr-4-codexcloud)，资源路径 `docs/worker-library/README.md`（本地已提交，待 main 发布） |
 | 准备云环境、构建或分发插件 | [lody4dot 分发](plugin/lody4dot/README.md) · [新任务验收](docs/lody4dot/fresh-task-acceptance.md) |
 | 查看已导入的 Gitee MCP | [源码与运行说明](mcp/gitee/README.md) |
 
 ## 当前状态
+
+下列版本与回执保留本仓既有采用范围；新路线进展分别查 [Herdr 当前状态](https://github.com/CF-FE/herdr-4-codexcloud/blob/main/docs/status.md)与[信箱／Mac 协调桥验证记录](https://github.com/CF-FE/task-mailbox-mcp/blob/main/docs/verification.md)。本页不复制另一份运行状态，也不以新路线就绪覆盖旧任务的未决项。
 
 - **云端已验入口：**已取得 Dot 自身云端固定 `a9d287c` 的源码同步与组织 **1.5.2** 增量读取[回执](docs/organization-collaboration/validation.md#152云端dot本地同步与增量读取回执)（组合源码 **0.9.3**），采用限当前 Dot 后续获准协调。三个已定位旧目录保持原状，更早未定位目录仍未定位；在途任务未重建、重派或迁移绑定。原生发现、真实通道可达及业务效果仍未验。[1.5.1旧回执](docs/organization-collaboration/validation.md#151云端dot本地同步与增量读取回执)、[0.9.1旧回执](docs/lody4dot/validation.md#2026-10-29云端dot的091同步与增量读取)保留原范围。
 - **源码与分发：**PR #11已合入main，组合源码 **0.9.3**、组织协议 **1.5.2** 补充[派发时的可达汇报约定](skill/organization-collaboration/references/context-and-reporting.md#派发时约定可达汇报)；保留1.5.1的[403等局部阻塞分流](skill/organization-collaboration/references/planning-and-progress.md#403等局部阻塞的独立会话分流)，见[1.5.1范围与证据](docs/organization-collaboration/validation.md#151阻塞分流说明补丁)。保留[Lody长会话接续](skill/lody4dot/references/sessions.md#长会话接续与额度单位)、[项目资产归档](docs/organization-collaboration/asset-archiving.md)和[并行交付](docs/organization-collaboration/parallel-delivery.md)。Projects skill **1.1.0**、岗位定义与专业库不变；源码读取不等于分发包安装，项目阈值、实际加载与在途采用仍各自取证。
