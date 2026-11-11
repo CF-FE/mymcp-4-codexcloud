@@ -8,6 +8,7 @@
 
 | 要做什么 | 入口 |
 | --- | --- |
+| G8（云端 Dot）遇到回执或巡检阻塞 | [主动排查与执行审批规则](docs/organization-collaboration/g8-blocker-investigation.md) |
 | 明确岗位、汇报、任务分配与验收 | [组织协作 skill](skill/organization-collaboration/SKILL.md) · [接入说明](docs/organization-collaboration/README.md) |
 | 按当前路线承接新任务 | [Herdr 协作入口](https://github.com/CF-FE/herdr-4-codexcloud) · [Task Mailbox／Mac 协调桥](https://github.com/CF-FE/task-mailbox-mcp) |
 | 归档项目资产、区分原件／副本及恢复证据 | [资产归档指引](skill/organization-collaboration/references/asset-archiving.md) · [迭代与采用范围](docs/organization-collaboration/asset-archiving.md) |
