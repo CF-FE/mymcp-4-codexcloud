@@ -4,6 +4,10 @@
 
 该skill全部为Markdown，不要求Python、Node、Lody身份、专业角色库或常驻服务。通用协议、当前关系、任务上下文分别维护；真实参与者和组织名单保留在已有私密正式记录中，不写进技能包。
 
+## G8 专属协调规则
+
+本用户的 **G8 = 云端 Dot**。其[阻塞主动排查与执行审批规则](g8-blocker-investigation.md)独立于通用组织协议：主动只读调查、必要的限定派查、辩证方案与用户执行审批分开；不自动扩大定时计划或其他执行器权限。
+
 ## 读取与任务上下文
 
 先读取`SKILL.md`，按稳定岗位ID只读对应指引：`organization_lead`、`project_owner`、`executor`、`reviewer`、`auditor`。首次接单、换项目和接管时用[上下文模板](../../skill/organization-collaboration/references/context-and-reporting.md)确认责任、报告对象与实际通道；已有有效任务上下文直接复用。纯独立问答不因此建立组织流程。
