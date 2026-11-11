@@ -14,3 +14,4 @@
 - 接手本项目任务先读[组织协作skill](skill/organization-collaboration/SKILL.md)，复用本次已给定的责任、汇报与授权上下文，按粒度审阅、规划、分配；既定任务内实现步骤不重复建单。组织协议与专业角色库分开，新增或变更岗位/角色按其维护指引处理。
 - 云端Dot重载时按[本地接入与恢复顺序](docs/organization-collaboration/README.md#dot重载后的恢复顺序)，优先本地取得环境仓库、按需读取，再恢复连通／CLI并刷新管理范围内全部未决任务；独立执行器的回执不冒充Dot本地装载，隔离开发测试仍可合理委派。
 - 实际涉及Lody时再读[平台协作参考](skill/lody4dot/references/collaboration.md)；涉及本用户Lody工作区的会话派发，另读[工作区执行规范](docs/lody4dot/workspace-roles/execution-policy.md)，不把专属配置作为通用技能默认。
+- 本用户的 **G8 = 云端 Dot**；回执或巡检阻塞按[G8阻塞主动排查与执行审批](docs/organization-collaboration/g8-blocker-investigation.md)处理。主动只读排查不等于新增修复获准，不自动改写定时计划限制。
